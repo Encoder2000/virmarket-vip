@@ -412,28 +412,37 @@
                 <div id="tab-vinted" class="hidden space-y-6">
 
                     <!-- Barra de Filtros -->
+                    <!-- Barra de Filtros y Estado en Vivo -->
                     <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
                         <div class="flex flex-wrap items-center gap-2">
-                            <button type="button" data-filter="ALL" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian">
-                                Todas
+                            <button type="button" data-filter="ALL" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian flex items-center gap-1.5">
+                                <span>Todas</span>
+                                <span id="filterCount-ALL" class="px-1.5 py-0.2 rounded-full text-[10px] bg-obsidian/20 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="RESERVADA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300">
-                                Reservadas VIP
+                            <button type="button" data-filter="RESERVADA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
+                                <span>Reservadas VIP</span>
+                                <span id="filterCount-RESERVADA" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="DISPONIBLE" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300">
-                                Sobrantes / Disponibles
+                            <button type="button" data-filter="DISPONIBLE" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
+                                <span>Disponibles</span>
+                                <span id="filterCount-DISPONIBLE" class="px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800 text-zinc-400 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="VENDIDA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300">
-                                Vendidas
+                            <button type="button" data-filter="VENDIDA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
+                                <span>Vendidas</span>
+                                <span id="filterCount-VENDIDA" class="px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800 text-zinc-400 font-bold">0</span>
                             </button>
                         </div>
 
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span id="liveSyncStatus" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[10px] text-zinc-400">
+                                <span class="w-1.5 h-1.5 rounded-full bg-acid animate-pulse"></span>
+                                <span id="liveSyncLabel">En vivo</span>
+                            </span>
                             <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
                                 <option value="ALL">Todos los Drops</option>
                             </select>
-                            <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5">
-                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
+                            <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5 transition-colors">
+                                <i data-lucide="refresh-cw" id="refreshIcon" class="w-3.5 h-3.5 text-acid"></i>
                                 <span>Actualizar</span>
                             </button>
                         </div>
@@ -816,7 +825,10 @@
             showAuthScreen();
         });
 
-        // ======================== PESTAÑAS Y DASHBOARD ========================
+        // ======================== PESTAÑAS, SINCRONIZACIÓN EN VIVO Y DASHBOARD ========================
+        let lastSyncTimestamp = Date.now();
+        let autoPollingInterval = null;
+
         function setActiveTab(tabName) {
             adminState.activeTab = tabName;
             ['drops', 'vinted', 'settings'].forEach(t => {
@@ -828,6 +840,64 @@
                     isAct ? 'bg-acid text-obsidian shadow-md shadow-acid/20' : 'text-zinc-300 hover:text-white'
                 }`;
             });
+            // Si el usuario entra a la pestaña de Vinted y está autenticado, sincronizar reservas al instante
+            if (tabName === 'vinted' && adminState.password) {
+                syncDashboardQuietly(true);
+            }
+        }
+
+        async function syncDashboardQuietly(isAuto = false) {
+            if (!adminState.password) return;
+            const refreshIcon = document.getElementById('refreshIcon');
+            if (refreshIcon && !isAuto) refreshIcon.classList.add('animate-spin');
+
+            try {
+                const prevReservedRefs = new Set(
+                    adminState.garments.filter(g => g.status === 'RESERVADA').map(g => g.ref)
+                );
+
+                const data = await callAdminApi('get_dashboard');
+                adminState.config = data.config || adminState.config;
+                adminState.garments = Array.isArray(data.garments) ? data.garments : [];
+                lastSyncTimestamp = Date.now();
+
+                // Actualizar cabecera de métricas
+                const cfg = adminState.config;
+                document.getElementById('statActiveDrop').textContent = cfg.activeDropId || 'Ninguno activo';
+                document.getElementById('statReservedCount').textContent =
+                    adminState.garments.filter(g => g.status === 'RESERVADA').length;
+                document.getElementById('statAvailableCount').textContent =
+                    adminState.garments.filter(g => g.status === 'DISPONIBLE').length;
+
+                renderVintedWorkspace();
+                renderCurrentDropList();
+                updateLiveSyncIndicator();
+
+                // Detectar si entraron nuevas reservas VIP y notificar con alerta destacada
+                const currentReserved = adminState.garments.filter(g => g.status === 'RESERVADA');
+                const newReserved = currentReserved.filter(g => !prevReservedRefs.has(g.ref));
+                if (newReserved.length > 0 && prevReservedRefs.size > 0) {
+                    const refsStr = newReserved.map(g => `${g.ref} (@${g.reservedByVinted || 'comprador'})`).join(', ');
+                    toast(`🔔 ¡Nueva reserva VIP: ${refsStr}!`, false);
+                }
+            } catch (err) {
+                if (!isAuto) toast(err.message, true);
+            } finally {
+                if (refreshIcon && !isAuto) refreshIcon.classList.remove('animate-spin');
+            }
+        }
+
+        function updateLiveSyncIndicator() {
+            const label = document.getElementById('liveSyncLabel');
+            if (!label) return;
+            const diffSec = Math.max(0, Math.round((Date.now() - lastSyncTimestamp) / 1000));
+            if (diffSec < 5) {
+                label.textContent = 'En vivo • al día';
+            } else if (diffSec < 60) {
+                label.textContent = `En vivo • hace ${diffSec}s`;
+            } else {
+                label.textContent = `En vivo • hace ${Math.floor(diffSec / 60)}m`;
+            }
         }
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -899,6 +969,8 @@
             renderDropChipsAndSelect();
             renderCurrentDropList();
             renderVintedWorkspace();
+            lastSyncTimestamp = Date.now();
+            updateLiveSyncIndicator();
             setActiveTab(adminState.activeTab);
             lucide.createIcons();
 
@@ -1305,8 +1377,8 @@
                 document.querySelectorAll('.vinted-filter-btn').forEach(b => {
                     const act = b.getAttribute('data-filter') === adminState.statusFilter;
                     b.className = act
-                        ? 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian'
-                        : 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300';
+                        ? 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian flex items-center gap-1.5'
+                        : 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5';
                 });
                 renderVintedWorkspace();
             });
@@ -1318,13 +1390,61 @@
         });
 
         document.getElementById('refreshDashboardBtn').addEventListener('click', async () => {
-            toast('Sincronizando reservas y colas...');
-            await loadDashboard();
+            toast('Sincronizando reservas en vivo...');
+            await syncDashboardQuietly(false);
+        });
+
+        // Auto-polling en segundo plano cada 15s si la ventana está activa
+        if (autoPollingInterval) clearInterval(autoPollingInterval);
+        autoPollingInterval = setInterval(() => {
+            if (!document.hidden && adminState.password) {
+                syncDashboardQuietly(true);
+            }
+        }, 15000);
+
+        // Actualizar indicador de tiempo transcurrido cada 5s
+        setInterval(updateLiveSyncIndicator, 5000);
+
+        // Al volver a la pestaña tras revisar el correo, Vinted o WhatsApp, sincronizar de inmediato
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && adminState.password) {
+                syncDashboardQuietly(true);
+            }
+        });
+        window.addEventListener('focus', () => {
+            if (adminState.password) {
+                syncDashboardQuietly(true);
+            }
         });
 
         function renderVintedWorkspace() {
+            // Recalcular contadores dinámicos para los botones de filtro según el Drop seleccionado
+            const dropGarments = adminState.garments.filter(g => {
+                if (adminState.dropFilter !== 'ALL' && (g.dropId || '').toUpperCase() !== adminState.dropFilter.toUpperCase()) return false;
+                return true;
+            });
+            const cAll = dropGarments.length;
+            const cRes = dropGarments.filter(g => g.status === 'RESERVADA').length;
+            const cDisp = dropGarments.filter(g => g.status === 'DISPONIBLE').length;
+            const cSold = dropGarments.filter(g => g.status === 'VENDIDA').length;
+
+            const elAll = document.getElementById('filterCount-ALL');
+            const elRes = document.getElementById('filterCount-RESERVADA');
+            const elDisp = document.getElementById('filterCount-DISPONIBLE');
+            const elSold = document.getElementById('filterCount-VENDIDA');
+
+            if (elAll) elAll.textContent = cAll;
+            if (elRes) {
+                elRes.textContent = cRes;
+                elRes.className = cRes > 0
+                    ? 'px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-obsidian font-bold shadow-sm shadow-amber-400/50 animate-pulse'
+                    : 'px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold';
+            }
+            if (elDisp) elDisp.textContent = cDisp;
+            if (elSold) elSold.textContent = cSold;
+
             const filtered = adminState.garments.filter(g => {
-                if (adminState.dropFilter !== 'ALL' && g.dropId !== adminState.dropFilter) return false;
+                if (adminState.dropFilter !== 'ALL' && (g.dropId || '').toUpperCase() !== adminState.dropFilter.toUpperCase()) return false;
                 if (adminState.statusFilter !== 'ALL' && g.status !== adminState.statusFilter) return false;
                 return true;
             });
@@ -1333,7 +1453,7 @@
             const groupsMap = new Map();
             adminState.garments.forEach(g => {
                 if (g.status === 'RESERVADA' && g.reservationGroupId) {
-                    if (adminState.dropFilter !== 'ALL' && g.dropId !== adminState.dropFilter) return;
+                    if (adminState.dropFilter !== 'ALL' && (g.dropId || '').toUpperCase() !== adminState.dropFilter.toUpperCase()) return;
                     if (!groupsMap.has(g.reservationGroupId)) groupsMap.set(g.reservationGroupId, []);
                     groupsMap.get(g.reservationGroupId).push(g);
                 }
