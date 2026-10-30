@@ -604,7 +604,6 @@
                 try {
                     const ta = document.createElement('textarea');
                     ta.value = cleanText;
-                    ta.setAttribute('readonly', '');
                     ta.style.position = 'fixed';
                     ta.style.top = '0';
                     ta.style.left = '-9999px';
@@ -612,6 +611,7 @@
                     document.body.appendChild(ta);
                     ta.focus();
                     ta.select();
+                    ta.setSelectionRange(0, cleanText.length);
                     success = document.execCommand('copy');
                     document.body.removeChild(ta);
                 } catch (fallbackErr) {
@@ -668,21 +668,33 @@
 
         // Generadores de textos listos para pegar en Vinted
         function buildIndividualVintedDescription(g) {
-            const lines = [g.title];
-            const specs = [];
-            if (g.brand) specs.push(`• Marca: ${g.brand}`);
-            if (g.size) specs.push(`• Talla: ${g.size}`);
-            if (g.vintedCondition) specs.push(`• Estado: ${g.vintedCondition}`);
-            specs.push(`• Ref: ${g.ref}`);
-            lines.push(specs.join('\n'));
-            if (g.description && g.description.trim()) {
-                lines.push(g.description.trim());
+            const blocks = [];
+            // 1. Título de la prenda
+            if (g.title && g.title.trim()) {
+                blocks.push(g.title.trim());
             }
+
+            // 2. Descripción real y medidas del producto (redactada por el vendedor)
+            if (g.description && g.description.trim()) {
+                blocks.push(g.description.trim());
+            }
+
+            // 3. Ficha de especificaciones oficiales de Vinted (Marca, Talla, Estado)
+            const specs = [];
+            if (g.brand && g.brand.trim()) specs.push(`• Marca: ${g.brand.trim()}`);
+            if (g.size && g.size.trim()) specs.push(`• Talla: ${g.size.trim()}`);
+            if (g.vintedCondition && g.vintedCondition.trim()) specs.push(`• Estado: ${g.vintedCondition.trim()}`);
+            if (specs.length > 0) {
+                blocks.push(specs.join('\n'));
+            }
+
+            // 4. Pie de página fijo de VirMarket con hashtags
             const footer = (adminState.config.vintedFooterTemplate || '').trim();
             if (footer) {
-                lines.push(footer);
+                blocks.push(footer);
             }
-            return lines.join('\n\n');
+
+            return blocks.join('\n\n');
         }
 
         function buildLotVintedTitle(items, vintedUser) {
@@ -1751,13 +1763,13 @@
                         ? g.reservedFinalPriceEur
                         : g.priceEur;
                     if (field === 'title') {
-                        copyText(g.title, `título "${g.title}"`, btn);
+                        copyText(g.title, `Título`, btn);
                     }
                     if (field === 'desc') {
-                        copyText(buildIndividualVintedDescription(g), `descripción de ${g.ref}`, btn);
+                        copyText(buildIndividualVintedDescription(g), `Descripción`, btn);
                     }
                     if (field === 'price') {
-                        copyText(fmtVintedInputPrice(priceVal), `precio (${fmtVintedInputPrice(priceVal)} €)`, btn);
+                        copyText(fmtVintedInputPrice(priceVal), `Precio (${fmtVintedInputPrice(priceVal)} €)`, btn);
                     }
                     if (field === 'user') {
                         const cleanUser = (g.reservedByVinted || '').replace(/^@+/, '');
