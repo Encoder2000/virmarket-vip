@@ -9,15 +9,28 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="VirMarket">
-    <meta name="application-name" content="VirMarket">
+    <meta name="apple-mobile-web-app-title" content="VM Studio">
+    <meta name="application-name" content="VirMarket Studio">
+
+    <script>
+        // Si se abre desde la app instalada en la pantalla de inicio del móvil (PWA standalone) y no es el escaparate explícito, abrir VirMarket Studio
+        (function() {
+            try {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                const params = new URLSearchParams(window.location.search);
+                if (isStandalone && !params.has('escaparate') && !params.has('drop') && !params.has('reservar')) {
+                    window.location.replace('admin.html');
+                }
+            } catch (e) {}
+        })();
+    </script>
 
     <!-- Favicon & PWA Icons -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+    <link rel="manifest" href="manifest.json?v=2">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -603,10 +616,16 @@
                 <span class="font-display font-bold text-zinc-300 uppercase">VIR<span class="text-acid">MARKET</span></span>
                 <span>• Club Privado de Drops 24h</span>
             </div>
-            <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
-                <i data-lucide="mail" class="w-3.5 h-3.5"></i>
-                <span>contacto@virmarsolutions.com</span>
-            </a>
+            <div class="flex items-center gap-4">
+                <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <span>contacto@virmarsolutions.com</span>
+                </a>
+                <a href="./admin.html" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-500 hover:text-zinc-300">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                    <span>VirMarket Studio</span>
+                </a>
+            </div>
         </div>
     </footer>
 
