@@ -306,7 +306,12 @@
 
                                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                         <div>
-                                            <label for="gRef" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Referencia *</label>
+                                            <div class="flex items-center justify-between mb-1">
+                                                <label for="gRef" class="block text-[11px] font-semibold uppercase text-zinc-400">Referencia *</label>
+                                                <button id="autoRefBtn" type="button" class="text-[10px] font-mono text-acid hover:underline flex items-center gap-1" title="Generar siguiente referencia única libre">
+                                                    <span>🔄 Auto</span>
+                                                </button>
+                                            </div>
                                             <input type="text" id="gRef" required placeholder="REF-001" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-acid uppercase focus:outline-none focus:border-acid">
                                         </div>
                                         <div>
@@ -948,20 +953,45 @@
             btn.addEventListener('click', () => setActiveTab(btn.getAttribute('data-tab')));
         });
 
-        function suggestDefaultDropId() {
+        function generateUniqueDropId() {
             const d = new Date();
             const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-            return `DROP-${stamp}`;
-        }
+            const existingIds = new Set(adminState.garments.map(g => (g.dropId || '').toUpperCase()));
+            if (adminState.config && adminState.config.activeDropId) {
+                existingIds.add(adminState.config.activeDropId.toUpperCase());
+            }
 
-        function suggestNextRef() {
+            // Secuencia diaria limpia garantizada única: DROP-YYYYMMDD-01, DROP-YYYYMMDD-02, ...
+            let seq = 1;
+            let candidate = `DROP-${stamp}-${String(seq).padStart(2, '0')}`;
+            while (existingIds.has(candidate.toUpperCase()) || (seq === 1 && existingIds.has(`DROP-${stamp}`.toUpperCase()))) {
+                seq++;
+                candidate = `DROP-${stamp}-${String(seq).padStart(2, '0')}`;
+            }
+            return candidate;
+        }
+        const suggestDefaultDropId = generateUniqueDropId;
+
+        function generateUniqueRef() {
+            const existingRefs = new Set(adminState.garments.map(g => (g.ref || '').toUpperCase()));
             let maxNum = 0;
             adminState.garments.forEach(g => {
                 const m = String(g.ref || '').match(/(\d+)$/);
-                if (m) maxNum = Math.max(maxNum, parseInt(m[1], 10));
+                if (m) {
+                    const val = parseInt(m[1], 10);
+                    if (!isNaN(val)) maxNum = Math.max(maxNum, val);
+                }
             });
-            return `REF-${String(maxNum + 1).padStart(3, '0')}`;
+
+            let candidateNum = maxNum + 1;
+            let candidate = `REF-${String(candidateNum).padStart(3, '0')}`;
+            while (existingRefs.has(candidate.toUpperCase())) {
+                candidateNum++;
+                candidate = `REF-${String(candidateNum).padStart(3, '0')}`;
+            }
+            return candidate;
         }
+        const suggestNextRef = generateUniqueRef;
 
         async function loadDashboard() {
             const data = await callAdminApi('get_dashboard');
@@ -1000,8 +1030,8 @@
             if (!dropTitleIn.value.trim()) {
                 dropTitleIn.value = cfg.activeDropTitle || 'Nuevo Drop Streetwear & Vintage 24h';
             }
-            if (!adminState.editingRef && !document.getElementById('gRef').value.trim()) {
-                document.getElementById('gRef').value = suggestNextRef();
+            if (!adminState.editingRef) {
+                document.getElementById('gRef').value = generateUniqueRef();
             }
 
             // Poblar Ajustes
@@ -1071,16 +1101,11 @@
         }
 
         document.getElementById('newDropAutoBtn').addEventListener('click', () => {
-            const base = suggestDefaultDropId();
-            const existingIds = new Set(adminState.garments.map(g => g.dropId));
-            let candidate = base;
-            let n = 2;
-            while (existingIds.has(candidate)) {
-                candidate = `${base}-${n++}`;
-            }
+            const candidate = generateUniqueDropId();
             document.getElementById('dropIdInput').value = candidate;
             document.getElementById('dropTitleInput').value = `Nuevo Drop Privado (${candidate})`;
             renderCurrentDropList();
+            toast(`✓ Nuevo Drop único asignado: ${candidate}`);
         });
 
         document.getElementById('dropIdInput').addEventListener('input', renderCurrentDropList);
@@ -1195,7 +1220,7 @@
             document.getElementById('garmentFormHeading').textContent = 'Añadir Prenda al Drop';
             document.getElementById('saveGarmentBtnText').textContent = 'Guardar Prenda en este Drop';
             document.getElementById('resetGarmentFormBtn').classList.add('hidden');
-            document.getElementById('gRef').value = suggestNextRef();
+            document.getElementById('gRef').value = generateUniqueRef();
             document.getElementById('gPrice').value = '';
             document.getElementById('gSize').value = '';
             document.getElementById('gTitle').value = '';
@@ -1206,6 +1231,15 @@
         }
 
         document.getElementById('resetGarmentFormBtn').addEventListener('click', resetGarmentForm);
+
+        const autoRefBtn = document.getElementById('autoRefBtn');
+        if (autoRefBtn) {
+            autoRefBtn.addEventListener('click', () => {
+                const safeRef = generateUniqueRef();
+                document.getElementById('gRef').value = safeRef;
+                toast(`✓ Siguiente referencia única libre: ${safeRef}`);
+            });
+        }
 
         function loadGarmentIntoForm(ref) {
             const g = adminState.garments.find(x => x.ref === ref);
@@ -1244,11 +1278,21 @@
             const description = document.getElementById('gDesc').value.trim();
 
             if (!dropId) {
-                toast('Indica un código de Drop arriba (ej. DROP-01).', true);
+                toast('Indica un código de Drop arriba (ej. DROP-20261030-01).', true);
                 return;
             }
             if (!ref || !title || !Number.isFinite(priceEur) || priceEur < 0) {
                 toast('Completa Referencia, Título y Precio válido.', true);
+                return;
+            }
+
+            // Validación estricta anti-sobreescritura en Data Tables
+            const isEditing = Boolean(adminState.editingRef && adminState.editingRef.toUpperCase() === ref);
+            const existingRefs = new Set(adminState.garments.map(g => (g.ref || '').toUpperCase()));
+            if (!isEditing && existingRefs.has(ref)) {
+                const safeRef = generateUniqueRef();
+                document.getElementById('gRef').value = safeRef;
+                toast(`⚠️ La referencia ${ref} ya existe en la base de datos. Se ha asignado automáticamente la siguiente libre: ${safeRef}`, true);
                 return;
             }
             if (adminState.formPhotos.length === 0) {
