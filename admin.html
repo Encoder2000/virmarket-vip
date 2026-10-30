@@ -583,20 +583,59 @@
             window.__admToast = setTimeout(() => el.classList.add('hidden'), 3400);
         }
 
-        async function copyText(text, label) {
+        async function copyText(text, label, triggerBtn = null) {
+            const cleanText = String(text ?? '').trim();
+            if (!cleanText) {
+                toast(`No hay texto disponible para ${label || 'copiar'}`, true);
+                return;
+            }
+
+            let success = false;
             try {
-                await navigator.clipboard.writeText(text);
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(cleanText);
+                    success = true;
+                }
+            } catch (err) {
+                console.warn('Fallback a execCommand por:', err);
+            }
+
+            if (!success) {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = cleanText;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.top = '0';
+                    ta.style.left = '-9999px';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    success = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (fallbackErr) {
+                    console.error('Error en fallback de copia:', fallbackErr);
+                }
+            }
+
+            if (success) {
                 toast(`✓ Copiado: ${label}`);
-            } catch (e) {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                ta.style.position = 'fixed';
-                ta.style.opacity = '0';
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                toast(`✓ Copiado: ${label}`);
+                if (triggerBtn && !triggerBtn.__copying) {
+                    triggerBtn.__copying = true;
+                    const prevHtml = triggerBtn.innerHTML;
+                    triggerBtn.classList.add('bg-acid', 'text-obsidian', 'border-acid');
+                    triggerBtn.classList.remove('bg-zinc-800', 'text-white', 'bg-acid/15', 'text-acid');
+                    triggerBtn.innerHTML = `✓ ¡Copiado!`;
+                    setTimeout(() => {
+                        triggerBtn.innerHTML = prevHtml;
+                        triggerBtn.classList.remove('bg-acid', 'text-obsidian', 'border-acid');
+                        triggerBtn.classList.add('bg-zinc-800', 'text-white');
+                        triggerBtn.__copying = false;
+                    }, 1400);
+                }
+            } else {
+                toast(`No se pudo copiar automáticamente al portapapeles.`, true);
             }
         }
 
@@ -1539,10 +1578,10 @@
                             ? round2(items[0].reservationLotPriceEur)
                             : round2(items.reduce((acc, x) => acc + Number(x.reservedFinalPriceEur || x.priceEur || 0), 0));
 
-                        if (kind === 'title') copyText(buildLotVintedTitle(items, buyer), 'Título del Lote');
-                        if (kind === 'desc') copyText(buildLotVintedDescription(items, buyer), 'Descripción completa del Lote');
-                        if (kind === 'price') copyText(fmtVintedInputPrice(lotPrice), `Precio Lote (${fmtVintedInputPrice(lotPrice)})`);
-                        if (kind === 'user') copyText(buyer.replace(/^@+/, ''), `Usuario ${buyer}`);
+                        if (kind === 'title') copyText(buildLotVintedTitle(items, buyer), 'Título del Lote', btn);
+                        if (kind === 'desc') copyText(buildLotVintedDescription(items, buyer), 'Descripción completa del Lote', btn);
+                        if (kind === 'price') copyText(fmtVintedInputPrice(lotPrice), `Precio Lote (${fmtVintedInputPrice(lotPrice)} €)`, btn);
+                        if (kind === 'user') copyText(buyer.replace(/^@+/, ''), `@${buyer.replace(/^@+/, '')}`, btn);
                     });
                 });
 
@@ -1706,15 +1745,24 @@
                 btn.addEventListener('click', () => {
                     const ref = btn.getAttribute('data-ref');
                     const field = btn.getAttribute('data-copy-field');
-                    const g = adminState.garments.find(x => x.ref === ref);
+                    const g = adminState.garments.find(x => String(x.ref).trim().toUpperCase() === String(ref).trim().toUpperCase());
                     if (!g) return;
                     const priceVal = (g.status === 'RESERVADA' && Number(g.reservedFinalPriceEur) > 0)
                         ? g.reservedFinalPriceEur
                         : g.priceEur;
-                    if (field === 'title') copyText(g.title, `Título ${ref}`);
-                    if (field === 'desc') copyText(buildIndividualVintedDescription(g), `Descripción ${ref} con pie y hashtags`);
-                    if (field === 'price') copyText(fmtVintedInputPrice(priceVal), `Precio (${fmtVintedInputPrice(priceVal)})`);
-                    if (field === 'user') copyText((g.reservedByVinted || '').replace(/^@+/, ''), `Usuario ${g.reservedByVinted}`);
+                    if (field === 'title') {
+                        copyText(g.title, `título "${g.title}"`, btn);
+                    }
+                    if (field === 'desc') {
+                        copyText(buildIndividualVintedDescription(g), `descripción de ${g.ref}`, btn);
+                    }
+                    if (field === 'price') {
+                        copyText(fmtVintedInputPrice(priceVal), `precio (${fmtVintedInputPrice(priceVal)} €)`, btn);
+                    }
+                    if (field === 'user') {
+                        const cleanUser = (g.reservedByVinted || '').replace(/^@+/, '');
+                        copyText(cleanUser, `@${cleanUser}`, btn);
+                    }
                 });
             });
 
