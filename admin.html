@@ -669,17 +669,12 @@
         // Generadores de textos listos para pegar en Vinted
         function buildIndividualVintedDescription(g) {
             const blocks = [];
-            // 1. Título de la prenda
-            if (g.title && g.title.trim()) {
-                blocks.push(g.title.trim());
-            }
-
-            // 2. Descripción real y medidas del producto (redactada por el vendedor)
+            // 1. Descripción real y medidas del producto (redactada por el vendedor)
             if (g.description && g.description.trim()) {
                 blocks.push(g.description.trim());
             }
 
-            // 3. Marca y Talla (si se han indicado; el estado se selecciona en Vinted)
+            // 2. Marca y Talla (si se han indicado)
             const specs = [];
             if (g.brand && g.brand.trim()) specs.push(`• Marca: ${g.brand.trim()}`);
             if (g.size && g.size.trim()) specs.push(`• Talla: ${g.size.trim()}`);
@@ -687,7 +682,7 @@
                 blocks.push(specs.join('\n'));
             }
 
-            // 4. Pie de página fijo de VirMarket con hashtags
+            // 3. Pie de página fijo de VirMarket con hashtags
             const footer = (adminState.config.vintedFooterTemplate || '').trim();
             if (footer) {
                 blocks.push(footer);
