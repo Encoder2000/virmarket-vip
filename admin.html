@@ -344,7 +344,7 @@
                                     <div>
                                         <label for="gDesc" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Medidas y detalles de la prenda</label>
                                         <textarea id="gDesc" rows="3" placeholder="Ej: Medidas axila a axila: 61 cm | Largo: 68 cm. Sin manchas ni desperfectos." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid"></textarea>
-                                        <p class="mt-1 text-[11px] text-zinc-500">Al pulsar «Copiar Descripción» para Vinted, se añadirán automáticamente marca, talla, estado y tu pie fijo con hashtags.</p>
+                                        <p class="mt-1 text-[11px] text-zinc-500">Al pulsar «Copiar Descripción» para Vinted, se añadirán automáticamente título, descripción, marca, talla y tu pie fijo con hashtags (el estado se selecciona directamente en Vinted).</p>
                                     </div>
 
                                     <div id="garmentUploadProgress" class="hidden p-3 rounded-xl bg-obsidian-elevated border border-acid/40 font-mono text-xs text-acid"></div>
@@ -679,11 +679,10 @@
                 blocks.push(g.description.trim());
             }
 
-            // 3. Ficha de especificaciones oficiales de Vinted (Marca, Talla, Estado)
+            // 3. Marca y Talla (si se han indicado; el estado se selecciona en Vinted)
             const specs = [];
             if (g.brand && g.brand.trim()) specs.push(`• Marca: ${g.brand.trim()}`);
             if (g.size && g.size.trim()) specs.push(`• Talla: ${g.size.trim()}`);
-            if (g.vintedCondition && g.vintedCondition.trim()) specs.push(`• Estado: ${g.vintedCondition.trim()}`);
             if (specs.length > 0) {
                 blocks.push(specs.join('\n'));
             }
@@ -707,8 +706,7 @@
             const blocks = items.map((g, idx) => {
                 const meta = [
                     g.brand ? `Marca: ${g.brand}` : '',
-                    g.size ? `Talla: ${g.size}` : '',
-                    g.vintedCondition ? `Estado: ${g.vintedCondition}` : ''
+                    g.size ? `Talla: ${g.size}` : ''
                 ].filter(Boolean).join(' | ');
                 return `${idx + 1}. [${g.ref}] ${g.title}${meta ? '\n   ' + meta : ''}${g.description ? '\n   ' + g.description.trim() : ''}`;
             });
