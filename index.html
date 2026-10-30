@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>VirMarket | Club Privado de Drops 24h &amp; -10% Bienvenida</title>
+    <meta name="description" content="Club privado para clientes de VirMarket. Desbloquea un 10% de descuento en tu primera reserva y recibe nuestros Drops de ropa Streetwear & Vintage 24h antes de salir en Vinted.">
+    <meta name="theme-color" content="#09090B">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        acid: {
+                            DEFAULT: '#A3E635',
+                            hover: '#BEF264',
+                            muted: 'rgba(163, 230, 53, 0.12)'
+                        },
+                        obsidian: {
+                            DEFAULT: '#09090B',
+                            card: '#121215',
+                            elevated: '#18181B',
+                            border: '#27272A'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Space Grotesk + Plus Jakarta Sans + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #09090B;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.14), transparent 55%),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+        }
+        .ticket-notch {
+            position: relative;
+        }
+        .custom-checkbox:checked {
+            background-color: #A3E635;
+            border-color: #A3E635;
+        }
+    </style>
+</head>
+<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
+
+    <!-- Cabecera Minimalista Mobile-First -->
+    <header class="sticky top-0 z-50 bg-obsidian/85 backdrop-blur-md border-b border-obsidian-border">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg tracking-tighter shadow-md shadow-acid/20">
+                    V
+                </div>
+                <div class="leading-none">
+                    <span class="font-display text-lg font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span></span>
+                    <span class="block font-mono text-[9px] uppercase tracking-widest text-zinc-400">Selected Streetwear &amp; Archive</span>
+                </div>
+            </div>
+
+            <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-obsidian-elevated border border-obsidian-border font-mono text-[10px] uppercase tracking-wider text-acid">
+                <span class="w-1.5 h-1.5 rounded-full bg-acid animate-pulse"></span>
+                <span>Club Privado</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1">
+        <!-- =================================================================== -->
+        <!-- VISTA 1: MODO CAPTACIÓN QR (Mostrada por defecto al escanear tarjeta) -->
+        <!-- =================================================================== -->
+        <div id="captureView">
+            <section class="pt-8 pb-14 sm:pt-14 sm:pb-20 px-4 sm:px-6">
+                <div class="max-w-xl mx-auto">
+
+                    <!-- Etiqueta de agradecimiento post-compra -->
+                    <div class="flex justify-center mb-6">
+                        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
+                            <i data-lucide="package-check" class="w-3.5 h-3.5"></i>
+                            <span>Gracias por tu pedido • Acceso VIP Clientes</span>
+                        </div>
+                    </div>
+
+                    <!-- Titular Principal -->
+                    <div class="text-center">
+                        <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.12] uppercase">
+                            <span class="text-acid">-10% en tu 1ª reserva</span> y acceso 24h antes que en Vinted
+                        </h1>
+                        <p class="mt-4 text-sm sm:text-base text-zinc-300 leading-relaxed max-w-md mx-auto">
+                            Únete a la lista privada de <strong>VirMarket</strong>. Te enviaremos cada nuevo <em>Drop</em> de prendas seleccionadas <strong>24 horas antes</strong> de publicarlas en abierto para que reserves tus favoritas sin competencia.
+                        </p>
+                    </div>
+
+                    <!-- Tarjeta Formulario de Mínima Fricción -->
+                    <div id="registro" class="mt-8 ticket-notch rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-7 shadow-2xl">
+                        <!-- Cabecera estilo etiqueta textil -->
+                        <div class="flex items-center justify-between pb-4 mb-5 border-b border-dashed border-zinc-800 font-mono text-[11px] text-zinc-400 uppercase tracking-wider">
+                            <span>PASE MIEMBRO #VIP-DROP</span>
+                            <span class="text-acid font-bold">VENTAJA: -10% + 24H</span>
+                        </div>
+
+                        <form id="leadForm" class="space-y-4" novalidate>
+                            <div>
+                                <label for="userEmail" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2">
+                                    Tu correo electrónico
+                                </label>
+                                <div class="relative">
+                                    <i data-lucide="mail" class="w-5 h-5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                                    <input
+                                        type="email"
+                                        id="userEmail"
+                                        inputmode="email"
+                                        autocomplete="email"
+                                        required
+                                        placeholder="ejemplo@correo.com"
+                                        class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700/80 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid focus:ring-2 focus:ring-acid/30 transition-all"
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Casilla de verificación RGPD obligatoria -->
+                            <label for="rgpdConsent" class="flex items-start space-x-3 p-3 rounded-xl bg-obsidian-elevated/60 border border-zinc-800/90 cursor-pointer hover:border-zinc-700 transition-colors">
+                                <input
+                                    type="checkbox"
+                                    id="rgpdConsent"
+                                    required
+                                    class="custom-checkbox mt-0.5 w-4 h-4 rounded border-zinc-600 bg-obsidian text-acid focus:ring-acid focus:ring-offset-obsidian shrink-0 accent-[#A3E635]"
+                                >
+                                <span class="text-xs text-zinc-300 leading-relaxed select-none">
+                                    Acepto recibir alertas privadas de lanzamientos (Drops) y el cupón de bienvenida. <strong>Cero spam y baja inmediata con un clic.</strong>
+                                </span>
+                            </label>
+
+                            <button
+                                type="submit"
+                                id="submitBtn"
+                                class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm sm:text-base uppercase tracking-wide transition-all shadow-lg shadow-acid/20 flex items-center justify-center space-x-2 active:scale-[0.99]"
+                            >
+                                <span>Activar mi -10% y Acceso VIP</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+
+                        <!-- Confirmación de Éxito -->
+                        <div id="formSuccess" class="hidden p-5 rounded-xl bg-acid-muted border border-acid/50 text-left">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-9 h-9 rounded-lg bg-acid text-obsidian flex items-center justify-center shrink-0 mt-0.5">
+                                    <i data-lucide="check" class="w-5 h-5 stroke-[2.5]"></i>
+                                </div>
+                                <div>
+                                    <p class="font-display font-bold text-white text-base uppercase">¡Estás dentro del Club Privado!</p>
+                                    <p class="mt-1 text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                                        Tu <strong>10% de descuento de bienvenida</strong> ya ha quedado vinculado a tu correo para tu primera reserva. Revisa tu bandeja de entrada (remitente <strong>contacto@virmarsolutions.com</strong>).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alerta de Error -->
+                        <div id="formError" class="hidden mt-4 p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-start space-x-2.5 text-left">
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="font-bold text-rose-100">Revisa los datos antes de continuar</p>
+                                <p id="formErrorMessage" class="mt-0.5 text-rose-300">Comprueba tu correo y marca la casilla de aceptación.</p>
+                            </div>
+                        </div>
+
+                        <!-- Sello de confianza Vinted -->
+                        <div class="mt-5 pt-4 border-t border-zinc-800/80 flex items-center justify-center space-x-2 text-[11px] text-zinc-400 text-center">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-acid shrink-0"></i>
+                            <span>Compras 100% seguras siempre a través de Vinted</span>
+                        </div>
+                    </div>
+
+                    <!-- Micro-beneficios rápidos (3 pills) -->
+                    <div class="mt-6 grid grid-cols-3 gap-2.5 text-center">
+                        <div class="p-3 rounded-xl bg-obsidian-card/80 border border-obsidian-border">
+                            <div class="font-display text-lg font-bold text-acid">-10%</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">1ª Reserva VIP</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-obsidian-card/80 border border-obsidian-border">
+                            <div class="font-display text-lg font-bold text-white">24h Antes</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">Prioridad total</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-obsidian-card/80 border border-obsidian-border">
+                            <div class="font-display text-lg font-bold text-white">100%</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">Pago en Vinted</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cómo Funciona el Sistema de Reserva Privada -->
+            <section class="py-14 bg-obsidian-card/60 border-y border-obsidian-border px-4 sm:px-6">
+                <div class="max-w-3xl mx-auto">
+                    <div class="text-center mb-10">
+                        <span class="font-mono text-[11px] font-bold uppercase tracking-widest text-acid">Mecánica del Club</span>
+                        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white uppercase mt-1.5">
+                            Cómo reservas tus prendas antes que nadie
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="p-5 rounded-2xl bg-obsidian border border-obsidian-border">
+                            <div class="font-mono text-xs font-bold text-acid mb-3">PASO 01 // DROP PRIVADO</div>
+                            <h3 class="font-display text-lg font-bold text-white">Recibe el catálogo 24h antes</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                Antes de subir nuevas prendas a Vinted, enviamos un correo privado a los miembros con fotos, medidas, precios y su código de referencia.
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-obsidian border border-obsidian-border">
+                            <div class="font-mono text-xs font-bold text-acid mb-3">PASO 02 // RESERVA EN 1 CLIC</div>
+                            <h3 class="font-display text-lg font-bold text-white">Pulsa «Reservar prenda»</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                Cada prenda del correo lleva un botón directo. Solo la primera vez te pediremos tu usuario de Vinted y quedará guardado para futuros Drops.
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-obsidian border border-obsidian-border">
+                            <div class="font-mono text-xs font-bold text-acid mb-3">PASO 03 // COMPRA EN VINTED</div>
+                            <h3 class="font-display text-lg font-bold text-white">Reservada a tu nombre</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                Subimos la prenda a Vinted <strong>reservada a tu usuario</strong> (con tu -10% ya aplicado en tu 1ª reserva) para que nadie te la quite y compres con envío protegido.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preguntas Frecuentes -->
+            <section class="py-14 px-4 sm:px-6">
+                <div class="max-w-xl mx-auto">
+                    <h2 class="font-display text-xl sm:text-2xl font-bold text-white uppercase text-center mb-8">
+                        Preguntas frecuentes
+                    </h2>
+
+                    <div class="space-y-3">
+                        <details class="group p-4 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer">
+                            <summary class="font-semibold text-sm text-white flex justify-between items-center list-none">
+                                <span>¿Dónde se realiza el pago y el envío de las prendas?</span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+                            </summary>
+                            <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                Siempre dentro de <strong>Vinted</strong>. Nunca te pediremos datos bancarios fuera de la plataforma: subimos el artículo reservado directamente a tu nombre de usuario de Vinted para que compres con toda la protección habitual.
+                            </p>
+                        </details>
+
+                        <details class="group p-4 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer">
+                            <summary class="font-semibold text-sm text-white flex justify-between items-center list-none">
+                                <span>¿Cómo funciona exactamente mi 10% de bienvenida?</span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+                            </summary>
+                            <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                Al solicitar tu primera reserva desde cualquiera de nuestras newsletters de Drops, nuestro sistema detecta que es tu primera compra del Club y subimos la prenda a Vinted reservada para ti con el <strong>10% ya descontado en el precio final</strong>.
+                            </p>
+                        </details>
+
+                        <details class="group p-4 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer">
+                            <summary class="font-semibold text-sm text-white flex justify-between items-center list-none">
+                                <span>¿Cuántos correos enviáis? ¿Puedo darme de baja?</span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
+                            </summary>
+                            <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                Solo escribimos cuando hay un nuevo lote real de prendas seleccionadas listo para salir. Todos los correos incluyen un botón al pie para darte de baja en un solo clic de forma instantánea.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- VISTA 2: MODO RESERVA VIP (Se activa automáticamente con ?reservar=REF-X) -->
+        <!-- ========================================================================= -->
+        <div id="reserveView" class="hidden py-10 sm:py-16 px-4 sm:px-6">
+            <div class="max-w-lg mx-auto">
+                <div class="flex justify-center mb-5">
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
+                        <i data-lucide="flame" class="w-3.5 h-3.5"></i>
+                        <span>Reserva Prioritaria Drop 24h</span>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-7 shadow-2xl">
+                    <!-- Ficha resumen de la prenda seleccionada -->
+                    <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 mb-6">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-[11px] uppercase tracking-wider text-zinc-400">Referencia seleccionada</span>
+                            <span id="reserveRefBadge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-acid text-obsidian">REF-001</span>
+                        </div>
+                        <p id="reserveGarmentName" class="mt-2 font-display text-lg font-bold text-white">Prenda Drop Privado 24h</p>
+                        <p class="mt-1 text-xs text-zinc-400">
+                            La subiremos a Vinted <strong>reservada a tu nombre de usuario</strong>. Si es tu 1ª reserva del Club, aplicaremos automáticamente tu <strong>-10% de bienvenida</strong>.
+                        </p>
+                    </div>
+
+                    <form id="reserveForm" class="space-y-4" novalidate>
+                        <div>
+                            <label for="reserveVintedUser" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
+                                Tu nombre de usuario en Vinted <span class="text-acid">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="font-mono text-zinc-500 text-sm absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">@</span>
+                                <input
+                                    type="text"
+                                    id="reserveVintedUser"
+                                    required
+                                    autocomplete="username"
+                                    autocapitalize="none"
+                                    spellcheck="false"
+                                    placeholder="tu_usuario_vinted"
+                                    class="w-full pl-9 pr-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700/80 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid focus:ring-2 focus:ring-acid/30 transition-all"
+                                >
+                            </div>
+                            <p class="mt-1.5 text-[11px] text-zinc-400">
+                                Lo necesitamos para usar la opción «Reservar artículo» en Vinted. Se guardará para tus próximos Drops.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="reserveEmail" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
+                                Tu correo del Club VIP <span class="text-acid">*</span>
+                            </label>
+                            <div class="relative">
+                                <i data-lucide="mail" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                                <input
+                                    type="email"
+                                    id="reserveEmail"
+                                    inputmode="email"
+                                    autocomplete="email"
+                                    required
+                                    placeholder="ejemplo@correo.com"
+                                    class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700/80 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid focus:ring-2 focus:ring-acid/30 transition-all"
+                                >
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="reserveSubmitBtn"
+                            class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm sm:text-base uppercase tracking-wide transition-all shadow-lg shadow-acid/20 flex items-center justify-center space-x-2"
+                        >
+                            <span>Confirmar Reserva en Vinted</span>
+                            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+
+                    <!-- Éxito Reserva -->
+                    <div id="reserveSuccess" class="hidden p-5 rounded-xl bg-acid-muted border border-acid/50 text-left">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-9 h-9 rounded-lg bg-acid text-obsidian flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="check" class="w-5 h-5 stroke-[2.5]"></i>
+                            </div>
+                            <div>
+                                <p class="font-display font-bold text-white text-base uppercase">¡Solicitud de reserva enviada!</p>
+                                <p id="reserveSuccessText" class="mt-1 text-xs sm:text-sm text-zinc-200 leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error Reserva -->
+                    <div id="reserveError" class="hidden mt-4 p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-start space-x-2.5 text-left">
+                        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-rose-100">No se pudo completar la reserva</p>
+                            <p id="reserveErrorMessage" class="mt-0.5 text-rose-300"></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-zinc-800 text-center">
+                        <a href="./" class="text-xs text-zinc-400 hover:text-acid transition-colors">
+                            ¿Aún no estás en el Club VIP? Ir a la página de bienvenida →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Minimalista (sin enlaces al armario público para centrar el embudo en el Club VIP) -->
+    <footer class="border-t border-obsidian-border bg-obsidian py-8 px-4 sm:px-6">
+        <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+            <div class="flex items-center space-x-2">
+                <span class="font-display font-bold text-zinc-300 uppercase">VIR<span class="text-acid">MARKET</span></span>
+                <span>• Club Privado de Drops 24h</span>
+            </div>
+            <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
+                <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                <span>contacto@virmarsolutions.com</span>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Lógica Dual: Captación QR + Modo Reserva VIP -->
+    <script>
+        lucide.createIcons();
+
+        // Endpoints productivos en n8n (Carpeta VirMarket)
+        const WEBHOOK_LEADS_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-leads';
+        const WEBHOOK_RESERVAS_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-reservas';
+
+        const params = new URLSearchParams(window.location.search);
+        const rawRef = (params.get('reservar') || '').trim();
+
+        // Limpia variables de plantilla Brevo sin resolver si se prueba desde una vista previa
+        function cleanParam(val) {
+            if (!val) return '';
+            const trimmed = val.trim();
+            if (trimmed.includes('{{') || trimmed.includes('}}')) return '';
+            return trimmed;
+        }
+
+        // Si la URL incluye ?reservar=REF-XXX (clic desde Newsletter Drop 24h), activar Modo Reserva
+        if (rawRef) {
+            document.getElementById('captureView').classList.add('hidden');
+            document.getElementById('reserveView').classList.remove('hidden');
+
+            const cleanRef = rawRef.toUpperCase().slice(0, 40);
+            const cleanGarment = cleanParam(params.get('prenda')) || 'Prenda Seleccionada — Drop Privado 24h';
+            const prefilledEmail = cleanParam(params.get('email'));
+            const prefilledVinted = cleanParam(params.get('vinted')).replace(/^@+/, '');
+
+            document.getElementById('reserveRefBadge').textContent = cleanRef;
+            document.getElementById('reserveGarmentName').textContent = cleanGarment;
+
+            const reserveEmailInput = document.getElementById('reserveEmail');
+            const reserveVintedInput = document.getElementById('reserveVintedUser');
+
+            if (prefilledEmail) reserveEmailInput.value = prefilledEmail;
+            if (prefilledVinted) {
+                reserveVintedInput.value = prefilledVinted;
+            } else {
+                setTimeout(() => reserveVintedInput.focus(), 150);
+            }
+
+            const reserveForm = document.getElementById('reserveForm');
+            const reserveBtn = document.getElementById('reserveSubmitBtn');
+            const reserveSuccess = document.getElementById('reserveSuccess');
+            const reserveSuccessText = document.getElementById('reserveSuccessText');
+            const reserveError = document.getElementById('reserveError');
+            const reserveErrorMessage = document.getElementById('reserveErrorMessage');
+
+            reserveForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                reserveError.classList.add('hidden');
+
+                const email = reserveEmailInput.value.trim();
+                const vintedUser = reserveVintedInput.value.trim().replace(/^@+/, '');
+
+                if (!vintedUser || vintedUser.length < 2 || /\s/.test(vintedUser)) {
+                    reserveErrorMessage.textContent = 'Introduce tu nombre de usuario de Vinted válido (sin espacios).';
+                    reserveError.classList.remove('hidden');
+                    reserveVintedInput.focus();
+                    return;
+                }
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+                    reserveErrorMessage.textContent = 'Introduce un correo electrónico válido.';
+                    reserveError.classList.remove('hidden');
+                    reserveEmailInput.focus();
+                    return;
+                }
+
+                reserveBtn.disabled = true;
+                reserveBtn.innerHTML = '<span>Reservando tu prenda...</span>';
+
+                try {
+                    const response = await fetch(WEBHOOK_RESERVAS_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: email,
+                            vintedUser: vintedUser,
+                            ref: cleanRef,
+                            prenda: cleanGarment,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    const payload = await response.json().catch(() => ({}));
+                    if (!response.ok || payload.ok === false) {
+                        throw new Error(payload.message || 'No pudimos registrar la reserva. Inténtalo de nuevo.');
+                    }
+
+                    reserveForm.classList.add('hidden');
+                    const bonusMsg = payload.esPrimeraReserva
+                        ? ' Además, al ser tu 1ª reserva del Club, subiremos la prenda con tu -10% de bienvenida ya aplicado.'
+                        : '';
+                    reserveSuccessText.textContent =
+                        `Subiremos ${cleanRef} a Vinted reservada exclusivamente al usuario @${vintedUser}.${bonusMsg} Te hemos enviado confirmación por correo.`;
+                    reserveSuccess.classList.remove('hidden');
+                    lucide.createIcons();
+                } catch (err) {
+                    reserveErrorMessage.textContent = err.message || 'Error de conexión. Inténtalo en unos segundos o responde al correo del Drop.';
+                    reserveError.classList.remove('hidden');
+                    reserveBtn.disabled = false;
+                    reserveBtn.innerHTML = '<span>Confirmar Reserva en Vinted</span><i data-lucide="check-circle-2" class="w-4 h-4"></i>';
+                    lucide.createIcons();
+                }
+            });
+        } else {
+            // Modo Captación QR por defecto
+            const form = document.getElementById('leadForm');
+            const emailInput = document.getElementById('userEmail');
+            const rgpdCheckbox = document.getElementById('rgpdConsent');
+            const submitBtn = document.getElementById('submitBtn');
+            const successBox = document.getElementById('formSuccess');
+            const errorBox = document.getElementById('formError');
+            const errorMessageEl = document.getElementById('formErrorMessage');
+
+            const sourceParam = cleanParam(params.get('utm_source') || params.get('origen')) || 'tarjeta_qr';
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorBox.classList.add('hidden');
+
+                const email = emailInput.value.trim();
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+                    errorMessageEl.textContent = 'Introduce una dirección de correo electrónico válida.';
+                    errorBox.classList.remove('hidden');
+                    emailInput.focus();
+                    return;
+                }
+
+                if (!rgpdCheckbox.checked) {
+                    errorMessageEl.textContent = 'Marca la casilla debajo del correo para aceptar recibir los Drops privados y tu cupón del 10%.';
+                    errorBox.classList.remove('hidden');
+                    rgpdCheckbox.focus();
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>Activando tu pase VIP...</span>';
+
+                try {
+                    const response = await fetch(WEBHOOK_LEADS_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: email,
+                            rgpdConsent: true,
+                            source: sourceParam,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    const payload = await response.json().catch(() => ({}));
+                    if (!response.ok || payload.ok === false) {
+                        throw new Error(payload.message || 'No se pudo completar tu alta. Inténtalo de nuevo.');
+                    }
+
+                    form.classList.add('hidden');
+                    successBox.classList.remove('hidden');
+                    lucide.createIcons();
+                } catch (err) {
+                    errorMessageEl.textContent = err.message || 'Hubo un problema de conexión. Inténtalo de nuevo en unos segundos.';
+                    errorBox.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Activar mi -10% y Acceso VIP</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
+                    lucide.createIcons();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
