@@ -658,15 +658,20 @@
 
         // Llamada autenticada al backend de administración
         async function callAdminApi(action, extraPayload = {}) {
-            const res = await fetch(WEBHOOK_ADMIN_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action,
-                    password: adminState.password,
-                    ...extraPayload
-                })
-            });
+            let res;
+            try {
+                res = await fetch(WEBHOOK_ADMIN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action,
+                        password: adminState.password,
+                        ...extraPayload
+                    })
+                });
+            } catch (netErr) {
+                throw new Error(`Error de conexión con el backend de administración (${netErr.message || 'sin respuesta'}).`);
+            }
             const data = await res.json().catch(() => ({}));
             if (res.status === 401) {
                 sessionStorage.removeItem('vm_admin_session_pwd');
