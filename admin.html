@@ -205,20 +205,27 @@
             <section id="studioSection" class="hidden space-y-6">
 
                 <!-- Resumen Rápido Superior -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                     <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
                         <span class="font-mono text-[10px] uppercase text-zinc-400">Drop Activo</span>
                         <div id="statActiveDrop" class="mt-1 font-display text-base sm:text-lg font-bold text-acid truncate">Sin activar</div>
                     </div>
                     <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                        <span class="font-mono text-[10px] uppercase text-zinc-400">Reservadas (Subir a Vinted)</span>
+                        <span class="font-mono text-[10px] uppercase text-zinc-400">Reservadas (Vinted)</span>
                         <div id="statReservedCount" class="mt-1 font-display text-xl font-bold text-white">0</div>
                     </div>
                     <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                        <span class="font-mono text-[10px] uppercase text-zinc-400">Disponibles en Escaparate</span>
+                        <span class="font-mono text-[10px] uppercase text-zinc-400">Disponibles</span>
                         <div id="statAvailableCount" class="mt-1 font-display text-xl font-bold text-zinc-200">0</div>
                     </div>
-                    <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                    <div id="statWaitlistCard" class="p-4 rounded-2xl bg-obsidian-card border border-amber-500/30 hover:border-amber-400 transition-colors cursor-pointer group" title="Ver prendas con suplentes en lista de espera">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-[10px] uppercase text-amber-400 font-bold">En Lista de Espera</span>
+                            <span class="text-xs group-hover:scale-110 transition-transform">⏳</span>
+                        </div>
+                        <div id="statWaitlistCount" class="mt-1 font-display text-xl font-bold text-amber-300">0</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border col-span-2 sm:col-span-1">
                         <span class="font-mono text-[10px] uppercase text-zinc-400">Regla Bienvenida</span>
                         <div id="statDiscountRule" class="mt-1 font-display text-base sm:text-lg font-bold text-acid">-10% (máx 15€)</div>
                     </div>
@@ -428,6 +435,10 @@
                                 <span>Reservadas VIP</span>
                                 <span id="filterCount-RESERVADA" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold">0</span>
                             </button>
+                            <button type="button" data-filter="WAITLIST" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-amber-500/30 text-amber-300 flex items-center gap-1.5 hover:border-amber-400">
+                                <span>⏳ En Cola de Espera</span>
+                                <span id="filterCount-WAITLIST" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold">0</span>
+                            </button>
                             <button type="button" data-filter="DISPONIBLE" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
                                 <span>Disponibles</span>
                                 <span id="filterCount-DISPONIBLE" class="px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800 text-zinc-400 font-bold">0</span>
@@ -553,6 +564,25 @@
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
+
+        function getGarmentWaitlist(g) {
+            if (!g) return [];
+            if (Array.isArray(g.waitlist)) return g.waitlist;
+            if (Array.isArray(g.waitlist_object)) return g.waitlist_object;
+            if (typeof g.waitlist === 'string' && g.waitlist.trim().length > 0) {
+                try {
+                    const p = JSON.parse(g.waitlist);
+                    if (Array.isArray(p)) return p;
+                } catch (e) {}
+            }
+            if (typeof g.waitlist_object === 'string' && g.waitlist_object.trim().length > 0) {
+                try {
+                    const p = JSON.parse(g.waitlist_object);
+                    if (Array.isArray(p)) return p;
+                } catch (e) {}
+            }
+            return [];
+        }
 
         const adminState = {
             password: sessionStorage.getItem('vm_admin_session_pwd') || '',
@@ -917,6 +947,9 @@
                     adminState.garments.filter(g => g.status === 'RESERVADA').length;
                 document.getElementById('statAvailableCount').textContent =
                     adminState.garments.filter(g => g.status === 'DISPONIBLE').length;
+                const totalWaitlistCount = adminState.garments.reduce((acc, g) => acc + getGarmentWaitlist(g).length, 0);
+                const statWaitEl = document.getElementById('statWaitlistCount');
+                if (statWaitEl) statWaitEl.textContent = totalWaitlistCount > 0 ? `${totalWaitlistCount}` : '0';
 
                 renderVintedWorkspace();
                 renderCurrentDropList();
@@ -1012,6 +1045,9 @@
                 adminState.garments.filter(g => g.status === 'RESERVADA').length;
             document.getElementById('statAvailableCount').textContent =
                 adminState.garments.filter(g => g.status === 'DISPONIBLE').length;
+            const initTotalWait = adminState.garments.reduce((acc, g) => acc + getGarmentWaitlist(g).length, 0);
+            const initStatWaitEl = document.getElementById('statWaitlistCount');
+            if (initStatWaitEl) initStatWaitEl.textContent = initTotalWait > 0 ? `${initTotalWait}` : '0';
             document.getElementById('statDiscountRule').textContent =
                 Number(cfg.discountPercent) > 0
                     ? `-${cfg.discountPercent}%${Number(cfg.maxDiscountEur) > 0 ? ' (máx ' + cfg.maxDiscountEur + '€)' : ' (sin tope)'}`
@@ -1363,7 +1399,9 @@
                 container.innerHTML = `<p class="text-xs text-zinc-500 py-4 text-center">Todavía no has añadido prendas a <strong>${escapeHtml(currentDropId || 'este Drop')}</strong>.</p>`;
                 return;
             }
-            container.innerHTML = list.map(g => `
+            container.innerHTML = list.map(g => {
+                const waitlist = getGarmentWaitlist(g);
+                return `
                 <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3 min-w-0">
                         ${g.photos && g.photos[0]
@@ -1371,9 +1409,10 @@
                             : `<div class="w-12 h-12 rounded-lg bg-zinc-900 shrink-0"></div>`
                         }
                         <div class="min-w-0">
-                            <div class="flex items-center gap-1.5">
+                            <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="font-mono text-[11px] font-bold text-acid">${escapeHtml(g.ref)}</span>
                                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-zinc-900 text-zinc-400">${escapeHtml(g.status)}</span>
+                                ${waitlist.length > 0 ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/40">⏳ ${waitlist.length} en cola</span>` : ''}
                             </div>
                             <p class="text-xs font-semibold text-white truncate">${escapeHtml(g.title)}</p>
                             <p class="font-mono text-[11px] text-zinc-400">${fmtEur(g.priceEur)}${g.size ? ' • Talla ' + escapeHtml(g.size) : ''}</p>
@@ -1383,8 +1422,8 @@
                         <button type="button" data-edit-g="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200">Editar</button>
                         <button type="button" data-del-g="${escapeHtml(g.ref)}" class="px-2 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-xs text-rose-300">✕</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             container.querySelectorAll('[data-edit-g]').forEach(b => {
                 b.addEventListener('click', () => loadGarmentIntoForm(b.getAttribute('data-edit-g')));
@@ -1459,6 +1498,18 @@
         document.getElementById('publishDraftBtn').addEventListener('click', () => triggerPublishDrop('draft'));
 
         // ======================== PESTAÑA 2: ASISTENTE COPIAR A VINTED + COLAS ========================
+        document.getElementById('statWaitlistCard')?.addEventListener('click', () => {
+            setActiveTab('vinted');
+            adminState.statusFilter = 'WAITLIST';
+            document.querySelectorAll('.vinted-filter-btn').forEach(b => {
+                const act = b.getAttribute('data-filter') === 'WAITLIST';
+                b.className = act
+                    ? 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian flex items-center gap-1.5'
+                    : 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5';
+            });
+            renderVintedWorkspace();
+        });
+
         document.querySelectorAll('.vinted-filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 adminState.statusFilter = btn.getAttribute('data-filter');
@@ -1515,9 +1566,11 @@
             const cRes = dropGarments.filter(g => g.status === 'RESERVADA').length;
             const cDisp = dropGarments.filter(g => g.status === 'DISPONIBLE').length;
             const cSold = dropGarments.filter(g => g.status === 'VENDIDA').length;
+            const cWait = dropGarments.filter(g => getGarmentWaitlist(g).length > 0).length;
 
             const elAll = document.getElementById('filterCount-ALL');
             const elRes = document.getElementById('filterCount-RESERVADA');
+            const elWait = document.getElementById('filterCount-WAITLIST');
             const elDisp = document.getElementById('filterCount-DISPONIBLE');
             const elSold = document.getElementById('filterCount-VENDIDA');
 
@@ -1528,11 +1581,20 @@
                     ? 'px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-obsidian font-bold shadow-sm shadow-amber-400/50 animate-pulse'
                     : 'px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold';
             }
+            if (elWait) {
+                elWait.textContent = cWait;
+                elWait.className = cWait > 0
+                    ? 'px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-obsidian font-bold shadow-sm shadow-amber-400/50 animate-pulse'
+                    : 'px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold';
+            }
             if (elDisp) elDisp.textContent = cDisp;
             if (elSold) elSold.textContent = cSold;
 
             const filtered = adminState.garments.filter(g => {
                 if (adminState.dropFilter !== 'ALL' && (g.dropId || '').toUpperCase() !== adminState.dropFilter.toUpperCase()) return false;
+                if (adminState.statusFilter === 'WAITLIST') {
+                    return getGarmentWaitlist(g).length > 0;
+                }
                 if (adminState.statusFilter !== 'ALL' && g.status !== adminState.statusFilter) return false;
                 return true;
             });
@@ -1578,12 +1640,18 @@
                         </div>
 
                         <div class="space-y-1.5 text-xs">
-                            ${items.map(it => `
-                                <div class="flex justify-between items-center px-3 py-1.5 rounded-lg bg-obsidian-elevated">
-                                    <span><strong class="font-mono text-acid">${escapeHtml(it.ref)}</strong> ${escapeHtml(it.title)} ${it.size ? '(' + escapeHtml(it.size) + ')' : ''}</span>
-                                    <span class="font-mono text-zinc-400">${fmtEur(it.priceEur)}</span>
-                                </div>
-                            `).join('')}
+                            ${items.map(it => {
+                                const wList = getGarmentWaitlist(it);
+                                return `
+                                <div class="flex justify-between items-center px-3 py-1.5 rounded-lg bg-obsidian-elevated gap-2">
+                                    <div class="flex items-center gap-1.5 flex-wrap min-w-0">
+                                        <strong class="font-mono text-acid">${escapeHtml(it.ref)}</strong>
+                                        <span class="truncate">${escapeHtml(it.title)} ${it.size ? '(' + escapeHtml(it.size) + ')' : ''}</span>
+                                        ${wList.length > 0 ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/40">⏳ ${wList.length} en espera</span>` : ''}
+                                    </div>
+                                    <span class="font-mono text-zinc-400 shrink-0">${fmtEur(it.priceEur)}</span>
+                                </div>`;
+                            }).join('')}
                         </div>
 
                         <!-- Botonera 1-Toque para subir el Lote unificado a Vinted -->
@@ -1678,7 +1746,8 @@
                 const priceForVinted = (isRes && Number(g.reservedFinalPriceEur) > 0)
                     ? round2(g.reservedFinalPriceEur)
                     : round2(g.priceEur);
-                const waitlist = Array.isArray(g.waitlist) ? g.waitlist : [];
+                const waitlist = getGarmentWaitlist(g);
+                const hasWaitlist = waitlist.length > 0;
 
                 let badgeClass = 'bg-emerald-950 text-acid border-acid/50';
                 if (isRes) badgeClass = 'bg-amber-950 text-amber-300 border-amber-400/50';
@@ -1694,9 +1763,13 @@
                             }
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center justify-between gap-1.5">
-                                    <div class="flex items-center gap-1.5">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
                                         <span class="font-mono text-xs font-bold text-acid">${escapeHtml(g.ref)}</span>
                                         <span class="font-mono text-[10px] px-2 py-0.5 rounded-full border ${badgeClass}">${escapeHtml(g.status)}</span>
+                                        ${hasWaitlist 
+                                            ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-amber-500/20 text-amber-300 border-amber-400/50 font-bold flex items-center gap-1">⏳ ${waitlist.length} en espera</span>`
+                                            : `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-zinc-900 text-zinc-500 border-zinc-800">⏳ 0 en cola</span>`
+                                        }
                                     </div>
                                     <span class="font-mono text-[10px] text-zinc-500">${escapeHtml(g.dropId)}</span>
                                 </div>
@@ -1752,20 +1825,49 @@
                             ` : ''}
                         </div>
 
-                        <!-- Cola de espera si hay suplentes apuntados -->
-                        ${waitlist.length > 0 ? `
-                            <div class="p-3 rounded-xl bg-obsidian border border-zinc-800 space-y-2">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-mono text-[11px] font-bold text-amber-300">⏳ En cola de espera (${waitlist.length})</span>
-                                    <button type="button" data-promote-ref="${escapeHtml(g.ref)}" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-[11px] uppercase">
-                                        Pasar al 1º en cola →
-                                    </button>
+                        <!-- Sección de Lista de Espera de la Prenda -->
+                        <div class="p-3.5 rounded-xl ${hasWaitlist ? 'bg-amber-500/10 border-2 border-amber-400/40 shadow-lg shadow-amber-500/5' : 'bg-obsidian-elevated/40 border border-zinc-800/60'} space-y-2.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="text-base shrink-0">${hasWaitlist ? '⏳' : '👥'}</span>
+                                    <div class="min-w-0">
+                                        <span class="font-mono text-xs font-bold ${hasWaitlist ? 'text-amber-300' : 'text-zinc-400'} truncate block">
+                                            Lista de Espera (${waitlist.length} suplente${waitlist.length === 1 ? '' : 's'})
+                                        </span>
+                                        <p class="text-[10px] text-zinc-500 truncate">
+                                            ${hasWaitlist ? 'Interesados por si la reserva no se completa' : 'Sin personas en cola para esta prenda'}
+                                        </p>
+                                    </div>
                                 </div>
-                                <ol class="text-[11px] text-zinc-400 space-y-0.5 list-decimal list-inside">
-                                    ${waitlist.map(w => `<li><strong class="text-zinc-200">@${escapeHtml(w.vintedUser)}</strong> (${escapeHtml(w.email)})</li>`).join('')}
-                                </ol>
+                                ${hasWaitlist ? `
+                                    <button type="button" data-promote-ref="${escapeHtml(g.ref)}" class="shrink-0 px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-[11px] uppercase tracking-wide shadow-md shadow-amber-400/20 transition-all flex items-center gap-1">
+                                        <span>Pasar al 1º</span>
+                                        <span>→</span>
+                                    </button>
+                                ` : ''}
                             </div>
-                        ` : ''}
+
+                            ${hasWaitlist ? `
+                                <div class="pt-2 border-t border-amber-400/20 space-y-1.5">
+                                    <ol class="space-y-1.5">
+                                        ${waitlist.map((w, idx) => {
+                                            const timeStr = w.joinedAt ? new Date(w.joinedAt).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+                                            return `
+                                            <li class="flex items-center justify-between p-2 rounded-lg bg-obsidian border border-zinc-800 text-xs gap-2">
+                                                <div class="flex items-center gap-2 min-w-0">
+                                                    <span class="px-1.5 py-0.5 rounded font-mono text-[10px] font-bold shrink-0 ${idx === 0 ? 'bg-amber-400 text-obsidian' : 'bg-zinc-800 text-zinc-400'}">#${idx + 1}</span>
+                                                    <strong class="font-mono text-white truncate">@${escapeHtml(w.vintedUser || 'desconocido')}</strong>
+                                                    <span class="text-zinc-400 text-[11px] truncate">(${escapeHtml(w.email || '')})</span>
+                                                </div>
+                                                ${timeStr ? `<span class="font-mono text-[10px] text-zinc-500 shrink-0">${escapeHtml(timeStr)}</span>` : ''}
+                                            </li>`;
+                                        }).join('')}
+                                    </ol>
+                                </div>
+                            ` : `
+                                <p class="text-[11px] text-zinc-500 italic">No hay compradores en espera para este producto. Si alguien intenta reservarlo mientras está ocupado, se registrará aquí su turno automáticamente.</p>
+                            `}
+                        </div>
                     </div>
 
                     <!-- Acciones de Estado -->
