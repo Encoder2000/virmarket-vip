@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <title>Tarjetas de Agradecimiento QR Imprimibles — VirMarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-card: #09090B;
+            --fg-card: #FFFFFF;
+            --muted-card: #D4D4D8;
+            --accent-card: #A3E635;
+            --accent-text: #09090B;
+            --border-card: #27272A;
+            --badge-bg: rgba(163, 230, 53, 0.14);
+        }
+
+        body.theme-eco {
+            --bg-card: #FFFFFF;
+            --fg-card: #09090B;
+            --muted-card: #3F3F46;
+            --accent-card: #09090B;
+            --accent-text: #A3E635;
+            --border-card: #D4D4D8;
+            --badge-bg: #F4F4F5;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #18181B;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            color: #F4F4F5;
+        }
+
+        /* Barra de controles en pantalla (oculta al imprimir) */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #09090B;
+            border-bottom: 1px solid #27272A;
+            padding: 14px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #3F3F46;
+            background: #18181B;
+            color: #E4E4E7;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn.active {
+            background: #A3E635;
+            color: #09090B;
+            border-color: #A3E635;
+        }
+
+        .btn-print {
+            background: #A3E635;
+            color: #09090B;
+            border-color: #A3E635;
+            padding: 9px 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        /* Lienzo Folio A4 */
+        .a4-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 24px auto;
+            background: #FFFFFF;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: grid;
+            align-content: center;
+            justify-content: center;
+        }
+
+        /* Formato 1: Postal A6 (4 por folio A4 -> 98x140mm con margen seguro de impresora) */
+        .a4-sheet.layout-a6 {
+            grid-template-columns: repeat(2, 98mm);
+            grid-template-rows: repeat(2, 140mm);
+            gap: 2mm;
+            padding: 6mm;
+        }
+
+        /* Formato 2: Tarjeta de Visita (8 por folio A4 -> 85x55mm) */
+        .a4-sheet.layout-business {
+            grid-template-columns: repeat(2, 85mm);
+            grid-template-rows: repeat(4, 55mm);
+            gap: 4mm;
+            padding: 20mm 15mm;
+        }
+
+        /* Diseño de cada tarjeta */
+        .vip-card {
+            background: var(--bg-card);
+            color: var(--fg-card);
+            border: 1px dashed var(--border-card);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Estilos internos para A6 */
+        .layout-a6 .vip-card {
+            padding: 8mm 7mm;
+            border-radius: 3mm;
+            text-align: center;
+        }
+
+        .layout-a6 .brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px dashed var(--border-card);
+            padding-bottom: 3mm;
+        }
+
+        .brand-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .layout-a6 .brand-logo {
+            font-size: 16pt;
+        }
+
+        .brand-accent {
+            color: #65A30D;
+        }
+
+        body:not(.theme-eco) .brand-accent {
+            color: #A3E635;
+        }
+
+        .drop-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 1.2mm 2.5mm;
+            border-radius: 99px;
+            background: var(--badge-bg);
+            border: 1px solid var(--border-card);
+        }
+
+        .layout-a6 .thanks-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15pt;
+            line-height: 1.15;
+            text-transform: uppercase;
+            margin: 3.5mm 0 2mm;
+        }
+
+        .layout-a6 .offer-highlight {
+            display: inline-block;
+            background: var(--accent-card);
+            color: var(--accent-text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 11pt;
+            padding: 1.5mm 3.5mm;
+            border-radius: 2mm;
+            text-transform: uppercase;
+            margin-bottom: 2.5mm;
+        }
+
+        .layout-a6 .desc-text {
+            font-size: 8.5pt;
+            line-height: 1.45;
+            color: var(--muted-card);
+            margin: 0 auto 3.5mm;
+        }
+
+        .qr-box {
+            background: #FFFFFF;
+            padding: 2.2mm;
+            border-radius: 2.5mm;
+            border: 1.5px solid #09090B;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .layout-a6 .qr-svg {
+            width: 34mm;
+            height: 34mm;
+            display: block;
+        }
+
+        .layout-a6 .footer-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 6.8pt;
+            color: var(--muted-card);
+            margin-top: 3mm;
+            padding-top: 2.5mm;
+            border-top: 1px dashed var(--border-card);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        /* Estilos internos para Tarjeta de Visita (85x55mm horizontal) */
+        .layout-business .vip-card {
+            flex-direction: row;
+            align-items: center;
+            padding: 4.5mm 5mm;
+            border-radius: 2mm;
+            gap: 4mm;
+            text-align: left;
+        }
+
+        .layout-business .card-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .layout-business .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+            margin-bottom: 1.5mm;
+        }
+
+        .layout-business .brand-logo {
+            font-size: 11pt;
+        }
+
+        .layout-business .drop-pill {
+            font-size: 5.5pt;
+            padding: 0.7mm 1.8mm;
+        }
+
+        .layout-business .thanks-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 9.2pt;
+            line-height: 1.15;
+            text-transform: uppercase;
+            margin: 0 0 1.2mm;
+        }
+
+        .layout-business .offer-highlight {
+            display: inline-block;
+            align-self: flex-start;
+            background: var(--accent-card);
+            color: var(--accent-text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 7.5pt;
+            padding: 0.8mm 2mm;
+            border-radius: 1.2mm;
+            text-transform: uppercase;
+            margin-bottom: 1.2mm;
+        }
+
+        .layout-business .desc-text {
+            font-size: 6.5pt;
+            line-height: 1.35;
+            color: var(--muted-card);
+            margin: 0;
+        }
+
+        .layout-business .qr-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            shrink: 0;
+        }
+
+        .layout-business .qr-svg {
+            width: 24mm;
+            height: 24mm;
+            display: block;
+        }
+
+        .layout-business .footer-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 5pt;
+            color: var(--muted-card);
+            margin-top: 1.2mm;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: #FFFFFF;
+            }
+            .toolbar {
+                display: none !important;
+            }
+            .a4-sheet {
+                margin: 0;
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <strong style="font-family:'Space Grotesk',sans-serif;font-size:15px;margin-right:6px;">VIRMARKET • TARJETAS QR</strong>
+            <button id="btnA6" class="btn active" onclick="setLayout('a6')">Postal Paquete A6 (4 / folio A4)</button>
+            <button id="btnBiz" class="btn" onclick="setLayout('business')">Tarjeta Visita 85×55mm (8 / folio A4)</button>
+        </div>
+        <div class="toolbar-group">
+            <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Dark Streetwear (Imprenta)</button>
+            <button id="btnEco" class="btn" onclick="setTheme('eco')">Edición Eco Fondo Blanco (Impresora Casa)</button>
+            <button class="btn btn-print" onclick="window.print()">Imprimir / Guardar PDF</button>
+        </div>
+    </div>
+
+    <div id="sheet" class="a4-sheet layout-a6"></div>
+
+    <template id="cardTemplate">
+        <article class="vip-card">
+            <div class="card-main">
+                <div class="brand-row">
+                    <span class="brand-logo">VIR<span class="brand-accent">MARKET</span></span>
+                    <span class="drop-pill">PASE VIP CLIENTES</span>
+                </div>
+                <h2 class="thanks-title">¡Gracias por tu compra!</h2>
+                <div class="offer-highlight">-10% + Drops 24h Antes</div>
+                <p class="desc-text">
+                    Escanea el QR para activar tu <strong>10% de descuento*</strong> en tu 1ª reserva y ver nuestras nuevas prendas por email <strong>24h antes</strong> de que salgan en Vinted.
+                </p>
+            </div>
+            <div class="qr-side">
+                <div class="qr-box">
+                    <svg class="qr-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" class="segno"><path fill="#fff" d="M0 0h41v41h-41z"/><path class="qrline" stroke="#09090b" d="M2 2.5h7m3 0h1m2 0h2m1 0h2m1 0h2m2 0h1m2 0h1m3 0h7m-37 1h1m5 0h1m1 0h1m1 0h1m3 0h1m1 0h3m3 0h1m2 0h1m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h3m1 0h2m1 0h1m1 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h5m1 0h1m2 0h5m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h1m5 0h1m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m2 0h1m4 0h1m1 0h5m2 0h3m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h1m3 0h1m2 0h2m8 0h4m-28 1h1m1 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1m2 0h2m1 0h2m1 0h1m-36 1h3m2 0h1m2 0h2m1 0h1m3 0h2m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m2 0h3m-35 1h1m2 0h1m1 0h3m1 0h1m1 0h3m6 0h4m1 0h1m1 0h6m3 0h1m-30 1h4m2 0h3m1 0h2m1 0h1m5 0h1m1 0h4m1 0h2m1 0h1m-37 1h3m3 0h2m3 0h1m2 0h2m1 0h2m2 0h1m2 0h1m2 0h2m1 0h2m3 0h1m-35 1h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h4m1 0h1m1 0h3m1 0h2m1 0h1m-35 1h4m2 0h1m3 0h1m1 0h3m4 0h2m3 0h2m1 0h1m1 0h2m1 0h5m-35 1h4m1 0h1m1 0h1m1 0h1m1 0h4m2 0h1m3 0h2m2 0h1m4 0h4m-33 1h1m2 0h1m6 0h3m2 0h2m2 0h4m4 0h2m2 0h2m-36 1h1m1 0h1m1 0h2m1 0h1m2 0h1m7 0h1m1 0h1m4 0h3m1 0h1m1 0h1m1 0h3m-36 1h1m4 0h3m1 0h1m1 0h5m1 0h2m1 0h5m2 0h2m2 0h1m2 0h1m1 0h1m-37 1h2m1 0h1m3 0h2m2 0h10m1 0h1m2 0h1m1 0h1m5 0h1m2 0h1m-34 1h1m1 0h2m1 0h2m1 0h2m4 0h4m6 0h4m1 0h1m2 0h1m-33 1h3m2 0h1m1 0h1m2 0h2m1 0h5m2 0h1m1 0h1m1 0h2m2 0h3m1 0h1m-33 1h1m2 0h1m3 0h1m3 0h1m1 0h1m1 0h1m2 0h3m1 0h3m4 0h1m1 0h1m1 0h1m-36 1h1m5 0h3m8 0h1m1 0h1m2 0h1m3 0h2m1 0h2m1 0h2m-33 1h2m1 0h4m1 0h1m1 0h2m2 0h4m3 0h2m3 0h1m1 0h2m1 0h1m-34 1h1m3 0h1m6 0h1m8 0h4m1 0h5m2 0h1m-33 1h2m1 0h1m1 0h5m7 0h1m8 0h3m1 0h1m1 0h2m1 0h2m-37 1h1m1 0h4m1 0h1m3 0h1m1 0h2m3 0h1m1 0h1m2 0h2m1 0h1m2 0h1m2 0h3m1 0h1m-37 1h1m2 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2m2 0h1m1 0h2m1 0h1m1 0h8m1 0h1m-29 1h4m5 0h1m1 0h2m7 0h1m3 0h4m-36 1h7m2 0h3m1 0h1m1 0h2m1 0h6m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h2m2 0h1m1 0h2m2 0h3m1 0h1m1 0h5m3 0h2m-34 1h1m1 0h3m1 0h1m1 0h6m1 0h1m7 0h1m2 0h7m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h3m-36 1h1m1 0h3m1 0h1m3 0h1m2 0h2m1 0h1m3 0h1m2 0h1m1 0h1m1 0h1m3 0h3m1 0h2m-37 1h1m5 0h1m1 0h2m3 0h1m2 0h1m1 0h2m3 0h1m2 0h2m1 0h1m2 0h1m1 0h3m-37 1h7m2 0h1m1 0h1m1 0h3m1 0h4m2 0h1m4 0h1m1 0h1m2 0h1m2 0h1"/></svg>
+                </div>
+                <div class="footer-note">virmarket.virmarsolutions.com<br><span style="font-size:0.82em;opacity:0.78;">*Condiciones vigentes en la web</span></div>
+            </div>
+        </article>
+    </template>
+
+    <script>
+        const sheet = document.getElementById('sheet');
+        const tpl = document.getElementById('cardTemplate');
+
+        function renderCards(count) {
+            sheet.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                sheet.appendChild(tpl.content.cloneNode(true));
+            }
+        }
+
+        function setLayout(mode) {
+            document.getElementById('btnA6').classList.toggle('active', mode === 'a6');
+            document.getElementById('btnBiz').classList.toggle('active', mode === 'business');
+            if (mode === 'a6') {
+                sheet.className = 'a4-sheet layout-a6';
+                renderCards(4);
+            } else {
+                sheet.className = 'a4-sheet layout-business';
+                renderCards(8);
+            }
+        }
+
+        function setTheme(theme) {
+            document.body.classList.toggle('theme-eco', theme === 'eco');
+            document.getElementById('btnDark').classList.toggle('active', theme === 'dark');
+            document.getElementById('btnEco').classList.toggle('active', theme === 'eco');
+        }
+
+        renderCards(4);
+    </script>
+</body>
+</html>
