@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>VirMarket Studio | Panel Privado de Drops y Copiado Vinted</title>
+    <meta name="theme-color" content="#09090B">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        acid: {
+                            DEFAULT: '#A3E635',
+                            hover: '#BEF264',
+                            muted: 'rgba(163, 230, 53, 0.12)'
+                        },
+                        obsidian: {
+                            DEFAULT: '#09090B',
+                            card: '#121215',
+                            elevated: '#18181B',
+                            border: '#27272A'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #09090B;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.12), transparent 50%),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+        }
+        @keyframes targetPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.65); }
+            50% { box-shadow: 0 0 0 7px rgba(163, 230, 53, 0.16); }
+        }
+        .deep-highlight {
+            border-color: #A3E635 !important;
+            animation: targetPulse 1.6s ease-in-out 4;
+        }
+    </style>
+</head>
+<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
+
+    <!-- Barra Superior -->
+    <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg">
+                    V
+                </div>
+                <div class="leading-none">
+                    <span class="font-display text-base sm:text-lg font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span> STUDIO</span>
+                    <span class="block font-mono text-[9px] uppercase tracking-widest text-zinc-400">Gestión de Drops &amp; Asistente Vinted</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 text-acid"></i>
+                    <span class="hidden sm:inline">Ver Escaparate</span>
+                </a>
+                <button id="logoutBtn" type="button" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-rose-500/60 text-xs text-zinc-400 hover:text-rose-300 transition-colors">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 py-6 sm:py-10 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto">
+
+            <!-- =================================================================== -->
+            <!-- PANTALLA DE AUTENTICACIÓN SEGURA (OTP EMAIL + SHA-256 SIN SECRETOS) -->
+            <!-- =================================================================== -->
+            <section id="authSection" class="max-w-md mx-auto mt-4 sm:mt-10">
+                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-7 shadow-2xl">
+                    <div class="flex items-center gap-2.5 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-acid-muted border border-acid/40 text-acid flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Acceso Privado Vendedor</span>
+                            <h1 class="font-display text-xl font-bold text-white uppercase">Panel Admin VirMarket</h1>
+                        </div>
+                    </div>
+
+                    <div id="authChecking" class="py-6 text-center text-xs text-zinc-400 font-mono">
+                        Verificando estado de seguridad...
+                    </div>
+
+                    <!-- Vista Login (cuando ya hay clave configurada) -->
+                    <form id="loginForm" class="hidden space-y-4" novalidate>
+                        <div>
+                            <label for="loginPassword" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
+                                Contraseña de Administrador
+                            </label>
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                autocomplete="current-password"
+                                required
+                                placeholder="Introduce tu clave..."
+                                class="w-full px-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid"
+                            >
+                        </div>
+
+                        <button id="loginSubmitBtn" type="submit" class="w-full py-3.5 px-5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide shadow-lg shadow-acid/20">
+                            Entrar al Panel
+                        </button>
+
+                        <div class="pt-2 text-center">
+                            <button id="switchToOtpBtn" type="button" class="text-xs text-zinc-400 hover:text-acid underline">
+                                ¿Olvidaste la clave o quieres cambiarla? Enviar código a mi correo
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Vista Configurar / Recuperar Clave mediante Código de 6 Dígitos al Gmail -->
+                    <div id="otpSetupBox" class="hidden space-y-4">
+                        <p class="text-xs text-zinc-300 leading-relaxed bg-obsidian-elevated border border-zinc-800 p-3.5 rounded-xl">
+                            Por seguridad, enviaremos un <strong>código de 6 dígitos</strong> a tu bandeja oficial (<strong>virmarket.oficial@gmail.com</strong>) para crear o actualizar tu contraseña privada.
+                        </p>
+
+                        <button id="sendOtpBtn" type="button" class="w-full py-3 px-4 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-acid/60 text-acid font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            <span>Enviar Código de 6 Dígitos a mi Gmail</span>
+                        </button>
+
+                        <form id="setPasswordForm" class="space-y-3.5 pt-2 border-t border-zinc-800" novalidate>
+                            <div>
+                                <label for="otpCodeInput" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1">
+                                    Código recibido (6 dígitos)
+                                </label>
+                                <input
+                                    type="text"
+                                    id="otpCodeInput"
+                                    inputmode="numeric"
+                                    maxlength="6"
+                                    placeholder="123456"
+                                    class="w-full px-4 py-3 rounded-xl bg-obsidian-elevated border border-zinc-700 text-acid font-mono text-lg tracking-widest text-center focus:outline-none focus:border-acid"
+                                >
+                            </div>
+                            <div>
+                                <label for="newAdminPassword" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1">
+                                    Nueva contraseña (mín. 6 caracteres)
+                                </label>
+                                <input
+                                    type="password"
+                                    id="newAdminPassword"
+                                    autocomplete="new-password"
+                                    placeholder="Elige tu contraseña..."
+                                    class="w-full px-4 py-3 rounded-xl bg-obsidian-elevated border border-zinc-700 text-white text-base sm:text-sm focus:outline-none focus:border-acid"
+                                >
+                            </div>
+                            <button id="savePasswordBtn" type="submit" class="w-full py-3.5 px-5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide">
+                                Guardar Contraseña y Entrar
+                            </button>
+                        </form>
+
+                        <div id="backToLoginWrap" class="hidden pt-1 text-center">
+                            <button id="backToLoginBtn" type="button" class="text-xs text-zinc-400 hover:text-white">
+                                ← Volver a iniciar sesión con mi contraseña actual
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="authFeedback" class="hidden mt-4 p-3 rounded-xl text-xs"></div>
+                </div>
+            </section>
+
+            <!-- =================================================================== -->
+            <!-- DASHBOARD PRINCIPAL DEL VENDEDOR -->
+            <!-- =================================================================== -->
+            <section id="studioSection" class="hidden space-y-6">
+
+                <!-- Resumen Rápido Superior -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <span class="font-mono text-[10px] uppercase text-zinc-400">Drop Activo</span>
+                        <div id="statActiveDrop" class="mt-1 font-display text-base sm:text-lg font-bold text-acid truncate">Sin activar</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <span class="font-mono text-[10px] uppercase text-zinc-400">Reservadas (Subir a Vinted)</span>
+                        <div id="statReservedCount" class="mt-1 font-display text-xl font-bold text-white">0</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <span class="font-mono text-[10px] uppercase text-zinc-400">Disponibles en Escaparate</span>
+                        <div id="statAvailableCount" class="mt-1 font-display text-xl font-bold text-zinc-200">0</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <span class="font-mono text-[10px] uppercase text-zinc-400">Regla Bienvenida</span>
+                        <div id="statDiscountRule" class="mt-1 font-display text-base sm:text-lg font-bold text-acid">-10% (máx 15€)</div>
+                    </div>
+                </div>
+
+                <!-- Navegación por Pestañas (Optimizada para pulgar en móvil) -->
+                <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                    <button type="button" data-tab="drops" class="tab-btn flex-1 min-w-[140px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all bg-acid text-obsidian">
+                        🚀 1. Crear Drop y Correo
+                    </button>
+                    <button type="button" data-tab="vinted" class="tab-btn flex-1 min-w-[150px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all text-zinc-300 hover:text-white">
+                        📋 2. Reservas y Copiar a Vinted
+                    </button>
+                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[130px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all text-zinc-300 hover:text-white">
+                        ⚙️ 3. Descuentos y Pie Vinted
+                    </button>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- PESTAÑA 1: CREAR / EDITAR DROP Y LANZAR CORREO ÚNICO EN BREVO -->
+                <!-- =============================================================== -->
+                <div id="tab-drops" class="space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                        <!-- Columna Izquierda: Datos del Drop + Añadir Prenda (7 cols) -->
+                        <div class="lg:col-span-7 space-y-6">
+
+                            <!-- Configuración del Lote / Drop -->
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6">
+                                <div class="flex items-center justify-between gap-2 mb-4">
+                                    <div>
+                                        <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Paso A • Identificador de Remesa</span>
+                                        <h2 class="font-display text-lg font-bold text-white uppercase">Datos del Drop Multi-Prenda</h2>
+                                    </div>
+                                    <button id="newDropAutoBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-[11px] font-mono text-acid">
+                                        + Nuevo Código Drop
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                                    <div>
+                                        <label for="dropIdInput" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Código del Drop *</label>
+                                        <input type="text" id="dropIdInput" placeholder="DROP-01" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-acid uppercase focus:outline-none focus:border-acid">
+                                    </div>
+                                    <div class="sm:col-span-2">
+                                        <label for="dropTitleInput" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Título del Drop (visible en Web y Correo) *</label>
+                                        <input type="text" id="dropTitleInput" placeholder="Selección Streetwear & Vintage Semana 1" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                                    </div>
+                                </div>
+
+                                <div id="existingDropsChips" class="mt-3 flex flex-wrap items-center gap-1.5"></div>
+                            </div>
+
+                            <!-- Formulario Añadir / Editar Prenda (100% Compatible con Vinted) -->
+                            <div id="garmentFormCard" class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6">
+                                <div class="flex items-center justify-between gap-2 mb-4">
+                                    <div>
+                                        <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Paso B • Escribe una sola vez (Sirve para Web, Email y Vinted)</span>
+                                        <h2 id="garmentFormHeading" class="font-display text-lg font-bold text-white uppercase">Añadir Prenda al Drop</h2>
+                                    </div>
+                                    <button id="resetGarmentFormBtn" type="button" class="hidden px-3 py-1 rounded-lg bg-zinc-800 text-xs text-zinc-300 hover:text-white">
+                                        Cancelar edición
+                                    </button>
+                                </div>
+
+                                <form id="garmentForm" class="space-y-4" novalidate>
+                                    <!-- Selector de 1 a 4 Fotos con compresión automática -->
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+                                                Fotos de la prenda (1 a 4 fotos) <span class="text-acid">*</span>
+                                            </label>
+                                            <span id="photoCounterLabel" class="font-mono text-[11px] text-zinc-400">0 / 4 fotos</span>
+                                        </div>
+
+                                        <div id="photoPreviewsGrid" class="grid grid-cols-4 gap-2.5 mb-2.5"></div>
+
+                                        <label for="photoFileInput" class="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-xl border-2 border-dashed border-zinc-700 hover:border-acid bg-obsidian-elevated/60 cursor-pointer text-xs text-zinc-300 hover:text-white transition-colors">
+                                            <i data-lucide="camera" class="w-4 h-4 text-acid"></i>
+                                            <span>Seleccionar o hacer fotos desde el móvil / PC (máx. 4)</span>
+                                        </label>
+                                        <input type="file" id="photoFileInput" accept="image/*" multiple class="hidden">
+                                        <p class="mt-1 text-[11px] text-zinc-500">La 1ª foto será la portada en el correo de Brevo y en el Escaparate VIP. Se optimizan automáticamente.</p>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        <div>
+                                            <label for="gRef" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Referencia *</label>
+                                            <input type="text" id="gRef" required placeholder="REF-001" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-acid uppercase focus:outline-none focus:border-acid">
+                                        </div>
+                                        <div>
+                                            <label for="gPrice" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Precio Base (€) *</label>
+                                            <input type="number" id="gPrice" step="0.01" min="0" required placeholder="35.00" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-white focus:outline-none focus:border-acid">
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <label for="gSize" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Talla Vinted *</label>
+                                            <input type="text" id="gSize" placeholder="L / 42 / M" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="gTitle" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Título del anuncio (tal como saldrá en Vinted) *</label>
+                                        <input type="text" id="gTitle" required maxlength="140" placeholder="Ej: Chaqueta Carhartt Detroit Vintage Negra" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div>
+                                            <label for="gBrand" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Marca (opcional)</label>
+                                            <input type="text" id="gBrand" placeholder="Ej: Carhartt, Nike, Levi's..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                                        </div>
+                                        <div>
+                                            <label for="gCondition" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Estado oficial en Vinted</label>
+                                            <select id="gCondition" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                                                <option value="Nuevo con etiquetas">Nuevo con etiquetas</option>
+                                                <option value="Nuevo sin etiquetas">Nuevo sin etiquetas</option>
+                                                <option value="Muy bueno" selected>Muy bueno</option>
+                                                <option value="Bueno">Bueno</option>
+                                                <option value="Satisfactorio">Satisfactorio</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="gDesc" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Medidas y detalles de la prenda</label>
+                                        <textarea id="gDesc" rows="3" placeholder="Ej: Medidas axila a axila: 61 cm | Largo: 68 cm. Sin manchas ni desperfectos." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid"></textarea>
+                                        <p class="mt-1 text-[11px] text-zinc-500">Al pulsar «Copiar Descripción» para Vinted, se añadirán automáticamente marca, talla, estado y tu pie fijo con hashtags.</p>
+                                    </div>
+
+                                    <div id="garmentUploadProgress" class="hidden p-3 rounded-xl bg-obsidian-elevated border border-acid/40 font-mono text-xs text-acid"></div>
+
+                                    <button id="saveGarmentBtn" type="submit" class="w-full py-3.5 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center justify-center gap-2">
+                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                        <span id="saveGarmentBtnText">Guardar Prenda en este Drop</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha: Prendas del Drop Seleccionado + Lanzamiento de 1 Solo Correo (5 cols) -->
+                        <div class="lg:col-span-5 space-y-6">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6">
+                                <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Paso C • Lanzar en 1 Solo Correo</span>
+                                <h2 class="font-display text-lg font-bold text-white uppercase mt-0.5">Publicar Drop y Newsletter</h2>
+                                <p class="mt-1 text-xs text-zinc-400 leading-relaxed">
+                                    Activa este Drop en el Escaparate Web VIP durante las horas indicadas y genera <strong>un único correo con todas las prendas del lote</strong> en Brevo.
+                                </p>
+
+                                <div class="mt-4 space-y-3">
+                                    <div class="grid grid-cols-3 gap-2.5">
+                                        <div>
+                                            <label for="publishHours" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Ventana (h)</label>
+                                            <input type="number" id="publishHours" value="24" min="1" max="168" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-white">
+                                        </div>
+                                        <div class="col-span-2">
+                                            <label for="publishSubject" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Asunto email (opcional)</label>
+                                            <input type="text" id="publishSubject" placeholder="Automático con nº de prendas..." class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                        </div>
+                                    </div>
+
+                                    <button id="publishSendNowBtn" type="button" class="w-full py-3.5 px-4 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center justify-center gap-2">
+                                        <i data-lucide="send" class="w-4 h-4"></i>
+                                        <span>Publicar Drop + Enviar Correo VIP Ahora</span>
+                                    </button>
+
+                                    <button id="publishDraftBtn" type="button" class="w-full py-3 px-4 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-amber-400/50 text-amber-300 font-display font-bold text-xs uppercase tracking-wide flex items-center justify-center gap-2">
+                                        <i data-lucide="file-edit" class="w-4 h-4"></i>
+                                        <span>Publicar Drop + Crear Borrador en Brevo</span>
+                                    </button>
+                                </div>
+
+                                <div id="publishResultBox" class="hidden mt-4 p-3.5 rounded-xl text-xs"></div>
+                            </div>
+
+                            <!-- Lista de Prendas dentro del Drop actual -->
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">
+                                        Prendas en <span id="currentDropPreviewLabel" class="text-acid">este Drop</span>
+                                    </h3>
+                                    <span id="currentDropCountBadge" class="px-2 py-0.5 rounded bg-obsidian-elevated border border-zinc-800 font-mono text-xs text-zinc-300">0</span>
+                                </div>
+                                <div id="currentDropGarmentsList" class="space-y-2.5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- PESTAÑA 2: RESERVAS, LOTES, COLAS Y COPIADO 1-TOQUE PARA VINTED -->
+                <!-- =============================================================== -->
+                <div id="tab-vinted" class="hidden space-y-6">
+
+                    <!-- Barra de Filtros -->
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" data-filter="ALL" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian">
+                                Todas
+                            </button>
+                            <button type="button" data-filter="RESERVADA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300">
+                                Reservadas VIP
+                            </button>
+                            <button type="button" data-filter="DISPONIBLE" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300">
+                                Sobrantes / Disponibles
+                            </button>
+                            <button type="button" data-filter="VENDIDA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300">
+                                Vendidas
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
+                                <option value="ALL">Todos los Drops</option>
+                            </select>
+                            <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
+                                <span>Actualizar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN AUTOMÁTICA DE LOTES AGRUPADOS (2+ prendas en un mismo pedido) -->
+                    <div id="groupedLotsSection" class="hidden space-y-4">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded bg-acid text-obsidian font-mono text-[11px] font-bold uppercase">Lotes Multi-Prenda</span>
+                            <h2 class="font-display text-lg font-bold text-white uppercase">Anuncios de Lote Listos para Pegar en Vinted</h2>
+                        </div>
+                        <div id="groupedLotsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+                    </div>
+
+                    <!-- FICHAS INDIVIDUALES CON ASISTENTE «COPIAR PARA VINTED» Y GESTIÓN DE COLA -->
+                    <div class="space-y-3">
+                        <h2 class="font-display text-lg font-bold text-white uppercase">Fichas Individuales para Vinted y Control de Cola</h2>
+                        <div id="vintedCardsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- PESTAÑA 3: AJUSTES DE DESCUENTO CON TOPE Y PLANTILLA PIE VINTED -->
+                <!-- =============================================================== -->
+                <div id="tab-settings" class="hidden max-w-2xl mx-auto">
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-7 space-y-5">
+                        <div>
+                            <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Reglas Globales en Vivo</span>
+                            <h2 class="font-display text-xl font-bold text-white uppercase mt-0.5">Motor de Descuento y Plantilla de Vinted</h2>
+                            <p class="mt-1 text-xs text-zinc-400">
+                                Cualquier cambio que guardes aquí se aplica al instante en la Landing QR, en el Escaparate VIP y en el botón «Copiar Descripción» para Vinted.
+                            </p>
+                        </div>
+
+                        <form id="settingsForm" class="space-y-4" novalidate>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                                <div>
+                                    <label for="cfgDiscountPct" class="block text-xs font-semibold uppercase text-zinc-300 mb-1">
+                                        % Bienvenida (1ª reserva)
+                                    </label>
+                                    <input type="number" id="cfgDiscountPct" min="0" max="90" step="1" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-base text-acid focus:outline-none focus:border-acid">
+                                    <p class="mt-1 text-[11px] text-zinc-500">Pon 0 para desactivar.</p>
+                                </div>
+
+                                <div>
+                                    <label for="cfgMaxDiscountEur" class="block text-xs font-semibold uppercase text-zinc-300 mb-1">
+                                        Tope máximo ahorro (€)
+                                    </label>
+                                    <input type="number" id="cfgMaxDiscountEur" min="0" step="0.5" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-base text-white focus:outline-none focus:border-acid">
+                                    <p class="mt-1 text-[11px] text-zinc-500">Aplica a 1 prenda o Lote (0 = sin tope).</p>
+                                </div>
+
+                                <div>
+                                    <label for="cfgMaxItems" class="block text-xs font-semibold uppercase text-zinc-300 mb-1">
+                                        Máx. prendas por pedido
+                                    </label>
+                                    <input type="number" id="cfgMaxItems" min="0" step="1" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-base text-white focus:outline-none focus:border-acid">
+                                    <p class="mt-1 text-[11px] text-zinc-500">0 = sin límite.</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="cfgVintedFooter" class="block text-xs font-semibold uppercase text-zinc-300 mb-1">
+                                    Pie fijo + Hashtags para descripciones de Vinted
+                                </label>
+                                <textarea id="cfgVintedFooter" rows="5" placeholder="📦 Envío rápido en 24/48h...&#10;#virmarket #streetwear #vintage" class="w-full px-3.5 py-3 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid"></textarea>
+                                <p class="mt-1 text-[11px] text-zinc-500">
+                                    Se añade automáticamente al final cada vez que pulses «Copiar Descripción» en una prenda o en un Lote.
+                                </p>
+                            </div>
+
+                            <button id="saveSettingsBtn" type="submit" class="w-full py-3.5 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide shadow-lg shadow-acid/20">
+                                Guardar Ajustes en Vivo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Notificación Toast Flotante -->
+    <div id="adminToast" class="hidden fixed bottom-5 right-5 z-50 max-w-sm px-4 py-3 rounded-xl bg-obsidian-elevated border border-acid text-xs font-semibold text-white shadow-2xl"></div>
+
+    <script>
+        lucide.createIcons();
+
+        const WEBHOOK_ADMIN_AUTH_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin-auth';
+        const WEBHOOK_ADMIN_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const deepLinkLote = (urlParams.get('lote') || '').trim().toUpperCase();
+        const deepLinkRef = (urlParams.get('ref') || '').trim().toUpperCase();
+
+        const round2 = (n) => Math.round((Number(n || 0) + Number.EPSILON) * 100) / 100;
+        const fmtEur = (n) => round2(n).toFixed(2).replace('.', ',') + ' €';
+        const fmtVintedInputPrice = (n) => {
+            const val = round2(n);
+            return Number.isInteger(val) ? String(val) : val.toFixed(2).replace('.', ',');
+        };
+        const escapeHtml = (str) => String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        const adminState = {
+            password: sessionStorage.getItem('vm_admin_session_pwd') || '',
+            hasPasswordConfigured: true,
+            activeTab: (deepLinkLote || deepLinkRef) ? 'vinted' : 'drops',
+            statusFilter: 'ALL',
+            dropFilter: 'ALL',
+            editingRef: null,
+            // Cada foto: { type: 'remote', url } o { type: 'local', base64, previewUrl }
+            formPhotos: [],
+            config: {
+                discountPercent: 10,
+                maxDiscountEur: 15,
+                maxItemsPerOrder: 10,
+                vintedFooterTemplate: '',
+                activeDropId: '',
+                activeDropTitle: '',
+                activeDropEndsAt: ''
+            },
+            garments: []
+        };
+
+        function toast(msg, isError = false) {
+            const el = document.getElementById('adminToast');
+            el.textContent = msg;
+            el.className = `fixed bottom-5 right-5 z-50 max-w-sm px-4 py-3 rounded-xl text-xs font-semibold shadow-2xl ${
+                isError
+                    ? 'bg-rose-950 border border-rose-500 text-rose-100'
+                    : 'bg-obsidian-elevated border border-acid text-white'
+            }`;
+            el.classList.remove('hidden');
+            clearTimeout(window.__admToast);
+            window.__admToast = setTimeout(() => el.classList.add('hidden'), 3400);
+        }
+
+        async function copyText(text, label) {
+            try {
+                await navigator.clipboard.writeText(text);
+                toast(`✓ Copiado: ${label}`);
+            } catch (e) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                toast(`✓ Copiado: ${label}`);
+            }
+        }
+
+        async function downloadPhotosList(urls, prefix) {
+            if (!urls || urls.length === 0) {
+                toast('Esta prenda no tiene fotos guardadas.', true);
+                return;
+            }
+            toast(`Descargando ${urls.length} ${urls.length === 1 ? 'foto' : 'fotos'}...`);
+            for (let i = 0; i < urls.length; i++) {
+                const url = urls[i];
+                const fileName = `${prefix}-foto-${i + 1}.jpg`;
+                try {
+                    const resp = await fetch(url, { mode: 'cors' });
+                    const blob = await resp.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 4000);
+                    await new Promise(r => setTimeout(r, 280));
+                } catch (e) {
+                    window.open(url, '_blank');
+                }
+            }
+        }
+
+        // Generadores de textos listos para pegar en Vinted
+        function buildIndividualVintedDescription(g) {
+            const lines = [g.title];
+            const specs = [];
+            if (g.brand) specs.push(`• Marca: ${g.brand}`);
+            if (g.size) specs.push(`• Talla: ${g.size}`);
+            if (g.vintedCondition) specs.push(`• Estado: ${g.vintedCondition}`);
+            specs.push(`• Ref: ${g.ref}`);
+            lines.push(specs.join('\n'));
+            if (g.description && g.description.trim()) {
+                lines.push(g.description.trim());
+            }
+            const footer = (adminState.config.vintedFooterTemplate || '').trim();
+            if (footer) {
+                lines.push(footer);
+            }
+            return lines.join('\n\n');
+        }
+
+        function buildLotVintedTitle(items, vintedUser) {
+            const summary = items.map(i => i.brand || i.title.split(' ')[0]).slice(0, 3).join(' + ');
+            return `Lote VIP ${items.length} prendas (@${vintedUser}) — ${summary}`.slice(0, 98);
+        }
+
+        function buildLotVintedDescription(items, vintedUser) {
+            const header = `Lote personalizado de ${items.length} prendas reservado para @${vintedUser}:`;
+            const blocks = items.map((g, idx) => {
+                const meta = [
+                    g.brand ? `Marca: ${g.brand}` : '',
+                    g.size ? `Talla: ${g.size}` : '',
+                    g.vintedCondition ? `Estado: ${g.vintedCondition}` : ''
+                ].filter(Boolean).join(' | ');
+                return `${idx + 1}. [${g.ref}] ${g.title}${meta ? '\n   ' + meta : ''}${g.description ? '\n   ' + g.description.trim() : ''}`;
+            });
+            const footer = (adminState.config.vintedFooterTemplate || '').trim();
+            return [header, blocks.join('\n\n'), footer].filter(Boolean).join('\n\n');
+        }
+
+        // Llamada autenticada al backend de administración
+        async function callAdminApi(action, extraPayload = {}) {
+            const res = await fetch(WEBHOOK_ADMIN_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action,
+                    password: adminState.password,
+                    ...extraPayload
+                })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 401) {
+                sessionStorage.removeItem('vm_admin_session_pwd');
+                adminState.password = '';
+                showAuthScreen('Tu sesión ha caducado o la contraseña ha cambiado. Vuelve a entrar.');
+                throw new Error(data.message || 'No autorizado');
+            }
+            if (!res.ok || data.ok === false) {
+                throw new Error(data.message || 'Error al ejecutar la operación.');
+            }
+            return data;
+        }
+
+        // ======================== AUTENTICACIÓN ========================
+        function setAuthFeedback(msg, isError = false) {
+            const fb = document.getElementById('authFeedback');
+            fb.textContent = msg;
+            fb.className = `mt-4 p-3 rounded-xl text-xs ${
+                isError
+                    ? 'bg-rose-950/60 border border-rose-500/50 text-rose-200'
+                    : 'bg-acid-muted border border-acid/50 text-zinc-100'
+            }`;
+            fb.classList.remove('hidden');
+        }
+
+        function showAuthScreen(errorMsg = '') {
+            document.getElementById('studioSection').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('authChecking').classList.add('hidden');
+
+            if (adminState.hasPasswordConfigured) {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('otpSetupBox').classList.add('hidden');
+                document.getElementById('backToLoginWrap').classList.remove('hidden');
+            } else {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('otpSetupBox').classList.remove('hidden');
+                document.getElementById('backToLoginWrap').classList.add('hidden');
+            }
+            if (errorMsg) setAuthFeedback(errorMsg, true);
+        }
+
+        document.getElementById('switchToOtpBtn').addEventListener('click', () => {
+            document.getElementById('authFeedback').classList.add('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('otpSetupBox').classList.remove('hidden');
+            document.getElementById('backToLoginWrap').classList.remove('hidden');
+        });
+
+        document.getElementById('backToLoginBtn').addEventListener('click', () => {
+            document.getElementById('authFeedback').classList.add('hidden');
+            document.getElementById('otpSetupBox').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        });
+
+        document.getElementById('sendOtpBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('sendOtpBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Enviando código a tu Gmail...</span>';
+            try {
+                const res = await fetch(WEBHOOK_ADMIN_AUTH_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'request_otp' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || data.ok === false) throw new Error(data.message || 'No se pudo enviar el código.');
+                setAuthFeedback(data.message || 'Código enviado a virmarket.oficial@gmail.com.');
+                document.getElementById('otpCodeInput').focus();
+            } catch (e) {
+                setAuthFeedback(e.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="mail" class="w-4 h-4"></i><span>Reenviar Código de 6 Dígitos a mi Gmail</span>';
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('setPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otpCodeInput').value.trim();
+            const newPassword = document.getElementById('newAdminPassword').value;
+            if (!/^\d{6}$/.test(otp)) {
+                setAuthFeedback('Introduce el código numérico de 6 dígitos que ha llegado a tu Gmail.', true);
+                return;
+            }
+            if (!newPassword || newPassword.trim().length < 6) {
+                setAuthFeedback('Elige una contraseña de al menos 6 caracteres.', true);
+                return;
+            }
+            const btn = document.getElementById('savePasswordBtn');
+            btn.disabled = true;
+            btn.textContent = 'Verificando código y guardando...';
+            try {
+                const res = await fetch(WEBHOOK_ADMIN_AUTH_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'set_password', otp, newPassword })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || data.ok === false) throw new Error(data.message || 'Código incorrecto o caducado.');
+
+                adminState.password = newPassword;
+                adminState.hasPasswordConfigured = true;
+                sessionStorage.setItem('vm_admin_session_pwd', newPassword);
+                toast('✓ Contraseña configurada. Cargando tu panel...');
+                await loadDashboard();
+            } catch (err) {
+                setAuthFeedback(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Guardar Contraseña y Entrar';
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pwd = document.getElementById('loginPassword').value;
+            if (!pwd) {
+                setAuthFeedback('Introduce tu contraseña.', true);
+                return;
+            }
+            const btn = document.getElementById('loginSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Verificando acceso...';
+            try {
+                adminState.password = pwd;
+                await loadDashboard();
+                sessionStorage.setItem('vm_admin_session_pwd', pwd);
+            } catch (err) {
+                setAuthFeedback(err.message || 'Contraseña incorrecta.', true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Entrar al Panel';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('vm_admin_session_pwd');
+            adminState.password = '';
+            showAuthScreen();
+        });
+
+        // ======================== PESTAÑAS Y DASHBOARD ========================
+        function setActiveTab(tabName) {
+            adminState.activeTab = tabName;
+            ['drops', 'vinted', 'settings'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const isAct = btn.getAttribute('data-tab') === tabName;
+                btn.className = `tab-btn flex-1 min-w-[135px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all ${
+                    isAct ? 'bg-acid text-obsidian shadow-md shadow-acid/20' : 'text-zinc-300 hover:text-white'
+                }`;
+            });
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => setActiveTab(btn.getAttribute('data-tab')));
+        });
+
+        function suggestDefaultDropId() {
+            const d = new Date();
+            const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+            return `DROP-${stamp}`;
+        }
+
+        function suggestNextRef() {
+            let maxNum = 0;
+            adminState.garments.forEach(g => {
+                const m = String(g.ref || '').match(/(\d+)$/);
+                if (m) maxNum = Math.max(maxNum, parseInt(m[1], 10));
+            });
+            return `REF-${String(maxNum + 1).padStart(3, '0')}`;
+        }
+
+        async function loadDashboard() {
+            const data = await callAdminApi('get_dashboard');
+            adminState.config = data.config || adminState.config;
+            adminState.garments = Array.isArray(data.garments) ? data.garments : [];
+
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('studioSection').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('inline-flex');
+
+            // Poblar cabecera de métricas
+            const cfg = adminState.config;
+            document.getElementById('statActiveDrop').textContent = cfg.activeDropId
+                ? `${cfg.activeDropId}`
+                : 'Ninguno activo';
+            document.getElementById('statReservedCount').textContent =
+                adminState.garments.filter(g => g.status === 'RESERVADA').length;
+            document.getElementById('statAvailableCount').textContent =
+                adminState.garments.filter(g => g.status === 'DISPONIBLE').length;
+            document.getElementById('statDiscountRule').textContent =
+                Number(cfg.discountPercent) > 0
+                    ? `-${cfg.discountPercent}%${Number(cfg.maxDiscountEur) > 0 ? ' (máx ' + cfg.maxDiscountEur + '€)' : ' (sin tope)'}`
+                    : 'Sin dto.';
+
+            if (cfg.activeDropId) {
+                document.getElementById('liveShowroomLink').href = `./?drop=${encodeURIComponent(cfg.activeDropId)}`;
+            }
+
+            // Inicializar campos del Drop si están vacíos
+            const dropIdIn = document.getElementById('dropIdInput');
+            const dropTitleIn = document.getElementById('dropTitleInput');
+            if (!dropIdIn.value.trim()) {
+                dropIdIn.value = cfg.activeDropId || suggestDefaultDropId();
+            }
+            if (!dropTitleIn.value.trim()) {
+                dropTitleIn.value = cfg.activeDropTitle || 'Nuevo Drop Streetwear & Vintage 24h';
+            }
+            if (!adminState.editingRef && !document.getElementById('gRef').value.trim()) {
+                document.getElementById('gRef').value = suggestNextRef();
+            }
+
+            // Poblar Ajustes
+            document.getElementById('cfgDiscountPct').value = cfg.discountPercent ?? 10;
+            document.getElementById('cfgMaxDiscountEur').value = cfg.maxDiscountEur ?? 15;
+            document.getElementById('cfgMaxItems').value = cfg.maxItemsPerOrder ?? 10;
+            document.getElementById('cfgVintedFooter').value = cfg.vintedFooterTemplate || '';
+
+            renderDropChipsAndSelect();
+            renderCurrentDropList();
+            renderVintedWorkspace();
+            setActiveTab(adminState.activeTab);
+            lucide.createIcons();
+
+            // Si viene desde el enlace directo del correo de orden (?lote=... o ?ref=...), hacer scroll y resaltar
+            if (!window.__admDeepLinkHandled && (deepLinkLote || deepLinkRef)) {
+                window.__admDeepLinkHandled = true;
+                setTimeout(() => {
+                    const targetEl = deepLinkLote
+                        ? document.getElementById(`lot-card-${deepLinkLote}`)
+                        : document.getElementById(`vinted-card-${deepLinkRef}`);
+                    if (targetEl) {
+                        targetEl.classList.add('deep-highlight');
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 250);
+            }
+        }
+
+        function renderDropChipsAndSelect() {
+            const uniqueDrops = new Map();
+            if (adminState.config.activeDropId) {
+                uniqueDrops.set(adminState.config.activeDropId, adminState.config.activeDropTitle || adminState.config.activeDropId);
+            }
+            adminState.garments.forEach(g => {
+                if (g.dropId && !uniqueDrops.has(g.dropId)) {
+                    uniqueDrops.set(g.dropId, g.dropTitle || g.dropId);
+                }
+            });
+
+            const chipsEl = document.getElementById('existingDropsChips');
+            if (uniqueDrops.size > 0) {
+                chipsEl.innerHTML = `<span class="text-[11px] text-zinc-500 mr-1">Drops guardados:</span>` +
+                    [...uniqueDrops.entries()].map(([id, title]) => `
+                        <button type="button" data-pick-drop="${escapeHtml(id)}" data-pick-title="${escapeHtml(title)}" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid font-mono text-[11px] text-zinc-300">
+                            ${escapeHtml(id)}${id === adminState.config.activeDropId ? ' • ACTIVO' : ''}
+                        </button>
+                    `).join('');
+                chipsEl.querySelectorAll('[data-pick-drop]').forEach(b => {
+                    b.addEventListener('click', () => {
+                        document.getElementById('dropIdInput').value = b.getAttribute('data-pick-drop');
+                        document.getElementById('dropTitleInput').value = b.getAttribute('data-pick-title');
+                        renderCurrentDropList();
+                    });
+                });
+            } else {
+                chipsEl.innerHTML = '';
+            }
+
+            const sel = document.getElementById('filterDropSelect');
+            const prevVal = adminState.dropFilter;
+            sel.innerHTML = `<option value="ALL">Todos los Drops</option>` +
+                [...uniqueDrops.keys()].map(id => `<option value="${escapeHtml(id)}">${escapeHtml(id)}</option>`).join('');
+            if ([...uniqueDrops.keys()].includes(prevVal)) sel.value = prevVal;
+        }
+
+        document.getElementById('newDropAutoBtn').addEventListener('click', () => {
+            const base = suggestDefaultDropId();
+            const existingIds = new Set(adminState.garments.map(g => g.dropId));
+            let candidate = base;
+            let n = 2;
+            while (existingIds.has(candidate)) {
+                candidate = `${base}-${n++}`;
+            }
+            document.getElementById('dropIdInput').value = candidate;
+            document.getElementById('dropTitleInput').value = `Nuevo Drop Privado (${candidate})`;
+            renderCurrentDropList();
+        });
+
+        document.getElementById('dropIdInput').addEventListener('input', renderCurrentDropList);
+
+        // ======================== COMPRESIÓN Y SUBIDA DE FOTOS (1-4) ========================
+        function compressImageFile(file, maxSide = 1080, quality = 0.84) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onerror = () => reject(new Error('Formato de imagen no soportado.'));
+                    img.onload = () => {
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxSide || h > maxSide) {
+                            if (w >= h) {
+                                h = Math.round((h * maxSide) / w);
+                                w = maxSide;
+                            } else {
+                                w = Math.round((w * maxSide) / h);
+                                h = maxSide;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#09090B';
+                        ctx.fillRect(0, 0, w, h);
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                        resolve(dataUrl);
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderPhotoPreviews() {
+            const grid = document.getElementById('photoPreviewsGrid');
+            document.getElementById('photoCounterLabel').textContent = `${adminState.formPhotos.length} / 4 fotos`;
+            if (adminState.formPhotos.length === 0) {
+                grid.innerHTML = '';
+                return;
+            }
+            grid.innerHTML = adminState.formPhotos.map((p, idx) => {
+                const src = p.type === 'remote' ? p.url : p.previewUrl;
+                return `
+                <div class="relative aspect-square rounded-xl overflow-hidden bg-obsidian-elevated border ${idx === 0 ? 'border-acid' : 'border-zinc-700'}">
+                    <img src="${escapeHtml(src)}" alt="Foto ${idx + 1}" class="w-full h-full object-cover">
+                    ${idx === 0 ? `<span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-acid text-obsidian font-mono text-[9px] font-bold">PORTADA</span>` : ''}
+                    <div class="absolute bottom-1 inset-x-1 flex items-center justify-between gap-1">
+                        ${idx > 0
+                            ? `<button type="button" data-move-photo="${idx}" class="px-1.5 py-0.5 rounded bg-black/80 text-[10px] text-white" title="Mover antes">←</button>`
+                            : `<span></span>`
+                        }
+                        <button type="button" data-del-photo="${idx}" class="px-1.5 py-0.5 rounded bg-rose-950/90 text-[10px] text-rose-200" title="Quitar">✕</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            grid.querySelectorAll('[data-del-photo]').forEach(b => {
+                b.addEventListener('click', () => {
+                    adminState.formPhotos.splice(Number(b.getAttribute('data-del-photo')), 1);
+                    renderPhotoPreviews();
+                });
+            });
+            grid.querySelectorAll('[data-move-photo]').forEach(b => {
+                b.addEventListener('click', () => {
+                    const i = Number(b.getAttribute('data-move-photo'));
+                    if (i > 0) {
+                        const tmp = adminState.formPhotos[i - 1];
+                        adminState.formPhotos[i - 1] = adminState.formPhotos[i];
+                        adminState.formPhotos[i] = tmp;
+                        renderPhotoPreviews();
+                    }
+                });
+            });
+        }
+
+        document.getElementById('photoFileInput').addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files || []);
+            e.target.value = '';
+            if (!files.length) return;
+
+            const slots = 4 - adminState.formPhotos.length;
+            if (slots <= 0) {
+                toast('Máximo 4 fotos por prenda.', true);
+                return;
+            }
+            const toProcess = files.slice(0, slots);
+            for (const f of toProcess) {
+                try {
+                    const dataUrl = await compressImageFile(f);
+                    adminState.formPhotos.push({
+                        type: 'local',
+                        base64: dataUrl,
+                        previewUrl: dataUrl
+                    });
+                } catch (err) {
+                    toast(err.message, true);
+                }
+            }
+            renderPhotoPreviews();
+        });
+
+        function resetGarmentForm() {
+            adminState.editingRef = null;
+            adminState.formPhotos = [];
+            document.getElementById('garmentFormHeading').textContent = 'Añadir Prenda al Drop';
+            document.getElementById('saveGarmentBtnText').textContent = 'Guardar Prenda en este Drop';
+            document.getElementById('resetGarmentFormBtn').classList.add('hidden');
+            document.getElementById('gRef').value = suggestNextRef();
+            document.getElementById('gPrice').value = '';
+            document.getElementById('gSize').value = '';
+            document.getElementById('gTitle').value = '';
+            document.getElementById('gBrand').value = '';
+            document.getElementById('gCondition').value = 'Muy bueno';
+            document.getElementById('gDesc').value = '';
+            renderPhotoPreviews();
+        }
+
+        document.getElementById('resetGarmentFormBtn').addEventListener('click', resetGarmentForm);
+
+        function loadGarmentIntoForm(ref) {
+            const g = adminState.garments.find(x => x.ref === ref);
+            if (!g) return;
+            adminState.editingRef = g.ref;
+            if (g.dropId) document.getElementById('dropIdInput').value = g.dropId;
+            if (g.dropTitle) document.getElementById('dropTitleInput').value = g.dropTitle;
+            document.getElementById('gRef').value = g.ref;
+            document.getElementById('gPrice').value = g.priceEur;
+            document.getElementById('gSize').value = g.size || '';
+            document.getElementById('gTitle').value = g.title || '';
+            document.getElementById('gBrand').value = g.brand || '';
+            document.getElementById('gCondition').value = g.vintedCondition || 'Muy bueno';
+            document.getElementById('gDesc').value = g.description || '';
+            adminState.formPhotos = (g.photos || []).map(url => ({ type: 'remote', url }));
+
+            document.getElementById('garmentFormHeading').textContent = `Editando ${g.ref}`;
+            document.getElementById('saveGarmentBtnText').textContent = `Actualizar ${g.ref}`;
+            document.getElementById('resetGarmentFormBtn').classList.remove('hidden');
+            renderPhotoPreviews();
+            renderCurrentDropList();
+            setActiveTab('drops');
+            document.getElementById('garmentFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        document.getElementById('garmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const dropId = document.getElementById('dropIdInput').value.trim().toUpperCase();
+            const dropTitle = document.getElementById('dropTitleInput').value.trim() || 'Drop Privado 24h';
+            const ref = document.getElementById('gRef').value.trim().toUpperCase();
+            const priceEur = Number(document.getElementById('gPrice').value);
+            const size = document.getElementById('gSize').value.trim();
+            const title = document.getElementById('gTitle').value.trim();
+            const brand = document.getElementById('gBrand').value.trim();
+            const vintedCondition = document.getElementById('gCondition').value;
+            const description = document.getElementById('gDesc').value.trim();
+
+            if (!dropId) {
+                toast('Indica un código de Drop arriba (ej. DROP-01).', true);
+                return;
+            }
+            if (!ref || !title || !Number.isFinite(priceEur) || priceEur < 0) {
+                toast('Completa Referencia, Título y Precio válido.', true);
+                return;
+            }
+            if (adminState.formPhotos.length === 0) {
+                toast('Añade al menos 1 foto de la prenda.', true);
+                return;
+            }
+
+            const btn = document.getElementById('saveGarmentBtn');
+            const prog = document.getElementById('garmentUploadProgress');
+            btn.disabled = true;
+            prog.classList.remove('hidden');
+
+            try {
+                const finalPhotoUrls = [];
+                for (let i = 0; i < adminState.formPhotos.length; i++) {
+                    const item = adminState.formPhotos[i];
+                    if (item.type === 'remote') {
+                        finalPhotoUrls.push(item.url);
+                    } else {
+                        prog.textContent = `Subiendo foto ${i + 1} de ${adminState.formPhotos.length} al CDN...`;
+                        const up = await callAdminApi('upload_photo', {
+                            dropId,
+                            ref,
+                            index: i + 1,
+                            base64Data: item.base64
+                        });
+                        finalPhotoUrls.push(up.photoUrl);
+                        item.type = 'remote';
+                        item.url = up.photoUrl;
+                    }
+                }
+
+                prog.textContent = `Guardando ficha de ${ref}...`;
+                await callAdminApi('save_garment', {
+                    garment: {
+                        ref,
+                        dropId,
+                        dropTitle,
+                        title,
+                        brand,
+                        size,
+                        vintedCondition,
+                        description,
+                        priceEur,
+                        photos: finalPhotoUrls
+                    }
+                });
+
+                toast(`✓ Prenda ${ref} guardada en ${dropId}`);
+                await loadDashboard();
+                resetGarmentForm();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                prog.classList.add('hidden');
+            }
+        });
+
+        function renderCurrentDropList() {
+            const currentDropId = document.getElementById('dropIdInput').value.trim().toUpperCase();
+            document.getElementById('currentDropPreviewLabel').textContent = currentDropId || 'este Drop';
+            const list = adminState.garments.filter(g => g.dropId.toUpperCase() === currentDropId);
+            document.getElementById('currentDropCountBadge').textContent = `${list.length} prendas`;
+
+            const container = document.getElementById('currentDropGarmentsList');
+            if (list.length === 0) {
+                container.innerHTML = `<p class="text-xs text-zinc-500 py-4 text-center">Todavía no has añadido prendas a <strong>${escapeHtml(currentDropId || 'este Drop')}</strong>.</p>`;
+                return;
+            }
+            container.innerHTML = list.map(g => `
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        ${g.photos && g.photos[0]
+                            ? `<img src="${escapeHtml(g.photos[0])}" alt="" class="w-12 h-12 rounded-lg object-cover shrink-0 border border-zinc-700">`
+                            : `<div class="w-12 h-12 rounded-lg bg-zinc-900 shrink-0"></div>`
+                        }
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-mono text-[11px] font-bold text-acid">${escapeHtml(g.ref)}</span>
+                                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-zinc-900 text-zinc-400">${escapeHtml(g.status)}</span>
+                            </div>
+                            <p class="text-xs font-semibold text-white truncate">${escapeHtml(g.title)}</p>
+                            <p class="font-mono text-[11px] text-zinc-400">${fmtEur(g.priceEur)}${g.size ? ' • Talla ' + escapeHtml(g.size) : ''}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button type="button" data-edit-g="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200">Editar</button>
+                        <button type="button" data-del-g="${escapeHtml(g.ref)}" class="px-2 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-xs text-rose-300">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('[data-edit-g]').forEach(b => {
+                b.addEventListener('click', () => loadGarmentIntoForm(b.getAttribute('data-edit-g')));
+            });
+            container.querySelectorAll('[data-del-g]').forEach(b => {
+                b.addEventListener('click', async () => {
+                    const ref = b.getAttribute('data-del-g');
+                    if (!confirm(`¿Eliminar la prenda ${ref} del Drop?`)) return;
+                    try {
+                        await callAdminApi('delete_garment', { ref });
+                        toast(`Prenda ${ref} eliminada.`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+        }
+
+        // Publicar Drop + Campaña Única Multi-Prenda en Brevo
+        async function triggerPublishDrop(sendMode) {
+            const dropId = document.getElementById('dropIdInput').value.trim().toUpperCase();
+            const dropTitle = document.getElementById('dropTitleInput').value.trim() || 'Nuevo Drop Privado 24h';
+            const durationHours = Number(document.getElementById('publishHours').value || 24);
+            const emailSubject = document.getElementById('publishSubject').value.trim();
+
+            const count = adminState.garments.filter(g => g.dropId.toUpperCase() === dropId).length;
+            if (count === 0) {
+                toast(`Añade al menos 1 prenda a ${dropId} antes de publicar.`, true);
+                return;
+            }
+
+            if (sendMode === 'send_now') {
+                const ok = confirm(`¿Confirmas activar ${dropId} (${count} prendas) y ENVIAR AHORA MISMO el correo único a toda tu lista VIP de Brevo?`);
+                if (!ok) return;
+            }
+
+            const btnNow = document.getElementById('publishSendNowBtn');
+            const btnDraft = document.getElementById('publishDraftBtn');
+            const resBox = document.getElementById('publishResultBox');
+            btnNow.disabled = true;
+            btnDraft.disabled = true;
+            resBox.classList.add('hidden');
+
+            try {
+                const res = await callAdminApi('publish_drop', {
+                    dropId,
+                    dropTitle,
+                    durationHours,
+                    emailSubject,
+                    sendMode
+                });
+                resBox.className = 'mt-4 p-4 rounded-xl text-xs bg-acid-muted border border-acid/50 text-zinc-100 space-y-2';
+                resBox.innerHTML = `
+                    <p class="font-bold text-white">${escapeHtml(res.message)}</p>
+                    <a href="${escapeHtml(res.showroomUrl)}" target="_blank" rel="noopener" class="inline-block font-mono text-acid underline">
+                        Abrir Escaparate Público del Drop →
+                    </a>
+                `;
+                resBox.classList.remove('hidden');
+                toast('✓ Drop publicado con éxito');
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btnNow.disabled = false;
+                btnDraft.disabled = false;
+            }
+        }
+
+        document.getElementById('publishSendNowBtn').addEventListener('click', () => triggerPublishDrop('send_now'));
+        document.getElementById('publishDraftBtn').addEventListener('click', () => triggerPublishDrop('draft'));
+
+        // ======================== PESTAÑA 2: ASISTENTE COPIAR A VINTED + COLAS ========================
+        document.querySelectorAll('.vinted-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                adminState.statusFilter = btn.getAttribute('data-filter');
+                document.querySelectorAll('.vinted-filter-btn').forEach(b => {
+                    const act = b.getAttribute('data-filter') === adminState.statusFilter;
+                    b.className = act
+                        ? 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian'
+                        : 'vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300';
+                });
+                renderVintedWorkspace();
+            });
+        });
+
+        document.getElementById('filterDropSelect').addEventListener('change', (e) => {
+            adminState.dropFilter = e.target.value;
+            renderVintedWorkspace();
+        });
+
+        document.getElementById('refreshDashboardBtn').addEventListener('click', async () => {
+            toast('Sincronizando reservas y colas...');
+            await loadDashboard();
+        });
+
+        function renderVintedWorkspace() {
+            const filtered = adminState.garments.filter(g => {
+                if (adminState.dropFilter !== 'ALL' && g.dropId !== adminState.dropFilter) return false;
+                if (adminState.statusFilter !== 'ALL' && g.status !== adminState.statusFilter) return false;
+                return true;
+            });
+
+            // 1. Agrupar Lotes activos (2 o más prendas RESERVADAS con el mismo reservationGroupId)
+            const groupsMap = new Map();
+            adminState.garments.forEach(g => {
+                if (g.status === 'RESERVADA' && g.reservationGroupId) {
+                    if (adminState.dropFilter !== 'ALL' && g.dropId !== adminState.dropFilter) return;
+                    if (!groupsMap.has(g.reservationGroupId)) groupsMap.set(g.reservationGroupId, []);
+                    groupsMap.get(g.reservationGroupId).push(g);
+                }
+            });
+
+            const activeLots = [...groupsMap.entries()].filter(([_, items]) => items.length >= 2);
+            const lotsSection = document.getElementById('groupedLotsSection');
+            const lotsContainer = document.getElementById('groupedLotsContainer');
+
+            if (activeLots.length > 0 && (adminState.statusFilter === 'ALL' || adminState.statusFilter === 'RESERVADA')) {
+                lotsSection.classList.remove('hidden');
+                lotsContainer.innerHTML = activeLots.map(([groupId, items]) => {
+                    const buyerVinted = items[0].reservedByVinted || 'comprador';
+                    const buyerEmail = items[0].reservedByEmail || '';
+                    const lotPrice = Number(items[0].reservationLotPriceEur) > 0
+                        ? round2(items[0].reservationLotPriceEur)
+                        : round2(items.reduce((acc, x) => acc + Number(x.reservedFinalPriceEur || x.priceEur || 0), 0));
+                    const baseSum = round2(items.reduce((acc, x) => acc + Number(x.priceEur || 0), 0));
+                    const allPhotos = items.flatMap(x => x.photos || []);
+
+                    return `
+                    <article id="lot-card-${escapeHtml(groupId.toUpperCase())}" class="rounded-2xl bg-obsidian-card border-2 border-acid/60 p-5 shadow-xl space-y-4">
+                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-zinc-800 pb-3">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase">${escapeHtml(groupId)} • ${items.length} PRENDAS</span>
+                                <h3 class="mt-1.5 font-display text-lg font-bold text-white">Reservar Lote a <span class="text-acid">@${escapeHtml(buyerVinted)}</span></h3>
+                                <p class="text-xs text-zinc-400">${escapeHtml(buyerEmail)}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block font-mono text-[10px] uppercase text-zinc-400">Precio Lote Vinted</span>
+                                <span class="font-display text-2xl font-bold text-acid">${fmtEur(lotPrice)}</span>
+                                ${lotPrice < baseSum ? `<span class="block font-mono text-[11px] text-zinc-500 line-through">Base: ${fmtEur(baseSum)}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5 text-xs">
+                            ${items.map(it => `
+                                <div class="flex justify-between items-center px-3 py-1.5 rounded-lg bg-obsidian-elevated">
+                                    <span><strong class="font-mono text-acid">${escapeHtml(it.ref)}</strong> ${escapeHtml(it.title)} ${it.size ? '(' + escapeHtml(it.size) + ')' : ''}</span>
+                                    <span class="font-mono text-zinc-400">${fmtEur(it.priceEur)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <!-- Botonera 1-Toque para subir el Lote unificado a Vinted -->
+                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                            <div class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">📋 Copiar Anuncio de Lote para Vinted (1 toque)</div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" data-lot-copy="title" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                    📋 Copiar Título Lote
+                                </button>
+                                <button type="button" data-lot-copy="desc" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                    📋 Copiar Descripción Lote
+                                </button>
+                                <button type="button" data-lot-copy="price" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-acid/20 hover:bg-acid/30 border border-acid/40 text-xs font-bold text-acid text-left">
+                                    💶 Copiar Precio (${fmtVintedInputPrice(lotPrice)})
+                                </button>
+                                <button type="button" data-lot-copy="user" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-acid/20 hover:bg-acid/30 border border-acid/40 text-xs font-bold text-acid text-left truncate">
+                                    👤 Copiar @${escapeHtml(buyerVinted)}
+                                </button>
+                            </div>
+                            <div class="flex flex-wrap gap-2 pt-1">
+                                <button type="button" data-lot-photos="${escapeHtml(groupId)}" class="flex-1 py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200">
+                                    📸 Descargar Fotos del Lote (${allPhotos.length})
+                                </button>
+                                <button type="button" data-lot-sold="${escapeHtml(groupId)}" class="py-2 px-3 rounded-lg bg-emerald-950/70 border border-emerald-500/40 hover:bg-emerald-900/70 text-xs text-emerald-200 font-semibold">
+                                    ✅ Marcar Lote Vendido
+                                </button>
+                            </div>
+                        </div>
+                    </article>`;
+                }).join('');
+
+                // Eventos botones de Lote
+                lotsContainer.querySelectorAll('[data-lot-copy]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const gid = btn.getAttribute('data-lot-id');
+                        const kind = btn.getAttribute('data-lot-copy');
+                        const items = groupsMap.get(gid) || [];
+                        if (!items.length) return;
+                        const buyer = items[0].reservedByVinted || 'comprador';
+                        const lotPrice = Number(items[0].reservationLotPriceEur) > 0
+                            ? round2(items[0].reservationLotPriceEur)
+                            : round2(items.reduce((acc, x) => acc + Number(x.reservedFinalPriceEur || x.priceEur || 0), 0));
+
+                        if (kind === 'title') copyText(buildLotVintedTitle(items, buyer), 'Título del Lote');
+                        if (kind === 'desc') copyText(buildLotVintedDescription(items, buyer), 'Descripción completa del Lote');
+                        if (kind === 'price') copyText(fmtVintedInputPrice(lotPrice), `Precio Lote (${fmtVintedInputPrice(lotPrice)})`);
+                        if (kind === 'user') copyText(buyer.replace(/^@+/, ''), `Usuario ${buyer}`);
+                    });
+                });
+
+                lotsContainer.querySelectorAll('[data-lot-photos]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const gid = btn.getAttribute('data-lot-photos');
+                        const items = groupsMap.get(gid) || [];
+                        const urls = items.flatMap(x => x.photos || []);
+                        downloadPhotosList(urls, gid);
+                    });
+                });
+
+                lotsContainer.querySelectorAll('[data-lot-sold]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const gid = btn.getAttribute('data-lot-sold');
+                        const items = groupsMap.get(gid) || [];
+                        if (!confirm(`¿Marcar las ${items.length} prendas de ${gid} como VENDIDAS?`)) return;
+                        try {
+                            for (const it of items) {
+                                await callAdminApi('update_status', { ref: it.ref, newStatus: 'VENDIDA' });
+                            }
+                            toast(`✓ Lote ${gid} marcado como VENDIDO`);
+                            await loadDashboard();
+                        } catch (err) {
+                            toast(err.message, true);
+                        }
+                    });
+                });
+            } else {
+                lotsSection.classList.add('hidden');
+            }
+
+            // 2. Renderizar tarjetas individuales (sirve para RESERVADAS, SOBRANTES 24H a precio normal, y COLAS)
+            const cardsEl = document.getElementById('vintedCardsContainer');
+            if (filtered.length === 0) {
+                cardsEl.innerHTML = `<div class="lg:col-span-2 p-8 rounded-2xl bg-obsidian-card border border-obsidian-border text-center text-xs text-zinc-400">
+                    No hay prendas con el filtro seleccionado.
+                </div>`;
+                return;
+            }
+
+            cardsEl.innerHTML = filtered.map(g => {
+                const isRes = g.status === 'RESERVADA';
+                const isSold = g.status === 'VENDIDA';
+                const priceForVinted = (isRes && Number(g.reservedFinalPriceEur) > 0)
+                    ? round2(g.reservedFinalPriceEur)
+                    : round2(g.priceEur);
+                const waitlist = Array.isArray(g.waitlist) ? g.waitlist : [];
+
+                let badgeClass = 'bg-emerald-950 text-acid border-acid/50';
+                if (isRes) badgeClass = 'bg-amber-950 text-amber-300 border-amber-400/50';
+                if (isSold) badgeClass = 'bg-zinc-900 text-zinc-400 border-zinc-700';
+
+                return `
+                <article id="vinted-card-${escapeHtml(g.ref.toUpperCase())}" class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3.5">
+                        <div class="flex items-start gap-3.5">
+                            ${g.photos && g.photos[0]
+                                ? `<img src="${escapeHtml(g.photos[0])}" alt="" class="w-16 h-20 rounded-xl object-cover border border-zinc-700 shrink-0">`
+                                : `<div class="w-16 h-20 rounded-xl bg-obsidian-elevated border border-zinc-800 shrink-0"></div>`
+                            }
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-wrap items-center justify-between gap-1.5">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="font-mono text-xs font-bold text-acid">${escapeHtml(g.ref)}</span>
+                                        <span class="font-mono text-[10px] px-2 py-0.5 rounded-full border ${badgeClass}">${escapeHtml(g.status)}</span>
+                                    </div>
+                                    <span class="font-mono text-[10px] text-zinc-500">${escapeHtml(g.dropId)}</span>
+                                </div>
+                                <h3 class="mt-1 font-display text-base font-bold text-white leading-snug">${escapeHtml(g.title)}</h3>
+                                <p class="mt-0.5 font-mono text-[11px] text-zinc-400">
+                                    ${[g.brand, g.size ? 'Talla ' + g.size : '', g.vintedCondition].filter(Boolean).map(escapeHtml).join(' • ')}
+                                </p>
+                                <div class="mt-1 flex items-baseline gap-2">
+                                    <span class="font-display text-lg font-bold text-acid">${fmtEur(priceForVinted)}</span>
+                                    ${isRes && priceForVinted < g.priceEur ? `<span class="font-mono text-[11px] text-zinc-500 line-through">Base: ${fmtEur(g.priceEur)}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        ${isRes ? `
+                            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs space-y-0.5">
+                                <div class="font-semibold text-amber-200">Reservada para: <span class="font-mono text-white">@${escapeHtml(g.reservedByVinted)}</span></div>
+                                <div class="text-zinc-400">${escapeHtml(g.reservedByEmail)} ${g.reservationGroupId ? '• <span class="font-mono text-zinc-300">' + escapeHtml(g.reservationGroupId) + '</span>' : ''}</div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Asistente Copiar para Vinted en 1 Toque -->
+                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">
+                                    📋 Copiar para Vinted ${isRes ? '(Precio VIP)' : '(Subida en abierto)'}
+                                </span>
+                                <span class="font-mono text-[10px] text-zinc-500">${(g.photos || []).length} fotos</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" data-copy-field="title" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                    📋 Copiar Título
+                                </button>
+                                <button type="button" data-copy-field="desc" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                    📋 Copiar Descripción
+                                </button>
+                                <button type="button" data-copy-field="price" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left">
+                                    💶 Precio (${fmtVintedInputPrice(priceForVinted)})
+                                </button>
+                                ${isRes && g.reservedByVinted
+                                    ? `<button type="button" data-copy-field="user" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left truncate">
+                                        👤 @${escapeHtml(g.reservedByVinted)}
+                                       </button>`
+                                    : `<button type="button" data-dl-photos="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200 text-left">
+                                        📸 Bajar Fotos (${(g.photos || []).length})
+                                       </button>`
+                                }
+                            </div>
+                            ${isRes && g.reservedByVinted ? `
+                                <button type="button" data-dl-photos="${escapeHtml(g.ref)}" class="w-full py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200">
+                                    📸 Descargar Fotos de ${escapeHtml(g.ref)} (${(g.photos || []).length})
+                                </button>
+                            ` : ''}
+                        </div>
+
+                        <!-- Cola de espera si hay suplentes apuntados -->
+                        ${waitlist.length > 0 ? `
+                            <div class="p-3 rounded-xl bg-obsidian border border-zinc-800 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-mono text-[11px] font-bold text-amber-300">⏳ En cola de espera (${waitlist.length})</span>
+                                    <button type="button" data-promote-ref="${escapeHtml(g.ref)}" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-[11px] uppercase">
+                                        Pasar al 1º en cola →
+                                    </button>
+                                </div>
+                                <ol class="text-[11px] text-zinc-400 space-y-0.5 list-decimal list-inside">
+                                    ${waitlist.map(w => `<li><strong class="text-zinc-200">@${escapeHtml(w.vintedUser)}</strong> (${escapeHtml(w.email)})</li>`).join('')}
+                                </ol>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Acciones de Estado -->
+                    <div class="pt-3 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex flex-wrap gap-1.5">
+                            ${g.status !== 'VENDIDA' ? `
+                                <button type="button" data-status-ref="${escapeHtml(g.ref)}" data-new-status="VENDIDA" class="px-3 py-1.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 hover:bg-emerald-900/70 text-xs text-emerald-200 font-semibold">
+                                    ✅ Marcar Vendida
+                                </button>
+                            ` : ''}
+                            ${g.status !== 'DISPONIBLE' ? `
+                                <button type="button" data-release-ref="${escapeHtml(g.ref)}" data-was-reserved="${isRes ? '1' : '0'}" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200">
+                                    🔓 Liberar a Disponible
+                                </button>
+                            ` : ''}
+                        </div>
+                        <button type="button" data-edit-vinted="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-zinc-600 text-xs text-zinc-400 hover:text-white">
+                            Editar ficha
+                        </button>
+                    </div>
+                </article>`;
+            }).join('');
+
+            // Bind eventos tarjetas individuales
+            cardsEl.querySelectorAll('[data-copy-field]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ref = btn.getAttribute('data-ref');
+                    const field = btn.getAttribute('data-copy-field');
+                    const g = adminState.garments.find(x => x.ref === ref);
+                    if (!g) return;
+                    const priceVal = (g.status === 'RESERVADA' && Number(g.reservedFinalPriceEur) > 0)
+                        ? g.reservedFinalPriceEur
+                        : g.priceEur;
+                    if (field === 'title') copyText(g.title, `Título ${ref}`);
+                    if (field === 'desc') copyText(buildIndividualVintedDescription(g), `Descripción ${ref} con pie y hashtags`);
+                    if (field === 'price') copyText(fmtVintedInputPrice(priceVal), `Precio (${fmtVintedInputPrice(priceVal)})`);
+                    if (field === 'user') copyText((g.reservedByVinted || '').replace(/^@+/, ''), `Usuario ${g.reservedByVinted}`);
+                });
+            });
+
+            cardsEl.querySelectorAll('[data-dl-photos]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ref = btn.getAttribute('data-dl-photos');
+                    const g = adminState.garments.find(x => x.ref === ref);
+                    if (g) downloadPhotosList(g.photos || [], g.ref);
+                });
+            });
+
+            cardsEl.querySelectorAll('[data-promote-ref]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-promote-ref');
+                    if (!confirm(`¿Asignar ${ref} al 1º suplente en cola, recalcular su precio automáticamente y avisarle por correo?`)) return;
+                    btn.disabled = true;
+                    btn.textContent = 'Asignando...';
+                    try {
+                        const res = await callAdminApi('promote_waitlist', { ref });
+                        toast(res.message || `✓ ${ref} asignada al suplente`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            cardsEl.querySelectorAll('[data-status-ref]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-status-ref');
+                    const newStatus = btn.getAttribute('data-new-status');
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus });
+                        toast(`✓ ${ref} marcada como ${newStatus}`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+
+            cardsEl.querySelectorAll('[data-release-ref]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-release-ref');
+                    if (!confirm(`¿Liberar ${ref} para que vuelva a aparecer como DISPONIBLE en el escaparate?`)) return;
+                    const wasReserved = btn.getAttribute('data-was-reserved') === '1';
+                    let restoreCoupon = false;
+                    if (wasReserved) {
+                        restoreCoupon = confirm(`¿Quieres restaurarle el cupón de bienvenida al comprador anterior que no completó la compra?\n\n• Aceptar = Sí, restaurar su cupón\n• Cancelar = Liberar prenda sin restaurar cupón`);
+                    }
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus: 'DISPONIBLE', restoreCoupon });
+                        toast(`✓ ${ref} vuelve a estar DISPONIBLE`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+
+            cardsEl.querySelectorAll('[data-edit-vinted]').forEach(btn => {
+                btn.addEventListener('click', () => loadGarmentIntoForm(btn.getAttribute('data-edit-vinted')));
+            });
+        }
+
+        // ======================== PESTAÑA 3: GUARDAR AJUSTES ========================
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('saveSettingsBtn');
+            btn.disabled = true;
+            btn.textContent = 'Guardando cambios...';
+            try {
+                await callAdminApi('save_config', {
+                    discountPercent: Number(document.getElementById('cfgDiscountPct').value || 0),
+                    maxDiscountEur: Number(document.getElementById('cfgMaxDiscountEur').value || 0),
+                    maxItemsPerOrder: Number(document.getElementById('cfgMaxItems').value || 0),
+                    vintedFooterTemplate: document.getElementById('cfgVintedFooter').value
+                });
+                toast('✓ Reglas de descuento y pie de Vinted actualizados en vivo');
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Guardar Ajustes en Vivo';
+            }
+        });
+
+        // ======================== ARRANQUE ========================
+        (async function init() {
+            try {
+                const res = await fetch(WEBHOOK_ADMIN_AUTH_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'auth_status' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && typeof data.hasPasswordConfigured === 'boolean') {
+                    adminState.hasPasswordConfigured = data.hasPasswordConfigured;
+                }
+            } catch (e) {
+                console.warn('Error consultando auth_status:', e);
+            }
+
+            if (adminState.password && adminState.hasPasswordConfigured) {
+                try {
+                    await loadDashboard();
+                    return;
+                } catch (e) {
+                    // Si falla, caerá a pantalla de login
+                }
+            }
+            showAuthScreen();
+        })();
+    </script>
+</body>
+</html>
