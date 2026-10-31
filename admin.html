@@ -677,10 +677,38 @@
             return [];
         }
 
+        function getStoredPassword() {
+            try {
+                return localStorage.getItem('vm_admin_session_pwd') || sessionStorage.getItem('vm_admin_session_pwd') || '';
+            } catch (e) {
+                return sessionStorage.getItem('vm_admin_session_pwd') || '';
+            }
+        }
+
+        function setStoredPassword(pwd) {
+            try { localStorage.setItem('vm_admin_session_pwd', pwd); } catch (e) {}
+            try { sessionStorage.setItem('vm_admin_session_pwd', pwd); } catch (e) {}
+        }
+
+        function clearStoredPassword() {
+            try { localStorage.removeItem('vm_admin_session_pwd'); } catch (e) {}
+            try { sessionStorage.removeItem('vm_admin_session_pwd'); } catch (e) {}
+        }
+
+        function getStoredTab() {
+            const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
+            if (['drops', 'vinted', 'settings'].includes(hash)) return hash;
+            try {
+                const saved = localStorage.getItem('vm_admin_active_tab');
+                if (['drops', 'vinted', 'settings'].includes(saved)) return saved;
+            } catch (e) {}
+            return (deepLinkLote || deepLinkRef) ? 'vinted' : 'drops';
+        }
+
         const adminState = {
-            password: sessionStorage.getItem('vm_admin_session_pwd') || '',
+            password: getStoredPassword(),
             hasPasswordConfigured: true,
-            activeTab: (deepLinkLote || deepLinkRef) ? 'vinted' : 'drops',
+            activeTab: getStoredTab(),
             statusFilter: 'ALL',
             dropFilter: 'ALL',
             editingRef: null,
@@ -855,7 +883,7 @@
             }
             const data = await res.json().catch(() => ({}));
             if (res.status === 401) {
-                sessionStorage.removeItem('vm_admin_session_pwd');
+                clearStoredPassword();
                 adminState.password = '';
                 showAuthScreen('Tu sesión ha caducado o la contraseña ha cambiado. Vuelve a entrar.');
                 throw new Error(data.message || 'No autorizado');
@@ -958,7 +986,7 @@
 
                 adminState.password = newPassword;
                 adminState.hasPasswordConfigured = true;
-                sessionStorage.setItem('vm_admin_session_pwd', newPassword);
+                setStoredPassword(newPassword);
                 toast('✓ Contraseña configurada. Cargando tu panel...');
                 await loadDashboard();
             } catch (err) {
@@ -982,8 +1010,10 @@
             try {
                 adminState.password = pwd;
                 await loadDashboard();
-                sessionStorage.setItem('vm_admin_session_pwd', pwd);
+                setStoredPassword(pwd);
             } catch (err) {
+                adminState.password = '';
+                clearStoredPassword();
                 setAuthFeedback(err.message || 'Contraseña incorrecta.', true);
             } finally {
                 btn.disabled = false;
@@ -992,9 +1022,9 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            sessionStorage.removeItem('vm_admin_session_pwd');
+            clearStoredPassword();
             adminState.password = '';
-            showAuthScreen();
+            showAuthScreen('Has cerrado sesión correctamente.');
         });
 
         // ======================== PESTAÑAS, SINCRONIZACIÓN EN VIVO Y DASHBOARD ========================
@@ -1002,9 +1032,17 @@
         let autoPollingInterval = null;
 
         function setActiveTab(tabName) {
+            if (!['drops', 'vinted', 'settings'].includes(tabName)) tabName = 'drops';
             adminState.activeTab = tabName;
+            try {
+                localStorage.setItem('vm_admin_active_tab', tabName);
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', `#${tabName}`);
+                }
+            } catch (e) {}
             ['drops', 'vinted', 'settings'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
+                const tabEl = document.getElementById(`tab-${t}`);
+                if (tabEl) tabEl.classList.toggle('hidden', t !== tabName);
             });
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 const isAct = btn.getAttribute('data-tab') === tabName;
@@ -1018,6 +1056,13 @@
             }
             lucide.createIcons();
         }
+
+        window.addEventListener('hashchange', () => {
+            const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
+            if (['drops', 'vinted', 'settings'].includes(hash) && hash !== adminState.activeTab) {
+                setActiveTab(hash);
+            }
+        });
 
         async function syncDashboardQuietly(isAuto = false) {
             if (!adminState.password) return;
@@ -2102,7 +2147,7 @@
         });
 
         // ======================== ARRANQUE ========================
-        (async function init() {
+        async function checkServerAuthStatus() {
             try {
                 const res = await fetch(WEBHOOK_ADMIN_AUTH_URL, {
                     method: 'POST',
@@ -2116,15 +2161,42 @@
             } catch (e) {
                 console.warn('Error consultando auth_status:', e);
             }
+        }
 
-            if (adminState.password && adminState.hasPasswordConfigured) {
+        (async function init() {
+            // 1. Si ya tenemos contraseña guardada en almacenamiento persistente, entrar directo
+            if (adminState.password) {
                 try {
                     await loadDashboard();
                     return;
                 } catch (e) {
-                    // Si falla, caerá a pantalla de login
+                    console.warn('Fallo inicial al cargar panel con contraseña guardada:', e);
+                    // Si el error fue 401 Unauthorized, callAdminApi ya borró la credencial y mostró la pantalla de login.
+                    // Si el error fue de red/servidor (no 401) y seguimos con contraseña guardada:
+                    if (adminState.password) {
+                        const authCheckingEl = document.getElementById('authChecking');
+                        if (authCheckingEl) {
+                            authCheckingEl.innerHTML = `
+                                <div class="space-y-3 py-2">
+                                    <p class="text-amber-400 font-semibold text-xs">⚠️ No se pudo sincronizar con el servidor en este momento.</p>
+                                    <p class="text-zinc-400 text-[11px]">${escapeHtml(e.message || 'Error de conexión temporal.')}</p>
+                                    <button type="button" id="retryInitBtn" class="px-4 py-2 rounded-xl bg-acid text-obsidian font-bold text-xs uppercase hover:bg-acid-hover shadow-md">
+                                        Reintentar Conexión
+                                    </button>
+                                </div>
+                            `;
+                            document.getElementById('retryInitBtn')?.addEventListener('click', () => {
+                                authCheckingEl.innerHTML = '<span class="text-zinc-400">Reintentando conexión con el panel...</span>';
+                                init();
+                            });
+                        }
+                        return;
+                    }
                 }
             }
+
+            // 2. Si no hay contraseña guardada, verificar si ya se configuró o requiere setup OTP inicial
+            await checkServerAuthStatus();
             showAuthScreen();
         })();
     </script>
