@@ -18,7 +18,7 @@
             try {
                 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
                 const params = new URLSearchParams(window.location.search);
-                if (isStandalone && !params.has('escaparate') && !params.has('drop') && !params.has('reservar')) {
+                if (isStandalone && !params.has('escaparate') && !params.has('drop') && !params.has('reservar') && !params.has('landing')) {
                     window.location.replace('admin.html');
                 }
             } catch (e) {}

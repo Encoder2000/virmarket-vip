@@ -84,14 +84,22 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
-                <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors">
-                    <i data-lucide="external-link" class="w-3.5 h-3.5 text-acid"></i>
-                    <span class="hidden sm:inline">Ver Escaparate</span>
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Landing Page de Captación QR">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
+                    <span class="hidden md:inline">Landing Page</span>
                 </a>
-                <button id="logoutBtn" type="button" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-rose-500/60 text-xs text-zinc-400 hover:text-rose-300 transition-colors">
+                <a href="tarjeta_qr.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver e imprimir Tarjetas de Agradecimiento QR">
+                    <i data-lucide="qr-code" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
+                    <span class="hidden md:inline">Tarjetas QR</span>
+                </a>
+                <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Escaparate VIP Activo">
+                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
+                    <span class="hidden sm:inline">Escaparate</span>
+                </a>
+                <button id="logoutBtn" type="button" class="hidden items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-rose-500/60 text-xs text-zinc-400 hover:text-rose-300 transition-colors" title="Cerrar sesión">
                     <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                    <span>Salir</span>
+                    <span class="hidden sm:inline">Salir</span>
                 </button>
             </div>
         </div>
@@ -535,6 +543,91 @@
                             </button>
                         </form>
                     </div>
+
+                    <!-- Tarjeta de Accesos Directos al Ecosistema VirMarket -->
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-7 space-y-4">
+                        <div class="flex items-center justify-between gap-3 border-b border-obsidian-border pb-3">
+                            <div>
+                                <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Ecosistema VirMarket</span>
+                                <h3 class="font-display text-lg font-bold text-white uppercase mt-0.5">Páginas Públicas &amp; Material de Envíos</h3>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[11px] font-bold">3 Accesos Directos</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <!-- 1. Landing Page -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-acid/10 border border-acid/20 text-acid flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="globe" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-sm text-white uppercase flex items-center gap-2">
+                                            Landing Page de Captación QR
+                                            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-normal">Pública</span>
+                                        </h4>
+                                        <p class="text-xs text-zinc-400 mt-0.5">
+                                            Página donde aterrizan los clientes al escanear el QR. Formulario directo de email con descuento dinámico.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                                    <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-acid text-obsidian hover:bg-acid-hover text-xs font-display font-bold uppercase transition-colors">
+                                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                        <span>Abrir</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 2. Tarjetas QR Imprimibles -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-acid/10 border border-acid/20 text-acid flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="qr-code" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-sm text-white uppercase flex items-center gap-2">
+                                            Tarjetas de Agradecimiento QR
+                                            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-normal">Imprimible</span>
+                                        </h4>
+                                        <p class="text-xs text-zinc-400 mt-0.5">
+                                            Formatos Postal A6 (4/folio) y Tarjeta de Visita (8/folio). Diseños Dark y Eco Blanco listos para imprimir e incluir en pedidos Vinted.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                                    <a href="tarjeta_qr.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-acid text-obsidian hover:bg-acid-hover text-xs font-display font-bold uppercase transition-colors">
+                                        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                                        <span>Abrir e Imprimir</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 3. Escaparate Web VIP -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-acid/10 border border-acid/20 text-acid flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-sm text-white uppercase flex items-center gap-2">
+                                            Escaparate Web VIP (Drops 24h)
+                                            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-normal">Exclusivo Clientes</span>
+                                        </h4>
+                                        <p class="text-xs text-zinc-400 mt-0.5">
+                                            Catálogo interactivo con el drop activo, reservas de prendas individuales o Lotes VIP con cálculo de descuentos.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                                    <a id="tabShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-acid text-obsidian hover:bg-acid-hover text-xs font-display font-bold uppercase transition-colors">
+                                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                        <span>Abrir</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -923,6 +1016,7 @@
             if (tabName === 'vinted' && adminState.password) {
                 syncDashboardQuietly(true);
             }
+            lucide.createIcons();
         }
 
         async function syncDashboardQuietly(isAuto = false) {
@@ -1054,7 +1148,11 @@
                     : 'Sin dto.';
 
             if (cfg.activeDropId) {
-                document.getElementById('liveShowroomLink').href = `./?drop=${encodeURIComponent(cfg.activeDropId)}`;
+                const showroomUrl = `./?drop=${encodeURIComponent(cfg.activeDropId)}`;
+                const elLive = document.getElementById('liveShowroomLink');
+                if (elLive) elLive.href = showroomUrl;
+                const elTab = document.getElementById('tabShowroomLink');
+                if (elTab) elTab.href = showroomUrl;
             }
 
             // Inicializar campos del Drop si están vacíos
