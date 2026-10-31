@@ -1313,7 +1313,7 @@
                     ? ` por un importe final de ${fmtEur(payload.finalTotalEur)}${payload.appliedDiscountEur > 0 ? ' (descuento de bienvenida aplicado)' : ''}`
                     : '';
                 document.getElementById('checkoutSuccessMsg').textContent =
-                    `Subiremos ${refs.join(', ')} a Vinted reservada exclusivamente al usuario @${vintedUser}${priceInfo}. Te hemos enviado un correo de confirmación con el desglose.`;
+                    `Hemos bloqueado ${refs.join(', ')}${priceInfo} para @${vintedUser}. Te hemos enviado un correo con el desglose y, en cuanto activemos tu precio VIP y la reservemos a tu usuario en Vinted, recibirás un segundo email con el enlace directo para completar la compra en 1 clic.`;
                 document.getElementById('checkoutSuccessBox').classList.remove('hidden');
                 lucide.createIcons();
                 fetchCatalog(true);

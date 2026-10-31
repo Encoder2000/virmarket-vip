@@ -290,11 +290,51 @@
                                 <div id="existingDropsChips" class="mt-3 flex flex-wrap items-center gap-1.5"></div>
                             </div>
 
+                            <!-- Importador Inteligente Dual desde Vinted (0,00 € • Sin IA) -->
+                            <div id="vintedImportCard" class="rounded-2xl bg-obsidian-card border-2 border-acid/40 p-5 sm:p-6 shadow-xl shadow-acid/5 space-y-3.5">
+                                <div class="flex flex-wrap items-start justify-between gap-2">
+                                    <div>
+                                        <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Paso B1 • Flujo Rápido Vinted-First (0 € • Sin IA)</span>
+                                        <h2 class="font-display text-lg font-bold text-white uppercase mt-0.5">⚡ Importar Prendas desde URL de Vinted</h2>
+                                    </div>
+                                    <span id="vintedImportModeBadge" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-[10px] text-zinc-300">
+                                        1 URL = Revisar • 2+ URLs = Lote directo
+                                    </span>
+                                </div>
+
+                                <div class="p-3 rounded-xl bg-obsidian-elevated/80 border border-zinc-800 text-xs text-zinc-300 leading-relaxed">
+                                    <strong class="text-acid font-mono">1º</strong> Sube la(s) prenda(s) en Vinted a precio sin descuento →
+                                    <strong class="text-acid font-mono">2º</strong> Pega aquí el enlace (o varios, uno por línea) y pulsa <strong>Importar</strong> →
+                                    <strong class="text-acid font-mono">3º</strong> Pásalas a <strong>Modo Oculto</strong> en Vinted.
+                                </div>
+
+                                <div>
+                                    <textarea
+                                        id="vintedImportUrlsInput"
+                                        rows="2"
+                                        placeholder="https://www.vinted.es/items/10603463522-bolso-de-hombro&#10;(Pega 1 enlace para autorrellenar el formulario, o pega varios enlaces uno por línea para importar todo el lote de golpe)"
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid"
+                                    ></textarea>
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-2.5">
+                                    <button id="vintedImportBtn" type="button" class="flex-1 py-3 px-4 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center justify-center gap-2">
+                                        <i data-lucide="zap" class="w-4 h-4"></i>
+                                        <span id="vintedImportBtnText">Extraer Datos y Fotos de Vinted</span>
+                                    </button>
+                                    <button id="vintedClearUrlsBtn" type="button" class="hidden py-3 px-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-zinc-500 text-xs text-zinc-300">
+                                        Limpiar
+                                    </button>
+                                </div>
+
+                                <div id="vintedImportFeedback" class="hidden p-3.5 rounded-xl text-xs space-y-2"></div>
+                            </div>
+
                             <!-- Formulario Añadir / Editar Prenda (100% Compatible con Vinted) -->
                             <div id="garmentFormCard" class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6">
                                 <div class="flex items-center justify-between gap-2 mb-4">
                                     <div>
-                                        <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Paso B • Escribe una sola vez (Sirve para Web, Email y Vinted)</span>
+                                        <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Paso B2 • Revisar Ficha Importada o Crear Manualmente</span>
                                         <h2 id="garmentFormHeading" class="font-display text-lg font-bold text-white uppercase">Añadir Prenda al Drop</h2>
                                     </div>
                                     <button id="resetGarmentFormBtn" type="button" class="hidden px-3 py-1 rounded-lg bg-zinc-800 text-xs text-zinc-300 hover:text-white">
@@ -367,7 +407,14 @@
                                     <div>
                                         <label for="gDesc" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Medidas y detalles de la prenda</label>
                                         <textarea id="gDesc" rows="3" placeholder="Ej: Medidas axila a axila: 61 cm | Largo: 68 cm. Sin manchas ni desperfectos." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid"></textarea>
-                                        <p class="mt-1 text-[11px] text-zinc-500">Al pulsar «Copiar Descripción» para Vinted, se añadirán automáticamente título, descripción, marca, talla y tu pie fijo con hashtags (el estado se selecciona directamente en Vinted).</p>
+                                        <p class="mt-1 text-[11px] text-zinc-500">Al importar desde Vinted, los #hashtags finales y tu pie fijo se limpian automáticamente para que el Escaparate VIP luzca impecable.</p>
+                                    </div>
+
+                                    <div>
+                                        <label for="gVintedUrl" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">
+                                            Enlace privado del anuncio en Vinted <span class="font-mono text-[10px] text-zinc-500">(Solo visible para ti y al enviar link de compra)</span>
+                                        </label>
+                                        <input type="url" id="gVintedUrl" placeholder="https://www.vinted.es/items/..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-acid placeholder-zinc-500 focus:outline-none focus:border-acid">
                                     </div>
 
                                     <div id="garmentUploadProgress" class="hidden p-3 rounded-xl bg-obsidian-elevated border border-acid/40 font-mono text-xs text-acid"></div>
@@ -728,6 +775,8 @@
             editingRef: null,
             // Cada foto: { type: 'remote', url } o { type: 'local', base64, previewUrl }
             formPhotos: [],
+            draftLotUrls: {},
+            draftSingleUrls: {},
             config: {
                 discountPercent: 10,
                 maxDiscountEur: 15,
@@ -1155,7 +1204,16 @@
                 const statWaitEl = document.getElementById('statWaitlistCount');
                 if (statWaitEl) statWaitEl.textContent = totalWaitlistCount > 0 ? `${totalWaitlistCount}` : '0';
 
-                renderVintedWorkspace();
+                const activeEl = document.activeElement;
+                const isTypingInVintedTab = Boolean(
+                    isAuto &&
+                    activeEl &&
+                    activeEl.tagName === 'INPUT' &&
+                    document.getElementById('tab-vinted')?.contains(activeEl)
+                );
+                if (!isTypingInVintedTab) {
+                    renderVintedWorkspace();
+                }
                 renderCurrentDropList();
                 updateLiveSyncIndicator();
 
@@ -1476,6 +1534,8 @@
             document.getElementById('gBrand').value = '';
             document.getElementById('gCondition').value = 'Muy bueno';
             document.getElementById('gDesc').value = '';
+            const vUrlIn = document.getElementById('gVintedUrl');
+            if (vUrlIn) vUrlIn.value = '';
             renderPhotoPreviews();
         }
 
@@ -1490,6 +1550,255 @@
             });
         }
 
+        // ======================== IMPORTADOR DUAL DESDE VINTED (0 € • SIN LLM) ========================
+        function parseVintedUrlsFromText(rawText) {
+            const matches = String(rawText || '').match(/https?:\/\/(?:www\.)?vinted\.[a-z.]+\/items\/\d+[^\s"'<>]*/gi) || [];
+            const cleaned = matches.map(u => u.split('?')[0].split('#')[0].trim());
+            return [...new Set(cleaned)];
+        }
+
+        async function fetchCorsPhotoAsCompressedBase64(corsUrl) {
+            const resp = await fetch(corsUrl, { mode: 'cors' });
+            if (!resp.ok) throw new Error(`HTTP ${resp.status} al descargar fotografía.`);
+            const blob = await resp.blob();
+            return compressImageFile(blob, 1080, 0.85);
+        }
+
+        const vintedUrlsInputEl = document.getElementById('vintedImportUrlsInput');
+        const vintedModeBadgeEl = document.getElementById('vintedImportModeBadge');
+        const vintedImportBtnEl = document.getElementById('vintedImportBtn');
+        const vintedImportBtnTextEl = document.getElementById('vintedImportBtnText');
+        const vintedClearUrlsBtnEl = document.getElementById('vintedClearUrlsBtn');
+        const vintedImportFeedbackEl = document.getElementById('vintedImportFeedback');
+
+        function updateVintedImporterUiHint() {
+            const urls = parseVintedUrlsFromText(vintedUrlsInputEl?.value || '');
+            if (vintedClearUrlsBtnEl) {
+                vintedClearUrlsBtnEl.classList.toggle('hidden', !(vintedUrlsInputEl?.value || '').trim());
+            }
+            if (!vintedModeBadgeEl || !vintedImportBtnTextEl) return;
+            if (urls.length === 0) {
+                vintedModeBadgeEl.textContent = '1 URL = Revisar • 2+ URLs = Lote directo';
+                vintedModeBadgeEl.className = 'px-2.5 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-[10px] text-zinc-300';
+                vintedImportBtnTextEl.textContent = 'Extraer Datos y Fotos de Vinted';
+            } else if (urls.length === 1) {
+                vintedModeBadgeEl.textContent = '1 URL • Autorrellenar formulario';
+                vintedModeBadgeEl.className = 'px-2.5 py-1 rounded-lg bg-acid-muted border border-acid/50 font-mono text-[10px] text-acid font-bold';
+                vintedImportBtnTextEl.textContent = 'Extraer Ficha al Formulario (1 prenda)';
+            } else {
+                vintedModeBadgeEl.textContent = `${urls.length} URLs • Importación masiva al Drop`;
+                vintedModeBadgeEl.className = 'px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-[10px] font-bold';
+                vintedImportBtnTextEl.textContent = `Importar Lote de ${urls.length} Prendas al Drop`;
+            }
+        }
+
+        vintedUrlsInputEl?.addEventListener('input', updateVintedImporterUiHint);
+        vintedClearUrlsBtnEl?.addEventListener('click', () => {
+            if (vintedUrlsInputEl) vintedUrlsInputEl.value = '';
+            if (vintedImportFeedbackEl) vintedImportFeedbackEl.classList.add('hidden');
+            updateVintedImporterUiHint();
+        });
+
+        vintedImportBtnEl?.addEventListener('click', async () => {
+            const urls = parseVintedUrlsFromText(vintedUrlsInputEl?.value || '');
+            if (urls.length === 0) {
+                toast('Pega al menos 1 URL válida de prenda de Vinted (ej. https://www.vinted.es/items/...).', true);
+                vintedUrlsInputEl?.focus();
+                return;
+            }
+
+            let dropId = document.getElementById('dropIdInput').value.trim().toUpperCase();
+            if (!dropId) {
+                dropId = suggestDefaultDropId();
+                document.getElementById('dropIdInput').value = dropId;
+            }
+            const dropTitle = document.getElementById('dropTitleInput').value.trim() || 'Drop Privado 24h';
+
+            vintedImportBtnEl.disabled = true;
+            vintedImportFeedbackEl.className = 'p-3.5 rounded-xl text-xs bg-obsidian-elevated border border-acid/40 text-zinc-200 space-y-2';
+            vintedImportFeedbackEl.classList.remove('hidden');
+
+            try {
+                // MODO A: 1 SOLA URL -> Autorrellena el formulario con fotos clonadas listas para revisar/guardar
+                if (urls.length === 1) {
+                    const targetUrl = urls[0];
+                    vintedImportFeedbackEl.innerHTML = `<div class="font-mono text-acid">⚡ Extrayendo título, precio, talla, marca, estado y descripción limpia desde Vinted...</div>`;
+                    const res = await callAdminApi('extract_vinted_url', { vintedUrl: targetUrl });
+                    const g = res.garment || {};
+
+                    const photoList = Array.isArray(g.corsJpgPhotos) ? g.corsJpgPhotos.slice(0, 4) : [];
+                    const loadedPhotos = [];
+                    for (let i = 0; i < photoList.length; i++) {
+                        vintedImportFeedbackEl.innerHTML = `<div class="font-mono text-acid">📸 Preparando foto HD ${i + 1} de ${photoList.length} para tu CDN...</div>`;
+                        try {
+                            const b64 = await fetchCorsPhotoAsCompressedBase64(photoList[i]);
+                            loadedPhotos.push({ type: 'local', base64: b64, previewUrl: b64 });
+                        } catch (imgErr) {
+                            console.warn('Error descargando foto CORS:', imgErr);
+                        }
+                    }
+
+                    if (!adminState.editingRef) {
+                        document.getElementById('gRef').value = generateUniqueRef();
+                    }
+                    document.getElementById('gTitle').value = g.title || '';
+                    document.getElementById('gPrice').value = Number.isFinite(Number(g.priceEur)) ? g.priceEur : '';
+                    document.getElementById('gSize').value = g.size || '';
+                    document.getElementById('gBrand').value = g.brand || '';
+                    const condSel = document.getElementById('gCondition');
+                    if (g.vintedCondition && [...condSel.options].some(o => o.value === g.vintedCondition)) {
+                        condSel.value = g.vintedCondition;
+                    }
+                    document.getElementById('gDesc').value = g.description || '';
+                    const vUrlIn = document.getElementById('gVintedUrl');
+                    if (vUrlIn) vUrlIn.value = g.vintedUrl || targetUrl;
+
+                    if (loadedPhotos.length > 0) {
+                        adminState.formPhotos = loadedPhotos;
+                        renderPhotoPreviews();
+                    }
+
+                    vintedUrlsInputEl.value = '';
+                    updateVintedImporterUiHint();
+
+                    vintedImportFeedbackEl.className = 'p-3.5 rounded-xl text-xs bg-acid-muted border border-acid/50 text-zinc-100 space-y-2';
+                    vintedImportFeedbackEl.innerHTML = `
+                        <div class="font-bold text-white">✓ Ficha «${escapeHtml(g.title || 'Prenda')}» extraída (${loadedPhotos.length} fotos HD listas).</div>
+                        <p class="text-zinc-300">Revisa los campos abajo y pulsa <strong>Guardar Prenda en este Drop</strong>. Ya puedes pasarla a <strong>Modo Oculto</strong> en Vinted:</p>
+                        <a href="${escapeHtml(g.vintedUrl || targetUrl)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-obsidian border border-acid/50 text-acid font-mono text-[11px] font-bold hover:bg-obsidian-elevated">
+                            <span>👁️‍🗨️ Abrir en Vinted para Ocultar</span>
+                            <span>↗</span>
+                        </a>
+                    `;
+                    toast('✓ Ficha importada de Vinted al formulario');
+                    document.getElementById('garmentFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    return;
+                }
+
+                // MODO B: 2 O MÁS URLs -> Importación por lote directa al Drop actual + subida automática al CDN de GitHub
+                const imported = [];
+                const failed = [];
+                const existingUrlsInDrop = new Set(
+                    adminState.garments
+                        .filter(x => (x.dropId || '').toUpperCase() === dropId && x.vintedUrl)
+                        .map(x => x.vintedUrl.split('?')[0].trim().toLowerCase())
+                );
+
+                for (let idx = 0; idx < urls.length; idx++) {
+                    const u = urls[idx];
+                    const normU = u.toLowerCase();
+                    if (existingUrlsInDrop.has(normU)) {
+                        failed.push({ url: u, reason: 'Ya estaba importada en este Drop (omitida para no duplicar).' });
+                        continue;
+                    }
+
+                    vintedImportFeedbackEl.innerHTML = `
+                        <div class="font-mono text-acid font-bold">⚡ Importando prenda ${idx + 1} de ${urls.length}...</div>
+                        <div class="font-mono text-[11px] text-zinc-400 truncate">${escapeHtml(u)}</div>
+                    `;
+
+                    try {
+                        const res = await callAdminApi('extract_vinted_url', { vintedUrl: u });
+                        const g = res.garment || {};
+                        const ref = generateUniqueRef();
+                        const photoList = Array.isArray(g.corsJpgPhotos) ? g.corsJpgPhotos.slice(0, 4) : [];
+                        const uploadedUrls = [];
+
+                        for (let pIdx = 0; pIdx < photoList.length; pIdx++) {
+                            vintedImportFeedbackEl.innerHTML = `
+                                <div class="font-mono text-acid font-bold">📸 [${idx + 1}/${urls.length}] Subiendo foto ${pIdx + 1}/${photoList.length} de ${escapeHtml(ref)} al CDN...</div>
+                                <div class="text-zinc-300 truncate">${escapeHtml(g.title || u)}</div>
+                            `;
+                            const b64 = await fetchCorsPhotoAsCompressedBase64(photoList[pIdx]);
+                            const up = await callAdminApi('upload_photo', {
+                                dropId,
+                                ref,
+                                index: pIdx + 1,
+                                base64Data: b64
+                            });
+                            uploadedUrls.push(up.photoUrl);
+                        }
+
+                        if (uploadedUrls.length === 0) {
+                            throw new Error('No se pudieron descargar fotografías válidas del anuncio.');
+                        }
+
+                        const cleanVUrl = g.vintedUrl || u;
+                        await callAdminApi('save_garment', {
+                            garment: {
+                                ref,
+                                dropId,
+                                dropTitle,
+                                title: g.title || ref,
+                                brand: g.brand || '',
+                                size: g.size || '',
+                                vintedCondition: g.vintedCondition || 'Muy bueno',
+                                description: g.description || '',
+                                priceEur: Number(g.priceEur || 0),
+                                vintedUrl: cleanVUrl,
+                                photos: uploadedUrls
+                            }
+                        });
+
+                        // Registrar inmediatamente en memoria local para que la siguiente REF correlativa sea única
+                        adminState.garments.push({ ref, dropId, vintedUrl: cleanVUrl, status: 'DISPONIBLE' });
+                        existingUrlsInDrop.add(normU);
+                        imported.push({ ref, title: g.title || ref, url: cleanVUrl, priceEur: Number(g.priceEur || 0) });
+                    } catch (itemErr) {
+                        failed.push({ url: u, reason: itemErr.message || 'Error al extraer ficha' });
+                    }
+                }
+
+                await loadDashboard();
+                resetGarmentForm();
+
+                if (imported.length > 0 && failed.length === 0) {
+                    vintedUrlsInputEl.value = '';
+                } else if (failed.length > 0) {
+                    vintedUrlsInputEl.value = failed.map(f => f.url).join('\n');
+                }
+                updateVintedImporterUiHint();
+
+                vintedImportFeedbackEl.className = `p-3.5 rounded-xl text-xs space-y-2.5 ${
+                    failed.length > 0
+                        ? 'bg-amber-950/40 border border-amber-400/50 text-zinc-100'
+                        : 'bg-acid-muted border border-acid/50 text-zinc-100'
+                }`;
+                vintedImportFeedbackEl.innerHTML = `
+                    <div class="font-bold text-white">
+                        ✓ Lote procesado: ${imported.length} ${imported.length === 1 ? 'prenda guardada' : 'prendas guardadas'} en ${escapeHtml(dropId)}${failed.length > 0 ? ` • ${failed.length} con aviso` : ''}.
+                    </div>
+                    ${imported.length > 0 ? `
+                        <div class="space-y-1">
+                            <p class="text-[11px] text-acid font-semibold">Recuerda pasarlas ahora a Modo Oculto en Vinted:</p>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${imported.map(it => `
+                                    <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid font-mono text-[11px] text-zinc-200">
+                                        <strong class="text-acid">${escapeHtml(it.ref)}</strong>
+                                        <span class="max-w-[140px] truncate">${escapeHtml(it.title)}</span>
+                                        <span>↗</span>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${failed.length > 0 ? `
+                        <div class="pt-2 border-t border-amber-400/20 space-y-1 text-amber-200">
+                            ${failed.map(f => `<div>⚠️ <span class="font-mono text-[11px]">${escapeHtml(f.url)}</span>: ${escapeHtml(f.reason)}</div>`).join('')}
+                        </div>
+                    ` : ''}
+                `;
+                toast(`✓ ${imported.length} prendas importadas a ${dropId}`);
+            } catch (err) {
+                vintedImportFeedbackEl.className = 'p-3.5 rounded-xl text-xs bg-rose-950/60 border border-rose-500/50 text-rose-200';
+                vintedImportFeedbackEl.textContent = `⚠️ ${err.message}`;
+                toast(err.message, true);
+            } finally {
+                vintedImportBtnEl.disabled = false;
+                updateVintedImporterUiHint();
+            }
+        });
+
         function loadGarmentIntoForm(ref) {
             const g = adminState.garments.find(x => x.ref === ref);
             if (!g) return;
@@ -1503,6 +1812,8 @@
             document.getElementById('gBrand').value = g.brand || '';
             document.getElementById('gCondition').value = g.vintedCondition || 'Muy bueno';
             document.getElementById('gDesc').value = g.description || '';
+            const vUrlIn = document.getElementById('gVintedUrl');
+            if (vUrlIn) vUrlIn.value = g.vintedUrl || '';
             adminState.formPhotos = (g.photos || []).map(url => ({ type: 'remote', url }));
 
             document.getElementById('garmentFormHeading').textContent = `Editando ${g.ref}`;
@@ -1525,6 +1836,7 @@
             const brand = document.getElementById('gBrand').value.trim();
             const vintedCondition = document.getElementById('gCondition').value;
             const description = document.getElementById('gDesc').value.trim();
+            const vintedUrl = (document.getElementById('gVintedUrl')?.value || '').trim().split('?')[0];
 
             if (!dropId) {
                 toast('Indica un código de Drop arriba (ej. DROP-20261030-01).', true);
@@ -1586,6 +1898,7 @@
                         vintedCondition,
                         description,
                         priceEur,
+                        vintedUrl,
                         photos: finalPhotoUrls
                     }
                 });
@@ -1625,6 +1938,7 @@
                             <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="font-mono text-[11px] font-bold text-acid">${escapeHtml(g.ref)}</span>
                                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-zinc-900 text-zinc-400">${escapeHtml(g.status)}</span>
+                                ${g.vintedUrl ? `<a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-acid/15 text-acid border border-acid/30 hover:bg-acid/25" title="Abrir prenda en Vinted">🔗 Vinted ↗</a>` : ''}
                                 ${waitlist.length > 0 ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/40">⏳ ${waitlist.length} en cola</span>` : ''}
                             </div>
                             <p class="text-xs font-semibold text-white truncate">${escapeHtml(g.title)}</p>
@@ -1848,6 +2162,13 @@
             const lotsSection = document.getElementById('groupedLotsSection');
             const lotsContainer = document.getElementById('groupedLotsContainer');
 
+            const formatShortTime = (isoStr) => {
+                if (!isoStr) return '';
+                const d = new Date(isoStr);
+                if (isNaN(d.getTime())) return '';
+                return d.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+            };
+
             if (activeLots.length > 0 && (adminState.statusFilter === 'ALL' || adminState.statusFilter === 'RESERVADA')) {
                 lotsSection.classList.remove('hidden');
                 lotsContainer.innerHTML = activeLots.map(([groupId, items]) => {
@@ -1858,12 +2179,25 @@
                         : round2(items.reduce((acc, x) => acc + Number(x.reservedFinalPriceEur || x.priceEur || 0), 0));
                     const baseSum = round2(items.reduce((acc, x) => acc + Number(x.priceEur || 0), 0));
                     const allPhotos = items.flatMap(x => x.photos || []);
+                    const savedLotUrl = items.map(x => x.vintedLotUrl).find(Boolean) || '';
+                    const lotDraftUrl = (adminState.draftLotUrls[groupId] !== undefined)
+                        ? adminState.draftLotUrls[groupId]
+                        : savedLotUrl;
+                    const lotReadySentAt = items.map(x => x.vintedReadySentAt).find(Boolean) || '';
+                    const lotSentLabel = formatShortTime(lotReadySentAt);
+                    const hasIndividualHiddenUrls = items.some(x => Boolean(x.vintedUrl));
 
                     return `
                     <article id="lot-card-${escapeHtml(groupId.toUpperCase())}" class="rounded-2xl bg-obsidian-card border-2 border-acid/60 p-5 shadow-xl space-y-4">
                         <div class="flex flex-wrap items-start justify-between gap-2 border-b border-zinc-800 pb-3">
                             <div>
-                                <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase">${escapeHtml(groupId)} • ${items.length} PRENDAS</span>
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase">${escapeHtml(groupId)} • ${items.length} PRENDAS</span>
+                                    ${lotReadySentAt
+                                        ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-mono text-[10px] font-bold">✅ Link enviado${lotSentLabel ? ' (' + escapeHtml(lotSentLabel) + ')' : ''}</span>`
+                                        : `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-bold">⏳ Pendiente enviar link Lote</span>`
+                                    }
+                                </div>
                                 <h3 class="mt-1.5 font-display text-lg font-bold text-white">Reservar Lote a <span class="text-acid">@${escapeHtml(buyerVinted)}</span></h3>
                                 <p class="text-xs text-zinc-400">${escapeHtml(buyerEmail)}</p>
                             </div>
@@ -1884,14 +2218,22 @@
                                         <span class="truncate">${escapeHtml(it.title)} ${it.size ? '(' + escapeHtml(it.size) + ')' : ''}</span>
                                         ${wList.length > 0 ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/40">⏳ ${wList.length} en espera</span>` : ''}
                                     </div>
-                                    <span class="font-mono text-zinc-400 shrink-0">${fmtEur(it.priceEur)}</span>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        ${it.vintedUrl ? `<a href="${escapeHtml(it.vintedUrl)}" target="_blank" rel="noopener" class="font-mono text-[10px] px-2 py-0.5 rounded bg-obsidian border border-zinc-700 hover:border-acid text-acid transition-colors" title="Abrir anuncio individual oculto en Vinted (para borrarlo cuando se pague el lote)">🔗 Ver oculta ↗</a>` : ''}
+                                        <span class="font-mono text-zinc-400">${fmtEur(it.priceEur)}</span>
+                                    </div>
                                 </div>`;
                             }).join('')}
+                            ${hasIndividualHiddenUrls ? `
+                                <p class="pt-1 text-[11px] text-zinc-400 leading-relaxed">
+                                    💡 Vinted no permite agrupar prendas reservadas: sube 1 anuncio de Lote (1 solo envío) con los botones de abajo y, cuando <strong>@${escapeHtml(buyerVinted)}</strong> lo pague, abre «🔗 Ver oculta ↗» para eliminar los anuncios sueltos.
+                                </p>
+                            ` : ''}
                         </div>
 
-                        <!-- Botonera 1-Toque para subir el Lote unificado a Vinted -->
+                        <!-- Paso 1: Botonera 1-Toque para subir el Lote unificado a Vinted -->
                         <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
-                            <div class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">📋 Copiar Anuncio de Lote para Vinted (1 toque)</div>
+                            <div class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">📋 1. Copiar Anuncio de Lote para Vinted (1 toque)</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" data-lot-copy="title" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
                                     📋 Copiar Título Lote
@@ -1915,10 +2257,67 @@
                                 </button>
                             </div>
                         </div>
+
+                        <!-- Paso 2: Pegar URL del Lote creado y avisar en 1 clic al comprador -->
+                        <div class="p-3.5 rounded-xl bg-acid/5 border border-acid/35 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">📩 2. Enviar Link de Pago del Lote al Cliente</span>
+                                ${savedLotUrl ? `<a href="${escapeHtml(savedLotUrl)}" target="_blank" rel="noopener" class="font-mono text-[10px] text-acid hover:underline">Abrir Lote en Vinted ↗</a>` : ''}
+                            </div>
+                            <input type="url" data-lot-url-input="${escapeHtml(groupId)}" value="${escapeHtml(lotDraftUrl)}" placeholder="https://www.vinted.es/items/... (pega la URL del Lote reservado a @${escapeHtml(buyerVinted)})" class="w-full px-3 py-2 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                            <button type="button" data-notify-lot="${escapeHtml(groupId)}" data-already-sent="${lotReadySentAt ? '1' : '0'}" class="w-full py-2.5 px-4 rounded-lg ${lotReadySentAt ? 'bg-emerald-950/80 border border-emerald-500/50 hover:bg-emerald-900/80 text-emerald-200' : 'bg-acid hover:bg-acid-hover text-obsidian shadow-md shadow-acid/20'} font-display font-bold text-xs uppercase tracking-wide transition-all">
+                                ${lotReadySentAt
+                                    ? `✅ Link del Lote enviado${lotSentLabel ? ' (' + escapeHtml(lotSentLabel) + ')' : ''} • Reenviar email`
+                                    : `📩 Ya reservado en Vinted → Enviar link de pago a @${escapeHtml(buyerVinted)}`
+                                }
+                            </button>
+                        </div>
                     </article>`;
                 }).join('');
 
                 // Eventos botones de Lote
+                lotsContainer.querySelectorAll('[data-lot-url-input]').forEach(inp => {
+                    inp.addEventListener('input', () => {
+                        const gid = inp.getAttribute('data-lot-url-input');
+                        adminState.draftLotUrls[gid] = inp.value;
+                    });
+                });
+
+                lotsContainer.querySelectorAll('[data-notify-lot]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const gid = btn.getAttribute('data-notify-lot');
+                        const items = groupsMap.get(gid) || [];
+                        if (!items.length) return;
+                        const buyer = (items[0].reservedByVinted || 'comprador').replace(/^@+/, '');
+                        const inp = lotsContainer.querySelector(`[data-lot-url-input="${CSS.escape(gid)}"]`);
+                        const rawUrl = (inp ? inp.value : (adminState.draftLotUrls[gid] || '')).trim();
+                        if (!/^https?:\/\/(?:www\.)?vinted\.[a-z.]+\/items\/\d+/i.test(rawUrl)) {
+                            toast('Pega primero una URL válida del Lote en Vinted (https://www.vinted.es/items/...)', true);
+                            if (inp) inp.focus();
+                            return;
+                        }
+                        if (btn.getAttribute('data-already-sent') === '1') {
+                            if (!confirm(`Ya enviaste el link de pago de ${gid} a @${buyer}. ¿Quieres reenviarle el correo con esta URL?`)) return;
+                        }
+                        const prevText = btn.textContent;
+                        btn.disabled = true;
+                        btn.textContent = `Enviando email a @${buyer}...`;
+                        try {
+                            const res = await callAdminApi('notify_vinted_ready', {
+                                reservationGroupId: gid,
+                                vintedLotUrl: rawUrl
+                            });
+                            delete adminState.draftLotUrls[gid];
+                            toast(res.message || `✓ Link del Lote enviado por email a @${buyer}`);
+                            await loadDashboard();
+                        } catch (err) {
+                            toast(err.message, true);
+                            btn.disabled = false;
+                            btn.textContent = prevText;
+                        }
+                    });
+                });
+
                 lotsContainer.querySelectorAll('[data-lot-copy]').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const gid = btn.getAttribute('data-lot-id');
@@ -1983,13 +2382,19 @@
                     : round2(g.priceEur);
                 const waitlist = getGarmentWaitlist(g);
                 const hasWaitlist = waitlist.length > 0;
+                const lotSiblings = (isRes && g.reservationGroupId) ? (groupsMap.get(g.reservationGroupId) || []) : [];
+                const isPartOfActiveLot = lotSiblings.length >= 2;
+                const readySentLabel = formatShortTime(g.vintedReadySentAt);
+                const singleDraftUrl = (adminState.draftSingleUrls[g.ref] !== undefined)
+                    ? adminState.draftSingleUrls[g.ref]
+                    : (g.vintedUrl || '');
 
                 let badgeClass = 'bg-emerald-950 text-acid border-acid/50';
                 if (isRes) badgeClass = 'bg-amber-950 text-amber-300 border-amber-400/50';
                 if (isSold) badgeClass = 'bg-zinc-900 text-zinc-400 border-zinc-700';
 
                 return `
-                <article id="vinted-card-${escapeHtml(g.ref.toUpperCase())}" class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-4 flex flex-col justify-between">
+                <article id="vinted-card-${escapeHtml(g.ref.toUpperCase())}" class="rounded-2xl bg-obsidian-card border ${isRes && !g.vintedReadySentAt ? 'border-amber-400/50' : 'border-obsidian-border'} p-5 space-y-4 flex flex-col justify-between">
                     <div class="space-y-3.5">
                         <div class="flex items-start gap-3.5">
                             ${g.photos && g.photos[0]
@@ -2001,6 +2406,10 @@
                                     <div class="flex items-center gap-1.5 flex-wrap">
                                         <span class="font-mono text-xs font-bold text-acid">${escapeHtml(g.ref)}</span>
                                         <span class="font-mono text-[10px] px-2 py-0.5 rounded-full border ${badgeClass}">${escapeHtml(g.status)}</span>
+                                        ${isRes && g.vintedReadySentAt
+                                            ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-emerald-500/20 text-emerald-300 border-emerald-400/50 font-bold">✅ Link enviado${readySentLabel ? ' (' + escapeHtml(readySentLabel) + ')' : ''}</span>`
+                                            : ''
+                                        }
                                         ${hasWaitlist 
                                             ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-amber-500/20 text-amber-300 border-amber-400/50 font-bold flex items-center gap-1">⏳ ${waitlist.length} en espera</span>`
                                             : `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-zinc-900 text-zinc-500 border-zinc-800">⏳ 0 en cola</span>`
@@ -2026,39 +2435,109 @@
                             </div>
                         ` : ''}
 
-                        <!-- Asistente Copiar para Vinted en 1 Toque -->
-                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">
-                                    📋 Copiar para Vinted ${isRes ? '(Precio VIP)' : '(Subida en abierto)'}
-                                </span>
-                                <span class="font-mono text-[10px] text-zinc-500">${(g.photos || []).length} fotos</span>
+                        ${isRes && isPartOfActiveLot ? `
+                            <!-- Prenda perteneciente a un Lote Multi-Prenda activo -->
+                            <div class="p-3.5 rounded-xl bg-acid/5 border border-acid/30 space-y-2 text-xs">
+                                <div class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">
+                                    📦 Incluida en Lote ${escapeHtml(g.reservationGroupId)} (${lotSiblings.length} prendas)
+                                </div>
+                                <p class="text-zinc-300 leading-relaxed">
+                                    Usa la tarjeta superior del Lote <strong>${escapeHtml(g.reservationGroupId)}</strong> para crear el anuncio unificado y enviar el link de pago a <strong>@${escapeHtml(g.reservedByVinted)}</strong>.
+                                </p>
+                                ${g.vintedUrl ? `
+                                    <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs font-semibold text-acid transition-colors">
+                                        🔗 Abrir anuncio individual oculto en Vinted (para borrar tras cobrarse) ↗
+                                    </a>
+                                ` : ''}
                             </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button type="button" data-copy-field="title" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
-                                    📋 Copiar Título
+                        ` : ''}
+
+                        ${isRes && !isPartOfActiveLot ? `
+                            <!-- Flujo Vinted-First 1 Prenda: Abrir anuncio oculto -> Cambiar precio y reservar -> Enviar link en 1 clic -->
+                            <div class="p-3.5 rounded-xl bg-acid/5 border border-acid/40 space-y-2.5">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">
+                                        ⚡ Activar Reserva en Vinted (1 Prenda)
+                                    </span>
+                                    <span class="font-mono text-[10px] text-zinc-400">Oculto → Reservado</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" data-copy-field="price" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left">
+                                        💶 Copiar Precio (${fmtVintedInputPrice(priceForVinted)})
+                                    </button>
+                                    <button type="button" data-copy-field="user" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left truncate">
+                                        👤 Copiar @${escapeHtml(g.reservedByVinted)}
+                                    </button>
+                                </div>
+
+                                ${g.vintedUrl ? `
+                                    <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs font-semibold text-white transition-colors">
+                                        🔗 1. Abrir en Vinted (Editar Precio y Reservar a @${escapeHtml(g.reservedByVinted)}) ↗
+                                    </a>
+                                ` : `
+                                    <input type="url" data-single-url-input="${escapeHtml(g.ref)}" value="${escapeHtml(singleDraftUrl)}" placeholder="https://www.vinted.es/items/... (pega la URL de la prenda en Vinted)" class="w-full px-3 py-2 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                                `}
+
+                                <button type="button" data-notify-ref="${escapeHtml(g.ref)}" data-already-sent="${g.vintedReadySentAt ? '1' : '0'}" class="w-full py-2.5 px-3 rounded-lg ${g.vintedReadySentAt ? 'bg-emerald-950/80 border border-emerald-500/50 hover:bg-emerald-900/80 text-emerald-200' : 'bg-acid hover:bg-acid-hover text-obsidian shadow-md shadow-acid/20'} font-display font-bold text-xs uppercase tracking-wide transition-all">
+                                    ${g.vintedReadySentAt
+                                        ? `✅ Link de pago enviado${readySentLabel ? ' (' + escapeHtml(readySentLabel) + ')' : ''} • Reenviar email`
+                                        : `📩 2. Ya activada en Vinted → Enviar link de pago al cliente`
+                                    }
                                 </button>
-                                <button type="button" data-copy-field="desc" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
-                                    📋 Copiar Descripción
-                                </button>
-                                <button type="button" data-copy-field="price" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left">
-                                    💶 Precio (${fmtVintedInputPrice(priceForVinted)})
-                                </button>
-                                ${isRes && g.reservedByVinted
-                                    ? `<button type="button" data-copy-field="user" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left truncate">
-                                        👤 @${escapeHtml(g.reservedByVinted)}
-                                       </button>`
-                                    : `<button type="button" data-dl-photos="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200 text-left">
-                                        📸 Bajar Fotos (${(g.photos || []).length})
-                                       </button>`
-                                }
                             </div>
-                            ${isRes && g.reservedByVinted ? `
-                                <button type="button" data-dl-photos="${escapeHtml(g.ref)}" class="w-full py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200">
-                                    📸 Descargar Fotos de ${escapeHtml(g.ref)} (${(g.photos || []).length})
-                                </button>
+
+                            <details class="rounded-xl bg-obsidian-elevated border border-zinc-800 px-3.5 py-2.5 text-xs">
+                                <summary class="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-zinc-400 hover:text-white select-none">
+                                    📋 Copiado manual de ficha / fotos (${(g.photos || []).length} fotos)
+                                </summary>
+                                <div class="pt-2.5 space-y-2">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button type="button" data-copy-field="title" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                            📋 Copiar Título
+                                        </button>
+                                        <button type="button" data-copy-field="desc" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                            📋 Copiar Descripción
+                                        </button>
+                                    </div>
+                                    <button type="button" data-dl-photos="${escapeHtml(g.ref)}" class="w-full py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200">
+                                        📸 Descargar Fotos de ${escapeHtml(g.ref)} (${(g.photos || []).length})
+                                    </button>
+                                </div>
+                            </details>
+                        ` : ''}
+
+                        ${!isRes ? `
+                            ${g.vintedUrl ? `
+                                <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-xl ${isSold ? 'bg-obsidian-elevated border border-zinc-700 text-zinc-300 hover:border-zinc-500' : 'bg-acid/10 border border-acid/40 text-acid hover:bg-acid/20'} text-xs font-semibold transition-colors">
+                                    ${isSold ? '🔗 Ver anuncio en Vinted ↗' : '👁️ Abrir en Vinted (Ocultar / Desocultar tras 24h) ↗'}
+                                </a>
                             ` : ''}
-                        </div>
+
+                            <!-- Asistente Copiar para Vinted en 1 Toque -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">
+                                        📋 Copiar para Vinted (Subida en abierto)
+                                    </span>
+                                    <span class="font-mono text-[10px] text-zinc-500">${(g.photos || []).length} fotos</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" data-copy-field="title" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                        📋 Copiar Título
+                                    </button>
+                                    <button type="button" data-copy-field="desc" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                        📋 Copiar Descripción
+                                    </button>
+                                    <button type="button" data-copy-field="price" data-ref="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-acid/15 hover:bg-acid/25 border border-acid/40 text-xs font-bold text-acid text-left">
+                                        💶 Precio (${fmtVintedInputPrice(priceForVinted)})
+                                    </button>
+                                    <button type="button" data-dl-photos="${escapeHtml(g.ref)}" class="py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200 text-left">
+                                        📸 Bajar Fotos (${(g.photos || []).length})
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
 
                         <!-- Sección de Lista de Espera de la Prenda -->
                         <div class="p-3.5 rounded-xl ${hasWaitlist ? 'bg-amber-500/10 border-2 border-amber-400/40 shadow-lg shadow-amber-500/5' : 'bg-obsidian-elevated/40 border border-zinc-800/60'} space-y-2.5">
@@ -2127,6 +2606,48 @@
             }).join('');
 
             // Bind eventos tarjetas individuales
+            cardsEl.querySelectorAll('[data-single-url-input]').forEach(inp => {
+                inp.addEventListener('input', () => {
+                    const ref = inp.getAttribute('data-single-url-input');
+                    adminState.draftSingleUrls[ref] = inp.value;
+                });
+            });
+
+            cardsEl.querySelectorAll('[data-notify-ref]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-notify-ref');
+                    const g = adminState.garments.find(x => String(x.ref).trim().toUpperCase() === String(ref).trim().toUpperCase());
+                    if (!g) return;
+                    const buyer = (g.reservedByVinted || 'comprador').replace(/^@+/, '');
+                    const inp = cardsEl.querySelector(`[data-single-url-input="${CSS.escape(ref)}"]`);
+                    const candidateUrl = (inp ? inp.value : (g.vintedUrl || adminState.draftSingleUrls[ref] || '')).trim();
+                    if (!/^https?:\/\/(?:www\.)?vinted\.[a-z.]+\/items\/\d+/i.test(candidateUrl)) {
+                        toast('Falta una URL válida del anuncio en Vinted (https://www.vinted.es/items/...)', true);
+                        if (inp) inp.focus();
+                        return;
+                    }
+                    if (btn.getAttribute('data-already-sent') === '1') {
+                        if (!confirm(`Ya enviaste el link de pago de ${ref} a @${buyer}. ¿Quieres reenviarle el correo?`)) return;
+                    }
+                    const prevText = btn.textContent;
+                    btn.disabled = true;
+                    btn.textContent = `Enviando email a @${buyer}...`;
+                    try {
+                        const res = await callAdminApi('notify_vinted_ready', {
+                            ref: g.ref,
+                            vintedUrl: candidateUrl
+                        });
+                        delete adminState.draftSingleUrls[ref];
+                        toast(res.message || `✓ Link de pago enviado por email a @${buyer}`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                        btn.disabled = false;
+                        btn.textContent = prevText;
+                    }
+                });
+            });
+
             cardsEl.querySelectorAll('[data-copy-field]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const ref = btn.getAttribute('data-ref');
