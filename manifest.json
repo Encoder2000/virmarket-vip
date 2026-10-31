@@ -1,8 +1,8 @@
 {
-  "name": "VirMarket Studio - Panel Admin",
-  "short_name": "VM Studio",
-  "description": "Panel privado de gestión de Drops, copiado a Vinted y control de stock de VirMarket.",
-  "start_url": "./admin.html",
+  "name": "VirMarket VIP - Club de Drops",
+  "short_name": "VirMarket VIP",
+  "description": "Club privado de drops 24h, descuentos de bienvenida y escaparate de streetwear exclusivo.",
+  "start_url": "./",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

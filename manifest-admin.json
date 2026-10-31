@@ -3,7 +3,7 @@
   "short_name": "VM Studio",
   "description": "Panel privado de gestión de Drops, copiado a Vinted y control de stock de VirMarket.",
   "start_url": "./admin.html",
-  "scope": "/",
+  "scope": "./admin.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#09090B",
