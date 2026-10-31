@@ -735,22 +735,42 @@
         function startCountdown() {
             clearInterval(state.countdownTimer);
             const textEl = document.getElementById('dropCountdownText');
+            const pillEl = document.getElementById('dropCountdownPill');
+            const badgeEl = document.getElementById('dropBadgeId');
             const endsIso = state.drop.endsAt;
             if (!endsIso || !Number.isFinite(Date.parse(endsIso))) {
                 textEl.textContent = 'Ventana VIP prioritaria activa';
+                if (pillEl) {
+                    pillEl.className = 'inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[11px] text-zinc-300';
+                }
                 return;
             }
             const tick = () => {
                 const diff = Date.parse(endsIso) - Date.now();
                 if (diff <= 0) {
-                    textEl.textContent = 'Últimas prendas antes de Vinted';
+                    textEl.textContent = 'Plazo VIP 24h finalizado • Pasando a Vinted';
+                    if (pillEl) {
+                        pillEl.className = 'inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-rose-950/50 border border-rose-500/50 font-mono text-[11px] text-rose-300 shadow-sm';
+                    }
+                    if (badgeEl) {
+                        badgeEl.textContent = state.drop.id ? `${state.drop.id} • FINALIZADO` : 'DROP FINALIZADO';
+                    }
+                    const statusTextEl = document.getElementById('discountStatusText');
+                    if (statusTextEl && !statusTextEl.dataset.expiredSet) {
+                        statusTextEl.dataset.expiredSet = 'true';
+                        statusTextEl.innerHTML = '<span class="text-rose-400 font-semibold">Ventana VIP de 24h cerrada:</span> Si aún queda alguna prenda disponible, puedes reservarla antes de que salga en abierto a Vinted.';
+                    }
                     clearInterval(state.countdownTimer);
+                    lucide.createIcons();
                     return;
                 }
                 const h = Math.floor(diff / 3600000);
                 const m = Math.floor((diff % 3600000) / 60000);
                 const s = Math.floor((diff % 60000) / 1000);
                 textEl.textContent = `Cierra en ${String(h).padStart(2, '0')}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+                if (pillEl) {
+                    pillEl.className = 'inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[11px] text-zinc-300';
+                }
             };
             tick();
             state.countdownTimer = setInterval(tick, 1000);

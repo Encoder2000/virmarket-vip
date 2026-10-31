@@ -407,6 +407,17 @@
                                         <i data-lucide="file-edit" class="w-4 h-4"></i>
                                         <span>Publicar Drop + Crear Borrador en Brevo</span>
                                     </button>
+
+                                    <!-- Estado y Control del Drop Activo -->
+                                    <div id="activeDropControlsBox" class="hidden pt-3 border-t border-zinc-800">
+                                        <div class="flex flex-wrap items-center justify-between gap-2">
+                                            <span id="activeDropStatusNotice" class="font-mono text-[11px] text-zinc-400">Drop Activo</span>
+                                            <button id="closeActiveDropBtn" type="button" class="py-1.5 px-3 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/40 text-rose-300 font-display font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+                                                <i data-lucide="square" class="w-3 h-3 text-rose-400"></i>
+                                                <span>Finalizar Drop Activo</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div id="publishResultBox" class="hidden mt-4 p-3.5 rounded-xl text-xs"></div>
@@ -1064,6 +1075,39 @@
             }
         });
 
+        function renderActiveDropMetricsAndControls() {
+            const cfg = adminState.config;
+            const statDropEl = document.getElementById('statActiveDrop');
+            const isExp = Boolean(cfg.activeDropEndsAt && (Date.parse(cfg.activeDropEndsAt) <= Date.now()));
+
+            if (statDropEl) {
+                if (!cfg.activeDropId) {
+                    statDropEl.innerHTML = '<span class="text-zinc-500">Ninguno activo</span>';
+                } else if (isExp) {
+                    statDropEl.innerHTML = `<span class="text-zinc-300">${escapeHtml(cfg.activeDropId)}</span> <span class="ml-1 text-[10px] font-mono font-bold text-rose-400 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">Finalizado</span>`;
+                } else {
+                    statDropEl.innerHTML = `<span class="text-acid">${escapeHtml(cfg.activeDropId)}</span> <span class="ml-1 text-[10px] font-mono font-bold text-acid bg-acid-muted border border-acid/40 px-1.5 py-0.5 rounded">24h En vivo</span>`;
+                }
+            }
+
+            const controlsBox = document.getElementById('activeDropControlsBox');
+            const noticeEl = document.getElementById('activeDropStatusNotice');
+            const closeBtn = document.getElementById('closeActiveDropBtn');
+
+            if (controlsBox && cfg.activeDropId) {
+                controlsBox.classList.remove('hidden');
+                if (isExp) {
+                    if (noticeEl) noticeEl.innerHTML = `<span class="text-rose-400 font-semibold">${escapeHtml(cfg.activeDropId)}</span> • Plazo VIP de 24h finalizado`;
+                    if (closeBtn) closeBtn.classList.add('hidden');
+                } else {
+                    if (noticeEl) noticeEl.innerHTML = `<span class="text-acid font-semibold">${escapeHtml(cfg.activeDropId)}</span> • Ventana 24h activa`;
+                    if (closeBtn) closeBtn.classList.remove('hidden');
+                }
+            } else if (controlsBox) {
+                controlsBox.classList.add('hidden');
+            }
+        }
+
         async function syncDashboardQuietly(isAuto = false) {
             if (!adminState.password) return;
             const refreshIcon = document.getElementById('refreshIcon');
@@ -1081,7 +1125,7 @@
 
                 // Actualizar cabecera de métricas
                 const cfg = adminState.config;
-                document.getElementById('statActiveDrop').textContent = cfg.activeDropId || 'Ninguno activo';
+                renderActiveDropMetricsAndControls();
                 document.getElementById('statReservedCount').textContent =
                     adminState.garments.filter(g => g.status === 'RESERVADA').length;
                 document.getElementById('statAvailableCount').textContent =
@@ -1177,9 +1221,7 @@
 
             // Poblar cabecera de métricas
             const cfg = adminState.config;
-            document.getElementById('statActiveDrop').textContent = cfg.activeDropId
-                ? `${cfg.activeDropId}`
-                : 'Ninguno activo';
+            renderActiveDropMetricsAndControls();
             document.getElementById('statReservedCount').textContent =
                 adminState.garments.filter(g => g.status === 'RESERVADA').length;
             document.getElementById('statAvailableCount').textContent =
@@ -1200,14 +1242,15 @@
                 if (elTab) elTab.href = showroomUrl;
             }
 
-            // Inicializar campos del Drop si están vacíos
+            // Inicializar campos del Drop: si está vacío o el drop activo ya expiró, sugerir nuevo ID limpio
+            const isExp = Boolean(cfg.activeDropEndsAt && (Date.parse(cfg.activeDropEndsAt) <= Date.now()));
             const dropIdIn = document.getElementById('dropIdInput');
             const dropTitleIn = document.getElementById('dropTitleInput');
-            if (!dropIdIn.value.trim()) {
-                dropIdIn.value = cfg.activeDropId || suggestDefaultDropId();
+            if (!dropIdIn.value.trim() || (isExp && dropIdIn.value.trim().toUpperCase() === (cfg.activeDropId || '').toUpperCase())) {
+                dropIdIn.value = suggestDefaultDropId();
             }
-            if (!dropTitleIn.value.trim()) {
-                dropTitleIn.value = cfg.activeDropTitle || 'Nuevo Drop Streetwear & Vintage 24h';
+            if (!dropTitleIn.value.trim() || isExp) {
+                dropTitleIn.value = 'Nuevo Drop Streetwear & Vintage 24h';
             }
             if (!adminState.editingRef) {
                 document.getElementById('gRef').value = generateUniqueRef();
@@ -1254,13 +1297,19 @@
             });
 
             const chipsEl = document.getElementById('existingDropsChips');
+            const isExp = Boolean(adminState.config.activeDropEndsAt && (Date.parse(adminState.config.activeDropEndsAt) <= Date.now()));
             if (uniqueDrops.size > 0) {
                 chipsEl.innerHTML = `<span class="text-[11px] text-zinc-500 mr-1">Drops guardados:</span>` +
-                    [...uniqueDrops.entries()].map(([id, title]) => `
+                    [...uniqueDrops.entries()].map(([id, title]) => {
+                        let tag = '';
+                        if (id === adminState.config.activeDropId) {
+                            tag = isExp ? ' • FINALIZADO' : ' • ACTIVO';
+                        }
+                        return `
                         <button type="button" data-pick-drop="${escapeHtml(id)}" data-pick-title="${escapeHtml(title)}" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid font-mono text-[11px] text-zinc-300">
-                            ${escapeHtml(id)}${id === adminState.config.activeDropId ? ' • ACTIVO' : ''}
+                            ${escapeHtml(id)}${tag}
                         </button>
-                    `).join('');
+                    `;}).join('');
                 chipsEl.querySelectorAll('[data-pick-drop]').forEach(b => {
                     b.addEventListener('click', () => {
                         document.getElementById('dropIdInput').value = b.getAttribute('data-pick-drop');
@@ -1639,6 +1688,28 @@
 
         document.getElementById('publishSendNowBtn').addEventListener('click', () => triggerPublishDrop('send_now'));
         document.getElementById('publishDraftBtn').addEventListener('click', () => triggerPublishDrop('draft'));
+
+        document.getElementById('closeActiveDropBtn')?.addEventListener('click', async () => {
+            const dropId = adminState.config.activeDropId;
+            if (!dropId) return;
+            const ok = confirm(`¿Confirmas finalizar la ventana VIP de 24h para ${dropId}?\n\nLa web pública mostrará de inmediato que el plazo VIP ha concluido.`);
+            if (!ok) return;
+
+            const btn = document.getElementById('closeActiveDropBtn');
+            btn.disabled = true;
+            btn.textContent = 'Finalizando...';
+            try {
+                const res = await callAdminApi('close_drop');
+                toast(res.message || '✓ Drop marcado como finalizado');
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="square" class="w-3 h-3 text-rose-400"></i><span>Finalizar Drop Activo</span>`;
+                lucide.createIcons();
+            }
+        });
 
         // ======================== PESTAÑA 2: ASISTENTE COPIAR A VINTED + COLAS ========================
         document.getElementById('statWaitlistCard')?.addEventListener('click', () => {
