@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
+        /* 1. Edición Dark Streetwear (Imprenta Profesional) */
         :root {
             --bg-card: #09090B;
             --fg-card: #FFFFFF;
@@ -21,12 +22,24 @@
             --badge-bg: rgba(163, 230, 53, 0.14);
         }
 
+        /* 2. Edición Eco Color (Fondo Blanco + Verde Lima para Impresora Color de Casa) */
         body.theme-eco {
             --bg-card: #FFFFFF;
             --fg-card: #09090B;
             --muted-card: #3F3F46;
             --accent-card: #09090B;
             --accent-text: #A3E635;
+            --border-card: #D4D4D8;
+            --badge-bg: #F4F4F5;
+        }
+
+        /* 3. Edición Eco Blanco y Negro (100% Monocromo / Escala de Grises para Impresora B&N de Casa) */
+        body.theme-bw {
+            --bg-card: #FFFFFF;
+            --fg-card: #09090B;
+            --muted-card: #52525B;
+            --accent-card: #09090B;
+            --accent-text: #FFFFFF;
             --border-card: #D4D4D8;
             --badge-bg: #F4F4F5;
         }
@@ -165,8 +178,12 @@
             color: #65A30D;
         }
 
-        body:not(.theme-eco) .brand-accent {
+        body:not(.theme-eco):not(.theme-bw) .brand-accent {
             color: #A3E635;
+        }
+
+        body.theme-bw .brand-accent {
+            color: #52525B;
         }
 
         .drop-pill {
@@ -354,8 +371,9 @@
             <button id="btnBiz" class="btn" onclick="setLayout('business')">Tarjeta Visita 85×55mm (8 / folio A4)</button>
         </div>
         <div class="toolbar-group">
-            <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Dark Streetwear (Imprenta)</button>
-            <button id="btnEco" class="btn" onclick="setTheme('eco')">Edición Eco Fondo Blanco (Impresora Casa)</button>
+            <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Dark (Imprenta)</button>
+            <button id="btnEco" class="btn" onclick="setTheme('eco')">Edición Eco Color (Casa)</button>
+            <button id="btnBw" class="btn" onclick="setTheme('bw')">Edición Eco B&amp;N (Casa)</button>
             <button class="btn btn-print" onclick="window.print()">Imprimir / Guardar PDF</button>
         </div>
     </div>
@@ -408,9 +426,13 @@
         }
 
         function setTheme(theme) {
-            document.body.classList.toggle('theme-eco', theme === 'eco');
+            document.body.classList.remove('theme-eco', 'theme-bw');
+            if (theme === 'eco') document.body.classList.add('theme-eco');
+            if (theme === 'bw') document.body.classList.add('theme-bw');
+
             document.getElementById('btnDark').classList.toggle('active', theme === 'dark');
             document.getElementById('btnEco').classList.toggle('active', theme === 'eco');
+            document.getElementById('btnBw').classList.toggle('active', theme === 'bw');
         }
 
         renderCards(4);
