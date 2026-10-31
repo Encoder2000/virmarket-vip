@@ -215,8 +215,11 @@
                 <!-- Resumen Rápido Superior -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                     <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                        <span class="font-mono text-[10px] uppercase text-zinc-400">Drop Activo</span>
-                        <div id="statActiveDrop" class="mt-1 font-display text-base sm:text-lg font-bold text-acid truncate">Sin activar</div>
+                        <div class="flex items-center justify-between gap-1.5">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Drop Activo</span>
+                            <span id="statActiveDropBadge" class="hidden text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0"></span>
+                        </div>
+                        <div id="statActiveDrop" class="mt-1 font-display text-base sm:text-lg font-bold text-acid truncate" title="Sin drop activo">Sin activar</div>
                     </div>
                     <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
                         <span class="font-mono text-[10px] uppercase text-zinc-400">Reservadas (Vinted)</span>
@@ -1078,15 +1081,33 @@
         function renderActiveDropMetricsAndControls() {
             const cfg = adminState.config;
             const statDropEl = document.getElementById('statActiveDrop');
+            const badgeEl = document.getElementById('statActiveDropBadge');
             const isExp = Boolean(cfg.activeDropEndsAt && (Date.parse(cfg.activeDropEndsAt) <= Date.now()));
 
             if (statDropEl) {
                 if (!cfg.activeDropId) {
-                    statDropEl.innerHTML = '<span class="text-zinc-500">Ninguno activo</span>';
+                    statDropEl.textContent = 'Sin activar';
+                    statDropEl.className = 'mt-1 font-display text-base sm:text-lg font-bold text-zinc-500 truncate';
+                    statDropEl.title = 'Sin drop activo';
+                    if (badgeEl) badgeEl.classList.add('hidden');
                 } else if (isExp) {
-                    statDropEl.innerHTML = `<span class="text-zinc-300">${escapeHtml(cfg.activeDropId)}</span> <span class="ml-1 text-[10px] font-mono font-bold text-rose-400 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">Finalizado</span>`;
+                    statDropEl.textContent = cfg.activeDropId;
+                    statDropEl.className = 'mt-1 font-display text-base sm:text-lg font-bold text-zinc-200 truncate';
+                    statDropEl.title = `${cfg.activeDropId} (Finalizado)`;
+                    if (badgeEl) {
+                        badgeEl.textContent = 'Finalizado';
+                        badgeEl.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 text-rose-300 bg-rose-950/60 border border-rose-500/40';
+                        badgeEl.classList.remove('hidden');
+                    }
                 } else {
-                    statDropEl.innerHTML = `<span class="text-acid">${escapeHtml(cfg.activeDropId)}</span> <span class="ml-1 text-[10px] font-mono font-bold text-acid bg-acid-muted border border-acid/40 px-1.5 py-0.5 rounded">24h En vivo</span>`;
+                    statDropEl.textContent = cfg.activeDropId;
+                    statDropEl.className = 'mt-1 font-display text-base sm:text-lg font-bold text-acid truncate';
+                    statDropEl.title = `${cfg.activeDropId} (24h En vivo)`;
+                    if (badgeEl) {
+                        badgeEl.textContent = 'En vivo';
+                        badgeEl.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 text-acid bg-acid-muted border border-acid/40';
+                        badgeEl.classList.remove('hidden');
+                    }
                 }
             }
 
