@@ -3,9 +3,8 @@
   "short_name": "VirMarket VIP",
   "description": "Club privado de drops 24h, descuentos de bienvenida y escaparate de streetwear exclusivo.",
   "start_url": "./",
-  "scope": "/",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#09090B",
   "theme_color": "#09090B",
   "icons": [
@@ -23,13 +22,25 @@
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

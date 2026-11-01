@@ -2,7 +2,8 @@
 <html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" id="metaThemeColor" content="#09090B">
     <script>
         (function() {
             try {
@@ -14,22 +15,26 @@
                     localStorage.setItem('vm_theme', 'dark');
                 }
                 const savedTheme = localStorage.getItem('vm_theme');
-                if (savedTheme === 'light') {
+                const isLight = savedTheme === 'light';
+                if (isLight) {
                     document.documentElement.classList.add('theme-light');
                     document.documentElement.classList.remove('dark');
                 } else {
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('theme-light');
                 }
+                const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
+                if (metaTheme) {
+                    metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+                }
             } catch (e) {}
         })();
     </script>
     <title>VirMarket | Club Privado de Drops 24h &amp; Escaparate VIP</title>
     <meta name="description" content="Club privado para clientes de VirMarket. Desbloquea tu descuento de bienvenida en tu primera reserva y accede a nuestros Drops de ropa Streetwear & Vintage 24h antes de salir en Vinted.">
-    <meta name="theme-color" content="#09090B">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" id="metaAppleStatus" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="VirMarket VIP">
     <meta name="application-name" content="VirMarket VIP">
 
@@ -38,7 +43,14 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
-    <link rel="manifest" href="manifest.json?v=3">
+    <link rel="manifest" href="manifest.json?v=4">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js').catch(function() {});
+            });
+        }
+    </script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -1638,6 +1650,7 @@
         function initThemeEngine() {
             const btn = document.getElementById('themeToggleBtn');
             const metaTheme = document.querySelector('meta[name="theme-color"]');
+            const metaStatus = document.getElementById('metaAppleStatus') || document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
 
             function applyTheme(theme) {
                 const isLight = theme === 'light';
@@ -1645,6 +1658,7 @@
                     document.documentElement.classList.add('theme-light');
                     document.documentElement.classList.remove('dark');
                     if (metaTheme) metaTheme.setAttribute('content', '#F8FAFC');
+                    if (metaStatus) metaStatus.setAttribute('content', 'default');
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo oscuro');
                         btn.setAttribute('aria-label', 'Cambiar a modo oscuro');
@@ -1654,6 +1668,7 @@
                     document.documentElement.classList.remove('theme-light');
                     document.documentElement.classList.add('dark');
                     if (metaTheme) metaTheme.setAttribute('content', '#09090B');
+                    if (metaStatus) metaStatus.setAttribute('content', 'black-translucent');
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo claro');
                         btn.setAttribute('aria-label', 'Cambiar a modo claro');
