@@ -247,18 +247,21 @@
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2">
-                <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Landing Page de Captación QR">
-                    <i data-lucide="globe" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
-                    <span class="hidden md:inline">Landing Page</span>
-                </a>
-                <a href="tarjeta_qr.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver e imprimir Tarjetas de Agradecimiento QR">
-                    <i data-lucide="qr-code" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
-                    <span class="hidden md:inline">Tarjetas QR</span>
-                </a>
-                <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Escaparate VIP Activo">
-                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
-                    <span class="hidden sm:inline">Escaparate</span>
-                </a>
+                <!-- Accesos directos al ecosistema (restringidos: solo visibles tras autenticación) -->
+                <div id="headerNavLinks" class="hidden items-center gap-1.5 sm:gap-2">
+                    <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Landing Page de Captación QR">
+                        <i data-lucide="globe" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
+                        <span class="hidden md:inline">Landing Page</span>
+                    </a>
+                    <a href="tarjeta_qr.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver e imprimir Tarjetas de Agradecimiento QR">
+                        <i data-lucide="qr-code" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
+                        <span class="hidden md:inline">Tarjetas QR</span>
+                    </a>
+                    <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Escaparate VIP Activo">
+                        <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
+                        <span class="hidden sm:inline">Escaparate</span>
+                    </a>
+                </div>
                 <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all cursor-pointer">
                     <i id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
                     <span id="themeToggleLabel" class="hidden sm:inline">Modo Claro</span>
@@ -1138,6 +1141,11 @@
         function showAuthScreen(errorMsg = '') {
             document.getElementById('studioSection').classList.add('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
+            const navLinks = document.getElementById('headerNavLinks');
+            if (navLinks) {
+                navLinks.classList.add('hidden');
+                navLinks.classList.remove('inline-flex');
+            }
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('authChecking').classList.add('hidden');
 
@@ -1463,6 +1471,11 @@
             document.getElementById('studioSection').classList.remove('hidden');
             document.getElementById('logoutBtn').classList.remove('hidden');
             document.getElementById('logoutBtn').classList.add('inline-flex');
+            const navLinks = document.getElementById('headerNavLinks');
+            if (navLinks) {
+                navLinks.classList.remove('hidden');
+                navLinks.classList.add('inline-flex');
+            }
 
             // Poblar cabecera de métricas
             const cfg = adminState.config;
