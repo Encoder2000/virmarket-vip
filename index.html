@@ -273,10 +273,6 @@
                     <i id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
                     <span id="themeToggleLabel">Modo Claro</span>
                 </button>
-                <button id="headerSwitchBtn" type="button" class="hidden items-center space-x-1.5 px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-acid/60 border border-obsidian-border font-mono text-[10px] uppercase tracking-wider text-zinc-200 transition-colors">
-                    <i data-lucide="sparkles" class="w-3 h-3 text-acid"></i>
-                    <span id="headerSwitchLabel">Escaparate VIP</span>
-                </button>
                 <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-obsidian-elevated border border-obsidian-border font-mono text-[10px] uppercase tracking-wider text-acid">
                     <span class="w-1.5 h-1.5 rounded-full bg-acid animate-pulse"></span>
                     <span>Club Privado</span>
@@ -885,33 +881,17 @@
         function updateViewVisibility() {
             const captureEl = document.getElementById('captureView');
             const showroomEl = document.getElementById('showroomView');
-            const switchBtn = document.getElementById('headerSwitchBtn');
-            const switchLabel = document.getElementById('headerSwitchLabel');
 
             if (state.mode === 'showroom') {
                 captureEl.classList.add('hidden');
                 showroomEl.classList.remove('hidden');
-                switchBtn.classList.remove('hidden');
-                switchBtn.classList.add('inline-flex');
-                switchLabel.textContent = 'Registro Club QR';
             } else {
                 showroomEl.classList.add('hidden');
                 captureEl.classList.remove('hidden');
                 document.getElementById('stickyLotBar').classList.add('hidden');
-                if (state.garments.length > 0) {
-                    switchBtn.classList.remove('hidden');
-                    switchBtn.classList.add('inline-flex');
-                    switchLabel.textContent = `Ver Drop (${state.garments.length})`;
-                }
             }
             lucide.createIcons();
         }
-
-        document.getElementById('headerSwitchBtn').addEventListener('click', () => {
-            state.mode = state.mode === 'showroom' ? 'capture' : 'showroom';
-            updateViewVisibility();
-            if (state.mode === 'showroom') renderShowroom();
-        });
 
         // Cuenta atrás en vivo 24h
         function startCountdown() {
