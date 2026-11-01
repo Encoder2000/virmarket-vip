@@ -3,6 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <script>
+        (function() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const paramTheme = urlParams.get('theme') || urlParams.get('modo');
+                if (paramTheme === 'light' || paramTheme === 'claro') {
+                    localStorage.setItem('vm_theme', 'light');
+                } else if (paramTheme === 'dark' || paramTheme === 'oscuro') {
+                    localStorage.setItem('vm_theme', 'dark');
+                }
+                const savedTheme = localStorage.getItem('vm_theme');
+                if (savedTheme === 'light') {
+                    document.documentElement.classList.add('theme-light');
+                    document.documentElement.classList.remove('dark');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('theme-light');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <meta name="robots" content="noindex, nofollow">
     <title>VirMarket Studio | Panel Privado de Drops y Copiado Vinted</title>
     <meta name="theme-color" content="#09090B">
@@ -67,6 +88,147 @@
             border-color: #A3E635 !important;
             animation: targetPulse 1.6s ease-in-out 4;
         }
+
+        /* ===================================================================== */
+        /* MODO CLARO (STREETWEAR MINIMAL / ECO) - VIRMARKET STUDIO */
+        /* ===================================================================== */
+        html.theme-light {
+            color-scheme: light;
+        }
+        html.theme-light body {
+            background-color: #F8FAFC !important;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.16), transparent 50%),
+                linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+                linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px) !important;
+            background-size: 100% 100%, 36px 36px, 36px 36px !important;
+            color: #0F172A !important;
+        }
+        html.theme-light header {
+            background-color: rgba(255, 255, 255, 0.94) !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+        }
+        html.theme-light .bg-obsidian,
+        html.theme-light [class*="bg-obsidian/"] {
+            background-color: #F8FAFC !important;
+        }
+        html.theme-light .bg-obsidian-card,
+        html.theme-light [class*="bg-obsidian-card"] {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
+        }
+        html.theme-light .bg-obsidian-elevated,
+        html.theme-light [class*="bg-obsidian-elevated"] {
+            background-color: #F1F5F9 !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .border-obsidian-border,
+        html.theme-light [class*="border-obsidian"],
+        html.theme-light [class*="border-zinc-"] {
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .divide-zinc-800 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #E2E8F0 !important;
+        }
+        /* Tipografía y Textos */
+        html.theme-light .text-white {
+            color: #0F172A !important;
+        }
+        html.theme-light .text-zinc-100,
+        html.theme-light .text-zinc-200 {
+            color: #0F172A !important;
+        }
+        html.theme-light .text-zinc-300,
+        html.theme-light .text-zinc-400 {
+            color: #475569 !important;
+        }
+        html.theme-light .text-zinc-500 {
+            color: #64748B !important;
+        }
+        /* Botones y Acentos */
+        html.theme-light .bg-acid {
+            background-color: #A3E635 !important;
+            color: #09090B !important;
+        }
+        html.theme-light .bg-acid * {
+            color: #09090B !important;
+        }
+        html.theme-light .text-obsidian {
+            color: #09090B !important;
+        }
+        html.theme-light .text-acid {
+            color: #3F6212 !important;
+        }
+        html.theme-light .bg-acid-muted {
+            background-color: #ECFCCB !important;
+            border-color: #BEF264 !important;
+            color: #365314 !important;
+        }
+        html.theme-light .bg-acid-muted * {
+            color: #365314 !important;
+        }
+        /* Chips y elementos oscuros secundarios */
+        html.theme-light .bg-zinc-900 {
+            background-color: #E2E8F0 !important;
+            color: #0F172A !important;
+        }
+        html.theme-light .bg-zinc-800 {
+            background-color: #F1F5F9 !important;
+            color: #0F172A !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light .bg-zinc-800:hover,
+        html.theme-light .hover\:bg-zinc-700:hover,
+        html.theme-light .hover\:bg-zinc-800:hover {
+            background-color: #E2E8F0 !important;
+        }
+        /* Inputs y Selectores */
+        html.theme-light input:not([type="checkbox"]):not([type="radio"]),
+        html.theme-light textarea,
+        html.theme-light select {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light input::placeholder,
+        html.theme-light textarea::placeholder {
+            color: #94A3B8 !important;
+        }
+        html.theme-light input:focus,
+        html.theme-light textarea:focus,
+        html.theme-light select:focus {
+            border-color: #65A30D !important;
+            box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.3) !important;
+        }
+        /* Toasts y Notificaciones en Studio */
+        html.theme-light #adminToast {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+            border-color: #A3E635 !important;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12) !important;
+        }
+        /* Badges de filtros y listas en Studio */
+        html.theme-light .bg-acid\/15 {
+            background-color: #ECFCCB !important;
+            border-color: #BEF264 !important;
+            color: #365314 !important;
+        }
+        html.theme-light .bg-amber-500\/20 {
+            background-color: #FEF3C7 !important;
+            border-color: #FCD34D !important;
+            color: #92400E !important;
+        }
+        html.theme-light .bg-rose-950\/60,
+        html.theme-light .bg-rose-950\/80 {
+            background-color: #FFE4E6 !important;
+            border-color: #FDA4AF !important;
+            color: #9F1239 !important;
+        }
+        html.theme-light .text-rose-300 {
+            color: #9F1239 !important;
+        }
     </style>
 </head>
 <body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
@@ -97,6 +259,10 @@
                     <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
                     <span class="hidden sm:inline">Escaparate</span>
                 </a>
+                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all cursor-pointer">
+                    <i id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
+                    <span id="themeToggleLabel" class="hidden sm:inline">Modo Claro</span>
+                </button>
                 <button id="logoutBtn" type="button" class="hidden items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-rose-500/60 text-xs text-zinc-400 hover:text-rose-300 transition-colors" title="Cerrar sesión">
                     <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                     <span class="hidden sm:inline">Salir</span>
@@ -2760,6 +2926,51 @@
         });
 
         // ======================== ARRANQUE ========================
+        // GESTIÓN DE TEMA CLARO / OSCURO (VIRMARKET THEME ENGINE)
+        function initThemeEngine() {
+            const btn = document.getElementById('themeToggleBtn');
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+
+            function applyTheme(theme) {
+                const isLight = theme === 'light';
+                if (isLight) {
+                    document.documentElement.classList.add('theme-light');
+                    document.documentElement.classList.remove('dark');
+                    if (metaTheme) metaTheme.setAttribute('content', '#F8FAFC');
+                    if (btn) {
+                        btn.setAttribute('title', 'Cambiar a modo oscuro');
+                        btn.setAttribute('aria-label', 'Cambiar a modo oscuro');
+                        btn.innerHTML = '<i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-500"></i><span class="font-mono text-[11px] font-semibold text-zinc-800 hidden sm:inline">Modo Oscuro</span>';
+                    }
+                } else {
+                    document.documentElement.classList.remove('theme-light');
+                    document.documentElement.classList.add('dark');
+                    if (metaTheme) metaTheme.setAttribute('content', '#09090B');
+                    if (btn) {
+                        btn.setAttribute('title', 'Cambiar a modo claro');
+                        btn.setAttribute('aria-label', 'Cambiar a modo claro');
+                        btn.innerHTML = '<i data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i><span class="font-mono text-[11px] font-semibold text-zinc-200 hidden sm:inline">Modo Claro</span>';
+                    }
+                }
+                if (window.lucide && typeof lucide.createIcons === 'function') {
+                    lucide.createIcons();
+                }
+            }
+
+            const currentTheme = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
+            applyTheme(currentTheme);
+
+            if (btn) {
+                btn.onclick = function() {
+                    const nextTheme = document.documentElement.classList.contains('theme-light') ? 'dark' : 'light';
+                    try {
+                        localStorage.setItem('vm_theme', nextTheme);
+                    } catch (e) {}
+                    applyTheme(nextTheme);
+                };
+            }
+        }
+
         async function checkServerAuthStatus() {
             try {
                 const res = await fetch(WEBHOOK_ADMIN_AUTH_URL, {
@@ -2777,6 +2988,7 @@
         }
 
         (async function init() {
+            initThemeEngine();
             // 1. Si ya tenemos contraseña guardada en almacenamiento persistente, entrar directo
             if (adminState.password) {
                 try {

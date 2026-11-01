@@ -3,6 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const paramTheme = urlParams.get('theme') || urlParams.get('modo');
+                if (paramTheme === 'light' || paramTheme === 'claro') {
+                    localStorage.setItem('vm_theme', 'light');
+                } else if (paramTheme === 'dark' || paramTheme === 'oscuro') {
+                    localStorage.setItem('vm_theme', 'dark');
+                }
+                const savedTheme = localStorage.getItem('vm_theme');
+                if (savedTheme === 'light') {
+                    document.documentElement.classList.add('theme-light');
+                } else {
+                    document.documentElement.classList.remove('theme-light');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -56,6 +75,24 @@
             background: #18181B;
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
             color: #F4F4F5;
+        }
+
+        /* Modo Claro para entorno de pantalla */
+        html.theme-light body {
+            background: #F1F5F9 !important;
+            color: #0F172A !important;
+        }
+        html.theme-light .toolbar {
+            background: #FFFFFF !important;
+            border-bottom: 1px solid #E2E8F0 !important;
+        }
+        html.theme-light .toolbar strong {
+            color: #0F172A !important;
+        }
+        html.theme-light .btn:not(.active):not(.btn-print) {
+            background: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
         }
 
         /* Barra de controles en pantalla (oculta al imprimir) */
@@ -374,6 +411,7 @@
             <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Dark (Imprenta)</button>
             <button id="btnEco" class="btn" onclick="setTheme('eco')">Edición Eco Color (Casa)</button>
             <button id="btnBw" class="btn" onclick="setTheme('bw')">Edición Eco B&amp;N (Casa)</button>
+            <button id="screenThemeBtn" class="btn" onclick="toggleScreenTheme()" title="Cambiar tema de pantalla (Claro / Oscuro)">☀️ Claro</button>
             <button class="btn btn-print" onclick="window.print()">Imprimir / Guardar PDF</button>
         </div>
     </div>
@@ -435,6 +473,26 @@
             document.getElementById('btnBw').classList.toggle('active', theme === 'bw');
         }
 
+        function updateScreenThemeUI(isLight) {
+            const btn = document.getElementById('screenThemeBtn');
+            if (isLight) {
+                document.documentElement.classList.add('theme-light');
+                if (btn) btn.textContent = '🌙 Oscuro';
+            } else {
+                document.documentElement.classList.remove('theme-light');
+                if (btn) btn.textContent = '☀️ Claro';
+            }
+        }
+
+        function toggleScreenTheme() {
+            const isNowLight = !document.documentElement.classList.contains('theme-light');
+            try {
+                localStorage.setItem('vm_theme', isNowLight ? 'light' : 'dark');
+            } catch (e) {}
+            updateScreenThemeUI(isNowLight);
+        }
+
+        updateScreenThemeUI(document.documentElement.classList.contains('theme-light'));
         renderCards(4);
     </script>
 </body>
