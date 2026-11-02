@@ -649,6 +649,15 @@
                                             </button>
                                         </div>
                                     </div>
+
+                                    <!-- Paso D: Difusión en Telegram de Prendas Sobrantes -->
+                                    <div class="pt-4 border-t border-zinc-800 space-y-1.5">
+                                        <button id="openSocialModalBtnTab1" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 transition-all">
+                                            <i data-lucide="send" class="w-4 h-4"></i>
+                                            <span>📢 Publicar Sobrantes en Telegram</span>
+                                        </button>
+                                        <p class="text-[11px] text-zinc-400 text-center">Genera borrador con IA y difunde a @virmarket_club las prendas disponibles tras la ventana VIP</p>
+                                    </div>
                                 </div>
 
                                 <div id="publishResultBox" class="hidden mt-4 p-3.5 rounded-xl text-xs"></div>
@@ -707,6 +716,10 @@
                             <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
                                 <option value="ALL">Todos los Drops</option>
                             </select>
+                            <button id="openSocialModalBtn" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-sky-500/20 transition-all">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                <span>📢 Publicar Sobrantes</span>
+                            </button>
                             <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5 transition-colors">
                                 <i data-lucide="refresh-cw" id="refreshIcon" class="w-3.5 h-3.5 text-acid"></i>
                                 <span>Actualizar</span>
@@ -875,6 +888,77 @@
         </div>
     </main>
 
+    <!-- Modal de Difusión en Redes Sociales y Telegram -->
+    <div id="socialPublishModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-sky-500/40 p-5 sm:p-7 shadow-2xl shadow-sky-950/60 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <!-- Cabecera del Modal -->
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 shrink-0">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 font-bold">Canal @virmarket_club</span>
+                            <span id="socialProviderBadge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-acid/10 text-acid border border-acid/20">✨ Generando con Gemini...</span>
+                        </div>
+                        <h3 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Difusión de Prendas Sobrantes</h3>
+                    </div>
+                </div>
+                <button type="button" id="closeSocialModalBtn" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Estado de Carga / Spinner -->
+            <div id="socialLoadingState" class="py-12 text-center space-y-3.5">
+                <div class="w-10 h-10 border-2 border-sky-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p class="text-xs font-mono text-zinc-200">Consultando stock disponible y redactando copy con la IA...</p>
+                <p class="text-[11px] text-zinc-500">Google Gemini Flash (0 €) • Cascada activa en n8n</p>
+            </div>
+
+            <!-- Contenido Principal del Modal (oculto mientras carga) -->
+            <div id="socialContentState" class="hidden space-y-4">
+                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 text-xs text-zinc-300 flex items-start gap-2.5">
+                    <i data-lucide="info" class="w-4 h-4 text-sky-400 shrink-0 mt-0.5"></i>
+                    <div>
+                        <span class="font-semibold text-white">Revisa o edita el texto antes de publicar:</span>
+                        <p class="text-[11px] text-zinc-400 mt-0.5">
+                            Al confirmar, se enviará este mensaje a tu canal <strong>@virmarket_club</strong> seguido de una foto HD con botón de compra en Vinted para cada una de las <strong id="socialItemsCount" class="text-acid">0</strong> prendas disponibles.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label for="socialCopyTextarea" class="font-mono text-xs font-bold text-zinc-300 uppercase tracking-wide">
+                            📝 Texto de la Publicación (Editable):
+                        </label>
+                        <span id="socialCopyLength" class="font-mono text-[10px] text-zinc-500">0 caracteres</span>
+                    </div>
+                    <textarea id="socialCopyTextarea" rows="7" class="w-full px-3.5 py-3 rounded-xl bg-obsidian border border-zinc-700 font-mono text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400/30 leading-relaxed resize-y"></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">
+                        Prendas que se enviarán con foto y botón de Vinted:
+                    </span>
+                    <div id="socialItemsPreviewList" class="max-h-36 overflow-y-auto space-y-1.5 pr-1"></div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-3 border-t border-zinc-800">
+                    <button type="button" id="cancelSocialModalBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="button" id="confirmSocialPublishBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition-all">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span id="confirmPublishBtnLabel">🚀 Publicar Ahora en @virmarket_club</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Notificación Toast Flotante -->
     <div id="adminToast" class="hidden fixed bottom-5 right-5 z-50 max-w-sm px-4 py-3 rounded-xl bg-obsidian-elevated border border-acid text-xs font-semibold text-white shadow-2xl"></div>
 
@@ -883,6 +967,7 @@
 
         const WEBHOOK_ADMIN_AUTH_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin-auth';
         const WEBHOOK_ADMIN_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin';
+        const WEBHOOK_SOCIAL_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-social';
 
         const urlParams = new URLSearchParams(window.location.search);
         const deepLinkLote = (urlParams.get('lote') || '').trim().toUpperCase();
@@ -1134,6 +1219,35 @@
             }
             if (!res.ok || data.ok === false) {
                 throw new Error(data.message || 'Error al ejecutar la operación.');
+            }
+            return data;
+        }
+
+        // Llamada autenticada al backend de difusión en redes sociales (Telegram / Cascada LLM)
+        async function callSocialApi(action, extraPayload = {}) {
+            let res;
+            try {
+                res = await fetch(WEBHOOK_SOCIAL_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action,
+                        password: adminState.password,
+                        ...extraPayload
+                    })
+                });
+            } catch (netErr) {
+                throw new Error(`Error de conexión con el backend de redes (${netErr.message || 'sin respuesta'}).`);
+            }
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 401) {
+                clearStoredPassword();
+                adminState.password = '';
+                showAuthScreen('Tu sesión ha caducado. Vuelve a iniciar sesión.');
+                throw new Error(data.message || 'No autorizado');
+            }
+            if (!res.ok || data.ok === false) {
+                throw new Error(data.message || 'Error en el backend de redes.');
             }
             return data;
         }
@@ -2605,6 +2719,10 @@
                                             ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-amber-500/20 text-amber-300 border-amber-400/50 font-bold flex items-center gap-1">⏳ ${waitlist.length} en espera</span>`
                                             : `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-zinc-900 text-zinc-500 border-zinc-800">⏳ 0 en cola</span>`
                                         }
+                                        ${(g.publishedToSocialAt || (g.photos_object && String(g.photos_object).includes('publishedToSocialAt')))
+                                            ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded-full border bg-sky-500/20 text-sky-300 border-sky-400/50 font-bold flex items-center gap-1">📢 En Telegram</span>`
+                                            : ''
+                                        }
                                     </div>
                                     <span class="font-mono text-[10px] text-zinc-500">${escapeHtml(g.dropId)}</span>
                                 </div>
@@ -2703,6 +2821,13 @@
                                 <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-xl ${isSold ? 'bg-obsidian-elevated border border-zinc-700 text-zinc-300 hover:border-zinc-500' : 'bg-acid/10 border border-acid/40 text-acid hover:bg-acid/20'} text-xs font-semibold transition-colors">
                                     ${isSold ? '🔗 Ver anuncio en Vinted ↗' : '👁️ Abrir en Vinted (Ocultar / Desocultar tras 24h) ↗'}
                                 </a>
+                            ` : ''}
+
+                            ${!isSold ? `
+                                <button type="button" data-publish-social-drop="${escapeHtml(g.dropId)}" class="flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-300 hover:bg-sky-500/20 text-xs font-semibold transition-colors">
+                                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                    <span>📢 Publicar Sobrantes en Telegram</span>
+                                </button>
                             ` : ''}
 
                             <!-- Asistente Copiar para Vinted en 1 Toque -->
@@ -2925,6 +3050,13 @@
             cardsEl.querySelectorAll('[data-edit-vinted]').forEach(btn => {
                 btn.addEventListener('click', () => loadGarmentIntoForm(btn.getAttribute('data-edit-vinted')));
             });
+
+            cardsEl.querySelectorAll('[data-publish-social-drop]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const dropId = btn.getAttribute('data-publish-social-drop');
+                    openSocialPublishModal(dropId);
+                });
+            });
         }
 
         // ======================== PESTAÑA 3: GUARDAR AJUSTES ========================
@@ -2949,6 +3081,152 @@
                 btn.textContent = 'Guardar Ajustes en Vivo';
             }
         });
+
+        // ======================== DIFUSIÓN SOCIAL Y TELEGRAM ========================
+        let currentSocialData = null;
+
+        function updateSocialCopyLength() {
+            const txt = document.getElementById('socialCopyTextarea')?.value || '';
+            const el = document.getElementById('socialCopyLength');
+            if (el) el.textContent = `${txt.length} caracteres`;
+        }
+
+        async function openSocialPublishModal(specificDropId = null) {
+            const dropId = (specificDropId || document.getElementById('filterDropSelect')?.value || document.getElementById('dropIdInput')?.value || adminState.config.activeDropId || '').trim();
+            const targetDropId = (dropId && dropId !== 'ALL') ? dropId : (adminState.config.activeDropId || '');
+
+            const availableGarments = adminState.garments.filter(g => {
+                const matchesDrop = !targetDropId || (g.dropId || '').toUpperCase() === targetDropId.toUpperCase();
+                return matchesDrop && g.status === 'DISPONIBLE';
+            });
+
+            if (availableGarments.length === 0) {
+                toast('No hay prendas disponibles en este drop para publicar en Telegram.', true);
+                return;
+            }
+
+            const modal = document.getElementById('socialPublishModal');
+            const loadingState = document.getElementById('socialLoadingState');
+            const contentState = document.getElementById('socialContentState');
+            const providerBadge = document.getElementById('socialProviderBadge');
+            const textarea = document.getElementById('socialCopyTextarea');
+            const countEl = document.getElementById('socialItemsCount');
+            const listEl = document.getElementById('socialItemsPreviewList');
+
+            if (!modal) return;
+
+            modal.classList.remove('hidden');
+            loadingState?.classList.remove('hidden');
+            contentState?.classList.add('hidden');
+            if (providerBadge) providerBadge.textContent = '✨ Generando con Gemini Flash (0 €)...';
+
+            try {
+                const data = await callSocialApi('generate_draft', {
+                    dropId: targetDropId
+                });
+
+                currentSocialData = data;
+
+                if (countEl) countEl.textContent = String(data.itemsCount || availableGarments.length);
+                if (providerBadge) providerBadge.textContent = `✨ ${data.provider || 'Google Gemini Flash'}`;
+                if (textarea) {
+                    textarea.value = data.draftCopy || '';
+                    updateSocialCopyLength();
+                }
+
+                if (listEl) {
+                    const items = (data.items && data.items.length > 0) ? data.items : availableGarments;
+                    listEl.innerHTML = items.map(it => `
+                        <div class="p-2 rounded-xl bg-obsidian border border-zinc-800 flex items-center justify-between gap-2.5 text-xs">
+                            <div class="flex items-center gap-2 min-w-0">
+                                ${(it.coverPhoto || (it.photos && it.photos[0]))
+                                    ? `<img src="${escapeHtml(it.coverPhoto || it.photos[0])}" class="w-8 h-10 rounded-lg object-cover border border-zinc-700 shrink-0">`
+                                    : `<div class="w-8 h-10 rounded-lg bg-zinc-800 shrink-0"></div>`
+                                }
+                                <div class="truncate">
+                                    <span class="font-mono text-acid font-bold">[${escapeHtml(it.ref)}]</span>
+                                    <span class="text-zinc-200 font-semibold ml-1">${escapeHtml(it.title)}</span>
+                                    <span class="text-zinc-500 font-mono text-[11px] block">Talla ${escapeHtml(it.size)} • ${fmtEur(it.priceEur)}</span>
+                                </div>
+                            </div>
+                            <div class="shrink-0 flex items-center gap-1.5">
+                                ${it.vintedUrl
+                                    ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">✓ Con link Vinted</span>`
+                                    : `<span class="font-mono text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">Sin link Vinted</span>`
+                                }
+                                ${(it.publishedToSocialAt || (it.photos_object && String(it.photos_object).includes('publishedToSocialAt')))
+                                    ? `<span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">Ya enviada</span>`
+                                    : ''
+                                }
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                loadingState?.classList.add('hidden');
+                contentState?.classList.remove('hidden');
+                if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+
+            } catch (err) {
+                modal.classList.add('hidden');
+                toast(`Error al generar borrador de redes: ${err.message}`, true);
+            }
+        }
+
+        function closeSocialPublishModal() {
+            const modal = document.getElementById('socialPublishModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function executeSocialPublish() {
+            if (!currentSocialData) return;
+
+            const textarea = document.getElementById('socialCopyTextarea');
+            const customCopy = textarea?.value?.trim() || '';
+            if (!customCopy) {
+                toast('El texto de la publicación no puede estar vacío.', true);
+                return;
+            }
+
+            const btn = document.getElementById('confirmSocialPublishBtn');
+            const btnLabel = document.getElementById('confirmPublishBtnLabel');
+            const prevLabel = btnLabel ? btnLabel.textContent : '';
+
+            if (btn) btn.disabled = true;
+            if (btnLabel) btnLabel.textContent = 'Enviando a @virmarket_club...';
+
+            try {
+                const res = await callSocialApi('publish_telegram', {
+                    dropId: currentSocialData.dropId,
+                    customCopy
+                });
+
+                closeSocialPublishModal();
+                toast(res.message || `🎉 ¡Prendas publicadas con éxito en @virmarket_club!`);
+
+                const nowIso = new Date().toISOString();
+                if (currentSocialData.items) {
+                    currentSocialData.items.forEach(it => {
+                        const found = adminState.garments.find(g => g.ref === it.ref);
+                        if (found) found.publishedToSocialAt = nowIso;
+                    });
+                }
+                renderVintedWorkspace();
+
+            } catch (err) {
+                toast(`Error al publicar en Telegram: ${err.message}`, true);
+            } finally {
+                if (btn) btn.disabled = false;
+                if (btnLabel) btnLabel.textContent = prevLabel || '🚀 Publicar Ahora en @virmarket_club';
+            }
+        }
+
+        document.getElementById('openSocialModalBtn')?.addEventListener('click', () => openSocialPublishModal());
+        document.getElementById('openSocialModalBtnTab1')?.addEventListener('click', () => openSocialPublishModal());
+        document.getElementById('closeSocialModalBtn')?.addEventListener('click', closeSocialPublishModal);
+        document.getElementById('cancelSocialModalBtn')?.addEventListener('click', closeSocialPublishModal);
+        document.getElementById('confirmSocialPublishBtn')?.addEventListener('click', executeSocialPublish);
+        document.getElementById('socialCopyTextarea')?.addEventListener('input', updateSocialCopyLength);
 
         // ======================== ARRANQUE ========================
         // GESTIÓN DE TEMA CLARO / OSCURO (VIRMARKET THEME ENGINE)
