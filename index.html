@@ -543,6 +543,26 @@
                         </div>
                         <a href="./" class="text-[11px] font-mono text-acid hover:underline">¿Nuevo aquí? Únete al Club →</a>
                     </div>
+
+                    <!-- Banner Canal Telegram Oficial de Difusión -->
+                    <div class="mt-4 p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-sky-950/40 via-obsidian-elevated to-sky-950/30 border border-sky-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-lg">
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white">Canal Público Telegram</span>
+                                    <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">@virmarket_club</span>
+                                </div>
+                                <p class="text-[11px] text-zinc-400 mt-0.5">Publicamos las prendas restantes con enlace directo de compra en Vinted tras las 24h VIP.</p>
+                            </div>
+                        </div>
+                        <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-3.5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-zinc-950 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-1.5 shrink-0">
+                            <span>Unirme al Canal</span>
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Estado Cargando -->
@@ -561,9 +581,15 @@
                     <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                         Ahora mismo no hay prendas pendientes en el escaparate privado. Si estás en la lista VIP, recibirás un correo en cuanto se abra el próximo lanzamiento 24h.
                     </p>
-                    <button id="goToCaptureFromEmpty" type="button" class="mt-5 px-5 py-3 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider">
-                        Ir al Registro del Club VIP
-                    </button>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-5">
+                        <button id="goToCaptureFromEmpty" type="button" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider">
+                            Ir al Registro del Club VIP
+                        </button>
+                        <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-zinc-950 font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Canal Telegram @virmarket_club</span>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Fallback Retrocompatible (si llega ?reservar=REF-XX de un correo antiguo sin fila en Data Table) -->
@@ -698,9 +724,15 @@
                     <div>
                         <h4 class="font-display font-bold text-white text-base uppercase">¡Prendas bloqueadas a tu nombre!</h4>
                         <p id="checkoutSuccessMsg" class="mt-1.5 text-xs sm:text-sm text-zinc-200 leading-relaxed"></p>
-                        <button id="checkoutDoneBtn" type="button" class="mt-4 px-4 py-2.5 rounded-xl bg-acid text-obsidian font-display font-bold text-xs uppercase">
-                            Volver al Escaparate
-                        </button>
+                        <div class="flex flex-wrap items-center gap-3 mt-4">
+                            <button id="checkoutDoneBtn" type="button" class="px-4 py-2.5 rounded-xl bg-acid text-obsidian font-display font-bold text-xs uppercase">
+                                Volver al Escaparate
+                            </button>
+                            <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-zinc-950 font-display font-bold text-xs uppercase">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                <span>Canal Telegram @virmarket_club</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -793,7 +825,11 @@
                 <span class="font-display font-bold text-zinc-300 uppercase">VIR<span class="text-acid">MARKET</span></span>
                 <span>• Club Privado de Drops 24h</span>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 flex-wrap justify-center">
+                <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors flex items-center space-x-1.5 text-sky-400 font-medium">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <span>Telegram @virmarket_club</span>
+                </a>
                 <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
                     <i data-lucide="mail" class="w-3.5 h-3.5"></i>
                     <span>contacto@virmarsolutions.com</span>
