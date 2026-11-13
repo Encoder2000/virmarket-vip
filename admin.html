@@ -1504,6 +1504,8 @@
                 const statWaitEl = document.getElementById('statWaitlistCount');
                 if (statWaitEl) statWaitEl.textContent = totalWaitlistCount > 0 ? `${totalWaitlistCount}` : '0';
 
+                renderDropChipsAndSelect();
+
                 const activeEl = document.activeElement;
                 const isTypingInVintedTab = Boolean(
                     isAuto &&
@@ -1670,23 +1672,32 @@
         }
 
         function renderDropChipsAndSelect() {
-            const uniqueDrops = new Map();
+            const dropsMap = new Map();
             if (adminState.config.activeDropId) {
-                uniqueDrops.set(adminState.config.activeDropId, adminState.config.activeDropTitle || adminState.config.activeDropId);
+                dropsMap.set(adminState.config.activeDropId, adminState.config.activeDropTitle || adminState.config.activeDropId);
             }
             adminState.garments.forEach(g => {
-                if (g.dropId && !uniqueDrops.has(g.dropId)) {
-                    uniqueDrops.set(g.dropId, g.dropTitle || g.dropId);
+                const dId = (g.dropId || '').trim();
+                if (dId && !dropsMap.has(dId)) {
+                    dropsMap.set(dId, g.dropTitle || dId);
                 }
+            });
+
+            // Ordenar: Drop activo primero, luego el resto en orden descendente (los más recientes arriba)
+            const activeId = (adminState.config.activeDropId || '').trim();
+            const sortedEntries = [...dropsMap.entries()].sort(([aId], [bId]) => {
+                if (aId === activeId && bId !== activeId) return -1;
+                if (bId === activeId && aId !== activeId) return 1;
+                return bId.localeCompare(aId);
             });
 
             const chipsEl = document.getElementById('existingDropsChips');
             const isExp = Boolean(adminState.config.activeDropEndsAt && (Date.parse(adminState.config.activeDropEndsAt) <= Date.now()));
-            if (uniqueDrops.size > 0) {
+            if (sortedEntries.length > 0) {
                 chipsEl.innerHTML = `<span class="text-[11px] text-zinc-500 mr-1">Drops guardados:</span>` +
-                    [...uniqueDrops.entries()].map(([id, title]) => {
+                    sortedEntries.map(([id, title]) => {
                         let tag = '';
-                        if (id === adminState.config.activeDropId) {
+                        if (id === activeId) {
                             tag = isExp ? ' • FINALIZADO' : ' • ACTIVO';
                         }
                         return `
@@ -1706,10 +1717,16 @@
             }
 
             const sel = document.getElementById('filterDropSelect');
-            const prevVal = adminState.dropFilter;
-            sel.innerHTML = `<option value="ALL">Todos los Drops</option>` +
-                [...uniqueDrops.keys()].map(id => `<option value="${escapeHtml(id)}">${escapeHtml(id)}</option>`).join('');
-            if ([...uniqueDrops.keys()].includes(prevVal)) sel.value = prevVal;
+            if (sel) {
+                const prevVal = adminState.dropFilter || sel.value || 'ALL';
+                sel.innerHTML = `<option value="ALL">Todos los Drops</option>` +
+                    sortedEntries.map(([id]) => `<option value="${escapeHtml(id)}">${escapeHtml(id)}</option>`).join('');
+                if (sortedEntries.some(([id]) => id === prevVal)) {
+                    sel.value = prevVal;
+                } else if (prevVal === 'ALL') {
+                    sel.value = 'ALL';
+                }
+            }
         }
 
         document.getElementById('newDropAutoBtn').addEventListener('click', () => {
