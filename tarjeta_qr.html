@@ -374,7 +374,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            shrink: 0;
+            flex-shrink: 0;
         }
 
         .layout-business .qr-svg {
@@ -392,6 +392,48 @@
             text-transform: uppercase;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Envoltorio responsivo para visualización en pantalla sin desbordamiento */
+        .sheet-viewport-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 24px 12px;
+        }
+
+        .sheet-scale-stage {
+            transform-origin: top center;
+            transition: transform 0.2s ease;
+        }
+
+        @media screen and (max-width: 640px) {
+            .toolbar {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+            .toolbar-group {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .toolbar-group .btn {
+                flex: 1 1 auto;
+                text-align: center;
+                font-size: 11px;
+                padding: 7px 8px;
+            }
+            .btn-print {
+                width: 100%;
+            }
+        }
+
         @page {
             size: A4 portrait;
             margin: 0;
@@ -399,16 +441,27 @@
 
         @media print {
             body {
-                background: #FFFFFF;
+                background: #FFFFFF !important;
             }
             .toolbar {
                 display: none !important;
             }
+            .sheet-viewport-wrapper {
+                padding: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+            .sheet-scale-stage {
+                transform: none !important;
+                width: auto !important;
+                height: auto !important;
+            }
             .a4-sheet {
-                margin: 0;
-                box-shadow: none;
-                width: 210mm;
-                height: 297mm;
+                margin: 0 !important;
+                box-shadow: none !important;
+                width: 210mm !important;
+                height: 297mm !important;
             }
         }
     </style>
@@ -428,12 +481,16 @@
             <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Dark (Imprenta)</button>
             <button id="btnEco" class="btn" onclick="setTheme('eco')">Edición Eco Color (Casa)</button>
             <button id="btnBw" class="btn" onclick="setTheme('bw')">Edición Eco B&amp;N (Casa)</button>
-            <button id="screenThemeBtn" class="btn" onclick="toggleScreenTheme()" title="Cambiar tema de pantalla (Claro / Oscuro)">☀️ Claro</button>
+            <button id="screenThemeBtn" class="btn" onclick="toggleScreenTheme()" title="Cambiar tema de pantalla (Claro / Oscuro)" style="display:inline-flex;align-items:center;gap:4px;">Modo Claro</button>
             <button class="btn btn-print" onclick="window.print()">Imprimir / Guardar PDF</button>
         </div>
     </div>
 
-    <div id="sheet" class="a4-sheet layout-a6"></div>
+    <div id="sheetWrapper" class="sheet-viewport-wrapper">
+        <div id="sheetStage" class="sheet-scale-stage">
+            <div id="sheet" class="a4-sheet layout-a6"></div>
+        </div>
+    </div>
 
     <template id="cardTemplate">
         <article class="vip-card">
@@ -490,20 +547,47 @@
             document.getElementById('btnBw').classList.toggle('active', theme === 'bw');
         }
 
+        function adjustSheetScale() {
+            const sheet = document.getElementById('sheet');
+            const stage = document.getElementById('sheetStage');
+            const wrapper = document.getElementById('sheetWrapper');
+            if (!sheet || !stage || !wrapper) return;
+
+            // Ancho físico A4: 210mm ≈ 794px a 96dpi
+            const sheetPxWidth = 794;
+            const sheetPxHeight = 1123;
+            const availableWidth = window.innerWidth - 24;
+
+            if (availableWidth < sheetPxWidth) {
+                const scale = Math.max(0.35, Math.min(1, availableWidth / sheetPxWidth));
+                stage.style.transform = `scale(${scale})`;
+                wrapper.style.height = `${Math.ceil(sheetPxHeight * scale + 48)}px`;
+            } else {
+                stage.style.transform = 'none';
+                wrapper.style.height = 'auto';
+            }
+        }
+
+        window.addEventListener('resize', adjustSheetScale);
+        window.addEventListener('orientationchange', adjustSheetScale);
+
         function updateScreenThemeUI(isLight) {
             const btn = document.getElementById('screenThemeBtn');
             const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
             const metaStatus = document.getElementById('metaAppleStatus') || document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+            const moonSvg = '<svg style="width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+            const sunSvg = '<svg style="width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
+
             if (isLight) {
                 document.documentElement.classList.add('theme-light');
                 if (metaTheme) metaTheme.setAttribute('content', '#F8FAFC');
                 if (metaStatus) metaStatus.setAttribute('content', 'default');
-                if (btn) btn.textContent = '🌙 Oscuro';
+                if (btn) btn.innerHTML = `${moonSvg}Modo Oscuro`;
             } else {
                 document.documentElement.classList.remove('theme-light');
                 if (metaTheme) metaTheme.setAttribute('content', '#09090B');
                 if (metaStatus) metaStatus.setAttribute('content', 'black-translucent');
-                if (btn) btn.textContent = '☀️ Claro';
+                if (btn) btn.innerHTML = `${sunSvg}Modo Claro`;
             }
         }
 
@@ -517,6 +601,7 @@
 
         updateScreenThemeUI(document.documentElement.classList.contains('theme-light'));
         renderCards(4);
+        setTimeout(adjustSheetScale, 50);
     </script>
 </body>
 </html>

@@ -221,6 +221,26 @@
             border-color: #A3E635 !important;
             box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12) !important;
         }
+        /* Números tabulares para métricas y precios */
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+        }
+
+        .keep-text-white,
+        .keep-text-white * {
+            color: #FFFFFF !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         /* Badges de filtros y listas en Studio */
         html.theme-light .bg-acid\/15 {
             background-color: #ECFCCB !important;
@@ -232,14 +252,58 @@
             border-color: #FCD34D !important;
             color: #92400E !important;
         }
+        html.theme-light .bg-rose-950\/40,
         html.theme-light .bg-rose-950\/60,
         html.theme-light .bg-rose-950\/80 {
             background-color: #FFE4E6 !important;
             border-color: #FDA4AF !important;
             color: #9F1239 !important;
         }
+        html.theme-light .bg-rose-950\/40 *,
+        html.theme-light .bg-rose-950\/60 *,
+        html.theme-light .bg-rose-950\/80 * {
+            color: #9F1239 !important;
+        }
         html.theme-light .text-rose-300 {
             color: #9F1239 !important;
+        }
+        /* Modal de Difusión Social en Modo Claro */
+        html.theme-light #socialPublishModal .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15) !important;
+        }
+        html.theme-light #socialPublishModal .bg-obsidian {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light #socialPublishModal .text-sky-400,
+        html.theme-light #socialPublishModal .text-sky-300 {
+            color: #0369A1 !important;
+        }
+        html.theme-light #socialPublishModal .bg-sky-500\/10 {
+            background-color: #E0F2FE !important;
+            border-color: #BAE6FD !important;
+        }
+        html.theme-light #socialPublishModal .text-emerald-400 {
+            color: #15803D !important;
+        }
+        html.theme-light #socialPublishModal .bg-emerald-500\/10 {
+            background-color: #DCFCE7 !important;
+            border-color: #86EFAC !important;
+        }
+        html.theme-light #socialPublishModal .text-amber-400 {
+            color: #B45309 !important;
+        }
+        html.theme-light #socialPublishModal .bg-amber-500\/10 {
+            background-color: #FEF3C7 !important;
+            border-color: #FCD34D !important;
+        }
+        html.theme-light #openSocialModalBtnTab1,
+        html.theme-light #openSocialModalBtn {
+            background-color: #F0F9FF !important;
+            border-color: #BAE6FD !important;
+            color: #0369A1 !important;
         }
     </style>
 </head>
@@ -254,7 +318,7 @@
                 </div>
                 <div class="leading-none">
                     <span class="font-display text-base sm:text-lg font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span> STUDIO</span>
-                    <span class="block font-mono text-[9px] uppercase tracking-widest text-zinc-400">Gestión de Drops &amp; Asistente Vinted</span>
+                    <span class="block font-mono text-xs uppercase tracking-wider text-zinc-400 mt-0.5">Gestión de Drops &amp; Asistente Vinted</span>
                 </div>
             </div>
 
@@ -314,14 +378,19 @@
                             <label for="loginPassword" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                                 Contraseña de Administrador
                             </label>
-                            <input
-                                type="password"
-                                id="loginPassword"
-                                autocomplete="current-password"
-                                required
-                                placeholder="Introduce tu clave..."
-                                class="w-full px-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid"
-                            >
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="loginPassword"
+                                    autocomplete="current-password"
+                                    required
+                                    placeholder="Introduce tu clave..."
+                                    class="w-full pl-4 pr-11 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid"
+                                >
+                                <button type="button" id="toggleLoginPwdBtn" aria-label="Mostrar u ocultar contraseña" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-1">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <button id="loginSubmitBtn" type="submit" class="w-full py-3.5 px-5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide shadow-lg shadow-acid/20">
@@ -364,13 +433,18 @@
                                 <label for="newAdminPassword" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1">
                                     Nueva contraseña (mín. 6 caracteres)
                                 </label>
-                                <input
-                                    type="password"
-                                    id="newAdminPassword"
-                                    autocomplete="new-password"
-                                    placeholder="Elige tu contraseña..."
-                                    class="w-full px-4 py-3 rounded-xl bg-obsidian-elevated border border-zinc-700 text-white text-base sm:text-sm focus:outline-none focus:border-acid"
-                                >
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="newAdminPassword"
+                                        autocomplete="new-password"
+                                        placeholder="Elige tu contraseña..."
+                                        class="w-full pl-4 pr-11 py-3 rounded-xl bg-obsidian-elevated border border-zinc-700 text-white text-base sm:text-sm focus:outline-none focus:border-acid"
+                                    >
+                                    <button type="button" id="toggleNewPwdBtn" aria-label="Mostrar u ocultar contraseña" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-1">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
                             </div>
                             <button id="savePasswordBtn" type="submit" class="w-full py-3.5 px-5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide">
                                 Guardar Contraseña y Entrar
@@ -425,14 +499,14 @@
 
                 <!-- Navegación por Pestañas (Optimizada para pulgar en móvil) -->
                 <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                    <button type="button" data-tab="drops" class="tab-btn flex-1 min-w-[140px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all bg-acid text-obsidian">
-                        🚀 1. Crear Drop y Correo
+                    <button type="button" data-tab="drops" class="tab-btn flex-1 min-w-[100px] py-3 px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors bg-acid text-obsidian">
+                        🚀 1. Drops
                     </button>
-                    <button type="button" data-tab="vinted" class="tab-btn flex-1 min-w-[150px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all text-zinc-300 hover:text-white">
-                        📋 2. Reservas y Copiar a Vinted
+                    <button type="button" data-tab="vinted" class="tab-btn flex-1 min-w-[110px] py-3 px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                        📋 2. Reservas
                     </button>
-                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[130px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all text-zinc-300 hover:text-white">
-                        ⚙️ 3. Descuentos y Pie Vinted
+                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[100px] py-3 px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                        ⚙️ 3. Ajustes
                     </button>
                 </div>
 
@@ -652,8 +726,8 @@
 
                                     <!-- Paso D: Difusión en Telegram de Prendas Sobrantes -->
                                     <div class="pt-4 border-t border-zinc-800 space-y-1.5">
-                                        <button id="openSocialModalBtnTab1" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 transition-all">
-                                            <i data-lucide="send" class="w-4 h-4"></i>
+                                        <button id="openSocialModalBtnTab1" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="w-full py-3.5 px-4 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-sky-400/60 text-sky-300 font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-colors">
+                                            <i data-lucide="send" class="w-4 h-4 text-sky-400"></i>
                                             <span>📢 Publicar Sobrantes en Telegram</span>
                                         </button>
                                         <p class="text-[11px] text-zinc-400 text-center">Genera borrador con IA y difunde a @virmarket_club las prendas disponibles tras la ventana VIP</p>
@@ -716,8 +790,8 @@
                             <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
                                 <option value="ALL">Todos los Drops</option>
                             </select>
-                            <button id="openSocialModalBtn" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-sky-500/20 transition-all">
-                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            <button id="openSocialModalBtn" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-sky-400/60 text-sky-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+                                <i data-lucide="send" class="w-3.5 h-3.5 text-sky-400"></i>
                                 <span>📢 Publicar Sobrantes</span>
                             </button>
                             <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5 transition-colors">
@@ -889,7 +963,7 @@
     </main>
 
     <!-- Modal de Difusión en Redes Sociales y Telegram -->
-    <div id="socialPublishModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div id="socialPublishModal" role="dialog" aria-modal="true" aria-labelledby="socialModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
         <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-sky-500/40 p-5 sm:p-7 shadow-2xl shadow-sky-950/60 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <!-- Cabecera del Modal -->
             <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-4">
@@ -902,10 +976,10 @@
                             <span class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 font-bold">Canal @virmarket_club</span>
                             <span id="socialProviderBadge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-acid/10 text-acid border border-acid/20">✨ Generando con Gemini...</span>
                         </div>
-                        <h3 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Difusión de Prendas Sobrantes</h3>
+                        <h3 id="socialModalTitle" class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Difusión de Prendas Sobrantes</h3>
                     </div>
                 </div>
-                <button type="button" id="closeSocialModalBtn" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors">
+                <button type="button" id="closeSocialModalBtn" aria-label="Cerrar modal de difusión" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -947,10 +1021,10 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-3 border-t border-zinc-800">
-                    <button type="button" id="cancelSocialModalBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                    <button type="button" id="cancelSocialModalBtn" aria-label="Cancelar y cerrar modal" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
                         Cancelar
                     </button>
-                    <button type="button" id="confirmSocialPublishBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition-all">
+                    <button type="button" id="confirmSocialPublishBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-acid/20 transition-colors">
                         <i data-lucide="send" class="w-4 h-4"></i>
                         <span id="confirmPublishBtnLabel">🚀 Publicar Ahora en @virmarket_club</span>
                     </button>
@@ -3292,6 +3366,39 @@
         document.getElementById('cancelSocialModalBtn')?.addEventListener('click', closeSocialPublishModal);
         document.getElementById('confirmSocialPublishBtn')?.addEventListener('click', executeSocialPublish);
         document.getElementById('socialCopyTextarea')?.addEventListener('input', updateSocialCopyLength);
+
+        // Backdrop click y tecla Escape para socialPublishModal
+        document.getElementById('socialPublishModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('socialPublishModal')) {
+                closeSocialPublishModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSocialPublishModal();
+            }
+        });
+
+        // Visibilidad de contraseñas en formularios de acceso
+        document.getElementById('toggleLoginPwdBtn')?.addEventListener('click', () => {
+            const input = document.getElementById('loginPassword');
+            if (!input) return;
+            const isPwd = input.type === 'password';
+            input.type = isPwd ? 'text' : 'password';
+            const icon = document.querySelector('#toggleLoginPwdBtn i');
+            if (icon) icon.setAttribute('data-lucide', isPwd ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+
+        document.getElementById('toggleNewPwdBtn')?.addEventListener('click', () => {
+            const input = document.getElementById('newAdminPassword');
+            if (!input) return;
+            const isPwd = input.type === 'password';
+            input.type = isPwd ? 'text' : 'password';
+            const icon = document.querySelector('#toggleNewPwdBtn i');
+            if (icon) icon.setAttribute('data-lucide', isPwd ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
 
         // ======================== ARRANQUE ========================
         // GESTIÓN DE TEMA CLARO / OSCURO (VIRMARKET THEME ENGINE)
