@@ -468,7 +468,7 @@
                                     </div>
                                 </div>
 
-                                <div id="existingDropsChips" class="mt-3 flex flex-wrap items-center gap-1.5"></div>
+                                <div id="existingDropsChips" class="mt-3 flex flex-wrap items-center gap-1.5 max-h-28 overflow-y-auto overflow-x-hidden scrollbar-thin"></div>
                             </div>
 
                             <!-- Importador Inteligente Dual desde Vinted (0,00 € • Sin IA) -->
@@ -1694,24 +1694,68 @@
             const chipsEl = document.getElementById('existingDropsChips');
             const isExp = Boolean(adminState.config.activeDropEndsAt && (Date.parse(adminState.config.activeDropEndsAt) <= Date.now()));
             if (sortedEntries.length > 0) {
-                chipsEl.innerHTML = `<span class="text-[11px] text-zinc-500 mr-1">Drops guardados:</span>` +
-                    sortedEntries.map(([id, title]) => {
-                        let tag = '';
-                        if (id === activeId) {
-                            tag = isExp ? ' • FINALIZADO' : ' • ACTIVO';
-                        }
-                        return `
-                        <button type="button" data-pick-drop="${escapeHtml(id)}" data-pick-title="${escapeHtml(title)}" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid font-mono text-[11px] text-zinc-300">
-                            ${escapeHtml(id)}${tag}
-                        </button>
-                    `;}).join('');
+                const currentInputDropId = (document.getElementById('dropIdInput')?.value || '').trim().toUpperCase();
+                const MAX_VISIBLE_CHIPS = 5;
+                const recentEntries = sortedEntries.slice(0, MAX_VISIBLE_CHIPS);
+                const olderEntries = sortedEntries.slice(MAX_VISIBLE_CHIPS);
+
+                let chipsHtml = `<span class="text-[11px] text-zinc-500 mr-1 shrink-0">Drops guardados:</span>`;
+
+                chipsHtml += recentEntries.map(([id, title]) => {
+                    let tag = '';
+                    if (id === activeId) {
+                        tag = isExp ? ' • FINALIZADO' : ' • ACTIVO';
+                    }
+                    const isSelected = id.toUpperCase() === currentInputDropId;
+                    const styleCls = isSelected
+                        ? 'bg-acid/15 border-acid text-acid font-bold shadow-sm shadow-acid/10'
+                        : 'bg-obsidian-elevated border-zinc-700 hover:border-acid text-zinc-300';
+                    return `
+                    <button type="button" data-pick-drop="${escapeHtml(id)}" data-pick-title="${escapeHtml(title)}" class="px-2.5 py-1 rounded-lg border font-mono text-[11px] transition-all shrink-0 ${styleCls}">
+                        ${escapeHtml(id)}${tag}
+                    </button>
+                `;}).join('');
+
+                if (olderEntries.length > 0) {
+                    chipsHtml += `
+                    <div class="inline-flex items-center gap-1 shrink-0">
+                        <select id="olderDropsSelect" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid font-mono text-[11px] text-zinc-400 focus:outline-none focus:border-acid cursor-pointer">
+                            <option value="">📁 Historial (${olderEntries.length} anteriores)...</option>
+                            ${olderEntries.map(([id, title]) => `<option value="${escapeHtml(id)}" data-title="${escapeHtml(title)}">${escapeHtml(id)}</option>`).join('')}
+                        </select>
+                    </div>`;
+                }
+
+                chipsEl.innerHTML = chipsHtml;
+
                 chipsEl.querySelectorAll('[data-pick-drop]').forEach(b => {
                     b.addEventListener('click', () => {
                         document.getElementById('dropIdInput').value = b.getAttribute('data-pick-drop');
                         document.getElementById('dropTitleInput').value = b.getAttribute('data-pick-title');
                         renderCurrentDropList();
+                        renderDropChipsAndSelect();
                     });
                 });
+
+                const olderSel = chipsEl.querySelector('#olderDropsSelect');
+                if (olderSel) {
+                    if (olderEntries.some(([id]) => id.toUpperCase() === currentInputDropId)) {
+                        olderSel.value = currentInputDropId;
+                        olderSel.classList.remove('text-zinc-400', 'border-zinc-700');
+                        olderSel.classList.add('text-acid', 'border-acid', 'bg-acid/10');
+                    }
+                    olderSel.addEventListener('change', (e) => {
+                        const pickedId = e.target.value;
+                        if (!pickedId) return;
+                        const opt = olderSel.options[olderSel.selectedIndex];
+                        const pickedTitle = opt?.getAttribute('data-title') || pickedId;
+                        document.getElementById('dropIdInput').value = pickedId;
+                        document.getElementById('dropTitleInput').value = pickedTitle;
+                        renderCurrentDropList();
+                        renderDropChipsAndSelect();
+                        toast(`✓ Cargado desde historial: ${pickedId}`);
+                    });
+                }
             } else {
                 chipsEl.innerHTML = '';
             }
@@ -1734,10 +1778,14 @@
             document.getElementById('dropIdInput').value = candidate;
             document.getElementById('dropTitleInput').value = `Nuevo Drop Privado (${candidate})`;
             renderCurrentDropList();
+            renderDropChipsAndSelect();
             toast(`✓ Nuevo Drop único asignado: ${candidate}`);
         });
 
-        document.getElementById('dropIdInput').addEventListener('input', renderCurrentDropList);
+        document.getElementById('dropIdInput').addEventListener('input', () => {
+            renderCurrentDropList();
+            renderDropChipsAndSelect();
+        });
 
         // ======================== COMPRESIÓN Y SUBIDA DE FOTOS (1-4) ========================
         function compressImageFile(file, maxSide = 1080, quality = 0.84) {
