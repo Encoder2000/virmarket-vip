@@ -84,6 +84,38 @@
             box-sizing: border-box;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 #121214;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #121214;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 9999px;
+            border: 1px solid #18181b;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a3e635;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
 
         body {

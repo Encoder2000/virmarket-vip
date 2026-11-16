@@ -102,6 +102,72 @@
         }
 
         /* ===================================================================== */
+        /* CONTROLES Y SCROLLBARS OBSIDIAN & ACID (CERO BLANCOS NATIVOS)         */
+        /* ===================================================================== */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 #121214;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #121214;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 9999px;
+            border: 1px solid #18181b;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a3e635; /* Resplandor acid en hover */
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        /* Ocultar flechas toscas nativas de Windows en barras de scroll */
+        ::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        /* Desactivar flechas numéricas nativas del navegador */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Selectores / Menús desplegables nativos coherentes */
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background-color: #121214;
+            color: #f4f4f5;
+            padding: 8px 12px;
+        }
+
+        /* Textareas sin esquinas ni controles toscos */
+        textarea {
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 #121214;
+        }
+
+        /* ===================================================================== */
         /* MODO CLARO (STREETWEAR MINIMAL / ECO) - VIRMARKET STUDIO */
         /* ===================================================================== */
         html.theme-light {
@@ -203,6 +269,23 @@
             background-color: #FFFFFF !important;
             color: #0F172A !important;
             border-color: #CBD5E1 !important;
+        }
+        html.theme-light select option {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+        }
+        html.theme-light * {
+            scrollbar-color: #94A3B8 #F1F5F9;
+        }
+        html.theme-light ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        html.theme-light ::-webkit-scrollbar-thumb {
+            background: #94A3B8;
+            border-color: #E2E8F0;
+        }
+        html.theme-light ::-webkit-scrollbar-thumb:hover {
+            background: #65A30D;
         }
         html.theme-light input::placeholder,
         html.theme-light textarea::placeholder {
@@ -667,9 +750,9 @@
                                 <div>
                                     <textarea
                                         id="vintedImportUrlsInput"
-                                        rows="2"
+                                        rows="3"
                                         placeholder="https://www.vinted.es/items/10603463522-bolso-de-hombro&#10;(Pega 1 enlace para autorrellenar el formulario, o pega varios enlaces uno por línea para importar todo el lote de golpe)"
-                                        class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid"
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid resize-none overflow-y-auto"
                                     ></textarea>
                                 </div>
 
@@ -3467,9 +3550,22 @@
             }
         }
 
-        vintedUrlsInputEl?.addEventListener('input', updateVintedImporterUiHint);
+        function autoResizeVintedUrlsInput() {
+            if (!vintedUrlsInputEl) return;
+            vintedUrlsInputEl.style.height = 'auto';
+            const targetH = Math.min(Math.max(vintedUrlsInputEl.scrollHeight, 74), 220);
+            vintedUrlsInputEl.style.height = targetH + 'px';
+        }
+
+        vintedUrlsInputEl?.addEventListener('input', () => {
+            autoResizeVintedUrlsInput();
+            updateVintedImporterUiHint();
+        });
         vintedClearUrlsBtnEl?.addEventListener('click', () => {
-            if (vintedUrlsInputEl) vintedUrlsInputEl.value = '';
+            if (vintedUrlsInputEl) {
+                vintedUrlsInputEl.value = '';
+                vintedUrlsInputEl.style.height = '74px';
+            }
             if (vintedImportFeedbackEl) vintedImportFeedbackEl.classList.add('hidden');
             updateVintedImporterUiHint();
         });

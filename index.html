@@ -107,6 +107,68 @@
             animation: pulseRing 1.8s ease-in-out 3;
         }
 
+        /* ===================================================================== */
+        /* CONTROLES Y SCROLLBARS OBSIDIAN & ACID (CERO BLANCOS NATIVOS)         */
+        /* ===================================================================== */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 #121214;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #121214;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 9999px;
+            border: 1px solid #18181b;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a3e635;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background-color: #121214;
+            color: #f4f4f5;
+            padding: 8px 12px;
+        }
+
+        textarea {
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 #121214;
+        }
+
         /* Números tabulares para precios y cuentas atrás */
         .tabular-nums {
             font-variant-numeric: tabular-nums;
@@ -245,6 +307,23 @@
             background-color: #FFFFFF !important;
             color: #0F172A !important;
             border-color: #CBD5E1 !important;
+        }
+        html.theme-light select option {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+        }
+        html.theme-light * {
+            scrollbar-color: #94A3B8 #F1F5F9;
+        }
+        html.theme-light ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        html.theme-light ::-webkit-scrollbar-thumb {
+            background: #94A3B8;
+            border-color: #E2E8F0;
+        }
+        html.theme-light ::-webkit-scrollbar-thumb:hover {
+            background: #65A30D;
         }
         html.theme-light input::placeholder,
         html.theme-light textarea::placeholder {
