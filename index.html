@@ -505,47 +505,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Preguntas Frecuentes -->
-            <section class="py-14 px-4 sm:px-6">
-                <div class="max-w-xl mx-auto">
-                    <h2 class="font-display text-xl sm:text-2xl font-bold text-white uppercase text-center mb-8">
-                        Preguntas frecuentes
-                    </h2>
-
-                    <div class="space-y-3">
-                        <details class="group p-4 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer">
-                            <summary class="font-semibold text-sm text-white flex justify-between items-center list-none">
-                                <span>¿Dónde se realiza el pago y el envío de las prendas?</span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
-                            </summary>
-                            <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                Siempre dentro de <strong>Vinted</strong>. Nunca te pediremos datos bancarios fuera de la plataforma: subimos la prenda o tu lote reservado directamente a tu nombre de usuario de Vinted para que compres con toda la protección habitual.
-                            </p>
-                        </details>
-
-                        <details class="group p-4 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer">
-                            <summary class="font-semibold text-sm text-white flex justify-between items-center list-none">
-                                <span>¿Cómo funciona el descuento de bienvenida y los Lotes?</span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
-                            </summary>
-                            <p id="dynFaqDiscount" class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                En tu primera reserva del Club (tanto si eliges 1 prenda como un Lote de varias prendas a la vez), el Escaparate Web calcula automáticamente tu <strong>10% de descuento</strong> (con tope máximo de 15,00 €) y subimos el anuncio reservado para ti en Vinted con el precio final ya rebajado.
-                            </p>
-                        </details>
-
-                        <details class="group p-4 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer">
-                            <summary class="font-semibold text-sm text-white flex justify-between items-center list-none">
-                                <span>¿Qué ocurre si una prenda ya aparece como RESERVADA?</span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180 shrink-0 ml-2"></i>
-                            </summary>
-                            <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                Son piezas únicas (stock 1 de 1). Puedes pulsar <strong>«Apuntarme en cola»</strong> gratis y sin gastar tu descuento de bienvenida: si el primer comprador no completa la compra en Vinted, te avisaremos por orden de llegada.
-                            </p>
-                        </details>
-                    </div>
-                </div>
-            </section>
         </div>
 
         <!-- ========================================================================= -->
@@ -655,6 +614,116 @@
                 </div>
             </div>
         </div>
+
+        <!-- ========================================================================= -->
+        <!-- SECCIÓN UNIVERSAL: PREGUNTAS FRECUENTES (Accesible vía #faqs en Landing y Escaparate) -->
+        <!-- ========================================================================= -->
+        <section id="faqs" class="py-14 px-4 sm:px-6 scroll-mt-20 border-t border-obsidian-border/60">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-10">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
+                        <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                        <span>Centro de Ayuda • Club VIP</span>
+                    </div>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">
+                        Preguntas frecuentes
+                    </h2>
+                    <p class="mt-2 text-xs sm:text-sm text-zinc-400">
+                        Todo lo que necesitas saber sobre los Drops 24h, tu descuento de bienvenida y las compras en Vinted.
+                    </p>
+                </div>
+
+                <div class="space-y-3.5">
+                    <!-- FAQ 1 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>1. ¿Dónde se realiza el pago y el envío de las prendas?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            Siempre dentro de <strong>Vinted</strong>. Nunca te pediremos datos bancarios fuera de la plataforma: subimos la prenda o tu lote reservado directamente a tu nombre de usuario de Vinted para que compres con toda la protección al comprador y los métodos de envío oficiales habituales.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 2 (Dinámico con % y tope en euros) -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>2. ¿Cómo funciona el descuento de bienvenida y los Lotes?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p id="dynFaqDiscount" class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            En tu primera reserva del Club (tanto si eliges 1 prenda como un Lote de varias prendas a la vez), el Escaparate Web calcula automáticamente tu <strong>10% de descuento</strong> (con tope máximo de 15,00 €) y subimos el anuncio reservado para ti en Vinted con el precio final ya rebajado.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 3 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>3. ¿Qué ocurre si una prenda ya aparece como RESERVADA?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            Son piezas únicas (stock 1 de 1). Puedes pulsar <strong>«Apuntarme en cola»</strong> gratis y sin gastar tu descuento de bienvenida: si el primer comprador no completa la compra en Vinted dentro del plazo establecido, te avisaremos de inmediato por orden de llegada.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 4 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>4. ¿Cada cuánto salen los Drops y cuánto dura el acceso VIP?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            No enviamos spam: recibirás <strong>1 único correo</strong> cada vez que preparemos un nuevo Drop. Desde ese momento dispones de <strong>24 horas de acceso exclusivo</strong> al Escaparate Web VIP para elegir y reservar antes de que las prendas restantes salgan publicadas en abierto en Vinted.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 5 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>5. ¿Cuánto tiempo tengo para pagar una prenda o lote reservado?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            Una vez que recibas el enlace directo de tu anuncio reservado en Vinted, dispones de <strong>24 horas</strong> para completar el pago en la app. Si pasado ese tiempo no se ha realizado la compra, la reserva se libera de forma automática para el siguiente miembro en cola.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 6 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>6. ¿Caduca mi descuento de bienvenida si no compro en el primer Drop?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            <strong>No.</strong> Tu descuento de bienvenida permanece vinculado a tu correo hasta que completes tu <strong>primera reserva efectiva</strong>. Si un Drop no encaja con tu estilo o talla, lo conservas intacto para las siguientes colecciones.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 7 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>7. Si reservo varias prendas en un Lote, ¿pago un solo envío en Vinted?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            <strong>Sí.</strong> Cuando reservas 2 o más prendas a la vez desde el Escaparate VIP, creamos un <strong>único anuncio de Lote unificado</strong> en Vinted con todas tus prendas agrupadas y el descuento aplicado sobre el total, para que pagues un único paquete y un solo envío.
+                        </p>
+                    </details>
+
+                    <!-- FAQ 8 -->
+                    <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
+                        <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
+                            <span>8. ¿Puedo pedir medidas adicionales o más fotos antes de reservar?</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                        </summary>
+                        <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                            En el Escaparate VIP incluimos hasta 4 fotos en alta definición, talla, estado oficial de Vinted y medidas principales. Si necesitas algún detalle específico antes de que se agote la prenda, escríbenos a <a href="mailto:contacto@virmarsolutions.com" class="text-acid hover:underline">contacto@virmarsolutions.com</a> indicando su referencia (ej. <code>REF-001</code>).
+                        </p>
+                    </details>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- ========================================================================= -->
@@ -871,6 +940,10 @@
                 <span>• Club Privado de Drops 24h</span>
             </div>
             <div class="flex items-center gap-4 flex-wrap justify-center">
+                <a href="#faqs" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                    <span>Preguntas frecuentes</span>
+                </a>
                 <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors flex items-center space-x-1.5 text-sky-400 font-medium">
                     <i data-lucide="send" class="w-3.5 h-3.5"></i>
                     <span>Telegram @virmarket_club</span>
@@ -1788,6 +1861,12 @@
         initThemeEngine();
         updateViewVisibility();
         fetchCatalog(false);
+        if (window.location.hash === '#faqs') {
+            setTimeout(() => {
+                const faqsEl = document.getElementById('faqs');
+                if (faqsEl) faqsEl.scrollIntoView({ behavior: 'smooth' });
+            }, 350);
+        }
 
         // =====================================================================
         // GESTIÓN DE TEMA CLARO / OSCURO (VIRMARKET THEME ENGINE)

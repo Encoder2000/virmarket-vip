@@ -46,7 +46,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
     <link rel="manifest" href="manifest-admin.json?v=4">
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && !window.location.search.includes('mock=1')) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./sw.js').catch(function() {});
             });
@@ -304,6 +304,104 @@
             background-color: #F0F9FF !important;
             border-color: #BAE6FD !important;
             color: #0369A1 !important;
+        }
+        /* Modal Checklist de Limpieza de Lotes en Modo Claro */
+        html.theme-light #lotCleanupModal .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #F43F5E !important;
+            box-shadow: 0 25px 50px -12px rgba(244, 63, 94, 0.2) !important;
+        }
+        html.theme-light #lotCleanupModal .bg-obsidian-elevated {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light #pendingVintedCleanupBanner {
+            background-color: #FFF1F2 !important;
+            border-color: #FDA4AF !important;
+        }
+        html.theme-light #pendingVintedCleanupBanner h3 {
+            color: #881337 !important;
+        }
+        html.theme-light #pendingVintedCleanupBanner p {
+            color: #9F1239 !important;
+        }
+        html.theme-light #pendingVintedCleanupBanner .bg-rose-500 {
+            background-color: #E11D48 !important;
+            color: #FFFFFF !important;
+        }
+        /* Modal de Confirmación Propio (VirMarket Confirm) en Modo Claro */
+        html.theme-light #vmConfirmModal .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.22) !important;
+        }
+        html.theme-light #vmConfirmModal .bg-obsidian-elevated {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light #vmConfirmModal #vmConfirmCancelBtn {
+            background-color: #F1F5F9 !important;
+            color: #334155 !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light #vmConfirmModal #vmConfirmCancelBtn:hover {
+            background-color: #E2E8F0 !important;
+        }
+        html.theme-light #vmConfirmModal #vmConfirmOkBtn.bg-rose-600 {
+            color: #FFFFFF !important;
+        }
+        html.theme-light #vmConfirmModal .text-amber-300 {
+            color: #B45309 !important;
+        }
+        html.theme-light #vmConfirmModal .text-rose-300 {
+            color: #BE123C !important;
+        }
+        /* Modal de Traspaso de Cola y Monitor 24h en Modo Claro */
+        html.theme-light #promoteWaitlistModal .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #F59E0B !important;
+            box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.2) !important;
+        }
+        html.theme-light #promoteWaitlistModal .bg-obsidian-elevated {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light #promoteWaitlistModal .bg-obsidian {
+            background-color: #F1F5F9 !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light #waitlistMonitorBanner {
+            background-color: #FEF3C7 !important;
+            border-color: #F59E0B !important;
+        }
+        html.theme-light #waitlistMonitorBanner h3 {
+            color: #92400E !important;
+        }
+        html.theme-light #waitlistMonitorBanner p {
+            color: #B45309 !important;
+        }
+        html.theme-light #waitlistMonitorBanner .bg-obsidian {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light #waitlistMonitorBanner .bg-rose-950\/20 {
+            background-color: #FFF1F2 !important;
+            border-color: #FDA4AF !important;
+        }
+        html.theme-light .reservation-timer-tag.bg-rose-500\/20 {
+            background-color: #FEE2E2 !important;
+            color: #B91C1C !important;
+            border-color: #F87171 !important;
+        }
+        html.theme-light .reservation-timer-tag.bg-amber-500\/20 {
+            background-color: #FEF3C7 !important;
+            color: #B45309 !important;
+            border-color: #FBBF24 !important;
+        }
+        html.theme-light .reservation-timer-tag.bg-emerald-500\/15 {
+            background-color: #DCFCE7 !important;
+            color: #15803D !important;
+            border-color: #86EFAC !important;
         }
     </style>
 </head>
@@ -801,6 +899,49 @@
                         </div>
                     </div>
 
+                    <!-- MONITOR SUPERIOR DE COLAS DE ESPERA Y PLAZOS 24H -->
+                    <div id="waitlistMonitorBanner" class="hidden rounded-2xl bg-amber-500/10 border-2 border-amber-400/50 p-4 sm:p-5 shadow-2xl space-y-3">
+                        <div class="flex items-start justify-between gap-3 border-b border-amber-400/30 pb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl shrink-0">⏳</span>
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="px-2 py-0.5 rounded bg-amber-400 text-obsidian font-mono text-[10px] font-bold uppercase">Gestión de Colas &amp; Plazos 24h</span>
+                                        <span id="waitlistMonitorStatsBadge" class="font-mono text-[11px] text-amber-300 font-bold">0 casos</span>
+                                    </div>
+                                    <h3 class="font-display text-base font-bold text-white mt-1">Monitor de Vencimientos y Lista de Espera</h3>
+                                    <p class="text-xs text-zinc-300 leading-relaxed mt-0.5">
+                                        Supervisa el tiempo restante para pagar en Vinted y pasa manualmente al siguiente en la cola cuando venza el plazo de 24 horas.
+                                    </p>
+                                </div>
+                            </div>
+                            <button type="button" id="toggleWaitlistMonitorBtn" class="shrink-0 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-[11px] font-mono text-zinc-300 transition-colors">
+                                Contraer
+                            </button>
+                        </div>
+                        <div id="waitlistMonitorItemsContainer" class="space-y-2"></div>
+                    </div>
+
+                    <!-- BANNER PERSISTENTE ANTI-«ANUNCIOS FANTASMA» EN VINTED -->
+                    <div id="pendingVintedCleanupBanner" class="hidden rounded-2xl bg-rose-950/60 border-2 border-rose-500/70 p-4 sm:p-5 shadow-2xl space-y-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-start gap-3">
+                                <span class="text-2xl shrink-0">⚠️</span>
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="px-2 py-0.5 rounded bg-rose-500 text-white font-mono text-[10px] font-bold uppercase">Acción Crítica en Vinted</span>
+                                        <span id="pendingCleanupCountBadge" class="font-mono text-[11px] text-rose-300 font-bold"></span>
+                                    </div>
+                                    <h3 class="font-display text-base font-bold text-white mt-1">Prendas vendidas en Lotes pendientes de eliminar en Vinted</h3>
+                                    <p class="text-xs text-rose-200/90 leading-relaxed mt-0.5">
+                                        Estas prendas pertenecen a lotes ya vendidos. Debes eliminarlas de tu armario de Vinted para evitar que, al desocultar prendas sobrantes tras las 24h, vuelvan a quedar a la venta por error y causen roturas de stock.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pendingCleanupListContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1"></div>
+                    </div>
+
                     <!-- SECCIÓN AUTOMÁTICA DE LOTES AGRUPADOS (2+ prendas en un mismo pedido) -->
                     <div id="groupedLotsSection" class="hidden space-y-4">
                         <div class="flex items-center gap-2">
@@ -1033,6 +1174,196 @@
         </div>
     </div>
 
+    <!-- Modal Checklist Bloqueante de Limpieza de Lotes en Vinted -->
+    <div id="lotCleanupModal" role="dialog" aria-modal="true" aria-labelledby="lotCleanupModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-rose-500/40 p-5 sm:p-7 shadow-2xl shadow-rose-950/60 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <!-- Cabecera del Modal -->
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-600 flex items-center justify-center text-white shadow-lg shadow-rose-500/20 shrink-0">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span id="lotCleanupBadgeId" class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30 font-bold">LOTE</span>
+                            <span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold">Paso Obligatorio Anti-Rotura de Stock</span>
+                        </div>
+                        <h3 id="lotCleanupModalTitle" class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Checklist de Limpieza en Vinted</h3>
+                    </div>
+                </div>
+                <button type="button" id="closeLotCleanupModalBtn" aria-label="Cerrar modal de limpieza" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Advertencia Operativa -->
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 text-xs text-zinc-300 flex items-start gap-2.5">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+                <div>
+                    <span class="font-semibold text-white">¿Por qué es obligatorio este checklist?</span>
+                    <p class="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">
+                        El comprador ya ha pagado el anuncio unificado del lote. Como los anuncios individuales estaban ocultos, si no los eliminas ahora en Vinted, podrían reaparecer activos al desocultar prendas tras las 24h provocando una venta duplicada y reclamación.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Lista de Prendas del Lote con Botón de Eliminar y Checkbox -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 font-bold">
+                        Prendas individuales a eliminar en Vinted:
+                    </span>
+                    <span id="lotCleanupProgressText" class="font-mono text-[11px] text-acid font-bold">0 de 0 eliminadas</span>
+                </div>
+                <div id="lotCleanupItemsList" class="max-h-72 overflow-y-auto space-y-2 pr-1"></div>
+            </div>
+
+            <!-- Barra de Acciones del Modal -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-zinc-800">
+                <p id="lotCleanupHelpNotice" class="text-[11px] text-amber-300/90 font-mono text-center sm:text-left">
+                    ⚠️ Marca todas las casillas tras borrarlas en Vinted para habilitar el cierre.
+                </p>
+                <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                    <button type="button" id="cancelLotCleanupModalBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                        Cerrar (Guardar progreso)
+                    </button>
+                    <button type="button" id="confirmLotCleanupBtn" disabled class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>🔒 Cerrar Lote como VENDIDO</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Asistente de Traspaso a Suplente en Cola (con enlace directo Vinted y plazo 24h) -->
+    <div id="promoteWaitlistModal" role="dialog" aria-modal="true" aria-labelledby="promoteModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-lg rounded-3xl bg-obsidian-card border border-amber-400/50 p-5 sm:p-6 shadow-2xl space-y-4 my-auto">
+            <!-- Cabecera -->
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+                        <span class="text-lg">⏳</span>
+                    </div>
+                    <div>
+                        <span class="inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/30 font-bold mb-0.5">Cola de Espera • Traspaso Guiado</span>
+                        <h3 id="promoteModalTitle" class="font-display text-lg font-bold text-white">Pasar Prenda al 1º Suplente</h3>
+                    </div>
+                </div>
+                <button type="button" id="closePromoteModalBtn" aria-label="Cerrar modal" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Ficha de la Prenda -->
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 flex items-center gap-3">
+                <img id="promoteGarmentThumb" src="" alt="" class="w-12 h-14 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">
+                <div class="min-w-0 flex-1 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span id="promoteGarmentRef" class="font-mono font-bold text-acid">REF-XXX</span>
+                        <span id="promoteGarmentPrice" class="font-mono text-zinc-400">0,00 €</span>
+                    </div>
+                    <h4 id="promoteGarmentTitle" class="font-display font-bold text-white truncate text-sm mt-0.5">Título</h4>
+                    <p id="promoteCurrentBuyerNote" class="text-zinc-400 text-[11px] mt-0.5">Comprador actual: @usuario</p>
+                </div>
+            </div>
+
+            <!-- Datos del Suplente #1 -->
+            <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-400/30 space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-amber-300 font-bold">👤 Nuevo Comprador (#1 en Cola)</span>
+                    <span id="promoteWaitlistPosition" class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-amber-400 text-obsidian font-bold">#1 en cola</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <div id="promoteBuyerUser" class="font-mono text-sm font-bold text-white">@suplente</div>
+                        <div id="promoteBuyerEmail" class="text-zinc-400 text-[11px]">email@ejemplo.com</div>
+                    </div>
+                    <button type="button" id="promoteCopyUserBtn" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-amber-400/40 text-amber-300 hover:bg-amber-400/10 text-xs font-mono font-bold flex items-center gap-1 transition-colors">
+                        📋 Copiar @usuario
+                    </button>
+                </div>
+                <p class="text-[11px] text-zinc-400">
+                    💡 Al confirmar, el sistema comprobará en Brevo si es su 1ª compra para recalcular su precio VIP automáticamente.
+                </p>
+            </div>
+
+            <!-- Paso 1: Enlace y Reserva en Vinted -->
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2 text-xs">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">🔗 1. Reasignar Reserva en Vinted</span>
+                    <a id="promoteVintedDirectLink" href="#" target="_blank" rel="noopener" class="font-mono text-[10px] text-acid hover:underline flex items-center gap-1">
+                        <span>Abrir en Vinted</span> ↗
+                    </a>
+                </div>
+                <p class="text-zinc-400 text-[11px] leading-relaxed">
+                    Abre el anuncio en Vinted, edita el precio si procede y cámbialo a reservado para el nuevo usuario. Confirma o pega aquí el enlace directo al anuncio:
+                </p>
+                <input type="url" id="promoteVintedUrlInput" placeholder="https://www.vinted.es/items/..." class="w-full px-3 py-2 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+            </div>
+
+            <!-- Paso 2: Plazo y Restaurar Cupón -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                    <label for="promoteDurationSelect" class="block font-mono text-[10px] uppercase tracking-wider text-zinc-400 font-bold">
+                        ⏱️ Plazo para pagar
+                    </label>
+                    <select id="promoteDurationSelect" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                        <option value="24" selected>24 horas (Recomendado)</option>
+                        <option value="12">12 horas (Exprés)</option>
+                        <option value="48">48 horas (Fin de semana)</option>
+                    </select>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex items-center">
+                    <label class="flex items-start gap-2 cursor-pointer select-none">
+                        <input type="checkbox" id="promoteRestoreCouponCheck" class="mt-0.5 rounded border-zinc-700 text-acid focus:ring-0">
+                        <span class="text-[11px] text-zinc-300 leading-snug">
+                            Restaurar cupón de bienvenida al comprador saliente
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Acciones Finales -->
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-2 border-t border-zinc-800">
+                <button type="button" id="cancelPromoteModalBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="confirmPromoteModalBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 transition-all">
+                    <span>📩 Confirmar Traspaso y Enviar Email (24h + Link)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación Propio de la Aplicación (reemplaza confirm() nativo del navegador) -->
+    <div id="vmConfirmModal" role="alertdialog" aria-modal="true" aria-labelledby="vmConfirmTitle" aria-describedby="vmConfirmMessage" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div id="vmConfirmCard" class="relative w-full max-w-md rounded-3xl bg-obsidian-card border border-acid/40 p-6 shadow-2xl space-y-4">
+            <div class="flex items-start gap-3.5">
+                <div id="vmConfirmIconBox" class="w-10 h-10 rounded-2xl bg-acid/15 border border-acid/40 flex items-center justify-center text-acid shrink-0">
+                    <i id="vmConfirmIcon" data-lucide="help-circle" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <span id="vmConfirmBadge" class="inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-acid/15 text-acid border border-acid/30 font-bold mb-1">Confirmación VirMarket</span>
+                    <h3 id="vmConfirmTitle" class="font-display text-lg font-bold text-white leading-snug">¿Confirmar acción?</h3>
+                </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                <p id="vmConfirmMessage" class="text-xs sm:text-[13px] text-zinc-300 leading-relaxed whitespace-pre-line break-words"></p>
+            </div>
+
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-1">
+                <button type="button" id="vmConfirmCancelBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-semibold text-zinc-200 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="vmConfirmOkBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-acid/20 transition-all">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notificación Toast Flotante -->
     <div id="adminToast" class="hidden fixed bottom-5 right-5 z-50 max-w-sm px-4 py-3 rounded-xl bg-obsidian-elevated border border-acid text-xs font-semibold text-white shadow-2xl"></div>
 
@@ -1113,6 +1444,9 @@
             statusFilter: 'ALL',
             dropFilter: 'ALL',
             editingRef: null,
+            activeCleanupLotId: null,
+            activePromoteRef: null,
+            isWaitlistMonitorCollapsed: false,
             // Cada foto: { type: 'remote', url } o { type: 'local', base64, previewUrl }
             formPhotos: [],
             draftLotUrls: {},
@@ -1140,6 +1474,103 @@
             el.classList.remove('hidden');
             clearTimeout(window.__admToast);
             window.__admToast = setTimeout(() => el.classList.add('hidden'), 3400);
+        }
+
+        // Diálogo de confirmación propio de VirMarket (reemplaza window.confirm nativo)
+        let __vmConfirmResolver = null;
+        function vmConfirm({
+            title = 'Confirmar acción',
+            message = '',
+            badge = 'VirMarket Studio',
+            confirmText = 'Confirmar',
+            cancelText = 'Cancelar',
+            variant = 'acid'
+        } = {}) {
+            const modal = document.getElementById('vmConfirmModal');
+            const card = document.getElementById('vmConfirmCard');
+            const iconBox = document.getElementById('vmConfirmIconBox');
+            const iconEl = document.getElementById('vmConfirmIcon');
+            const badgeEl = document.getElementById('vmConfirmBadge');
+            const titleEl = document.getElementById('vmConfirmTitle');
+            const msgEl = document.getElementById('vmConfirmMessage');
+            const okBtn = document.getElementById('vmConfirmOkBtn');
+            const cancelBtn = document.getElementById('vmConfirmCancelBtn');
+
+            if (!modal || !okBtn || !cancelBtn) return Promise.resolve(false);
+
+            if (__vmConfirmResolver) {
+                __vmConfirmResolver(false);
+                __vmConfirmResolver = null;
+            }
+
+            const variants = {
+                acid: {
+                    cardBorder: 'border-acid/50',
+                    iconBox: 'bg-acid/15 border-acid/40 text-acid',
+                    badge: 'bg-acid/15 text-acid border-acid/30',
+                    okBtn: 'bg-acid hover:bg-acid-hover text-obsidian shadow-acid/20',
+                    icon: 'check-circle-2'
+                },
+                amber: {
+                    cardBorder: 'border-amber-400/50',
+                    iconBox: 'bg-amber-500/15 border-amber-400/40 text-amber-300',
+                    badge: 'bg-amber-500/15 text-amber-300 border-amber-400/30',
+                    okBtn: 'bg-amber-400 hover:bg-amber-300 text-obsidian shadow-amber-400/20',
+                    icon: 'alert-triangle'
+                },
+                danger: {
+                    cardBorder: 'border-rose-500/50',
+                    iconBox: 'bg-rose-500/15 border-rose-500/40 text-rose-400',
+                    badge: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
+                    okBtn: 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-500/25',
+                    icon: 'alert-octagon'
+                }
+            };
+            const v = variants[variant] || variants.acid;
+
+            card.className = `relative w-full max-w-md rounded-3xl bg-obsidian-card border ${v.cardBorder} p-6 shadow-2xl space-y-4`;
+            iconBox.className = `w-10 h-10 rounded-2xl border flex items-center justify-center shrink-0 ${v.iconBox}`;
+            badgeEl.className = `inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border font-bold mb-1 ${v.badge}`;
+            okBtn.className = `w-full sm:w-auto px-5 py-2.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider shadow-lg transition-all ${v.okBtn}`;
+
+            if (iconEl) iconEl.setAttribute('data-lucide', v.icon);
+            badgeEl.textContent = badge;
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+            okBtn.textContent = confirmText;
+            cancelBtn.textContent = cancelText;
+
+            lucide.createIcons();
+            modal.classList.remove('hidden');
+
+            return new Promise((resolve) => {
+                const cleanup = (result) => {
+                    modal.classList.add('hidden');
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    modal.removeEventListener('click', onBackdrop);
+                    document.removeEventListener('keydown', onKey);
+                    __vmConfirmResolver = null;
+                    resolve(result);
+                };
+                const onOk = () => cleanup(true);
+                const onCancel = () => cleanup(false);
+                const onBackdrop = (e) => { if (e.target === modal) cleanup(false); };
+                const onKey = (e) => {
+                    if (e.key === 'Escape') {
+                        e.stopPropagation();
+                        cleanup(false);
+                    }
+                };
+
+                __vmConfirmResolver = cleanup;
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                modal.addEventListener('click', onBackdrop);
+                document.addEventListener('keydown', onKey);
+
+                setTimeout(() => (variant === 'danger' ? cancelBtn : okBtn).focus(), 30);
+            });
         }
 
         async function copyText(text, label, triggerBtn = null) {
@@ -1195,6 +1626,360 @@
                 }
             } else {
                 toast(`No se pudo copiar automáticamente al portapapeles.`, true);
+            }
+        }
+
+        // Empaquetador ZIP puro en JavaScript (Modo STORE sin compresión / compatible WebAPK y offline)
+        const CRC32_TABLE = (() => {
+            const table = new Uint32Array(256);
+            for (let i = 0; i < 256; i++) {
+                let c = i;
+                for (let k = 0; k < 8; k++) {
+                    c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+                }
+                table[i] = c >>> 0;
+            }
+            return table;
+        })();
+
+        function computeCrc32(uint8Array) {
+            let crc = 0xFFFFFFFF;
+            for (let i = 0; i < uint8Array.length; i++) {
+                crc = (crc >>> 8) ^ CRC32_TABLE[(crc ^ uint8Array[i]) & 0xFF];
+            }
+            return (crc ^ 0xFFFFFFFF) >>> 0;
+        }
+
+        function createStoreZip(files) {
+            const parts = [];
+            const centralEntries = [];
+            let offset = 0;
+
+            const now = new Date();
+            const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (Math.floor(now.getSeconds() / 2));
+            const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+            const enc = new TextEncoder();
+
+            files.forEach(f => {
+                const nameBytes = enc.encode(f.name);
+                const dataBytes = f.data instanceof Uint8Array ? f.data : new Uint8Array(f.data);
+                const crc = computeCrc32(dataBytes);
+                const size = dataBytes.length;
+
+                // Local header (30 bytes + name)
+                const localHeader = new Uint8Array(30 + nameBytes.length);
+                const lv = new DataView(localHeader.buffer);
+                lv.setUint32(0, 0x04034b50, true);
+                lv.setUint16(4, 20, true);
+                lv.setUint16(6, 0x0800, true);
+                lv.setUint16(8, 0, true);
+                lv.setUint16(10, dosTime, true);
+                lv.setUint16(12, dosDate, true);
+                lv.setUint32(14, crc, true);
+                lv.setUint32(18, size, true);
+                lv.setUint32(22, size, true);
+                lv.setUint16(26, nameBytes.length, true);
+                lv.setUint16(28, 0, true);
+                localHeader.set(nameBytes, 30);
+
+                parts.push(localHeader);
+                parts.push(dataBytes);
+
+                centralEntries.push({
+                    nameBytes,
+                    crc,
+                    size,
+                    offset,
+                    dosTime,
+                    dosDate
+                });
+
+                offset += localHeader.length + dataBytes.length;
+            });
+
+            const cdStartOffset = offset;
+            let cdSize = 0;
+
+            centralEntries.forEach(entry => {
+                const cdHeader = new Uint8Array(46 + entry.nameBytes.length);
+                const cv = new DataView(cdHeader.buffer);
+                cv.setUint32(0, 0x02014b50, true);
+                cv.setUint16(4, 20, true);
+                cv.setUint16(6, 20, true);
+                cv.setUint16(8, 0x0800, true);
+                cv.setUint16(10, 0, true);
+                cv.setUint16(12, entry.dosTime, true);
+                cv.setUint16(14, entry.dosDate, true);
+                cv.setUint32(16, entry.crc, true);
+                cv.setUint32(20, entry.size, true);
+                cv.setUint32(24, entry.size, true);
+                cv.setUint16(28, entry.nameBytes.length, true);
+                cv.setUint16(30, 0, true);
+                cv.setUint16(32, 0, true);
+                cv.setUint16(34, 0, true);
+                cv.setUint16(36, 0, true);
+                cv.setUint32(38, 0, true);
+                cv.setUint32(42, entry.offset, true);
+                cdHeader.set(entry.nameBytes, 46);
+
+                parts.push(cdHeader);
+                cdSize += cdHeader.length;
+            });
+
+            const eocd = new Uint8Array(22);
+            const ev = new DataView(eocd.buffer);
+            ev.setUint32(0, 0x06054b50, true);
+            ev.setUint16(4, 0, true);
+            ev.setUint16(6, 0, true);
+            ev.setUint16(8, centralEntries.length, true);
+            ev.setUint16(10, centralEntries.length, true);
+            ev.setUint32(12, cdSize, true);
+            ev.setUint32(16, cdStartOffset, true);
+            ev.setUint16(20, 0, true);
+            parts.push(eocd);
+
+            return new Blob(parts, { type: 'application/zip' });
+        }
+
+        async function loadImageEl(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(new Error(`No se pudo cargar la imagen: ${url}`));
+                img.src = url;
+            });
+        }
+
+        async function generateLotCollageBlob(items, buyerVinted, groupId) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1350;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#09090B';
+            ctx.fillRect(0, 0, 1080, 1350);
+
+            const headerH = 140;
+            ctx.fillStyle = '#121215';
+            ctx.fillRect(0, 0, 1080, headerH);
+            ctx.strokeStyle = '#27272A';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, headerH);
+            ctx.lineTo(1080, headerH);
+            ctx.stroke();
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 36px "Space Grotesk", sans-serif';
+            ctx.fillText('VIRMARKET', 36, 54);
+            ctx.fillStyle = '#A3E635';
+            ctx.fillText('VIP', 260, 54);
+
+            ctx.fillStyle = '#A1A1AA';
+            ctx.font = '500 20px "Plus Jakarta Sans", sans-serif';
+            const refsSummary = items.map(i => i.ref).join(' • ');
+            ctx.fillText(`LOTE DE ${items.length} PRENDAS: ${refsSummary}`.slice(0, 60), 36, 96);
+
+            const userText = `@${(buyerVinted || 'comprador').replace(/^@+/, '')}`;
+            ctx.font = 'bold 22px monospace';
+            const userWidth = ctx.measureText(userText).width;
+            ctx.fillStyle = 'rgba(163, 230, 53, 0.15)';
+            ctx.strokeStyle = '#A3E635';
+            ctx.lineWidth = 1.5;
+            const badgeW = userWidth + 32;
+            const badgeX = 1080 - 36 - badgeW;
+            if (ctx.roundRect) {
+                ctx.beginPath();
+                ctx.roundRect(badgeX, 32, badgeW, 46, 8);
+                ctx.fill();
+                ctx.stroke();
+            } else {
+                ctx.fillRect(badgeX, 32, badgeW, 46);
+                ctx.strokeRect(badgeX, 32, badgeW, 46);
+            }
+            ctx.fillStyle = '#A3E635';
+            ctx.fillText(userText, badgeX + 16, 62);
+
+            const gridY = headerH + 16;
+            const gridW = 1080 - 32;
+            const gridH = 1350 - gridY - 16;
+
+            const n = items.length;
+            let cols = 1, rows = 1;
+            if (n === 2) { cols = 2; rows = 1; }
+            else if (n === 3) { cols = 3; rows = 1; }
+            else if (n === 4) { cols = 2; rows = 2; }
+            else if (n <= 6) { cols = 3; rows = 2; }
+            else if (n <= 8) { cols = 4; rows = 2; }
+            else { cols = 3; rows = 3; }
+
+            const gap = 14;
+            const cellW = (gridW - (cols - 1) * gap) / cols;
+            const cellH = (gridH - (rows - 1) * gap) / rows;
+
+            for (let idx = 0; idx < Math.min(n, cols * rows); idx++) {
+                const item = items[idx];
+                const col = idx % cols;
+                const row = Math.floor(idx / cols);
+                const x = 16 + col * (cellW + gap);
+                const y = gridY + row * (cellH + gap);
+
+                ctx.fillStyle = '#18181B';
+                if (ctx.roundRect) {
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, cellW, cellH, 12);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(x, y, cellW, cellH);
+                }
+
+                const photoUrl = (item.photos && item.photos[0]) ? item.photos[0] : '';
+                if (photoUrl) {
+                    try {
+                        const img = await loadImageEl(photoUrl);
+                        ctx.save();
+                        ctx.beginPath();
+                        if (ctx.roundRect) {
+                            ctx.roundRect(x, y, cellW, cellH, 12);
+                        } else {
+                            ctx.rect(x, y, cellW, cellH);
+                        }
+                        ctx.clip();
+
+                        const imgRatio = img.width / img.height;
+                        const cellRatio = cellW / cellH;
+                        let sw, sh, sx, sy;
+                        if (imgRatio > cellRatio) {
+                            sh = img.height;
+                            sw = sh * cellRatio;
+                            sx = (img.width - sw) / 2;
+                            sy = 0;
+                        } else {
+                            sw = img.width;
+                            sh = sw / cellRatio;
+                            sx = 0;
+                            sy = (img.height - sh) / 2;
+                        }
+                        ctx.drawImage(img, sx, sy, sw, sh, x, y, cellW, cellH);
+                        ctx.restore();
+                    } catch (e) {}
+                }
+
+                ctx.strokeStyle = '#3F3F46';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(x, y, cellW, cellH, 12);
+                } else {
+                    ctx.rect(x, y, cellW, cellH);
+                }
+                ctx.stroke();
+
+                const tagH = 34;
+                const tagY = y + cellH - tagH - 8;
+                const tagX = x + 8;
+                const tagW = cellW - 16;
+                ctx.fillStyle = 'rgba(9, 9, 11, 0.88)';
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(tagX, tagY, tagW, tagH, 6);
+                } else {
+                    ctx.fillRect(tagX, tagY, tagW, tagH);
+                }
+                ctx.fill();
+
+                ctx.fillStyle = '#A3E635';
+                ctx.font = 'bold 15px monospace';
+                ctx.fillText(item.ref, tagX + 10, tagY + 22);
+
+                if (item.size) {
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.font = 'bold 12px sans-serif';
+                    const sizeTxt = `Talla ${item.size}`;
+                    const sizeW = ctx.measureText(sizeTxt).width;
+                    ctx.fillText(sizeTxt, tagX + tagW - sizeW - 10, tagY + 22);
+                }
+            }
+
+            return new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.92));
+        }
+
+        async function downloadLotPackZip(items, buyerVinted, groupId) {
+            toast(`Preparando Pack de Fotos para Vinted (Collage + fotos)...`);
+            try {
+                let collageBlob;
+                try {
+                    collageBlob = await generateLotCollageBlob(items, buyerVinted, groupId);
+                } catch (collErr) {
+                    console.warn('Fallo generando collage:', collErr);
+                }
+
+                const maxIndividualPhotos = collageBlob ? 19 : 20;
+                const pickedPhotos = [];
+                let round = 0;
+                let addedInRound = true;
+                while (pickedPhotos.length < maxIndividualPhotos && addedInRound) {
+                    addedInRound = false;
+                    for (const item of items) {
+                        if (pickedPhotos.length >= maxIndividualPhotos) break;
+                        const pList = item.photos || [];
+                        if (round < pList.length) {
+                            pickedPhotos.push({
+                                ref: item.ref,
+                                url: pList[round],
+                                index: round + 1
+                            });
+                            addedInRound = true;
+                        }
+                    }
+                    round++;
+                }
+
+                const filesForZip = [];
+                if (collageBlob) {
+                    const collageBuf = await collageBlob.arrayBuffer();
+                    filesForZip.push({
+                        name: '00-portada-lote-collage.jpg',
+                        data: new Uint8Array(collageBuf)
+                    });
+                }
+
+                for (let i = 0; i < pickedPhotos.length; i++) {
+                    const p = pickedPhotos[i];
+                    const numStr = String(i + 1).padStart(2, '0');
+                    const fileName = `${numStr}-${p.ref}-foto-${p.index}.jpg`;
+                    try {
+                        const resp = await fetch(p.url, { mode: 'cors' });
+                        const blob = await resp.blob();
+                        const buf = await blob.arrayBuffer();
+                        filesForZip.push({
+                            name: fileName,
+                            data: new Uint8Array(buf)
+                        });
+                    } catch (fetchErr) {
+                        console.warn(`No se pudo descargar ${p.url}:`, fetchErr);
+                    }
+                }
+
+                if (filesForZip.length === 0) {
+                    toast('No se pudieron descargar las fotos del lote.', true);
+                    return;
+                }
+
+                const zipBlob = createStoreZip(filesForZip);
+                const zipUrl = URL.createObjectURL(zipBlob);
+                const a = document.createElement('a');
+                a.href = zipUrl;
+                a.download = `${groupId}-vinted-pack.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(zipUrl), 8000);
+
+                toast(`✓ ZIP descargado: ${filesForZip.length} fotos listas (≤ 20)`);
+            } catch (err) {
+                toast(`Error al crear el pack: ${err.message}`, true);
             }
         }
 
@@ -1270,6 +2055,9 @@
 
         // Llamada autenticada al backend de administración
         async function callAdminApi(action, extraPayload = {}) {
+            if (urlParams.get('mock') === '1') {
+                return { ok: true, message: `[MOCK] Acción ${action} ejecutada correctamente.` };
+            }
             let res;
             try {
                 res = await fetch(WEBHOOK_ADMIN_URL, {
@@ -1553,7 +2341,7 @@
         }
 
         async function syncDashboardQuietly(isAuto = false) {
-            if (!adminState.password) return;
+            if (!adminState.password || urlParams.get('mock') === '1') return;
             const refreshIcon = document.getElementById('refreshIcon');
             if (refreshIcon && !isAuto) refreshIcon.classList.add('animate-spin');
 
@@ -2402,7 +3190,15 @@
             container.querySelectorAll('[data-del-g]').forEach(b => {
                 b.addEventListener('click', async () => {
                     const ref = b.getAttribute('data-del-g');
-                    if (!confirm(`¿Eliminar la prenda ${ref} del Drop?`)) return;
+                    const ok = await vmConfirm({
+                        badge: 'Eliminar Prenda',
+                        title: `¿Eliminar ${ref} del Drop?`,
+                        message: `Esta acción eliminará la ficha de ${ref} de la base de datos de VirMarket.`,
+                        confirmText: 'Sí, eliminar',
+                        cancelText: 'Cancelar',
+                        variant: 'danger'
+                    });
+                    if (!ok) return;
                     try {
                         await callAdminApi('delete_garment', { ref });
                         toast(`Prenda ${ref} eliminada.`);
@@ -2428,7 +3224,14 @@
             }
 
             if (sendMode === 'send_now') {
-                const ok = confirm(`¿Confirmas activar ${dropId} (${count} prendas) y ENVIAR AHORA MISMO el correo único a toda tu lista VIP de Brevo?`);
+                const ok = await vmConfirm({
+                    badge: 'Lanzamiento Inmediato',
+                    title: `¿Publicar ${dropId} (${count} prendas)?`,
+                    message: `Se activará el escaparate de 24h y se enviará AHORA MISMO el correo único del Drop a toda tu lista VIP de Brevo.`,
+                    confirmText: '🚀 Publicar y Enviar',
+                    cancelText: 'Cancelar',
+                    variant: 'acid'
+                });
                 if (!ok) return;
             }
 
@@ -2471,7 +3274,14 @@
         document.getElementById('closeActiveDropBtn')?.addEventListener('click', async () => {
             const dropId = adminState.config.activeDropId;
             if (!dropId) return;
-            const ok = confirm(`¿Confirmas finalizar la ventana VIP de 24h para ${dropId}?\n\nLa web pública mostrará de inmediato que el plazo VIP ha concluido.`);
+            const ok = await vmConfirm({
+                badge: 'Cierre de Drop',
+                title: `¿Finalizar ventana VIP de ${dropId}?`,
+                message: 'La web pública mostrará de inmediato que el plazo VIP de 24h ha concluido y no se admitirán nuevas reservas.',
+                confirmText: 'Finalizar Drop',
+                cancelText: 'Mantener activo',
+                variant: 'danger'
+            });
             if (!ok) return;
 
             const btn = document.getElementById('closeActiveDropBtn');
@@ -2549,6 +3359,477 @@
             }
         });
 
+        // ======================== GESTIÓN DE COLAS Y TEMPORIZADORES 24H ========================
+        function formatRemainingTime(ms) {
+            const totalMinutes = Math.floor(Math.max(0, ms) / (60 * 1000));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${hours > 0 ? hours + 'h ' : ''}${minutes}m`;
+        }
+
+        function formatPastTime(ms) {
+            const totalMinutes = Math.floor(Math.abs(ms) / (60 * 1000));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${hours > 0 ? hours + 'h ' : ''}${minutes}m`;
+        }
+
+        function updateReservationTimers() {
+            const timerEls = document.querySelectorAll('.reservation-timer-tag');
+            const now = Date.now();
+            timerEls.forEach(el => {
+                const expIso = el.getAttribute('data-timer-expires');
+                if (!expIso) {
+                    el.textContent = '⏱️ Plazo 24h';
+                    el.className = 'reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-zinc-800 text-zinc-400';
+                    return;
+                }
+                const expTime = new Date(expIso).getTime();
+                if (isNaN(expTime)) {
+                    el.textContent = '⏱️ Plazo 24h';
+                    el.className = 'reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-zinc-800 text-zinc-400';
+                    return;
+                }
+                const diff = expTime - now;
+                if (diff <= 0) {
+                    el.textContent = `🚨 Plazo Vencido (${formatPastTime(diff)})`;
+                    el.className = 'reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/50 animate-pulse';
+                } else if (diff <= 4 * 3600 * 1000) {
+                    el.textContent = `🔥 Quedan ${formatRemainingTime(diff)}`;
+                    el.className = 'reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/50';
+                } else {
+                    el.textContent = `⏱️ Quedan ${formatRemainingTime(diff)}`;
+                    el.className = 'reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
+                }
+            });
+        }
+
+        // Ticker periódico de timers cada 5 segundos
+        setInterval(updateReservationTimers, 5000);
+
+        function renderWaitlistMonitor() {
+            const banner = document.getElementById('waitlistMonitorBanner');
+            const container = document.getElementById('waitlistMonitorItemsContainer');
+            const statsBadge = document.getElementById('waitlistMonitorStatsBadge');
+            if (!banner || !container) return;
+
+            const now = Date.now();
+            const relevantItems = [];
+
+            for (const g of adminState.garments) {
+                if (adminState.dropFilter !== 'ALL' && (g.dropId || '').toUpperCase() !== adminState.dropFilter.toUpperCase()) continue;
+                const waitlist = getGarmentWaitlist(g);
+                const isRes = g.status === 'RESERVADA';
+                const hasWaitlist = waitlist.length > 0;
+                let expiresMs = 0;
+                let isExpired = false;
+                let isUrgent = false;
+
+                if (isRes && g.reservationExpiresAt) {
+                    const expTime = new Date(g.reservationExpiresAt).getTime();
+                    if (!isNaN(expTime)) {
+                        expiresMs = expTime - now;
+                        isExpired = expiresMs <= 0;
+                        isUrgent = !isExpired && expiresMs <= 4 * 3600 * 1000;
+                    }
+                }
+
+                if (hasWaitlist || (isRes && (isExpired || isUrgent || g.reservationExpiresAt))) {
+                    let priorityScore = 0;
+                    if (isExpired && hasWaitlist) priorityScore = 100;
+                    else if (isExpired && !hasWaitlist) priorityScore = 80;
+                    else if (isUrgent && hasWaitlist) priorityScore = 60;
+                    else if (isUrgent && !hasWaitlist) priorityScore = 40;
+                    else if (hasWaitlist) priorityScore = 30;
+                    else priorityScore = 10;
+
+                    relevantItems.push({
+                        g,
+                        waitlist,
+                        isRes,
+                        hasWaitlist,
+                        expiresMs,
+                        isExpired,
+                        isUrgent,
+                        priorityScore
+                    });
+                }
+            }
+
+            if (relevantItems.length === 0) {
+                banner.classList.add('hidden');
+                return;
+            }
+
+            relevantItems.sort((a, b) => b.priorityScore - a.priorityScore);
+            banner.classList.remove('hidden');
+
+            if (statsBadge) {
+                const expiredCount = relevantItems.filter(x => x.isExpired).length;
+                statsBadge.textContent = `${relevantItems.length} caso${relevantItems.length === 1 ? '' : 's'}${expiredCount > 0 ? ' (' + expiredCount + ' vencidos)' : ''}`;
+            }
+
+            container.innerHTML = relevantItems.map(({ g, waitlist, isRes, isExpired, isUrgent, expiresMs }) => {
+                let statusBadge = '';
+                if (isExpired) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/50 text-rose-300 font-mono text-[10px] font-bold animate-pulse">🚨 Plazo Vencido (${formatPastTime(expiresMs)})</span>`;
+                } else if (isUrgent) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 font-mono text-[10px] font-bold">🔥 Quedan ${formatRemainingTime(expiresMs)}</span>`;
+                } else if (isRes && g.reservationExpiresAt) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono text-[10px] font-bold">⏱️ Quedan ${formatRemainingTime(expiresMs)}</span>`;
+                } else if (isRes) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono text-[10px]">⏱️ Plazo 24h activo</span>`;
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono text-[10px]">${escapeHtml(g.status)}</span>`;
+                }
+
+                const thumb = (g.photos && g.photos[0]) || '';
+
+                return `
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-xl bg-obsidian border ${isExpired ? 'border-rose-500/50 bg-rose-950/20' : (waitlist.length > 0 ? 'border-amber-400/40' : 'border-zinc-800')} gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        ${thumb ? `<img src="${thumb}" alt="" class="w-10 h-12 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">` : ''}
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <strong class="font-mono text-xs text-acid">${escapeHtml(g.ref)}</strong>
+                                <span class="text-xs font-bold text-white truncate">${escapeHtml(g.title || g.ref)}</span>
+                                ${statusBadge}
+                            </div>
+                            <div class="text-[11px] text-zinc-400 flex items-center gap-2 mt-0.5 flex-wrap">
+                                ${isRes ? `<span>Comprador: <strong class="font-mono text-zinc-200">@${escapeHtml(g.reservedByVinted || 'desconocido')}</strong></span>` : ''}
+                                ${waitlist.length > 0
+                                    ? `<span class="text-amber-300 font-semibold">⏳ En cola: ${waitlist.length} (#1: @${escapeHtml(waitlist[0].vintedUser)})</span>`
+                                    : '<span class="text-zinc-500">Sin cola</span>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+                        ${waitlist.length > 0 ? `
+                            <button type="button" data-promote-ref="${escapeHtml(g.ref)}" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs uppercase tracking-wide shadow-md shadow-amber-400/20 transition-all flex items-center gap-1">
+                                <span>Pasar al 1º</span>
+                                <span>→</span>
+                            </button>
+                        ` : ''}
+                        ${isRes ? `
+                            <button type="button" data-extend-ref="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono font-bold text-zinc-200 border border-zinc-700 transition-colors" title="Prorrogar 24 horas más">
+                                ⏱️ +24h
+                            </button>
+                            <button type="button" data-release-ref="${escapeHtml(g.ref)}" data-was-reserved="1" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-300 border border-zinc-700 transition-colors">
+                                🔓 Liberar
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+
+            bindWaitlistEvents(container);
+        }
+
+        function openPromoteWaitlistModal(ref) {
+            const g = adminState.garments.find(x => x.ref === ref);
+            if (!g) {
+                toast(`No se encontró la prenda ${ref}`, true);
+                return;
+            }
+            const waitlist = getGarmentWaitlist(g);
+            if (!waitlist || waitlist.length === 0) {
+                toast(`La prenda ${ref} no tiene personas en lista de espera`, true);
+                return;
+            }
+            const nextBuyer = waitlist[0];
+            adminState.activePromoteRef = ref;
+
+            const modal = document.getElementById('promoteWaitlistModal');
+            const thumbEl = document.getElementById('promoteGarmentThumb');
+            const refEl = document.getElementById('promoteGarmentRef');
+            const priceEl = document.getElementById('promoteGarmentPrice');
+            const titleEl = document.getElementById('promoteGarmentTitle');
+            const currentBuyerEl = document.getElementById('promoteCurrentBuyerNote');
+            const buyerUserEl = document.getElementById('promoteBuyerUser');
+            const buyerEmailEl = document.getElementById('promoteBuyerEmail');
+            const directLinkEl = document.getElementById('promoteVintedDirectLink');
+            const urlInputEl = document.getElementById('promoteVintedUrlInput');
+            const durationSelectEl = document.getElementById('promoteDurationSelect');
+            const restoreCouponCheckEl = document.getElementById('promoteRestoreCouponCheck');
+            const confirmBtn = document.getElementById('confirmPromoteModalBtn');
+
+            if (thumbEl) thumbEl.src = (g.photos && g.photos[0]) || '';
+            if (refEl) refEl.textContent = g.ref;
+            if (priceEl) priceEl.textContent = fmtEur(g.priceEur);
+            if (titleEl) titleEl.textContent = g.title || g.ref;
+            if (currentBuyerEl) {
+                currentBuyerEl.textContent = g.reservedByVinted
+                    ? `Comprador saliente: @${g.reservedByVinted} (${g.reservedByEmail || 'sin email'})`
+                    : 'Prenda sin reserva previa';
+            }
+            if (buyerUserEl) buyerUserEl.textContent = `@${nextBuyer.vintedUser || 'desconocido'}`;
+            if (buyerEmailEl) buyerEmailEl.textContent = nextBuyer.email || '';
+            if (directLinkEl) {
+                directLinkEl.href = g.vintedUrl || 'https://www.vinted.es';
+            }
+            if (urlInputEl) {
+                urlInputEl.value = g.vintedUrl || '';
+            }
+            if (durationSelectEl) {
+                durationSelectEl.value = '24';
+            }
+            if (restoreCouponCheckEl) {
+                restoreCouponCheckEl.checked = Boolean(g.reservedByEmail);
+            }
+            if (confirmBtn) {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<span>📩 Confirmar Traspaso y Enviar Email (24h + Link)</span>';
+            }
+
+            modal?.classList.remove('hidden');
+        }
+
+        function closePromoteWaitlistModal() {
+            const modal = document.getElementById('promoteWaitlistModal');
+            modal?.classList.add('hidden');
+            adminState.activePromoteRef = null;
+        }
+
+        function bindWaitlistEvents(container) {
+            if (!container) return;
+
+            // Pasar al 1º (abre el modal asistente)
+            container.querySelectorAll('[data-promote-ref]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ref = btn.getAttribute('data-promote-ref');
+                    openPromoteWaitlistModal(ref);
+                });
+            });
+
+            // Prorrogar +24h Prenda individual
+            container.querySelectorAll('[data-extend-ref]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-extend-ref');
+                    const ok = await vmConfirm({
+                        badge: 'Prorrogar Plazo',
+                        title: `¿Ampliar +24 horas el plazo de ${ref}?`,
+                        message: `Se añadirán 24 horas al plazo límite para que el comprador pueda completar el pago en Vinted.`,
+                        confirmText: '+24 Horas',
+                        cancelText: 'Cancelar',
+                        variant: 'amber'
+                    });
+                    if (!ok) return;
+                    btn.disabled = true;
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus: 'KEEP', extendHours: 24 });
+                        toast(`✓ Plazo de ${ref} ampliado +24 horas`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            // Prorrogar +24h Lote completo
+            container.querySelectorAll('[data-extend-lot]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const groupId = btn.getAttribute('data-extend-lot');
+                    const lotItems = adminState.garments.filter(x => x.reservationGroupId === groupId);
+                    const ok = await vmConfirm({
+                        badge: 'Prorrogar Lote',
+                        title: `¿Ampliar +24 horas el lote ${groupId}?`,
+                        message: `Se añadirán 24 horas al plazo límite de las ${lotItems.length} prendas de este lote.`,
+                        confirmText: '+24 Horas al Lote',
+                        cancelText: 'Cancelar',
+                        variant: 'amber'
+                    });
+                    if (!ok) return;
+                    btn.disabled = true;
+                    try {
+                        for (const it of lotItems) {
+                            await callAdminApi('update_status', { ref: it.ref, newStatus: 'KEEP', extendHours: 24 });
+                        }
+                        toast(`✓ Plazo del lote ${groupId} ampliado +24 horas`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            // Mover suplente al puesto #1
+            container.querySelectorAll('[data-waitlist-up]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const email = btn.getAttribute('data-waitlist-up');
+                    const ref = btn.getAttribute('data-ref');
+                    const ok = await vmConfirm({
+                        badge: 'Priorizar Suplente',
+                        title: `¿Mover este comprador al puesto #1?`,
+                        message: `El comprador con email ${email} pasará al primer puesto de la lista de espera de ${ref}.`,
+                        confirmText: 'Mover al #1',
+                        cancelText: 'Cancelar',
+                        variant: 'amber'
+                    });
+                    if (!ok) return;
+                    btn.disabled = true;
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus: 'KEEP', promoteWaitlistEmail: email });
+                        toast(`✓ Suplente movido al puesto #1 en ${ref}`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            // Eliminar suplente de la cola
+            container.querySelectorAll('[data-waitlist-remove]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const email = btn.getAttribute('data-waitlist-remove');
+                    const ref = btn.getAttribute('data-ref');
+                    const ok = await vmConfirm({
+                        badge: 'Quitar de la Cola',
+                        title: `¿Eliminar de la lista de espera?`,
+                        message: `Se eliminará a ${email} de la lista de espera de ${ref}. No se le notificará por email.`,
+                        confirmText: 'Sí, eliminar de la cola',
+                        cancelText: 'Cancelar',
+                        variant: 'rose'
+                    });
+                    if (!ok) return;
+                    btn.disabled = true;
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus: 'KEEP', removeWaitlistEmail: email });
+                        toast(`✓ Eliminado de la lista de espera de ${ref}`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            // Liberar prenda
+            container.querySelectorAll('[data-release-ref]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-release-ref');
+                    const releaseOk = await vmConfirm({
+                        badge: 'Liberar Prenda',
+                        title: `¿Liberar ${ref} a DISPONIBLE?`,
+                        message: `La prenda ${ref} volverá a mostrarse como DISPONIBLE en el escaparate VIP para que cualquier miembro pueda reservarla.`,
+                        confirmText: 'Sí, liberar prenda',
+                        cancelText: 'Cancelar',
+                        variant: 'amber'
+                    });
+                    if (!releaseOk) return;
+                    const wasReserved = btn.getAttribute('data-was-reserved') === '1';
+                    let restoreCoupon = false;
+                    if (wasReserved) {
+                        restoreCoupon = await vmConfirm({
+                            badge: 'Cupón de Bienvenida',
+                            title: '¿Restaurar cupón al comprador anterior?',
+                            message: `El comprador anterior de ${ref} no completó la compra. ¿Quieres devolverle su cupón de bienvenida para un futuro pedido?`,
+                            confirmText: 'Sí, restaurar cupón',
+                            cancelText: 'No, liberar sin restaurar',
+                            variant: 'acid'
+                        });
+                    }
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus: 'DISPONIBLE', restoreCoupon });
+                        toast(`✓ ${ref} vuelve a estar DISPONIBLE`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+        }
+
+        // Eventos estáticos del Modal Asistente de Traspaso
+        document.getElementById('closePromoteModalBtn')?.addEventListener('click', closePromoteWaitlistModal);
+        document.getElementById('cancelPromoteModalBtn')?.addEventListener('click', closePromoteWaitlistModal);
+        document.getElementById('promoteWaitlistModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'promoteWaitlistModal') closePromoteWaitlistModal();
+        });
+        document.getElementById('promoteCopyUserBtn')?.addEventListener('click', () => {
+            const userText = document.getElementById('promoteBuyerUser')?.textContent || '';
+            const cleanUser = userText.replace(/^@+/, '').trim();
+            if (cleanUser) {
+                navigator.clipboard.writeText(cleanUser).then(() => {
+                    toast(`✓ Usuario @${cleanUser} copiado al portapapeles`);
+                }).catch(() => {
+                    toast(`@${cleanUser}`);
+                });
+            }
+        });
+        document.getElementById('confirmPromoteModalBtn')?.addEventListener('click', async () => {
+            const ref = adminState.activePromoteRef;
+            if (!ref) return;
+            const g = adminState.garments.find(x => x.ref === ref);
+            if (!g) return;
+
+            const waitlist = getGarmentWaitlist(g);
+            const nextBuyer = waitlist && waitlist[0];
+            const vintedUrl = (document.getElementById('promoteVintedUrlInput')?.value || '').trim();
+            const durationHours = Number(document.getElementById('promoteDurationSelect')?.value || 24);
+            const restoreCoupon = document.getElementById('promoteRestoreCouponCheck')?.checked === true;
+            const prevEmail = g.reservedByEmail;
+
+            const confirmBtn = document.getElementById('confirmPromoteModalBtn');
+            if (confirmBtn) {
+                confirmBtn.disabled = true;
+                confirmBtn.innerHTML = '<span>⏳ Asignando y enviando email...</span>';
+            }
+
+            try {
+                // Si el usuario marcó restaurar cupón y había comprador previo, restaurarlo en Brevo
+                if (restoreCoupon && prevEmail) {
+                    try {
+                        await callAdminApi('update_status', {
+                            ref,
+                            newStatus: 'KEEP',
+                            restoreCouponOnly: true,
+                            restoreEmail: prevEmail
+                        });
+                    } catch (errRestore) {
+                        console.warn('[PROMOTE] Advertencia al restaurar cupón:', errRestore);
+                    }
+                }
+
+                // Ejecutar promote_waitlist con la URL confirmada y plazo seleccionado
+                const res = await callAdminApi('promote_waitlist', {
+                    ref,
+                    vintedUrl,
+                    durationHours,
+                    restorePreviousCoupon: restoreCoupon
+                });
+
+                toast(res.message || `✓ ${ref} asignada a @${nextBuyer?.vintedUser || 'suplente'} (plazo ${durationHours}h)`);
+                closePromoteWaitlistModal();
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = '<span>📩 Confirmar Traspaso y Enviar Email (24h + Link)</span>';
+                }
+            }
+        });
+
+        // Toggle colapso del monitor
+        document.getElementById('toggleWaitlistMonitorBtn')?.addEventListener('click', () => {
+            adminState.isWaitlistMonitorCollapsed = !adminState.isWaitlistMonitorCollapsed;
+            const c = document.getElementById('waitlistMonitorItemsContainer');
+            const b = document.getElementById('toggleWaitlistMonitorBtn');
+            if (c) {
+                if (adminState.isWaitlistMonitorCollapsed) {
+                    c.classList.add('hidden');
+                    if (b) b.textContent = 'Expandir';
+                } else {
+                    c.classList.remove('hidden');
+                    if (b) b.textContent = 'Contraer';
+                }
+            }
+        });
+
         function renderVintedWorkspace() {
             // Recalcular contadores dinámicos para los botones de filtro según el Drop seleccionado
             const dropGarments = adminState.garments.filter(g => {
@@ -2591,6 +3872,69 @@
                 if (adminState.statusFilter !== 'ALL' && g.status !== adminState.statusFilter) return false;
                 return true;
             });
+
+            // 0. Auditoría preventiva de prendas vendidas en lotes pendientes de eliminación en Vinted
+            const pendingCleanupGarments = adminState.garments.filter(g =>
+                g.status === 'VENDIDA' &&
+                g.reservationGroupId &&
+                Boolean(g.vintedUrl) &&
+                !g.vintedCleanedAt
+            );
+            const pendingCleanupBannerEl = document.getElementById('pendingVintedCleanupBanner');
+            const pendingCleanupCountBadge = document.getElementById('pendingCleanupCountBadge');
+            const pendingCleanupListContainer = document.getElementById('pendingCleanupListContainer');
+
+            if (pendingCleanupBannerEl) {
+                if (pendingCleanupGarments.length > 0) {
+                    pendingCleanupBannerEl.classList.remove('hidden');
+                    if (pendingCleanupCountBadge) {
+                        pendingCleanupCountBadge.textContent = `${pendingCleanupGarments.length} prenda${pendingCleanupGarments.length === 1 ? '' : 's'} pendiente${pendingCleanupGarments.length === 1 ? '' : 's'}`;
+                    }
+                    if (pendingCleanupListContainer) {
+                        pendingCleanupListContainer.innerHTML = pendingCleanupGarments.map(g => `
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-obsidian border border-rose-500/40 text-xs">
+                                <div class="min-w-0 pr-2">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <span class="font-mono text-acid font-bold">${escapeHtml(g.ref)}</span>
+                                        <span class="text-white truncate font-medium">${escapeHtml(g.title)}</span>
+                                    </div>
+                                    <span class="font-mono text-[10px] text-rose-300">Lote: ${escapeHtml(g.reservationGroupId)}</span>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded bg-rose-950/70 border border-rose-500/50 hover:bg-rose-900/70 text-rose-200 font-mono text-[10px] font-bold transition-colors">
+                                        🗑️ Borrar en Vinted ↗
+                                    </a>
+                                    <button type="button" data-resolve-cleaned="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded bg-emerald-950/80 border border-emerald-500/50 hover:bg-emerald-900/80 text-emerald-200 font-mono text-[10px] font-bold transition-colors">
+                                        ✓ Ya borrada
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        pendingCleanupListContainer.querySelectorAll('[data-resolve-cleaned]').forEach(btn => {
+                            btn.addEventListener('click', async () => {
+                                const ref = btn.getAttribute('data-resolve-cleaned');
+                                btn.disabled = true;
+                                btn.textContent = 'Guardando...';
+                                try {
+                                    await callAdminApi('update_status', { ref, newStatus: 'KEEP', markVintedCleaned: true });
+                                    toast(`✓ ${ref} marcada como eliminada en Vinted`);
+                                    await loadDashboard();
+                                } catch (err) {
+                                    toast(err.message, true);
+                                    btn.disabled = false;
+                                    btn.textContent = '✓ Ya borrada';
+                                }
+                            });
+                        });
+                    }
+                } else {
+                    pendingCleanupBannerEl.classList.add('hidden');
+                }
+            }
+
+            // 0.1 Renderizar Monitor Superior de Colas y Plazos 24h
+            renderWaitlistMonitor();
 
             // 1. Agrupar Lotes activos (2 o más prendas RESERVADAS con el mismo reservationGroupId)
             const groupsMap = new Map();
@@ -2641,6 +3985,16 @@
                                         ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-mono text-[10px] font-bold">✅ Link enviado${lotSentLabel ? ' (' + escapeHtml(lotSentLabel) + ')' : ''}</span>`
                                         : `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-bold">⏳ Pendiente enviar link Lote</span>`
                                     }
+                                    ${items[0].reservationExpiresAt ? `
+                                        <span class="reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold" data-timer-expires="${escapeHtml(items[0].reservationExpiresAt)}" data-timer-ref="${escapeHtml(items[0].ref)}" data-timer-lot="${escapeHtml(groupId)}">⏱️ Calculando...</span>
+                                        <button type="button" data-extend-lot="${escapeHtml(groupId)}" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700 hover:border-zinc-500 transition-colors" title="Prorrogar 24 horas a todas las prendas del lote">
+                                            +24h
+                                        </button>
+                                    ` : `
+                                        <button type="button" data-extend-lot="${escapeHtml(groupId)}" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700 hover:border-zinc-500 transition-colors" title="Fijar plazo de 24 horas al lote">
+                                            ⏱️ +24h
+                                        </button>
+                                    `}
                                 </div>
                                 <h3 class="mt-1.5 font-display text-lg font-bold text-white">Reservar Lote a <span class="text-acid">@${escapeHtml(buyerVinted)}</span></h3>
                                 <p class="text-xs text-zinc-400">${escapeHtml(buyerEmail)}</p>
@@ -2652,6 +4006,7 @@
                             </div>
                         </div>
 
+                        <!-- Prendas del Lote y Estado de Limpieza -->
                         <div class="space-y-1.5 text-xs">
                             ${items.map(it => {
                                 const wList = getGarmentWaitlist(it);
@@ -2661,6 +4016,10 @@
                                         <strong class="font-mono text-acid">${escapeHtml(it.ref)}</strong>
                                         <span class="truncate">${escapeHtml(it.title)} ${it.size ? '(' + escapeHtml(it.size) + ')' : ''}</span>
                                         ${wList.length > 0 ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/40">⏳ ${wList.length} en espera</span>` : ''}
+                                        ${it.vintedCleanedAt
+                                            ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">✅ Eliminada en Vinted</span>`
+                                            : (it.vintedUrl ? `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 font-medium border border-amber-500/30">⚠️ Borrar al cobrar</span>` : '')
+                                        }
                                     </div>
                                     <div class="flex items-center gap-2 shrink-0">
                                         ${it.vintedUrl ? `<a href="${escapeHtml(it.vintedUrl)}" target="_blank" rel="noopener" class="font-mono text-[10px] px-2 py-0.5 rounded bg-obsidian border border-zinc-700 hover:border-acid text-acid transition-colors" title="Abrir anuncio individual oculto en Vinted (para borrarlo cuando se pague el lote)">🔗 Ver oculta ↗</a>` : ''}
@@ -2670,34 +4029,39 @@
                             }).join('')}
                             ${hasIndividualHiddenUrls ? `
                                 <p class="pt-1 text-[11px] text-zinc-400 leading-relaxed">
-                                    💡 Vinted no permite agrupar prendas reservadas: sube 1 anuncio de Lote (1 solo envío) con los botones de abajo y, cuando <strong>@${escapeHtml(buyerVinted)}</strong> lo pague, abre «🔗 Ver oculta ↗» para eliminar los anuncios sueltos.
+                                    💡 <strong>Protocolo Anti-Rotura de Stock:</strong> Sube el anuncio de lote con el Paso 1. Cuando <strong>@${escapeHtml(buyerVinted)}</strong> lo pague, pulsa en el Paso 3 para abrir el checklist obligatorio y eliminar las prendas sueltas en Vinted antes de cerrar.
                                 </p>
                             ` : ''}
                         </div>
 
-                        <!-- Paso 1: Botonera 1-Toque para subir el Lote unificado a Vinted -->
-                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
-                            <div class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">📋 1. Copiar Anuncio de Lote para Vinted (1 toque)</div>
+                        <!-- Paso 1: Botonera 1-Toque y Pack Multimedia para subir el Lote a Vinted -->
+                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">📋 1. Crear Anuncio de Lote en Vinted (1 toque)</span>
+                                <a href="https://www.vinted.es/items/new" target="_blank" rel="noopener" class="font-mono text-[10px] px-2.5 py-1 rounded bg-acid/15 border border-acid/40 hover:bg-acid/25 text-acid font-bold transition-colors">
+                                    ➕ Abrir Subir en Vinted ↗
+                                </a>
+                            </div>
                             <div class="grid grid-cols-2 gap-2">
-                                <button type="button" data-lot-copy="title" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                <button type="button" data-lot-copy="title" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left transition-colors">
                                     📋 Copiar Título Lote
                                 </button>
-                                <button type="button" data-lot-copy="desc" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left">
+                                <button type="button" data-lot-copy="desc" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white text-left transition-colors">
                                     📋 Copiar Descripción Lote
                                 </button>
-                                <button type="button" data-lot-copy="price" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-acid/20 hover:bg-acid/30 border border-acid/40 text-xs font-bold text-acid text-left">
+                                <button type="button" data-lot-copy="price" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-acid/20 hover:bg-acid/30 border border-acid/40 text-xs font-bold text-acid text-left transition-colors">
                                     💶 Copiar Precio (${fmtVintedInputPrice(lotPrice)})
                                 </button>
-                                <button type="button" data-lot-copy="user" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-acid/20 hover:bg-acid/30 border border-acid/40 text-xs font-bold text-acid text-left truncate">
+                                <button type="button" data-lot-copy="user" data-lot-id="${escapeHtml(groupId)}" class="py-2.5 px-3 rounded-lg bg-acid/20 hover:bg-acid/30 border border-acid/40 text-xs font-bold text-acid text-left truncate transition-colors">
                                     👤 Copiar @${escapeHtml(buyerVinted)}
                                 </button>
                             </div>
                             <div class="flex flex-wrap gap-2 pt-1">
-                                <button type="button" data-lot-photos="${escapeHtml(groupId)}" class="flex-1 py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs text-zinc-200">
-                                    📸 Descargar Fotos del Lote (${allPhotos.length})
+                                <button type="button" data-lot-pack-zip="${escapeHtml(groupId)}" class="flex-1 py-2.5 px-3 rounded-lg bg-gradient-to-r from-acid/20 to-emerald-500/20 hover:from-acid/30 hover:to-emerald-500/30 border border-acid/50 text-xs font-bold text-acid flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                                    <span>📸 Preparar Pack Fotos Lote (Collage + ZIP ≤ 20)</span>
                                 </button>
-                                <button type="button" data-lot-sold="${escapeHtml(groupId)}" class="py-2 px-3 rounded-lg bg-emerald-950/70 border border-emerald-500/40 hover:bg-emerald-900/70 text-xs text-emerald-200 font-semibold">
-                                    ✅ Marcar Lote Vendido
+                                <button type="button" data-lot-photos="${escapeHtml(groupId)}" title="Descarga las fotos individuales una a una" class="py-2.5 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-zinc-500 text-xs text-zinc-400 transition-colors">
+                                    Fotos sueltas (${allPhotos.length})
                                 </button>
                             </div>
                         </div>
@@ -2715,6 +4079,25 @@
                                     : `📩 Ya reservado en Vinted → Enviar link de pago a @${escapeHtml(buyerVinted)}`
                                 }
                             </button>
+                        </div>
+
+                        <!-- Paso 3: Cierre de Venta o Cancelación Segura -->
+                        <div class="p-3.5 rounded-xl bg-zinc-900/80 border border-zinc-700/80 space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-300 font-bold">
+                                    🔒 3. Cierre de Venta o Cancelación
+                                </span>
+                                <span class="font-mono text-[10px] text-amber-400 font-semibold">Blindaje Anti-Rotura de Stock</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row items-center gap-2">
+                                <button type="button" data-lot-cleanup="${escapeHtml(groupId)}" class="w-full sm:flex-1 py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-display font-bold text-xs uppercase tracking-wide flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-950/50 transition-all">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                    <span>✅ Lote Pagado → Limpiar Vinted y Cerrar</span>
+                                </button>
+                                <button type="button" data-lot-cancel="${escapeHtml(groupId)}" class="w-full sm:w-auto py-2.5 px-3 rounded-lg bg-obsidian border border-rose-500/40 hover:bg-rose-950/50 text-rose-300 text-xs font-semibold transition-colors">
+                                    🔓 Cancelar / Liberar
+                                </button>
+                            </div>
                         </div>
                     </article>`;
                 }).join('');
@@ -2741,7 +4124,15 @@
                             return;
                         }
                         if (btn.getAttribute('data-already-sent') === '1') {
-                            if (!confirm(`Ya enviaste el link de pago de ${gid} a @${buyer}. ¿Quieres reenviarle el correo con esta URL?`)) return;
+                            const resendOk = await vmConfirm({
+                                badge: 'Reenvío de Enlace',
+                                title: `¿Reenviar link de pago a @${buyer}?`,
+                                message: `Ya enviaste anteriormente el link de pago de ${gid} a @${buyer}. ¿Quieres volver a enviarle el correo con esta URL?`,
+                                confirmText: 'Reenviar email',
+                                cancelText: 'Cancelar',
+                                variant: 'amber'
+                            });
+                            if (!resendOk) return;
                         }
                         const prevText = btn.textContent;
                         btn.disabled = true;
@@ -2780,6 +4171,24 @@
                     });
                 });
 
+                lotsContainer.querySelectorAll('[data-lot-pack-zip]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const gid = btn.getAttribute('data-lot-pack-zip');
+                        const items = groupsMap.get(gid) || [];
+                        if (!items.length) return;
+                        const buyer = items[0].reservedByVinted || 'comprador';
+                        btn.disabled = true;
+                        const orig = btn.innerHTML;
+                        btn.innerHTML = `<span>⏳ Generando Collage y ZIP...</span>`;
+                        try {
+                            await downloadLotPackZip(items, buyer, gid);
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerHTML = orig;
+                        }
+                    });
+                });
+
                 lotsContainer.querySelectorAll('[data-lot-photos]').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const gid = btn.getAttribute('data-lot-photos');
@@ -2789,19 +4198,47 @@
                     });
                 });
 
-                lotsContainer.querySelectorAll('[data-lot-sold]').forEach(btn => {
+                lotsContainer.querySelectorAll('[data-lot-cleanup]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const gid = btn.getAttribute('data-lot-cleanup');
+                        openLotCleanupModal(gid);
+                    });
+                });
+
+                lotsContainer.querySelectorAll('[data-lot-cancel]').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        const gid = btn.getAttribute('data-lot-sold');
+                        const gid = btn.getAttribute('data-lot-cancel');
                         const items = groupsMap.get(gid) || [];
-                        if (!confirm(`¿Marcar las ${items.length} prendas de ${gid} como VENDIDAS?`)) return;
+                        if (!items.length) return;
+                        const buyer = items[0].reservedByVinted || 'comprador';
+                        const lotUrl = items.map(x => x.vintedLotUrl).find(Boolean) || '';
+
+                        let warn = `Se devolverán las ${items.length} prendas del lote ${gid} (@${buyer}) al estado DISPONIBLE y se restaurará su cupón si corresponde.`;
+                        if (lotUrl) {
+                            warn += `\n\n⚠️ RECORDATORIO CRÍTICO DE SEGURIDAD:\nHabías creado un anuncio de lote en Vinted:\n${lotUrl}\n\nConfirma que ya lo has eliminado en Vinted para evitar que otra persona lo compre por error.`;
+                        }
+                        const cancelOk = await vmConfirm({
+                            badge: 'Cancelación Segura de Lote',
+                            title: `¿Cancelar Lote ${gid}?`,
+                            message: warn,
+                            confirmText: lotUrl ? 'Sí, ya borré el lote y liberar' : 'Sí, liberar prendas',
+                            cancelText: 'Volver',
+                            variant: 'danger'
+                        });
+                        if (!cancelOk) return;
+
+                        btn.disabled = true;
+                        btn.textContent = 'Cancelando lote...';
                         try {
                             for (const it of items) {
-                                await callAdminApi('update_status', { ref: it.ref, newStatus: 'VENDIDA' });
+                                await callAdminApi('update_status', { ref: it.ref, newStatus: 'DISPONIBLE', restoreCoupon: true });
                             }
-                            toast(`✓ Lote ${gid} marcado como VENDIDO`);
+                            toast(`✓ Lote ${gid} cancelado y prendas devueltas a DISPONIBLE`);
                             await loadDashboard();
                         } catch (err) {
                             toast(err.message, true);
+                            btn.disabled = false;
+                            btn.textContent = '🔓 Cancelar / Liberar';
                         }
                     });
                 });
@@ -2818,7 +4255,21 @@
                 return;
             }
 
-            cardsEl.innerHTML = filtered.map(g => {
+            let availableSafetyBannerHtml = '';
+            if (adminState.statusFilter === 'DISPONIBLE') {
+                availableSafetyBannerHtml = `
+                <div class="lg:col-span-2 p-3.5 rounded-xl bg-acid/5 border border-acid/30 text-xs text-zinc-300 flex items-start gap-2.5">
+                    <span class="text-base shrink-0">💡</span>
+                    <div>
+                        <strong class="text-acid">Consejo de seguridad anti-rotura de stock:</strong>
+                        <p class="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">
+                            Desoculta las prendas sobrantes únicamente pulsando «👁️ Abrir en Vinted» desde esta lista. Nunca desocultes masivamente desde la pestaña general de «Ocultos» de tu perfil de Vinted para evitar reactivar por error prendas pertenecientes a lotes ya vendidos.
+                        </p>
+                    </div>
+                </div>`;
+            }
+
+            cardsEl.innerHTML = availableSafetyBannerHtml + filtered.map(g => {
                 const isRes = g.status === 'RESERVADA';
                 const isSold = g.status === 'VENDIDA';
                 const priceForVinted = (isRes && Number(g.reservedFinalPriceEur) > 0)
@@ -2877,8 +4328,16 @@
                         </div>
 
                         ${isRes ? `
-                            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs space-y-0.5">
-                                <div class="font-semibold text-amber-200">Reservada para: <span class="font-mono text-white">@${escapeHtml(g.reservedByVinted)}</span></div>
+                            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs space-y-2">
+                                <div class="flex flex-wrap items-center justify-between gap-1.5">
+                                    <div class="font-semibold text-amber-200">Reservada para: <span class="font-mono text-white">@${escapeHtml(g.reservedByVinted)}</span></div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="reservation-timer-tag px-2 py-0.5 rounded-full font-mono text-[10px] font-bold" data-timer-expires="${escapeHtml(g.reservationExpiresAt || '')}" data-timer-ref="${escapeHtml(g.ref)}">⏱️ Plazo 24h</span>
+                                        <button type="button" data-extend-ref="${escapeHtml(g.ref)}" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700 hover:border-zinc-500 transition-colors" title="Prorrogar 24 horas más">
+                                            +24h
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="text-zinc-400">${escapeHtml(g.reservedByEmail)} ${g.reservationGroupId ? '• <span class="font-mono text-zinc-300">' + escapeHtml(g.reservationGroupId) + '</span>' : ''}</div>
                             </div>
                         ` : ''}
@@ -2896,7 +4355,11 @@
                                     <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs font-semibold text-acid transition-colors">
                                         🔗 Abrir anuncio individual oculto en Vinted (para borrar tras cobrarse) ↗
                                     </a>
-                                ` : ''}
+                                ` : `
+                                    <a href="https://www.vinted.es" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs font-semibold text-zinc-300 hover:text-acid transition-colors">
+                                        🔗 Abrir Vinted (localizar anuncio individual) ↗
+                                    </a>
+                                `}
                             </div>
                         ` : ''}
 
@@ -2919,13 +4382,16 @@
                                     </button>
                                 </div>
 
-                                ${g.vintedUrl ? `
-                                    <a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs font-semibold text-white transition-colors">
-                                        🔗 1. Abrir en Vinted (Editar Precio y Reservar a @${escapeHtml(g.reservedByVinted)}) ↗
-                                    </a>
-                                ` : `
+                                <a href="${escapeHtml(g.vintedUrl || singleDraftUrl || 'https://www.vinted.es')}" target="_blank" rel="noopener" class="flex items-center justify-center gap-1.5 w-full py-2.5 px-3 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs font-semibold text-white transition-colors">
+                                    ${(g.vintedUrl || singleDraftUrl)
+                                        ? `🔗 1. Abrir Prenda en Vinted (Reservar a @${escapeHtml(g.reservedByVinted)}) ↗`
+                                        : `🔗 1. Abrir Vinted (Buscar prenda o subir y copiar URL) ↗`
+                                    }
+                                </a>
+
+                                ${!g.vintedUrl ? `
                                     <input type="url" data-single-url-input="${escapeHtml(g.ref)}" value="${escapeHtml(singleDraftUrl)}" placeholder="https://www.vinted.es/items/... (pega la URL de la prenda en Vinted)" class="w-full px-3 py-2 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
-                                `}
+                                ` : ''}
 
                                 <button type="button" data-notify-ref="${escapeHtml(g.ref)}" data-already-sent="${g.vintedReadySentAt ? '1' : '0'}" class="w-full py-2.5 px-3 rounded-lg ${g.vintedReadySentAt ? 'bg-emerald-950/80 border border-emerald-500/50 hover:bg-emerald-900/80 text-emerald-200' : 'bg-acid hover:bg-acid-hover text-obsidian shadow-md shadow-acid/20'} font-display font-bold text-xs uppercase tracking-wide transition-all">
                                     ${g.vintedReadySentAt
@@ -3028,7 +4494,17 @@
                                                     <strong class="font-mono text-white truncate">@${escapeHtml(w.vintedUser || 'desconocido')}</strong>
                                                     <span class="text-zinc-400 text-[11px] truncate">(${escapeHtml(w.email || '')})</span>
                                                 </div>
-                                                ${timeStr ? `<span class="font-mono text-[10px] text-zinc-500 shrink-0">${escapeHtml(timeStr)}</span>` : ''}
+                                                <div class="flex items-center gap-1.5 shrink-0">
+                                                    ${timeStr ? `<span class="font-mono text-[10px] text-zinc-500 hidden sm:inline">${escapeHtml(timeStr)}</span>` : ''}
+                                                    ${idx > 0 ? `
+                                                        <button type="button" data-waitlist-up="${escapeHtml(w.email)}" data-ref="${escapeHtml(g.ref)}" title="Mover al puesto #1" class="px-1.5 py-0.5 rounded hover:bg-amber-400/20 text-amber-300 font-mono text-xs transition-colors">
+                                                            ↑
+                                                        </button>
+                                                    ` : ''}
+                                                    <button type="button" data-waitlist-remove="${escapeHtml(w.email)}" data-ref="${escapeHtml(g.ref)}" title="Quitar de la cola" class="px-1.5 py-0.5 rounded hover:bg-rose-500/20 text-rose-400 font-mono text-xs transition-colors">
+                                                        ✕
+                                                    </button>
+                                                </div>
                                             </li>`;
                                         }).join('')}
                                     </ol>
@@ -3082,7 +4558,15 @@
                         return;
                     }
                     if (btn.getAttribute('data-already-sent') === '1') {
-                        if (!confirm(`Ya enviaste el link de pago de ${ref} a @${buyer}. ¿Quieres reenviarle el correo?`)) return;
+                        const resendOk = await vmConfirm({
+                            badge: 'Reenvío de Enlace',
+                            title: `¿Reenviar link de pago a @${buyer}?`,
+                            message: `Ya enviaste anteriormente el link de pago de ${ref} a @${buyer}. ¿Quieres volver a enviarle el correo?`,
+                            confirmText: 'Reenviar email',
+                            cancelText: 'Cancelar',
+                            variant: 'amber'
+                        });
+                        if (!resendOk) return;
                     }
                     const prevText = btn.textContent;
                     btn.disabled = true;
@@ -3136,23 +4620,6 @@
                 });
             });
 
-            cardsEl.querySelectorAll('[data-promote-ref]').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const ref = btn.getAttribute('data-promote-ref');
-                    if (!confirm(`¿Asignar ${ref} al 1º suplente en cola, recalcular su precio automáticamente y avisarle por correo?`)) return;
-                    btn.disabled = true;
-                    btn.textContent = 'Asignando...';
-                    try {
-                        const res = await callAdminApi('promote_waitlist', { ref });
-                        toast(res.message || `✓ ${ref} asignada al suplente`);
-                        await loadDashboard();
-                    } catch (err) {
-                        toast(err.message, true);
-                        btn.disabled = false;
-                    }
-                });
-            });
-
             cardsEl.querySelectorAll('[data-status-ref]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const ref = btn.getAttribute('data-status-ref');
@@ -3167,24 +4634,10 @@
                 });
             });
 
-            cardsEl.querySelectorAll('[data-release-ref]').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const ref = btn.getAttribute('data-release-ref');
-                    if (!confirm(`¿Liberar ${ref} para que vuelva a aparecer como DISPONIBLE en el escaparate?`)) return;
-                    const wasReserved = btn.getAttribute('data-was-reserved') === '1';
-                    let restoreCoupon = false;
-                    if (wasReserved) {
-                        restoreCoupon = confirm(`¿Quieres restaurarle el cupón de bienvenida al comprador anterior que no completó la compra?\n\n• Aceptar = Sí, restaurar su cupón\n• Cancelar = Liberar prenda sin restaurar cupón`);
-                    }
-                    try {
-                        await callAdminApi('update_status', { ref, newStatus: 'DISPONIBLE', restoreCoupon });
-                        toast(`✓ ${ref} vuelve a estar DISPONIBLE`);
-                        await loadDashboard();
-                    } catch (err) {
-                        toast(err.message, true);
-                    }
-                });
-            });
+            // Bind unificado de eventos de colas, traspasos guiados, prórrogas 24h y liberación
+            bindWaitlistEvents(lotsContainer);
+            bindWaitlistEvents(cardsEl);
+            updateReservationTimers();
 
             cardsEl.querySelectorAll('[data-edit-vinted]').forEach(btn => {
                 btn.addEventListener('click', () => loadGarmentIntoForm(btn.getAttribute('data-edit-vinted')));
@@ -3367,7 +4820,7 @@
         document.getElementById('confirmSocialPublishBtn')?.addEventListener('click', executeSocialPublish);
         document.getElementById('socialCopyTextarea')?.addEventListener('input', updateSocialCopyLength);
 
-        // Backdrop click y tecla Escape para socialPublishModal
+        // Backdrop click y tecla Escape para modales
         document.getElementById('socialPublishModal')?.addEventListener('click', (e) => {
             if (e.target === document.getElementById('socialPublishModal')) {
                 closeSocialPublishModal();
@@ -3376,6 +4829,184 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeSocialPublishModal();
+                closeLotCleanupModal();
+            }
+        });
+
+        // ======================== MODAL CHECKLIST LIMPIEZA DE LOTES ========================
+        function openLotCleanupModal(groupId) {
+            const modal = document.getElementById('lotCleanupModal');
+            if (!modal) return;
+            adminState.activeCleanupLotId = groupId;
+
+            const items = adminState.garments.filter(g =>
+                g.reservationGroupId &&
+                g.reservationGroupId.toUpperCase() === groupId.toUpperCase()
+            );
+
+            if (items.length === 0) {
+                toast(`No se encontraron prendas para el lote ${groupId}`, true);
+                return;
+            }
+
+            const buyer = items[0].reservedByVinted || 'comprador';
+            const badgeEl = document.getElementById('lotCleanupBadgeId');
+            if (badgeEl) badgeEl.textContent = `${groupId} • @${buyer.replace(/^@+/, '')}`;
+
+            const listEl = document.getElementById('lotCleanupItemsList');
+            const confirmBtn = document.getElementById('confirmLotCleanupBtn');
+            const progressEl = document.getElementById('lotCleanupProgressText');
+            const noticeEl = document.getElementById('lotCleanupHelpNotice');
+
+            function updateModalState() {
+                const totalItems = items.length;
+                const cleanedItems = items.filter(it => Boolean(it.vintedCleanedAt) || !it.vintedUrl);
+                const allDone = cleanedItems.length === totalItems;
+
+                if (progressEl) {
+                    progressEl.textContent = `${cleanedItems.length} de ${totalItems} eliminadas / verificadas`;
+                }
+
+                if (confirmBtn) {
+                    if (allDone) {
+                        confirmBtn.disabled = false;
+                        confirmBtn.classList.remove('disabled:bg-zinc-800', 'disabled:text-zinc-500', 'disabled:cursor-not-allowed');
+                        confirmBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'text-obsidian', 'shadow-emerald-500/30');
+                        if (noticeEl) {
+                            noticeEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ Verificación completa: todos los anuncios sueltos han sido eliminados de Vinted.</span>`;
+                        }
+                    } else {
+                        confirmBtn.disabled = true;
+                        confirmBtn.classList.add('disabled:bg-zinc-800', 'disabled:text-zinc-500', 'disabled:cursor-not-allowed');
+                        confirmBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-400', 'text-obsidian', 'shadow-emerald-500/30');
+                        if (noticeEl) {
+                            noticeEl.innerHTML = `⚠️ <span class="text-amber-300 font-semibold">Quedan ${totalItems - cleanedItems.length} anuncio(s) por eliminar en Vinted. Marca sus casillas tras eliminarlos para poder cerrar el lote.</span>`;
+                        }
+                    }
+                }
+            }
+
+            if (listEl) {
+                listEl.innerHTML = items.map(it => {
+                    const hasUrl = Boolean(it.vintedUrl);
+                    const isClean = Boolean(it.vintedCleanedAt);
+                    const thumb = (it.photos && it.photos[0]) ? it.photos[0] : '';
+
+                    return `
+                    <div id="cleanup-row-${escapeHtml(it.ref)}" class="p-3 rounded-xl bg-obsidian-elevated border ${isClean ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-zinc-800'} flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-colors">
+                        <div class="flex items-center gap-3 min-w-0">
+                            ${thumb
+                                ? `<img src="${escapeHtml(thumb)}" alt="" class="w-12 h-14 rounded-lg object-cover border border-zinc-700 shrink-0">`
+                                : `<div class="w-12 h-14 rounded-lg bg-obsidian border border-zinc-800 shrink-0"></div>`
+                            }
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="font-mono font-bold text-acid">${escapeHtml(it.ref)}</span>
+                                    <span class="truncate font-semibold text-white">${escapeHtml(it.title)}</span>
+                                    ${it.size ? `<span class="text-zinc-400">(${escapeHtml(it.size)})</span>` : ''}
+                                </div>
+                                <div class="flex items-center gap-2 mt-0.5 text-zinc-400">
+                                    <span>${fmtEur(it.priceEur)}</span>
+                                    ${hasUrl
+                                        ? `<span class="text-zinc-400">• Anuncio oculto en Vinted</span>`
+                                        : `<span class="text-amber-400/80">• Creada sin URL Vinted previa</span>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
+                            ${hasUrl ? `
+                                <a href="${escapeHtml(it.vintedUrl)}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg bg-obsidian border border-rose-500/40 hover:border-rose-400 hover:bg-rose-950/50 text-rose-300 font-mono text-[11px] font-bold flex items-center gap-1.5 transition-colors">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    <span>1. Abrir y Borrar ↗</span>
+                                </a>
+                            ` : ''}
+                            <label class="flex items-center gap-2 cursor-pointer select-none px-3 py-1.5 rounded-lg bg-obsidian border ${isClean ? 'border-emerald-500/50 text-emerald-300' : 'border-zinc-700 hover:border-acid text-zinc-200'} transition-colors">
+                                <input type="checkbox" data-cleanup-check="${escapeHtml(it.ref)}" ${isClean ? 'checked' : ''} class="w-4 h-4 rounded text-acid focus:ring-0 cursor-pointer">
+                                <span class="font-mono text-[11px] font-bold">2. Eliminada</span>
+                            </label>
+                        </div>
+                    </div>`;
+                }).join('');
+
+                lucide.createIcons();
+
+                listEl.querySelectorAll('[data-cleanup-check]').forEach(chk => {
+                    chk.addEventListener('change', async () => {
+                        const ref = chk.getAttribute('data-cleanup-check');
+                        const target = items.find(x => x.ref === ref);
+                        if (!target) return;
+                        chk.disabled = true;
+                        try {
+                            await callAdminApi('update_status', {
+                                ref,
+                                newStatus: 'KEEP',
+                                markVintedCleaned: chk.checked
+                            });
+                            target.vintedCleanedAt = chk.checked ? new Date().toISOString() : '';
+                            const row = document.getElementById(`cleanup-row-${ref}`);
+                            if (row) {
+                                if (chk.checked) {
+                                    row.classList.add('border-emerald-500/40', 'bg-emerald-950/20');
+                                    row.classList.remove('border-zinc-800');
+                                } else {
+                                    row.classList.remove('border-emerald-500/40', 'bg-emerald-950/20');
+                                    row.classList.add('border-zinc-800');
+                                }
+                            }
+                            updateModalState();
+                            toast(chk.checked ? `✓ ${ref} marcada como eliminada en Vinted` : `✓ ${ref} desmarcada`);
+                        } catch (err) {
+                            chk.checked = !chk.checked;
+                            toast(`Error al guardar estado: ${err.message}`, true);
+                        } finally {
+                            chk.disabled = false;
+                        }
+                    });
+                });
+            }
+
+            updateModalState();
+            modal.classList.remove('hidden');
+        }
+
+        function closeLotCleanupModal() {
+            document.getElementById('lotCleanupModal')?.classList.add('hidden');
+            adminState.activeCleanupLotId = null;
+        }
+
+        document.getElementById('closeLotCleanupModalBtn')?.addEventListener('click', closeLotCleanupModal);
+        document.getElementById('cancelLotCleanupModalBtn')?.addEventListener('click', closeLotCleanupModal);
+        document.getElementById('lotCleanupModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lotCleanupModal')) {
+                closeLotCleanupModal();
+            }
+        });
+
+        document.getElementById('confirmLotCleanupBtn')?.addEventListener('click', async () => {
+            const gid = adminState.activeCleanupLotId;
+            if (!gid) return;
+            const items = adminState.garments.filter(g =>
+                g.reservationGroupId &&
+                g.reservationGroupId.toUpperCase() === gid.toUpperCase()
+            );
+            if (!items.length) return;
+
+            const btn = document.getElementById('confirmLotCleanupBtn');
+            btn.disabled = true;
+            btn.textContent = 'Cerrando lote y guardando...';
+            try {
+                for (const it of items) {
+                    await callAdminApi('update_status', { ref: it.ref, newStatus: 'VENDIDA' });
+                }
+                closeLotCleanupModal();
+                toast(`✓ Lote ${gid} marcado como VENDIDO y verificada la limpieza en Vinted.`);
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>🔒 Cerrar Lote como VENDIDO</span>`;
+                lucide.createIcons();
             }
         });
 
@@ -3467,6 +5098,78 @@
 
         (async function init() {
             initThemeEngine();
+
+            // Modo Mock de Verificación Local e Inspección Visual (?mock=1)
+            if (urlParams.get('mock') === '1') {
+                document.getElementById('authSection')?.classList.add('hidden');
+                document.getElementById('studioSection')?.classList.remove('hidden');
+                document.getElementById('logoutBtn')?.classList.remove('hidden');
+                const navLinks = document.getElementById('headerNavLinks');
+                if (navLinks) {
+                    navLinks.classList.remove('hidden');
+                    navLinks.classList.add('inline-flex');
+                }
+                adminState.garments = [
+                    {
+                        ref: "REF-001",
+                        dropId: "DROP-20261030",
+                        title: "Funda polar",
+                        brand: "VirMarket",
+                        size: "Única",
+                        priceEur: 14.0,
+                        status: "RESERVADA",
+                        reservedByEmail: "comprador1@gmail.com",
+                        reservedByVinted: "comprador1",
+                        reservationGroupId: "RES-001-GROUP",
+                        reservationExpiresAt: new Date(Date.now() - 3600 * 1000).toISOString(),
+                        vintedUrl: "https://www.vinted.es/items/10612288197-funda-polar",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg"],
+                        waitlist: [
+                            { email: "encoder2000@gmail.com", vintedUser: "encoder2000", joinedAt: "2026-10-30T22:42:54.612Z" },
+                            { email: "segundo@gmail.com", vintedUser: "segundo_user", joinedAt: "2026-10-31T10:00:00.000Z" }
+                        ]
+                    },
+                    {
+                        ref: "REF-004",
+                        dropId: "DROP-20261101-01",
+                        title: "Camiseta niña talla 6 años",
+                        brand: "Zara",
+                        size: "6 años",
+                        priceEur: 1.75,
+                        status: "RESERVADA",
+                        reservedByEmail: "lote_buyer@gmail.com",
+                        reservedByVinted: "lote_buyer",
+                        reservationGroupId: "LOTE-DEMO123",
+                        reservationLotPriceEur: 4.0,
+                        reservationExpiresAt: new Date(Date.now() + 2 * 3600 * 1000).toISOString(),
+                        vintedUrl: "https://www.vinted.es/items/10612677051",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261101-01/ref-004-1-1793490026585.jpg"],
+                        waitlist: []
+                    },
+                    {
+                        ref: "REF-005",
+                        dropId: "DROP-20261101-01",
+                        title: "Vestido lana bebé talla 3/6 meses",
+                        brand: "Benetton",
+                        size: "3/6 meses",
+                        priceEur: 2.25,
+                        status: "RESERVADA",
+                        reservedByEmail: "lote_buyer@gmail.com",
+                        reservedByVinted: "lote_buyer",
+                        reservationGroupId: "LOTE-DEMO123",
+                        reservationLotPriceEur: 4.0,
+                        reservationExpiresAt: new Date(Date.now() + 2 * 3600 * 1000).toISOString(),
+                        vintedUrl: "https://www.vinted.es/items/10612288197",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261101-01/ref-005-1-1793490035233.jpg"],
+                        waitlist: []
+                    }
+                ];
+                adminState.password = 'mock';
+                setActiveTab('vinted');
+                renderVintedWorkspace();
+                return;
+            }
+
             // 1. Si ya tenemos contraseña guardada en almacenamiento persistente, entrar directo
             if (adminState.password) {
                 try {
