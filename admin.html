@@ -978,6 +978,11 @@
                             <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
                                 <option value="ALL">Todos los Drops</option>
                             </select>
+                            <button id="openVintedSyncBtnTab2" type="button" title="Escanear correos reales de ventas y transacciones de Vinted" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-emerald-400/60 text-emerald-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+                                <i data-lucide="mail-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                <span>📬 Sincronizar Vinted</span>
+                                <span class="vinted-sync-badge hidden px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-400 text-obsidian font-mono font-bold">0</span>
+                            </button>
                             <button id="openSocialModalBtn" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-sky-400/60 text-sky-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors">
                                 <i data-lucide="send" class="w-3.5 h-3.5 text-sky-400"></i>
                                 <span>📢 Publicar Sobrantes</span>
@@ -1063,7 +1068,12 @@
                             <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Registro Contable &amp; Auditoría de Negocio</h2>
                             <p class="text-xs text-zinc-400 mt-0.5">Supervisión integral de ventas cerradas, márgenes netos, inventario valorado, CRM de clientes y rendimiento por Drop.</p>
                         </div>
-                        <div class="flex items-center gap-2 shrink-0">
+                        <div class="flex flex-wrap items-center gap-2 shrink-0">
+                            <button id="openVintedSyncBtnTab3" type="button" title="Conciliar correos reales de Vinted e importar ventas al ERP" class="px-3.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/60 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors">
+                                <i data-lucide="mail-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                <span>📬 Sincronizar Vinted</span>
+                                <span class="vinted-sync-badge hidden px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-400 text-obsidian font-mono font-bold">0</span>
+                            </button>
                             <button id="exportRegistroCsvBtn" type="button" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Descargar datos contables filtrados en formato CSV compatible con Excel">
                                 <i data-lucide="download" class="w-3.5 h-3.5 text-acid"></i>
                                 <span>Exportar CSV</span>
@@ -1980,6 +1990,25 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="markSoldStageSelect" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Etapa Logística Vinted
+                        </label>
+                        <select id="markSoldStageSelect" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                            <option value="COMPLETED">✅ Cobrada en saldo</option>
+                            <option value="PAID_PENDING_SHIPMENT">📦 Pendiente de enviar (5d)</option>
+                            <option value="IN_TRANSIT">🚚 En camino</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="markSoldTxIdInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            N.º Transacción Vinted
+                        </label>
+                        <input type="text" id="markSoldTxIdInput" placeholder="#22978145321" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                    </div>
+                </div>
+
                 <div class="p-3 rounded-xl bg-obsidian border border-zinc-800 text-xs flex items-center justify-between">
                     <span class="text-zinc-400">Beneficio Neto Estimado:</span>
                     <span id="markSoldNetProfitPreview" class="font-mono text-sm font-bold text-acid">0,00 € (0%)</span>
@@ -2062,6 +2091,112 @@
                     Cerrar Ficha
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Bandeja de Conciliación y Sincronización Inbound de Correos de Vinted -->
+    <div id="vintedSyncModal" role="dialog" aria-modal="true" aria-labelledby="vintedSyncModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-4xl my-auto rounded-3xl bg-obsidian-card border border-emerald-500/45 p-4 sm:p-6 shadow-2xl shadow-emerald-950/60 space-y-4">
+            <!-- Cabecera -->
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-zinc-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center text-emerald-400 shrink-0">
+                        <i data-lucide="mail-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">Coste 0,00 € • Sin LLM</span>
+                            <span id="vintedSyncLastScannedLabel" class="font-mono text-[10px] text-zinc-400">Listo para escanear virmarket.oficial@gmail.com</span>
+                        </div>
+                        <h3 id="vintedSyncModalTitle" class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Bandeja de Conciliación Vinted</h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-end sm:self-start">
+                    <button type="button" id="runVintedScanBtn" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all">
+                        <i data-lucide="refresh-cw" id="vintedScanSpinIcon" class="w-3.5 h-3.5"></i>
+                        <span>Escanear Correos Ahora</span>
+                    </button>
+                    <button type="button" id="closeVintedSyncModalBtn" aria-label="Cerrar bandeja Vinted" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPIs del Escaneo -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Coincidencias App</span>
+                    <div id="syncKpiExact" class="font-display text-xl font-bold text-acid mt-0.5">0</div>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Lotes Vinted</span>
+                    <div id="syncKpiLots" class="font-display text-xl font-bold text-amber-300 mt-0.5">0</div>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Importables al ERP</span>
+                    <div id="syncKpiUnmatched" class="font-display text-xl font-bold text-emerald-300 mt-0.5">0</div>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Impagos 24h Verif.</span>
+                    <div id="syncKpiExpired" class="font-display text-xl font-bold text-rose-400 mt-0.5">0</div>
+                </div>
+            </div>
+
+            <!-- Interruptores de Modo Manual / Automático -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-2xl bg-obsidian-elevated border border-zinc-800 text-xs">
+                <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input type="checkbox" id="syncToggleAutoApply" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-white block">Modo Automático para Coincidencias Exactas</span>
+                        <span class="text-[11px] text-zinc-400">Si está activo, aplica automáticamente al escanear las ventas que coinciden al 100% con prendas o reservas de tu app.</span>
+                    </div>
+                </label>
+                <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input type="checkbox" id="syncToggleAutoPromote" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-amber-400 focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-white block">Destacar Impagos 24h para Traspaso en Cola</span>
+                        <span class="text-[11px] text-zinc-400">Prioriza reservas vencidas sin correo de venta para pasar al #1 de espera tras ajustar el usuario en Vinted.</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Filtros y Buscador -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
+                <div id="vintedSyncTabs" class="flex flex-wrap gap-1.5">
+                    <button type="button" data-sync-filter="ALL" class="sync-filter-btn px-2.5 py-1.5 rounded-lg font-mono text-[11px] font-bold bg-acid text-obsidian">Todos (0)</button>
+                    <button type="button" data-sync-filter="EXACT" class="sync-filter-btn px-2.5 py-1.5 rounded-lg font-mono text-[11px] bg-obsidian-elevated border border-zinc-700 text-zinc-300">Coincidencias App (0)</button>
+                    <button type="button" data-sync-filter="LOTS" class="sync-filter-btn px-2.5 py-1.5 rounded-lg font-mono text-[11px] bg-obsidian-elevated border border-zinc-700 text-zinc-300">Lotes Vinted (0)</button>
+                    <button type="button" data-sync-filter="UNMATCHED" class="sync-filter-btn px-2.5 py-1.5 rounded-lg font-mono text-[11px] bg-obsidian-elevated border border-zinc-700 text-zinc-300">Importar al ERP (0)</button>
+                    <button type="button" data-sync-filter="EXPIRED" class="sync-filter-btn px-2.5 py-1.5 rounded-lg font-mono text-[11px] bg-obsidian-elevated border border-zinc-700 text-zinc-300">Impagos 24h (0)</button>
+                </div>
+                <div class="relative md:w-64">
+                    <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+                    <input type="search" id="vintedSyncSearchInput" placeholder="Buscar prenda, @usuario, #tx..." class="w-full pl-8 pr-3 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-400">
+                </div>
+            </div>
+
+            <!-- Barra de Acción Masiva -->
+            <div id="vintedSyncBulkBar" class="hidden flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/35 text-xs">
+                <label class="flex items-center gap-2 cursor-pointer select-none font-mono text-[11px] text-zinc-200">
+                    <input type="checkbox" id="selectAllSyncImportable" class="w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
+                    <span>Seleccionar ventas importables visibles</span>
+                </label>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" id="applyAllExactSyncBtn" class="hidden px-3 py-1.5 rounded-lg bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                        ⚡ Aplicar Coincidencias Exactas (<span id="applyExactCountSpan">0</span>)
+                    </button>
+                    <button type="button" id="importSelectedSyncBtn" disabled class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                        📥 Importar Seleccionadas al ERP (<span id="importSelectedCountSpan">0</span>)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estado de Carga o Resultados -->
+            <div id="vintedSyncLoadingState" class="hidden py-10 text-center space-y-3">
+                <div class="w-9 h-9 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p class="text-xs font-mono text-zinc-200">Leyendo correos de Vinted en virmarket.oficial@gmail.com y cruzando con Supabase...</p>
+            </div>
+            <div id="vintedSyncListContainer" class="max-h-[48vh] overflow-y-auto space-y-2.5 pr-1"></div>
         </div>
     </div>
 
@@ -2206,6 +2341,17 @@
             selectedRefs: new Set(),
             activeMarkSoldRef: null,
             activeClientKey: null,
+            vintedSync: {
+                events: [],
+                expiredUnpaidReservations: [],
+                stats: null,
+                filter: 'ALL',
+                search: '',
+                selectedKeys: new Set(),
+                nativeLotSelections: {},
+                isLoading: false,
+                lastScannedAt: ''
+            },
             config: {
                 discountPercent: 10,
                 maxDiscountEur: 15,
@@ -2215,7 +2361,12 @@
                 activeDropTitle: '',
                 activeDropEndsAt: '',
                 defaultExtraExpenseEur: 0,
-                crmClientsMeta: {}
+                crmClientsMeta: {},
+                vintedSyncConfig: {
+                    autoApplyExactMatches: false,
+                    autoPromoteExpiredWaitlist: false,
+                    ignoredEventKeys: []
+                }
             },
             garments: []
         };
@@ -2819,6 +2970,149 @@
                 }
                 if (action === 'get_dashboard') {
                     return { ok: true, config: adminState.config, garments: adminState.garments, contacts: adminState.contacts };
+                }
+                if (action === 'save_config' && extraPayload.vintedSyncConfig) {
+                    adminState.config.vintedSyncConfig = {
+                        ...(adminState.config.vintedSyncConfig || {}),
+                        ...extraPayload.vintedSyncConfig
+                    };
+                }
+                if (action === 'bulk_update_garments' && Array.isArray(extraPayload.updates)) {
+                    for (const u of extraPayload.updates) {
+                        const idx = adminState.garments.findIndex(g => g.ref === u.ref);
+                        if (idx >= 0) {
+                            adminState.garments[idx] = { ...adminState.garments[idx], ...u };
+                        } else if (u.upsertNew) {
+                            adminState.garments.push({
+                                ref: u.ref,
+                                dropId: u.dropId || 'VINTED-DIRECT',
+                                dropTitle: u.dropTitle || 'Ventas Directas Vinted',
+                                title: u.title || u.ref,
+                                brand: u.brand || '',
+                                size: u.size || '',
+                                priceEur: Number(u.priceEur || u.soldPriceEur || 0),
+                                costEur: Number(u.costEur || 0),
+                                extraExpenseEur: Number(u.extraExpenseEur || adminState.config.defaultExtraExpenseEur || 0),
+                                soldPriceEur: Number(u.soldPriceEur || u.priceEur || 0),
+                                soldAt: u.soldAt || new Date().toISOString(),
+                                saleChannel: u.saleChannel || 'VINTED_DIRECT',
+                                soldToVinted: u.soldToVinted || '',
+                                vintedSaleStage: u.vintedSaleStage || 'COMPLETED',
+                                vintedTxId: u.vintedTxId || '',
+                                vintedInboxUrl: u.vintedInboxUrl || '',
+                                vintedThumbUrl: u.vintedThumbUrl || '',
+                                status: u.status || 'VENDIDA',
+                                photos: [],
+                                waitlist: []
+                            });
+                        }
+                    }
+                }
+                if (action === 'scan_vinted_emails') {
+                    const ignored = new Set(adminState.config?.vintedSyncConfig?.ignoredEventKeys || []);
+                    const mockEvents = [
+                        {
+                            eventKey: 'mock-ev-exact-006',
+                            eventKeys: ['mock-ev-exact-006'],
+                            buyerVinted: 'laura_vintage88',
+                            lotCount: 1,
+                            isNativeLot: false,
+                            title: 'Jersey cuello alto lana merino',
+                            txTitle: '',
+                            displayTitle: 'Jersey cuello alto lana merino',
+                            priceEur: 18.0,
+                            soldAt: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
+                            completedAt: '',
+                            txId: '',
+                            deliveryEstimate: '',
+                            thumbUrl: 'https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg',
+                            inboxUrl: 'https://www.vinted.es/inbox/mock-006',
+                            stage: 'PAID_PENDING_SHIPMENT',
+                            matchType: 'EXACT_AVAILABLE',
+                            matchedRefs: ['REF-006'],
+                            matchedGroupId: '',
+                            matchedPreview: [{ ref: 'REF-006', title: 'Jersey cuello alto lana merino', status: 'DISPONIBLE', priceEur: 18.0 }],
+                            isExactAppMatch: true
+                        },
+                        {
+                            eventKey: 'mock-ev-lot-01',
+                            eventKeys: ['mock-ev-lot-01', 'mock-tx-lot-01'],
+                            buyerVinted: 'margauxdanielli',
+                            lotCount: 3,
+                            isNativeLot: true,
+                            title: 'Lote de 3 artículos',
+                            txTitle: 'Vestido XL Lefties cuello bebé',
+                            displayTitle: 'Lote de 3 artículos (Vestido XL Lefties cuello bebé)',
+                            priceEur: 12.0,
+                            soldAt: '2026-11-04T10:08:00.000Z',
+                            completedAt: '2026-11-12T17:17:00.000Z',
+                            txId: '23895313973',
+                            deliveryEstimate: '',
+                            thumbUrl: 'https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg',
+                            inboxUrl: 'https://www.vinted.es/inbox/mock-lot',
+                            stage: 'COMPLETED',
+                            matchType: 'NATIVE_VINTED_LOT',
+                            matchedRefs: [],
+                            matchedGroupId: '',
+                            matchedPreview: [],
+                            isExactAppMatch: false
+                        },
+                        {
+                            eventKey: 'mock-ev-direct-01',
+                            eventKeys: ['mock-ev-direct-01', 'mock-transit-01'],
+                            buyerVinted: 'miriam6522',
+                            lotCount: 1,
+                            isNativeLot: false,
+                            title: 'Vaquero niña pata ancha Zara talla 4años',
+                            txTitle: '',
+                            displayTitle: 'Vaquero niña pata ancha Zara talla 4años',
+                            priceEur: 3.6,
+                            soldAt: '2026-11-14T16:57:00.000Z',
+                            completedAt: '',
+                            txId: '',
+                            deliveryEstimate: 'Nov 23 - Nov 25',
+                            thumbUrl: 'https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261101-01/ref-004-1-1793490026585.jpg',
+                            inboxUrl: 'https://www.vinted.es/inbox/mock-vaquero',
+                            stage: 'IN_TRANSIT',
+                            matchType: 'UNMATCHED_VINTED_SALE',
+                            matchedRefs: [],
+                            matchedGroupId: '',
+                            matchedPreview: [],
+                            isExactAppMatch: false
+                        }
+                    ].filter(ev => !ev.eventKeys.some(k => ignored.has(k)));
+                    const mockExpired = [
+                        {
+                            ref: 'REF-001',
+                            title: 'Funda polar sherpa',
+                            priceEur: 14.0,
+                            reservedFinalPriceEur: 14.0,
+                            reservedByVinted: 'comprador1',
+                            reservedByEmail: 'comprador1@gmail.com',
+                            reservationGroupId: 'RES-001-GROUP',
+                            reservationExpiresAt: new Date(Date.now() - 3600 * 1000).toISOString(),
+                            hoursExpired: 1.0,
+                            waitlistCount: 2,
+                            nextInWaitlist: { email: 'encoder2000@gmail.com', vintedUser: 'encoder2000' },
+                            vintedUrl: 'https://www.vinted.es/items/10612288197-funda-polar',
+                            photo: 'https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg'
+                        }
+                    ];
+                    return {
+                        ok: true,
+                        scannedAt: new Date().toISOString(),
+                        syncConfig: adminState.config.vintedSyncConfig,
+                        events: mockEvents,
+                        expiredUnpaidReservations: mockExpired,
+                        stats: {
+                            emailsScanned: 48,
+                            pendingTotal: mockEvents.length,
+                            exactMatches: mockEvents.filter(e => e.isExactAppMatch).length,
+                            nativeLots: mockEvents.filter(e => e.matchType === 'NATIVE_VINTED_LOT').length,
+                            unmatchedSales: mockEvents.filter(e => e.matchType === 'UNMATCHED_VINTED_SALE').length,
+                            expiredUnpaidCount: mockExpired.length
+                        }
+                    };
                 }
                 return { ok: true, message: `[MOCK] Acción ${action} ejecutada correctamente.` };
             }
@@ -4285,7 +4579,7 @@
                     statusBadge = `<span class="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono text-[10px]">${escapeHtml(g.status)}</span>`;
                 }
 
-                const thumb = (g.photos && g.photos[0]) || '';
+                const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
 
                 return `
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-xl bg-obsidian border ${isExpired ? 'border-rose-500/50 bg-rose-950/20' : (waitlist.length > 0 ? 'border-amber-400/40' : 'border-zinc-800')} gap-3">
@@ -5094,8 +5388,8 @@
                 <article id="vinted-card-${escapeHtml(g.ref.toUpperCase())}" class="rounded-2xl bg-obsidian-card border ${isRes && !g.vintedReadySentAt ? 'border-amber-400/50' : 'border-obsidian-border'} p-5 space-y-4 flex flex-col justify-between">
                     <div class="space-y-3.5">
                         <div class="flex items-start gap-3.5">
-                            ${g.photos && g.photos[0]
-                                ? `<img src="${escapeHtml(g.photos[0])}" alt="" class="w-16 h-20 rounded-xl object-cover border border-zinc-700 shrink-0">`
+                            ${(g.photos && g.photos[0]) || g.vintedThumbUrl
+                                ? `<img src="${escapeHtml((g.photos && g.photos[0]) || g.vintedThumbUrl)}" alt="" class="w-16 h-20 rounded-xl object-cover border border-zinc-700 shrink-0">`
                                 : `<div class="w-16 h-20 rounded-xl bg-obsidian-elevated border border-zinc-800 shrink-0"></div>`
                             }
                             <div class="flex-1 min-w-0">
@@ -5764,6 +6058,17 @@
                 const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
                 const isSold = g.status === 'VENDIDA';
 
+                let stageBadgeHtml = '';
+                if (isSold) {
+                    if (g.vintedSaleStage === 'PAID_PENDING_SHIPMENT') {
+                        stageBadgeHtml = '<span class="inline-flex items-center whitespace-nowrap mt-0.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-amber-500/15 text-amber-300 border border-amber-400/30">📦 Pendiente envío</span>';
+                    } else if (g.vintedSaleStage === 'IN_TRANSIT') {
+                        stageBadgeHtml = `<span class="inline-flex items-center whitespace-nowrap mt-0.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-sky-500/15 text-sky-300 border border-sky-400/30">🚚 En camino${g.vintedDeliveryEstimate ? ' (' + escapeHtml(g.vintedDeliveryEstimate) + ')' : ''}</span>`;
+                    } else if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId) {
+                        stageBadgeHtml = `<span class="inline-flex items-center whitespace-nowrap mt-0.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">✅ Cobrada${g.vintedTxId ? ' #' + escapeHtml(g.vintedTxId) : ''}</span>`;
+                    }
+                }
+
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
                     <td class="py-3 px-3 font-mono text-[11px] text-zinc-400 whitespace-nowrap">${escapeHtml(dateFmt)}</td>
@@ -5771,9 +6076,10 @@
                         <span class="font-mono font-bold text-acid">${escapeHtml(g.ref)}</span>
                         ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
                     </td>
-                    <td class="py-3 px-2.5 max-w-[200px]">
+                    <td class="py-3 px-2.5 max-w-[210px]">
                         <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
                         <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
+                        ${stageBadgeHtml}
                     </td>
                     <td class="py-3 px-2.5">
                         <span class="font-mono text-xs font-semibold text-zinc-200 whitespace-nowrap">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
@@ -5794,6 +6100,7 @@
                             <button type="button" data-edit-sale="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors" title="Editar datos económicos o reasignar venta">
                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                             </button>
+                            ${g.vintedInboxUrl ? `<a href="${escapeHtml(g.vintedInboxUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-emerald-300 transition-colors" title="Abrir conversación con comprador en Vinted">💬</a>` : ''}
                             ${g.vintedUrl ? `<a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-acid transition-colors" title="Abrir anuncio en Vinted">🔗</a>` : ''}
                         </div>
                     </td>
@@ -5824,7 +6131,7 @@
 
             tableBody.innerHTML = filteredGarments.map(g => {
                 const isChecked = adminState.selectedRefs.has(g.ref);
-                const thumb = (g.photos && g.photos[0]) || '';
+                const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
                 const cost = Number(g.costEur || 0);
                 const basePrice = Number(g.priceEur || 0);
                 const finalPrice = getGarmentSoldPrice(g);
@@ -6514,7 +6821,7 @@
             const basePriceEl = document.getElementById('markSoldGarmentBasePrice');
             const originHintEl = document.getElementById('markSoldOriginHint');
 
-            if (thumbEl) thumbEl.src = (g.photos && g.photos[0]) || '';
+            if (thumbEl) thumbEl.src = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
             if (refEl) refEl.textContent = g.ref;
             if (titleEl) titleEl.textContent = g.title || g.ref;
             if (basePriceEl) basePriceEl.textContent = `PVP: ${fmtEur(g.priceEur)}`;
@@ -6544,6 +6851,12 @@
 
             const expenseIn = document.getElementById('markSoldExtraExpenseInput');
             if (expenseIn) expenseIn.value = (g.extraExpenseEur !== undefined && g.extraExpenseEur > 0) ? g.extraExpenseEur : (adminState.config.defaultExtraExpenseEur || 0);
+
+            const stageSel = document.getElementById('markSoldStageSelect');
+            if (stageSel) stageSel.value = g.vintedSaleStage || 'COMPLETED';
+
+            const txIn = document.getElementById('markSoldTxIdInput');
+            if (txIn) txIn.value = g.vintedTxId || '';
 
             updateMarkSoldNetProfitPreview();
             modal?.classList.remove('hidden');
@@ -6931,6 +7244,8 @@
             const soldToEmail = document.getElementById('markSoldBuyerEmailInput')?.value.trim().toLowerCase();
             const costEur = parseFloat(document.getElementById('markSoldCostInput')?.value || 0);
             const extraExpenseEur = parseFloat(document.getElementById('markSoldExtraExpenseInput')?.value || 0);
+            const vintedSaleStage = document.getElementById('markSoldStageSelect')?.value || 'COMPLETED';
+            const vintedTxId = (document.getElementById('markSoldTxIdInput')?.value || '').trim().replace(/^#+/, '');
 
             if (!Number.isFinite(soldPriceEur) || soldPriceEur < 0) {
                 toast('Introduce un precio cobrado válido.', true);
@@ -6951,6 +7266,8 @@
                     soldToEmail,
                     costEur,
                     extraExpenseEur,
+                    vintedSaleStage,
+                    vintedTxId,
                     soldAt: new Date().toISOString()
                 });
 
@@ -7149,6 +7466,7 @@
             if (e.key === 'Escape') {
                 closeSocialPublishModal();
                 closeLotCleanupModal();
+                closeVintedSyncModal();
             }
         });
 
@@ -7348,6 +7666,701 @@
             const icon = document.querySelector('#toggleNewPwdBtn i');
             if (icon) icon.setAttribute('data-lucide', isPwd ? 'eye-off' : 'eye');
             lucide.createIcons();
+        });
+
+        // ======================== SINCRONIZACIÓN INBOUND CORREOS VINTED ========================
+        function updateVintedSyncBadges() {
+            const total = (adminState.vintedSync.events || []).length + (adminState.vintedSync.expiredUnpaidReservations || []).length;
+            document.querySelectorAll('.vinted-sync-badge').forEach(badge => {
+                if (total > 0) {
+                    badge.textContent = String(total);
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
+        }
+
+        function buildUpdatesForExactSyncEvent(ev) {
+            const refs = Array.isArray(ev.matchedRefs) ? ev.matchedRefs : [];
+            if (!refs.length) return [];
+            const matchedGarments = refs.map(r => adminState.garments.find(g => g.ref === r)).filter(Boolean);
+            const totalBase = matchedGarments.reduce((acc, g) => acc + Number(g.reservedFinalPriceEur || g.priceEur || 0), 0);
+            const targetTotal = Number(ev.priceEur || 0);
+            const isLot = matchedGarments.length > 1;
+            let accPrice = 0;
+
+            return matchedGarments.map((g, idx) => {
+                let soldPrice = Number(g.soldPriceEur || 0);
+                if (!(soldPrice > 0) && targetTotal > 0) {
+                    if (!isLot) {
+                        soldPrice = targetTotal;
+                    } else if (totalBase > 0) {
+                        if (idx === matchedGarments.length - 1) {
+                            soldPrice = round2(Math.max(0, targetTotal - accPrice));
+                        } else {
+                            soldPrice = round2((Number(g.reservedFinalPriceEur || g.priceEur || 0) / totalBase) * targetTotal);
+                            accPrice = round2(accPrice + soldPrice);
+                        }
+                    } else {
+                        soldPrice = round2(targetTotal / matchedGarments.length);
+                    }
+                }
+                const upd = {
+                    ref: g.ref,
+                    status: 'VENDIDA',
+                    vintedSaleStage: ev.stage || 'COMPLETED',
+                    syncSource: 'VINTED_EMAIL_SYNC'
+                };
+                if (soldPrice > 0) upd.soldPriceEur = soldPrice;
+                if (ev.buyerVinted) upd.soldToVinted = ev.buyerVinted;
+                if (g.reservedByEmail && !g.soldToEmail) upd.soldToEmail = g.reservedByEmail;
+                if (ev.soldAt && !g.soldAt) upd.soldAt = ev.soldAt;
+                if (ev.txId) upd.vintedTxId = ev.txId;
+                if (ev.inboxUrl) upd.vintedInboxUrl = ev.inboxUrl;
+                if (ev.thumbUrl && !(g.photos && g.photos.length)) upd.vintedThumbUrl = ev.thumbUrl;
+                if (ev.deliveryEstimate) upd.vintedDeliveryEstimate = ev.deliveryEstimate;
+                if (ev.completedAt) upd.completedAt = ev.completedAt;
+                if (!g.saleChannel) {
+                    upd.saleChannel = g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT';
+                }
+                return upd;
+            });
+        }
+
+        function buildDeterministicVintedRef(ev, usedRefsSet) {
+            const tx = String(ev.txId || '').replace(/\D/g, '');
+            let base = tx
+                ? `VTD-${tx.slice(-8)}`
+                : `VTD-${String(ev.eventKey || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 8).toUpperCase() || Date.now().toString(36).toUpperCase()}`;
+            let candidate = base;
+            let suffix = 2;
+            while (usedRefsSet.has(candidate.toUpperCase())) {
+                candidate = `${base}-${suffix}`;
+                suffix++;
+            }
+            usedRefsSet.add(candidate.toUpperCase());
+            return candidate;
+        }
+
+        function buildUpdatesForImportedEvents(eventsList) {
+            const usedRefs = new Set((adminState.garments || []).map(g => String(g.ref || '').toUpperCase()));
+            return eventsList.map(ev => {
+                const ref = buildDeterministicVintedRef(ev, usedRefs);
+                const title = ev.isNativeLot
+                    ? `${ev.title}${ev.txTitle ? ' — ' + ev.txTitle : ''}`
+                    : (ev.title || 'Venta Vinted');
+                return {
+                    ref,
+                    upsertNew: true,
+                    dropId: 'VINTED-DIRECT',
+                    dropTitle: 'Ventas Directas Vinted',
+                    title: title.slice(0, 140),
+                    priceEur: Number(ev.priceEur || 0),
+                    soldPriceEur: Number(ev.priceEur || 0),
+                    status: 'VENDIDA',
+                    saleChannel: 'VINTED_DIRECT',
+                    soldToVinted: ev.buyerVinted || '',
+                    soldAt: ev.soldAt || ev.completedAt || new Date().toISOString(),
+                    vintedSaleStage: ev.stage || 'COMPLETED',
+                    vintedTxId: ev.txId || '',
+                    vintedInboxUrl: ev.inboxUrl || '',
+                    vintedThumbUrl: ev.thumbUrl || '',
+                    vintedDeliveryEstimate: ev.deliveryEstimate || '',
+                    completedAt: ev.completedAt || '',
+                    reservationGroupId: ev.isNativeLot ? `LOTE-VTD-${ref.replace(/^VTD-/, '')}` : '',
+                    reservationLotPriceEur: ev.isNativeLot ? Number(ev.priceEur || 0) : 0,
+                    syncSource: 'VINTED_EMAIL_IMPORT'
+                };
+            });
+        }
+
+        function getFilteredSyncItems() {
+            const sync = adminState.vintedSync;
+            const filter = sync.filter || 'ALL';
+            const q = (sync.search || '').trim().toLowerCase();
+
+            const filteredEvents = (sync.events || []).filter(ev => {
+                if (filter === 'EXPIRED') return false;
+                if (filter === 'EXACT' && !ev.isExactAppMatch) return false;
+                if (filter === 'LOTS' && ev.matchType !== 'NATIVE_VINTED_LOT') return false;
+                if (filter === 'UNMATCHED' && ev.matchType !== 'UNMATCHED_VINTED_SALE') return false;
+                if (q) {
+                    const hay = [ev.displayTitle, ev.title, ev.txTitle, ev.buyerVinted, ev.txId, ...(ev.matchedRefs || [])].join(' ').toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            });
+
+            const filteredExpired = (filter === 'ALL' || filter === 'EXPIRED')
+                ? (sync.expiredUnpaidReservations || []).filter(ex => {
+                    if (!q) return true;
+                    const hay = [ex.ref, ex.title, ex.reservedByVinted, ex.reservedByEmail, ex.reservationGroupId].join(' ').toLowerCase();
+                    return hay.includes(q);
+                })
+                : [];
+
+            return { filteredEvents, filteredExpired };
+        }
+
+        function updateVintedSyncBulkControls(filteredEvents) {
+            const sync = adminState.vintedSync;
+            const exactVisible = (sync.events || []).filter(ev => ev.isExactAppMatch);
+            const importableVisible = filteredEvents.filter(ev => ev.matchType === 'UNMATCHED_VINTED_SALE' || ev.matchType === 'NATIVE_VINTED_LOT');
+            const selectedCount = importableVisible.filter(ev => sync.selectedKeys.has(ev.eventKey)).length;
+
+            const bulkBar = document.getElementById('vintedSyncBulkBar');
+            if (bulkBar) {
+                bulkBar.classList.toggle('hidden', exactVisible.length === 0 && importableVisible.length === 0);
+            }
+
+            const applyExactBtn = document.getElementById('applyAllExactSyncBtn');
+            const applyExactSpan = document.getElementById('applyExactCountSpan');
+            if (applyExactBtn) {
+                applyExactBtn.classList.toggle('hidden', exactVisible.length === 0);
+            }
+            if (applyExactSpan) applyExactSpan.textContent = String(exactVisible.length);
+
+            const importBtn = document.getElementById('importSelectedSyncBtn');
+            const importSpan = document.getElementById('importSelectedCountSpan');
+            if (importSpan) importSpan.textContent = String(selectedCount);
+            if (importBtn) importBtn.disabled = selectedCount === 0;
+
+            const selectAllChk = document.getElementById('selectAllSyncImportable');
+            if (selectAllChk) {
+                selectAllChk.checked = importableVisible.length > 0 && importableVisible.every(ev => sync.selectedKeys.has(ev.eventKey));
+            }
+        }
+
+        function formatSyncStageBadge(ev) {
+            if (ev.stage === 'COMPLETED') {
+                return `<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold">✅ Cobrada${ev.txId ? ' #' + escapeHtml(ev.txId) : ''}</span>`;
+            }
+            if (ev.stage === 'IN_TRANSIT') {
+                return `<span class="px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-400/40 text-sky-300 font-mono text-[10px] font-bold">🚚 En camino${ev.deliveryEstimate ? ' (' + escapeHtml(ev.deliveryEstimate) + ')' : ''}</span>`;
+            }
+            return `<span class="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-bold">📦 Pendiente envío (5d)</span>`;
+        }
+
+        function renderVintedSyncModal() {
+            const sync = adminState.vintedSync;
+            const events = sync.events || [];
+            const expired = sync.expiredUnpaidReservations || [];
+
+            const exactCount = events.filter(e => e.isExactAppMatch).length;
+            const lotsCount = events.filter(e => e.matchType === 'NATIVE_VINTED_LOT').length;
+            const unmatchedCount = events.filter(e => e.matchType === 'UNMATCHED_VINTED_SALE').length;
+            const expiredCount = expired.length;
+
+            const elExact = document.getElementById('syncKpiExact');
+            const elLots = document.getElementById('syncKpiLots');
+            const elUnmatched = document.getElementById('syncKpiUnmatched');
+            const elExpired = document.getElementById('syncKpiExpired');
+            if (elExact) elExact.textContent = String(exactCount);
+            if (elLots) elLots.textContent = String(lotsCount);
+            if (elUnmatched) elUnmatched.textContent = String(unmatchedCount);
+            if (elExpired) elExpired.textContent = String(expiredCount);
+
+            const syncCfg = adminState.config?.vintedSyncConfig || {};
+            const chkAuto = document.getElementById('syncToggleAutoApply');
+            const chkPromote = document.getElementById('syncToggleAutoPromote');
+            if (chkAuto) chkAuto.checked = syncCfg.autoApplyExactMatches === true;
+            if (chkPromote) chkPromote.checked = syncCfg.autoPromoteExpiredWaitlist === true;
+
+            const lastLbl = document.getElementById('vintedSyncLastScannedLabel');
+            if (lastLbl && sync.lastScannedAt) {
+                const dt = new Date(sync.lastScannedAt);
+                const fmt = !isNaN(dt.getTime()) ? dt.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
+                lastLbl.textContent = `Último escaneo: ${fmt || 'ahora'} (${sync.stats?.emailsScanned || 0} hilos analizados)`;
+            }
+
+            const tabLabels = {
+                ALL: `Todos (${events.length + expired.length})`,
+                EXACT: `Coincidencias App (${exactCount})`,
+                LOTS: `Lotes Vinted (${lotsCount})`,
+                UNMATCHED: `Importar al ERP (${unmatchedCount})`,
+                EXPIRED: `Impagos 24h (${expiredCount})`
+            };
+            document.querySelectorAll('.sync-filter-btn').forEach(btn => {
+                const key = btn.getAttribute('data-sync-filter');
+                const active = (sync.filter || 'ALL') === key;
+                if (tabLabels[key]) btn.textContent = tabLabels[key];
+                btn.className = `sync-filter-btn px-2.5 py-1.5 rounded-lg font-mono text-[11px] transition-colors ${
+                    active ? 'font-bold bg-acid text-obsidian' : 'bg-obsidian-elevated border border-zinc-700 text-zinc-300 hover:border-zinc-500'
+                }`;
+            });
+
+            updateVintedSyncBadges();
+
+            const listEl = document.getElementById('vintedSyncListContainer');
+            if (!listEl) return;
+
+            const { filteredEvents, filteredExpired } = getFilteredSyncItems();
+            updateVintedSyncBulkControls(filteredEvents);
+
+            if (filteredEvents.length === 0 && filteredExpired.length === 0) {
+                listEl.innerHTML = `
+                    <div class="p-8 rounded-2xl bg-obsidian-elevated border border-zinc-800 text-center space-y-2">
+                        <div class="text-2xl">✨</div>
+                        <p class="text-sm font-display font-bold text-white uppercase">Sin elementos pendientes en esta vista</p>
+                        <p class="text-xs text-zinc-400">Pulsa «Escanear Correos Ahora» para comprobar si han entrado nuevas ventas o liquidaciones en virmarket.oficial@gmail.com.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            const assignableGarments = (adminState.garments || []).filter(g => g.status === 'DISPONIBLE' || g.status === 'RESERVADA');
+
+            const expiredCards = filteredExpired.map(ex => `
+                <div class="p-3.5 rounded-2xl bg-rose-950/25 border border-rose-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        ${ex.photo
+                            ? `<img src="${escapeHtml(ex.photo)}" alt="" class="w-12 h-14 object-cover rounded-xl border border-rose-500/40 shrink-0">`
+                            : `<div class="w-12 h-14 rounded-xl bg-zinc-900 border border-zinc-700 shrink-0 flex items-center justify-center text-rose-400 font-mono text-xs">${escapeHtml(ex.ref)}</div>`
+                        }
+                        <div class="min-w-0 space-y-1">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2 py-0.5 rounded bg-rose-500 text-white font-mono text-[10px] font-bold uppercase">🚨 Impago 24h Verificado</span>
+                                <span class="font-mono text-xs font-bold text-acid">${escapeHtml(ex.ref)}</span>
+                                <span class="font-mono text-[10px] text-rose-300">Vencida hace ${ex.hoursExpired}h</span>
+                            </div>
+                            <h4 class="text-sm font-bold text-white truncate">${escapeHtml(ex.title)}</h4>
+                            <p class="text-[11px] text-zinc-300">
+                                Reservada a <strong class="font-mono">@${escapeHtml(ex.reservedByVinted || 'comprador')}</strong> (${fmtEur(ex.reservedFinalPriceEur || ex.priceEur)}) • Sin correo de compra en Vinted.
+                                ${ex.waitlistCount > 0 ? `<span class="text-amber-300 font-semibold">Cola: ${ex.waitlistCount} (#1: @${escapeHtml(ex.nextInWaitlist?.vintedUser || '')})</span>` : '<span class="text-zinc-400">Sin suplentes en cola</span>'}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 shrink-0 justify-end">
+                        ${ex.vintedUrl ? `<a href="${escapeHtml(ex.vintedUrl)}" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs font-mono text-acid transition-colors">Abrir Vinted ↗</a>` : ''}
+                        ${ex.waitlistCount > 0 ? `
+                            <button type="button" data-sync-promote="${escapeHtml(ex.ref)}" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs uppercase transition-colors">
+                                Pasar al 1º →
+                            </button>
+                        ` : `
+                            <button type="button" data-sync-release="${escapeHtml(ex.ref)}" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-semibold text-zinc-200 transition-colors">
+                                🔓 Liberar a Disponible
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+
+            const eventCards = filteredEvents.map(ev => {
+                const isSelected = sync.selectedKeys.has(ev.eventKey);
+                const dateStr = ev.soldAt || ev.completedAt || '';
+                let dateFmt = '';
+                if (dateStr) {
+                    const d = new Date(dateStr);
+                    if (!isNaN(d.getTime())) dateFmt = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                }
+
+                let typeBadge = '';
+                let borderClass = 'border-zinc-800';
+                if (ev.isExactAppMatch) {
+                    borderClass = 'border-acid/50 bg-acid/5';
+                    const lbl = ev.matchType === 'STAGE_UPGRADE'
+                        ? '🔄 Actualización Logística'
+                        : (ev.matchType === 'EXACT_VIP_LOT' ? '🎯 Coincide Lote VIP' : (ev.matchType === 'EXACT_RESERVATION' ? '🎯 Coincide Reserva' : '🎯 Coincide Catálogo'));
+                    typeBadge = `<span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase">${lbl}</span>`;
+                } else if (ev.matchType === 'NATIVE_VINTED_LOT') {
+                    borderClass = 'border-amber-400/45 bg-amber-500/5';
+                    typeBadge = `<span class="px-2 py-0.5 rounded bg-amber-400/20 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-bold uppercase">📦 Lote Vinted (${ev.lotCount} prendas)</span>`;
+                } else {
+                    borderClass = 'border-emerald-500/35';
+                    typeBadge = `<span class="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-[10px] font-bold uppercase">📥 Venta Directa Vinted</span>`;
+                }
+
+                const chosenRefs = Array.isArray(sync.nativeLotSelections[ev.eventKey]) ? sync.nativeLotSelections[ev.eventKey] : [];
+
+                return `
+                <div class="p-3.5 rounded-2xl bg-obsidian-elevated border ${borderClass} space-y-2.5">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div class="flex items-start gap-3 min-w-0">
+                            ${!ev.isExactAppMatch ? `
+                                <input type="checkbox" data-sync-select="${escapeHtml(ev.eventKey)}" ${isSelected ? 'checked' : ''} class="mt-1.5 w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0 cursor-pointer shrink-0">
+                            ` : ''}
+                            ${ev.thumbUrl
+                                ? `<img src="${escapeHtml(ev.thumbUrl)}" alt="" class="w-12 h-14 object-cover rounded-xl border border-zinc-700 bg-zinc-900 shrink-0">`
+                                : `<div class="w-12 h-14 rounded-xl bg-obsidian border border-zinc-800 flex items-center justify-center text-zinc-500 text-xs font-mono shrink-0">VTD</div>`
+                            }
+                            <div class="min-w-0 space-y-1">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    ${typeBadge}
+                                    ${formatSyncStageBadge(ev)}
+                                    ${dateFmt ? `<span class="font-mono text-[10px] text-zinc-400">${escapeHtml(dateFmt)}</span>` : ''}
+                                </div>
+                                <h4 class="text-sm font-bold text-white leading-snug break-words">${escapeHtml(ev.displayTitle || ev.title)}</h4>
+                                <div class="flex flex-wrap items-center gap-2 text-xs text-zinc-300">
+                                    <span class="font-mono font-bold text-acid">${fmtEur(ev.priceEur)}</span>
+                                    ${ev.buyerVinted ? `<span>• Comprador: <strong class="font-mono text-white">@${escapeHtml(ev.buyerVinted)}</strong></span>` : ''}
+                                    ${ev.inboxUrl ? `<a href="${escapeHtml(ev.inboxUrl)}" target="_blank" rel="noopener" class="font-mono text-[11px] text-emerald-300 hover:underline">💬 Chat Vinted ↗</a>` : ''}
+                                </div>
+                                ${ev.isExactAppMatch && ev.matchedPreview?.length ? `
+                                    <div class="flex flex-wrap items-center gap-1.5 pt-0.5 text-[11px]">
+                                        <span class="text-zinc-400">Vinculada con:</span>
+                                        ${ev.matchedPreview.map(mp => `<span class="px-1.5 py-0.5 rounded bg-obsidian border border-zinc-700 font-mono text-acid font-bold">${escapeHtml(mp.ref)} · ${escapeHtml(mp.status || '')}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 shrink-0 justify-end">
+                            ${ev.isExactAppMatch ? `
+                                <button type="button" data-sync-apply-exact="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                                    ✓ Aplicar Ahora
+                                </button>
+                            ` : `
+                                <button type="button" data-sync-import-one="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                                    ➕ Importar al ERP
+                                </button>
+                            `}
+                            <button type="button" data-sync-ignore="${escapeHtml(ev.eventKey)}" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 hover:border-zinc-500 text-xs text-zinc-400 hover:text-white transition-colors" title="Ignorar este correo para que no vuelva a mostrarse">
+                                🙈 Ignorar
+                            </button>
+                        </div>
+                    </div>
+
+                    ${ev.matchType === 'NATIVE_VINTED_LOT' ? `
+                        <div class="p-2.5 rounded-xl bg-obsidian border border-zinc-800 space-y-2 text-xs">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="font-mono text-[10px] uppercase text-amber-300 font-bold">
+                                    🔗 Opcional: Vincular prendas existentes de tu catálogo a este Lote (${chosenRefs.length}/${ev.lotCount} selec.)
+                                </span>
+                                ${chosenRefs.length > 0 ? `
+                                    <button type="button" data-sync-assign-lot="${escapeHtml(ev.eventKey)}" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-[11px] uppercase transition-colors">
+                                        ✓ Cerrar ${chosenRefs.length} prenda(s) como Lote Vendido
+                                    </button>
+                                ` : ''}
+                            </div>
+                            ${assignableGarments.length > 0 ? `
+                                <div class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+                                    ${assignableGarments.map(g => {
+                                        const picked = chosenRefs.includes(g.ref);
+                                        return `
+                                        <button type="button" data-lot-assign-toggle="${escapeHtml(ev.eventKey)}" data-lot-ref="${escapeHtml(g.ref)}" class="px-2 py-1 rounded-lg border font-mono text-[10px] transition-colors ${
+                                            picked ? 'bg-amber-400 text-obsidian border-amber-300 font-bold' : 'bg-obsidian-elevated text-zinc-300 border-zinc-700 hover:border-amber-400/50'
+                                        }">
+                                            ${picked ? '✓ ' : ''}${escapeHtml(g.ref)} · ${escapeHtml(String(g.title || '').slice(0, 22))} (${fmtEur(g.priceEur)})
+                                        </button>`;
+                                    }).join('')}
+                                </div>
+                            ` : '<p class="text-[11px] text-zinc-500">No hay prendas activas pendientes en el catálogo; puedes importarlo directamente al ERP arriba.</p>'}
+                        </div>
+                    ` : ''}
+                </div>`;
+            }).join('');
+
+            listEl.innerHTML = expiredCards + eventCards;
+            lucide.createIcons();
+
+            listEl.querySelectorAll('[data-sync-select]').forEach(chk => {
+                chk.addEventListener('change', () => {
+                    const key = chk.getAttribute('data-sync-select');
+                    if (chk.checked) sync.selectedKeys.add(key);
+                    else sync.selectedKeys.delete(key);
+                    updateVintedSyncBulkControls(filteredEvents);
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-apply-exact]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const key = btn.getAttribute('data-sync-apply-exact');
+                    const ev = (sync.events || []).find(e => e.eventKey === key);
+                    if (ev) await applyExactSyncEvents([ev]);
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-import-one]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const key = btn.getAttribute('data-sync-import-one');
+                    const ev = (sync.events || []).find(e => e.eventKey === key);
+                    if (ev) await importVintedEventsToErp([ev]);
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-ignore]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const key = btn.getAttribute('data-sync-ignore');
+                    const ev = (sync.events || []).find(e => e.eventKey === key);
+                    if (ev) await ignoreVintedEvent(ev);
+                });
+            });
+
+            listEl.querySelectorAll('[data-lot-assign-toggle]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.getAttribute('data-lot-assign-toggle');
+                    const ref = btn.getAttribute('data-lot-ref');
+                    const cur = Array.isArray(sync.nativeLotSelections[key]) ? [...sync.nativeLotSelections[key]] : [];
+                    const idx = cur.indexOf(ref);
+                    if (idx >= 0) cur.splice(idx, 1);
+                    else cur.push(ref);
+                    sync.nativeLotSelections[key] = cur;
+                    renderVintedSyncModal();
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-assign-lot]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const key = btn.getAttribute('data-sync-assign-lot');
+                    const ev = (sync.events || []).find(e => e.eventKey === key);
+                    const refs = sync.nativeLotSelections[key] || [];
+                    if (ev && refs.length > 0) await assignNativeLotToGarments(ev, refs);
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-promote]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ref = btn.getAttribute('data-sync-promote');
+                    closeVintedSyncModal();
+                    if (typeof openPromoteWaitlistModal === 'function') openPromoteWaitlistModal(ref);
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-release]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-sync-release');
+                    const ok = await vmConfirm({
+                        badge: 'Liberar Reserva Vencida',
+                        title: `¿Liberar ${ref} a Disponible?`,
+                        message: 'Se ha verificado que no hay correo de venta en Vinted tras vencer el plazo. La prenda volverá a estar DISPONIBLE.',
+                        confirmText: 'Sí, liberar prenda',
+                        cancelText: 'Cancelar'
+                    });
+                    if (!ok) return;
+                    try {
+                        await callAdminApi('update_status', { ref, newStatus: 'DISPONIBLE', releaseReason: 'Impago 24h verificado desde Bandeja Vinted' });
+                        sync.expiredUnpaidReservations = (sync.expiredUnpaidReservations || []).filter(x => x.ref !== ref);
+                        toast(`✓ ${ref} liberada a DISPONIBLE`);
+                        await loadDashboard();
+                        renderVintedSyncModal();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+        }
+
+        async function applyExactSyncEvents(eventsList) {
+            const updates = eventsList.flatMap(ev => buildUpdatesForExactSyncEvent(ev));
+            if (updates.length === 0) return;
+            try {
+                toast(`Aplicando ${eventsList.length} coincidencia(s) en catálogo y ERP...`);
+                await callAdminApi('bulk_update_garments', { updates });
+                const appliedKeys = new Set(eventsList.map(e => e.eventKey));
+                adminState.vintedSync.events = (adminState.vintedSync.events || []).filter(e => !appliedKeys.has(e.eventKey));
+                toast(`✓ ${eventsList.length} coincidencia(s) aplicada(s) correctamente.`);
+                await loadDashboard();
+                renderVintedSyncModal();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
+        async function importVintedEventsToErp(eventsList) {
+            const updates = buildUpdatesForImportedEvents(eventsList);
+            if (updates.length === 0) return;
+            try {
+                toast(`Importando ${updates.length} venta(s) al Registro ERP...`);
+                await callAdminApi('bulk_update_garments', { updates });
+                const importedKeys = new Set(eventsList.map(e => e.eventKey));
+                adminState.vintedSync.events = (adminState.vintedSync.events || []).filter(e => !importedKeys.has(e.eventKey));
+                importedKeys.forEach(k => adminState.vintedSync.selectedKeys.delete(k));
+                toast(`✓ ${updates.length} venta(s) importada(s) al Registro ERP.`);
+                await loadDashboard();
+                renderVintedSyncModal();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
+        async function assignNativeLotToGarments(ev, selectedRefs) {
+            const picked = selectedRefs.map(r => adminState.garments.find(g => g.ref === r)).filter(Boolean);
+            if (!picked.length) return;
+            const totalBase = picked.reduce((acc, g) => acc + Number(g.priceEur || 0), 0);
+            const targetTotal = Number(ev.priceEur || 0);
+            const lotGroupId = `LOTE-VTD-${Date.now().toString(36).toUpperCase()}`;
+            let accPrice = 0;
+
+            const updates = picked.map((g, idx) => {
+                let soldPrice = 0;
+                if (targetTotal > 0) {
+                    if (totalBase > 0) {
+                        if (idx === picked.length - 1) soldPrice = round2(Math.max(0, targetTotal - accPrice));
+                        else {
+                            soldPrice = round2((Number(g.priceEur || 0) / totalBase) * targetTotal);
+                            accPrice = round2(accPrice + soldPrice);
+                        }
+                    } else {
+                        soldPrice = round2(targetTotal / picked.length);
+                    }
+                }
+                return {
+                    ref: g.ref,
+                    status: 'VENDIDA',
+                    soldPriceEur: soldPrice,
+                    saleChannel: 'VINTED_DIRECT',
+                    soldToVinted: ev.buyerVinted || '',
+                    soldAt: ev.soldAt || ev.completedAt || new Date().toISOString(),
+                    vintedSaleStage: ev.stage || 'COMPLETED',
+                    vintedTxId: ev.txId || '',
+                    vintedInboxUrl: ev.inboxUrl || '',
+                    completedAt: ev.completedAt || '',
+                    reservationGroupId: lotGroupId,
+                    reservationLotPriceEur: targetTotal,
+                    syncSource: 'VINTED_NATIVE_LOT_MATCH'
+                };
+            });
+
+            try {
+                toast(`Vinculando ${updates.length} prenda(s) al lote ${lotGroupId}...`);
+                await callAdminApi('bulk_update_garments', { updates });
+                delete adminState.vintedSync.nativeLotSelections[ev.eventKey];
+                adminState.vintedSync.events = (adminState.vintedSync.events || []).filter(e => e.eventKey !== ev.eventKey);
+                toast(`✓ Lote ${lotGroupId} cerrado como VENDIDO (${updates.length} prendas).`);
+                await loadDashboard();
+                renderVintedSyncModal();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
+        async function ignoreVintedEvent(ev) {
+            const prev = Array.isArray(adminState.config?.vintedSyncConfig?.ignoredEventKeys)
+                ? adminState.config.vintedSyncConfig.ignoredEventKeys
+                : [];
+            const merged = [...new Set([...prev, ...(ev.eventKeys || [ev.eventKey])])];
+            try {
+                await callAdminApi('save_config', {
+                    onlySyncConfig: true,
+                    vintedSyncConfig: { ignoredEventKeys: merged }
+                });
+                if (!adminState.config.vintedSyncConfig) adminState.config.vintedSyncConfig = {};
+                adminState.config.vintedSyncConfig.ignoredEventKeys = merged;
+                adminState.vintedSync.events = (adminState.vintedSync.events || []).filter(e => e.eventKey !== ev.eventKey);
+                adminState.vintedSync.selectedKeys.delete(ev.eventKey);
+                toast('✓ Evento ignorado y ocultado de la bandeja.');
+                renderVintedSyncModal();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
+        async function runVintedEmailScan(autoApplyIfEnabled = true) {
+            const sync = adminState.vintedSync;
+            if (sync.isLoading) return;
+            sync.isLoading = true;
+            document.getElementById('vintedSyncLoadingState')?.classList.remove('hidden');
+            document.getElementById('vintedScanSpinIcon')?.classList.add('animate-spin');
+
+            try {
+                const res = await callAdminApi('scan_vinted_emails');
+                sync.events = Array.isArray(res.events) ? res.events : [];
+                sync.expiredUnpaidReservations = Array.isArray(res.expiredUnpaidReservations) ? res.expiredUnpaidReservations : [];
+                sync.stats = res.stats || {};
+                sync.lastScannedAt = res.scannedAt || new Date().toISOString();
+                if (res.syncConfig) {
+                    adminState.config.vintedSyncConfig = res.syncConfig;
+                }
+
+                const autoApplyOn = adminState.config?.vintedSyncConfig?.autoApplyExactMatches === true;
+                const exactList = sync.events.filter(e => e.isExactAppMatch);
+                if (autoApplyIfEnabled && autoApplyOn && exactList.length > 0) {
+                    const updates = exactList.flatMap(ev => buildUpdatesForExactSyncEvent(ev));
+                    if (updates.length > 0) {
+                        await callAdminApi('bulk_update_garments', { updates });
+                        const appliedSet = new Set(exactList.map(e => e.eventKey));
+                        sync.events = sync.events.filter(e => !appliedSet.has(e.eventKey));
+                        toast(`⚡ Modo Automático: ${exactList.length} coincidencia(s) aplicada(s) al catálogo y ERP.`);
+                        await loadDashboard();
+                    }
+                } else {
+                    toast(`✓ Escaneo completado: ${sync.events.length} evento(s) pendiente(s) y ${sync.expiredUnpaidReservations.length} impago(s) 24h.`);
+                }
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                sync.isLoading = false;
+                document.getElementById('vintedSyncLoadingState')?.classList.add('hidden');
+                document.getElementById('vintedScanSpinIcon')?.classList.remove('animate-spin');
+                renderVintedSyncModal();
+            }
+        }
+
+        function openVintedSyncModal() {
+            const modal = document.getElementById('vintedSyncModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            renderVintedSyncModal();
+            if (!adminState.vintedSync.lastScannedAt) {
+                runVintedEmailScan(true);
+            }
+        }
+
+        function closeVintedSyncModal() {
+            document.getElementById('vintedSyncModal')?.classList.add('hidden');
+        }
+
+        document.getElementById('openVintedSyncBtnTab2')?.addEventListener('click', openVintedSyncModal);
+        document.getElementById('openVintedSyncBtnTab3')?.addEventListener('click', openVintedSyncModal);
+        document.getElementById('closeVintedSyncModalBtn')?.addEventListener('click', closeVintedSyncModal);
+        document.getElementById('runVintedScanBtn')?.addEventListener('click', () => runVintedEmailScan(true));
+        document.getElementById('vintedSyncModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('vintedSyncModal')) closeVintedSyncModal();
+        });
+
+        document.querySelectorAll('.sync-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                adminState.vintedSync.filter = btn.getAttribute('data-sync-filter') || 'ALL';
+                renderVintedSyncModal();
+            });
+        });
+
+        document.getElementById('vintedSyncSearchInput')?.addEventListener('input', (e) => {
+            adminState.vintedSync.search = e.target.value;
+            renderVintedSyncModal();
+        });
+
+        document.getElementById('selectAllSyncImportable')?.addEventListener('change', (e) => {
+            const { filteredEvents } = getFilteredSyncItems();
+            const importable = filteredEvents.filter(ev => ev.matchType === 'UNMATCHED_VINTED_SALE' || ev.matchType === 'NATIVE_VINTED_LOT');
+            if (e.target.checked) importable.forEach(ev => adminState.vintedSync.selectedKeys.add(ev.eventKey));
+            else importable.forEach(ev => adminState.vintedSync.selectedKeys.delete(ev.eventKey));
+            renderVintedSyncModal();
+        });
+
+        document.getElementById('applyAllExactSyncBtn')?.addEventListener('click', async () => {
+            const exact = (adminState.vintedSync.events || []).filter(e => e.isExactAppMatch);
+            if (exact.length > 0) await applyExactSyncEvents(exact);
+        });
+
+        document.getElementById('importSelectedSyncBtn')?.addEventListener('click', async () => {
+            const selected = (adminState.vintedSync.events || []).filter(e => adminState.vintedSync.selectedKeys.has(e.eventKey));
+            if (selected.length > 0) await importVintedEventsToErp(selected);
+        });
+
+        async function saveVintedSyncToggle(patch) {
+            try {
+                await callAdminApi('save_config', {
+                    onlySyncConfig: true,
+                    vintedSyncConfig: patch
+                });
+                adminState.config.vintedSyncConfig = {
+                    ...(adminState.config.vintedSyncConfig || {}),
+                    ...patch
+                };
+                toast('✓ Preferencia de automatización guardada.');
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
+        document.getElementById('syncToggleAutoApply')?.addEventListener('change', (e) => {
+            saveVintedSyncToggle({ autoApplyExactMatches: e.target.checked });
+        });
+
+        document.getElementById('syncToggleAutoPromote')?.addEventListener('change', (e) => {
+            saveVintedSyncToggle({ autoPromoteExpiredWaitlist: e.target.checked });
         });
 
         // ======================== ARRANQUE ========================
