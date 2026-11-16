@@ -1232,6 +1232,10 @@
                             <button type="button" id="erpBulkChangeDropBtn" class="px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-zinc-500 text-xs font-mono text-zinc-200 flex items-center gap-1">
                                 <span>Mover de Drop</span>
                             </button>
+                            <button type="button" id="erpBulkDeleteBtn" class="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 text-xs font-mono text-rose-300 hover:text-rose-200 flex items-center gap-1.5 transition-colors" title="Eliminar prendas erróneas o duplicadas (solo si no tienen historial)">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                <span>Eliminar erróneas</span>
+                            </button>
                             <button type="button" id="erpBulkDeselectBtn" class="px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-400 hover:text-white">
                                 Deseleccionar
                             </button>
@@ -2106,6 +2110,43 @@
             return [];
         }
 
+        // CANDADO ANTI-TRAZABILIDAD: Determina si una prenda puede ser eliminada del catálogo
+        // Regla estricta: Solo prendas subidas por error o duplicadas sin historial de venta, reserva ni leads.
+        function isGarmentDeletable(g) {
+            if (!g) return false;
+            const st = (g.status || '').toUpperCase();
+            if (st !== 'DISPONIBLE' && st !== 'OCULTA') {
+                return false;
+            }
+            if (g.soldAt || (g.soldPriceEur && Number(g.soldPriceEur) > 0)) {
+                return false;
+            }
+            if (g.reservedAt || g.reservedByEmail || g.reservedByVinted || (g.reservedFinalPriceEur && Number(g.reservedFinalPriceEur) > 0)) {
+                return false;
+            }
+            const waitlist = getGarmentWaitlist(g);
+            if (Array.isArray(waitlist) && waitlist.length > 0) {
+                return false;
+            }
+            if (Array.isArray(g.historyLog) && g.historyLog.length > 0) {
+                return false;
+            }
+            return true;
+        }
+
+        function getGarmentDeletionBlockReason(g) {
+            if (!g) return 'Prenda no válida';
+            const st = (g.status || '').toUpperCase();
+            if (st === 'VENDIDA') return 'Protegida: La prenda fue vendida y forma parte del historial contable.';
+            if (st === 'RESERVADA') return 'Protegida: La prenda tiene una reserva VIP activa.';
+            if (g.soldAt || (g.soldPriceEur && Number(g.soldPriceEur) > 0)) return 'Protegida: Registro con histórico contable de venta.';
+            if (g.reservedAt || g.reservedByEmail || g.reservedByVinted) return 'Protegida: Registro con reserva histórica.';
+            const waitlist = getGarmentWaitlist(g);
+            if (Array.isArray(waitlist) && waitlist.length > 0) return `Protegida: Tiene ${waitlist.length} persona(s) en lista de espera.`;
+            if (Array.isArray(g.historyLog) && g.historyLog.length > 0) return 'Protegida: Tiene historial de eventos comerciales auditados.';
+            return '';
+        }
+
         function getStoredPassword() {
             try {
                 return localStorage.getItem('vm_admin_session_pwd') || sessionStorage.getItem('vm_admin_session_pwd') || '';
@@ -2772,6 +2813,13 @@
         // Llamada autenticada al backend de administración
         async function callAdminApi(action, extraPayload = {}) {
             if (urlParams.get('mock') === '1') {
+                if (action === 'delete_garment') {
+                    const refsToDelete = extraPayload.refs || (extraPayload.ref ? [extraPayload.ref] : []);
+                    adminState.garments = adminState.garments.filter(g => !refsToDelete.includes(g.ref));
+                }
+                if (action === 'get_dashboard') {
+                    return { ok: true, config: adminState.config, garments: adminState.garments, contacts: adminState.contacts };
+                }
                 return { ok: true, message: `[MOCK] Acción ${action} ejecutada correctamente.` };
             }
             let res;
@@ -3902,6 +3950,8 @@
             }
             container.innerHTML = list.map(g => {
                 const waitlist = getGarmentWaitlist(g);
+                const canDelete = isGarmentDeletable(g);
+                const blockReason = getGarmentDeletionBlockReason(g);
                 return `
                 <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3 min-w-0">
@@ -3922,7 +3972,11 @@
                     </div>
                     <div class="flex items-center gap-1.5 shrink-0">
                         <button type="button" data-edit-g="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200">Editar</button>
-                        <button type="button" data-del-g="${escapeHtml(g.ref)}" class="px-2 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-xs text-rose-300">✕</button>
+                        ${canDelete ? `
+                            <button type="button" data-del-g="${escapeHtml(g.ref)}" class="px-2 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-xs text-rose-300 transition-colors" title="Eliminar prenda errónea o duplicada (Sin historial)">✕</button>
+                        ` : `
+                            <span class="px-2 py-1.5 rounded-lg bg-zinc-900/60 text-zinc-600 text-xs cursor-not-allowed inline-flex items-center justify-center select-none" title="${escapeHtml(blockReason)}">🔒</span>
+                        `}
                     </div>
                 </div>`;
             }).join('');
@@ -3933,10 +3987,15 @@
             container.querySelectorAll('[data-del-g]').forEach(b => {
                 b.addEventListener('click', async () => {
                     const ref = b.getAttribute('data-del-g');
+                    const garment = (adminState.garments || []).find(x => x.ref === ref);
+                    if (garment && !isGarmentDeletable(garment)) {
+                        toast(getGarmentDeletionBlockReason(garment) || 'Prenda protegida por trazabilidad contable o reservas.', true);
+                        return;
+                    }
                     const ok = await vmConfirm({
-                        badge: 'Eliminar Prenda',
+                        badge: 'Borrado Seguro',
                         title: `¿Eliminar ${ref} del Drop?`,
-                        message: `Esta acción eliminará la ficha de ${ref} de la base de datos de VirMarket.`,
+                        message: `Esta acción eliminará de forma definitiva la ficha de ${ref} de la base de datos de VirMarket.\n\nSolo se permite porque la prenda no tiene ventas ni reservas asociadas.`,
                         confirmText: 'Sí, eliminar',
                         cancelText: 'Cancelar',
                         variant: 'danger'
@@ -5772,6 +5831,8 @@
                 const expense = Number(g.extraExpenseEur || 0);
                 const profit = finalPrice - (cost + expense);
                 const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
+                const canDelete = isGarmentDeletable(g);
+                const blockReason = getGarmentDeletionBlockReason(g);
 
                 let statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
                 if (g.status === 'VENDIDA') {
@@ -5825,6 +5886,15 @@
                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                 </button>
                             ` : ''}
+                            ${canDelete ? `
+                                <button type="button" data-delete-garment="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-colors" title="Eliminar prenda errónea o duplicada (Sin historial)">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            ` : `
+                                <span class="p-1.5 rounded bg-zinc-900/60 text-zinc-600 cursor-not-allowed inline-flex items-center justify-center select-none" title="${escapeHtml(blockReason)}">
+                                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                                </span>
+                            `}
                         </div>
                     </td>
                 </tr>`;
@@ -5873,6 +5943,36 @@
             // Botón Marcar Vendida
             tableBody.querySelectorAll('[data-quick-sold]').forEach(btn => {
                 btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-quick-sold')));
+            });
+
+            // Botón Eliminar Prenda Errónea (Candado Anti-Trazabilidad)
+            tableBody.querySelectorAll('[data-delete-garment]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-delete-garment');
+                    const garment = (adminState.garments || []).find(x => x.ref === ref);
+                    if (!garment || !isGarmentDeletable(garment)) {
+                        toast(getGarmentDeletionBlockReason(garment) || 'Prenda protegida por trazabilidad contable o reservas.', true);
+                        return;
+                    }
+                    const ok = await vmConfirm({
+                        badge: 'Borrado Seguro de Catálogo',
+                        title: `¿Eliminar la prenda ${ref}?`,
+                        message: `Esta acción eliminará de forma definitiva la ficha de ${ref} ("${garment.title || 'Sin título'}").\n\nSolo se permite porque la prenda no tiene ventas, reservas ni trazabilidad previa registrada.`,
+                        confirmText: 'Sí, eliminar prenda',
+                        cancelText: 'Cancelar',
+                        variant: 'danger'
+                    });
+                    if (!ok) return;
+                    try {
+                        toast(`Eliminando ${ref}...`);
+                        await callAdminApi('delete_garment', { ref });
+                        adminState.selectedRefs.delete(ref);
+                        toast(`✓ Prenda ${ref} eliminada del catálogo.`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
             });
 
             lucide.createIcons();
@@ -6773,6 +6873,46 @@
             }
         });
 
+        // Eliminar prendas erróneas en lote (Candado Anti-Trazabilidad)
+        document.getElementById('erpBulkDeleteBtn')?.addEventListener('click', async () => {
+            if (adminState.selectedRefs.size === 0) return;
+            const selectedList = adminState.garments.filter(g => adminState.selectedRefs.has(g.ref));
+            const deletableList = selectedList.filter(isGarmentDeletable);
+            const blockedList = selectedList.filter(g => !isGarmentDeletable(g));
+
+            if (deletableList.length === 0) {
+                toast('Ninguna de las prendas seleccionadas se puede eliminar: todas están protegidas por historial comercial o reservas activas.', true);
+                return;
+            }
+
+            let warningMsg = `Se van a eliminar definitivamente ${deletableList.length} prenda(s) sin historial comercial:\n${deletableList.map(g => `• ${g.ref} - ${g.title || 'Prenda'}`).slice(0, 8).join('\n')}${deletableList.length > 8 ? `\n... y ${deletableList.length - 8} más` : ''}`;
+
+            if (blockedList.length > 0) {
+                warningMsg += `\n\n🔒 AVISO DE TRAZABILIDAD: ${blockedList.length} prenda(s) seleccionada(s) NO se borrarán para proteger el histórico contable de ventas o reservas (${blockedList.map(g => g.ref).join(', ')}).`;
+            }
+
+            const ok = await vmConfirm({
+                badge: 'Borrado Masivo Seguro',
+                title: `¿Eliminar ${deletableList.length} prenda(s) errónea(s)?`,
+                message: warningMsg,
+                confirmText: `Sí, eliminar ${deletableList.length} prenda(s)`,
+                cancelText: 'Cancelar',
+                variant: 'danger'
+            });
+            if (!ok) return;
+
+            try {
+                const refsToDelete = deletableList.map(g => g.ref);
+                toast(`Eliminando ${refsToDelete.length} prenda(s)...`);
+                await callAdminApi('delete_garment', { refs: refsToDelete });
+                refsToDelete.forEach(r => adminState.selectedRefs.delete(r));
+                toast(`✓ ${refsToDelete.length} prenda(s) eliminada(s) del catálogo.`);
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        });
+
         // Eventos Mini-Modal Marcar Vendida
         document.getElementById('closeMarkSoldModalBtn')?.addEventListener('click', closeMarkSoldModal);
         document.getElementById('cancelMarkSoldModalBtn')?.addEventListener('click', closeMarkSoldModal);
@@ -7401,6 +7541,19 @@
                         brand: "Massimo Dutti",
                         size: "S",
                         priceEur: 18.0,
+                        costEur: 0,
+                        extraExpenseEur: 0.20,
+                        status: "DISPONIBLE",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg"],
+                        waitlist: []
+                    },
+                    {
+                        ref: "REF-007",
+                        dropId: "DROP-20261101-01",
+                        title: "Camiseta estampada (Subida por error)",
+                        brand: "Vintage",
+                        size: "M",
+                        priceEur: 12.0,
                         costEur: 0,
                         extraExpenseEur: 0.20,
                         status: "DISPONIBLE",
