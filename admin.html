@@ -409,7 +409,7 @@
 
     <!-- Barra Superior -->
     <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
             <div class="flex items-center space-x-2.5">
                 <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg">
                     V
@@ -449,7 +449,7 @@
     </header>
 
     <main class="flex-1 py-6 sm:py-10 px-4 sm:px-6">
-        <div class="max-w-6xl mx-auto">
+        <div class="max-w-7xl mx-auto">
 
             <!-- =================================================================== -->
             <!-- PANTALLA DE AUTENTICACIÓN SEGURA (OTP EMAIL + SHA-256 SIN SECRETOS) -->
@@ -1169,18 +1169,18 @@
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
-                                                <th class="py-3 px-3.5">Fecha</th>
-                                                <th class="py-3 px-3">REF</th>
-                                                <th class="py-3 px-3">Prenda</th>
-                                                <th class="py-3 px-3">Comprador</th>
-                                                <th class="py-3 px-3">Canal</th>
-                                                <th class="py-3 px-3 text-right">PVP Base</th>
-                                                <th class="py-3 px-3 text-right">Cobrado</th>
-                                                <th class="py-3 px-3 text-right">Coste + Gasto</th>
-                                                <th class="py-3 px-3.5 text-right text-acid font-bold">Beneficio</th>
-                                                <th class="py-3 px-3 text-center">Margen</th>
-                                                <th class="py-3 px-3 text-center">Acciones</th>
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                                <th class="py-3 px-3">Fecha</th>
+                                                <th class="py-3 px-2.5">REF</th>
+                                                <th class="py-3 px-2.5">Prenda</th>
+                                                <th class="py-3 px-2.5">Comprador</th>
+                                                <th class="py-3 px-2.5 text-center">Canal</th>
+                                                <th class="py-3 px-2.5 text-right">PVP Base</th>
+                                                <th class="py-3 px-2.5 text-right">Cobrado</th>
+                                                <th class="py-3 px-2.5 text-right">Coste + Gasto</th>
+                                                <th class="py-3 px-3 text-right text-acid font-bold">Beneficio</th>
+                                                <th class="py-3 px-2.5 text-center">Margen</th>
+                                                <th class="py-3 px-2.5 text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="ventasTableBody" class="divide-y divide-obsidian-border">
@@ -1206,21 +1206,21 @@
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
-                                                <th class="py-3 px-3 w-8 text-center">
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                                <th class="py-3 px-2 w-8 text-center">
                                                     <input type="checkbox" id="erpSelectAllCheckbox" class="rounded border-zinc-700 text-acid focus:ring-0">
                                                 </th>
-                                                <th class="py-3 px-2 w-12">Foto</th>
-                                                <th class="py-3 px-3">REF</th>
-                                                <th class="py-3 px-3">Título / Marca</th>
-                                                <th class="py-3 px-2.5">Talla</th>
-                                                <th class="py-3 px-3">Drop</th>
-                                                <th class="py-3 px-3">Estado</th>
-                                                <th class="py-3 px-3 text-right">PVP Base</th>
-                                                <th class="py-3 px-3 text-right text-amber-300 font-bold">Coste (€)</th>
-                                                <th class="py-3 px-3 text-right">PVP Final</th>
-                                                <th class="py-3 px-3 text-center">Rentabilidad</th>
-                                                <th class="py-3 px-3 text-center">Acciones</th>
+                                                <th class="py-3 px-1.5 w-11">Foto</th>
+                                                <th class="py-3 px-2">REF</th>
+                                                <th class="py-3 px-2">Título / Marca</th>
+                                                <th class="py-3 px-2">Talla</th>
+                                                <th class="py-3 px-2">Drop</th>
+                                                <th class="py-3 px-2 text-center">Estado</th>
+                                                <th class="py-3 px-2 text-right">PVP Base</th>
+                                                <th class="py-3 px-2 text-center text-amber-300 font-bold">Coste (€)</th>
+                                                <th class="py-3 px-2 text-right">PVP Final</th>
+                                                <th class="py-3 px-2 text-center">Rentab.</th>
+                                                <th class="py-3 px-2 text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="prendasTableBody" class="divide-y divide-obsidian-border">
@@ -1246,7 +1246,7 @@
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
                                                 <th class="py-3 px-3.5">Cliente</th>
                                                 <th class="py-3 px-3">Email</th>
                                                 <th class="py-3 px-3 text-center">Perfil / Etiqueta</th>
@@ -1277,7 +1277,7 @@
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
                                                 <th class="py-3 px-3.5">Código Drop</th>
                                                 <th class="py-3 px-3">Título</th>
                                                 <th class="py-3 px-3 text-center">Prendas</th>
@@ -1309,7 +1309,7 @@
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
                                                 <th class="py-3 px-3.5">ID Lote</th>
                                                 <th class="py-3 px-3">Comprador</th>
                                                 <th class="py-3 px-3">Prendas Incluidas</th>
@@ -5593,11 +5593,11 @@
                 const buyerEmail = g.soldToEmail || g.reservedByEmail || '';
                 const channel = (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT')).toUpperCase();
 
-                let channelBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-300">Vinted</span>';
+                let channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-300">Vinted</span>';
                 if (channel === 'DROP_VIP') {
-                    channelBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">Drop VIP</span>';
+                    channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">Drop VIP</span>';
                 } else if (channel === 'TELEGRAM') {
-                    channelBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">Telegram</span>';
+                    channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">Telegram</span>';
                 }
 
                 const basePrice = Number(g.priceEur || 0);
@@ -5611,30 +5611,30 @@
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
-                    <td class="py-3 px-3.5 font-mono text-[11px] text-zinc-400">${escapeHtml(dateFmt)}</td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 font-mono text-[11px] text-zinc-400 whitespace-nowrap">${escapeHtml(dateFmt)}</td>
+                    <td class="py-3 px-2.5 whitespace-nowrap">
                         <span class="font-mono font-bold text-acid">${escapeHtml(g.ref)}</span>
                         ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
                     </td>
-                    <td class="py-3 px-3 max-w-[200px]">
+                    <td class="py-3 px-2.5 max-w-[200px]">
                         <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
-                        <span class="font-mono text-[10px] text-zinc-400">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
+                        <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
                     </td>
-                    <td class="py-3 px-3">
-                        <span class="font-mono text-xs font-semibold text-zinc-200">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
+                    <td class="py-3 px-2.5">
+                        <span class="font-mono text-xs font-semibold text-zinc-200 whitespace-nowrap">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
                         ${buyerEmail ? `<span class="block text-[10px] text-zinc-500 truncate max-w-[140px]">${escapeHtml(buyerEmail)}</span>` : ''}
                     </td>
-                    <td class="py-3 px-3">${channelBadge}</td>
-                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(basePrice)}</td>
-                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${fmtEur(finalPrice)}</td>
-                    <td class="py-3 px-3 text-right font-mono text-zinc-400" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">${fmtEur(totalCost)}</td>
-                    <td class="py-3 px-3.5 text-right font-mono font-bold ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
-                    <td class="py-3 px-3 text-center">
-                        <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
+                    <td class="py-3 px-2.5 text-center whitespace-nowrap">${channelBadge}</td>
+                    <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap">${fmtEur(basePrice)}</td>
+                    <td class="py-3 px-2.5 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(finalPrice)}</td>
+                    <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">${fmtEur(totalCost)}</td>
+                    <td class="py-3 px-3 text-right font-mono tabular-nums font-bold whitespace-nowrap ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
+                    <td class="py-3 px-2.5 text-center whitespace-nowrap">
+                        <span class="inline-block font-mono tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
                             ${margin}%
                         </span>
                     </td>
-                    <td class="py-3 px-3 text-center">
+                    <td class="py-3 px-2.5 text-center whitespace-nowrap">
                         <div class="inline-flex items-center gap-1">
                             <button type="button" data-edit-sale="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors" title="Editar datos económicos o reasignar venta">
                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
@@ -5677,54 +5677,55 @@
                 const profit = finalPrice - (cost + expense);
                 const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
 
-                let statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
+                let statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
                 if (g.status === 'VENDIDA') {
-                    statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span>`;
+                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span>`;
                 } else if (g.status === 'RESERVADA') {
-                    statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">Reservada VIP</span>`;
+                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">Reservada VIP</span>`;
                 } else if (g.status === 'DISPONIBLE') {
-                    statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-acid-muted text-acid border border-acid/40">Disponible</span>`;
+                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-acid-muted text-acid border border-acid/40">Disponible</span>`;
                 }
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors ${isChecked ? 'bg-acid/5' : ''}">
-                    <td class="py-3 px-3 text-center">
+                    <td class="py-3 px-2 text-center">
                         <input type="checkbox" data-check-ref="${escapeHtml(g.ref)}" ${isChecked ? 'checked' : ''} class="rounded border-zinc-700 text-acid focus:ring-0 cursor-pointer">
                     </td>
-                    <td class="py-3 px-2">
+                    <td class="py-3 px-1.5">
                         ${thumb
                             ? `<img src="${escapeHtml(thumb)}" alt="" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
                             : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
                         }
                     </td>
-                    <td class="py-3 px-3 font-mono font-bold text-acid">${escapeHtml(g.ref)}</td>
-                    <td class="py-3 px-3 max-w-[200px]">
+                    <td class="py-3 px-2 font-mono font-bold text-acid whitespace-nowrap">${escapeHtml(g.ref)}</td>
+                    <td class="py-3 px-2 min-w-[130px] max-w-[170px]">
                         <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
-                        <span class="font-mono text-[10px] text-zinc-400">${escapeHtml(g.brand || 'Vintage')}</span>
+                        <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}</span>
                     </td>
-                    <td class="py-3 px-2.5 font-mono text-xs text-zinc-300">${escapeHtml(g.size || '-')}</td>
-                    <td class="py-3 px-3 font-mono text-xs text-zinc-400">${escapeHtml(g.dropId || '-')}</td>
-                    <td class="py-3 px-3">${statusBadge}</td>
-                    <td class="py-3 px-3 text-right font-mono text-zinc-300">${fmtEur(basePrice)}</td>
-                    <td class="py-3 px-3 text-right">
-                        <button type="button" data-inline-cost="${escapeHtml(g.ref)}" data-current-cost="${cost}" class="px-2 py-1 rounded bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-amber-400 font-mono text-xs font-bold ${cost > 0 ? 'text-amber-300' : 'text-zinc-500'}" title="Clic para editar coste unitario">
-                            ${cost > 0 ? fmtEur(cost) : 'Sin coste'} ✎
+                    <td class="py-3 px-2 font-mono text-xs text-zinc-300 max-w-[105px] truncate whitespace-nowrap" title="${escapeHtml(g.size || '-')}">${escapeHtml(g.size || '-')}</td>
+                    <td class="py-3 px-2 font-mono text-xs text-zinc-400 whitespace-nowrap">${escapeHtml(g.dropId || '-')}</td>
+                    <td class="py-3 px-2 text-center whitespace-nowrap">${statusBadge}</td>
+                    <td class="py-3 px-2 text-right font-mono tabular-nums text-zinc-300 whitespace-nowrap">${fmtEur(basePrice)}</td>
+                    <td class="py-3 px-2 text-center whitespace-nowrap">
+                        <button type="button" data-inline-cost="${escapeHtml(g.ref)}" data-current-cost="${cost}" class="inline-flex items-center justify-center gap-1 whitespace-nowrap px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-amber-400 font-mono tabular-nums text-xs font-bold transition-colors ${cost > 0 ? 'text-amber-300' : 'text-zinc-500'}" title="Clic para editar coste unitario">
+                            <span>${cost > 0 ? fmtEur(cost) : 'Sin coste'}</span>
+                            <span class="text-[10px] opacity-80">✎</span>
                         </button>
                     </td>
-                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${fmtEur(finalPrice)}</td>
-                    <td class="py-3 px-3 text-center font-mono text-xs">
+                    <td class="py-3 px-2 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(finalPrice)}</td>
+                    <td class="py-3 px-2 text-center font-mono tabular-nums text-xs whitespace-nowrap">
                         ${cost > 0
                             ? `<span class="font-bold ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">${margin}%</span>`
                             : '<span class="text-zinc-500 text-[10px]">-</span>'
                         }
                     </td>
-                    <td class="py-3 px-3 text-center">
-                        <div class="inline-flex items-center gap-1.5">
-                            <button type="button" data-edit-form="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors" title="Editar ficha completa en Pestaña 1">
+                    <td class="py-3 px-2 text-center whitespace-nowrap">
+                        <div class="inline-flex items-center gap-1">
+                            <button type="button" data-edit-form="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors" title="Editar ficha completa en Pestaña 1">
                                 <i data-lucide="edit" class="w-3.5 h-3.5"></i>
                             </button>
                             ${g.status !== 'VENDIDA' ? `
-                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
+                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                 </button>
                             ` : ''}
@@ -5898,15 +5899,15 @@
                 const reservedPurchases = c.purchases.filter(p => p.status === 'RESERVADA');
                 const ltv = completedPurchases.reduce((acc, p) => acc + p.price, 0);
 
-                let tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">🌱 Lead QR</span>';
+                let tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">🌱 Lead QR</span>';
                 if (completedPurchases.length >= 2) {
-                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid text-obsidian shadow-sm">🏆 VIP Recurrente</span>';
+                    tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid text-obsidian shadow-sm">🏆 VIP Recurrente</span>';
                 } else if (completedPurchases.length === 1) {
-                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🛍️ Comprador</span>';
+                    tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🛍️ Comprador</span>';
                 } else if (reservedPurchases.length > 0) {
-                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">⏱️ Reserva Activa</span>';
+                    tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">⏱️ Reserva Activa</span>';
                 } else if (c.waitlists.length > 0) {
-                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">⏳ En Cola</span>';
+                    tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">⏳ En Cola</span>';
                 }
 
                 const clientMeta = configCrm[c.key.toLowerCase()] || {};
@@ -5914,7 +5915,7 @@
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
-                    <td class="py-3 px-3.5">
+                    <td class="py-3 px-3.5 whitespace-nowrap">
                         <div class="flex items-center gap-2.5">
                             <div class="w-8 h-8 rounded-xl bg-obsidian-elevated border border-zinc-700 flex items-center justify-center font-mono font-bold text-xs text-acid shrink-0">
                                 ${(c.vintedUser ? c.vintedUser.charAt(0) : (c.email ? c.email.charAt(0) : '?')).toUpperCase()}
@@ -5927,14 +5928,14 @@
                             </div>
                         </div>
                     </td>
-                    <td class="py-3 px-3 font-mono text-xs text-zinc-300">${escapeHtml(c.email || '-')}</td>
-                    <td class="py-3 px-3 text-center">${tagBadge}</td>
-                    <td class="py-3 px-3 text-center font-mono text-xs">
+                    <td class="py-3 px-3 font-mono text-xs text-zinc-300 whitespace-nowrap">${escapeHtml(c.email || '-')}</td>
+                    <td class="py-3 px-3 text-center whitespace-nowrap">${tagBadge}</td>
+                    <td class="py-3 px-3 text-center font-mono tabular-nums text-xs whitespace-nowrap">
                         <strong class="text-white">${completedPurchases.length}</strong>
                         ${reservedPurchases.length > 0 ? `<span class="text-amber-400 text-[10px]"> (+${reservedPurchases.length} res.)</span>` : ''}
                     </td>
-                    <td class="py-3 px-3 text-right font-mono font-bold text-acid">${fmtEur(ltv)}</td>
-                    <td class="py-3 px-3 text-center font-mono text-[10px]">
+                    <td class="py-3 px-3 text-right font-mono tabular-nums font-bold text-acid whitespace-nowrap">${fmtEur(ltv)}</td>
+                    <td class="py-3 px-3 text-center font-mono text-[10px] whitespace-nowrap">
                         ${c.numReservas === 0 ? '<span class="text-acid font-bold">Disponible</span>' : '<span class="text-zinc-500">Consumido</span>'}
                     </td>
                     <td class="py-3 px-3 max-w-[180px]">
@@ -5942,8 +5943,8 @@
                             ${escapeHtml(privateNote || 'Sin notas')}
                         </span>
                     </td>
-                    <td class="py-3 px-3 text-center">
-                        <button type="button" data-open-client="${escapeHtml(c.key)}" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs text-zinc-200 transition-colors">
+                    <td class="py-3 px-3 text-center whitespace-nowrap">
+                        <button type="button" data-open-client="${escapeHtml(c.key)}" class="inline-flex items-center whitespace-nowrap px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs text-zinc-200 transition-colors">
                             Ficha 360º
                         </button>
                     </td>
@@ -6001,30 +6002,30 @@
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
-                    <td class="py-3 px-3.5">
+                    <td class="py-3 px-3.5 whitespace-nowrap">
                         <span class="font-mono font-bold text-acid">${escapeHtml(d.id)}</span>
-                        ${isActive ? '<span class="ml-1.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-acid text-obsidian">ACTIVO</span>' : ''}
+                        ${isActive ? '<span class="ml-1.5 inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-acid text-obsidian">ACTIVO</span>' : ''}
                     </td>
                     <td class="py-3 px-3 max-w-[220px]">
-                        <span class="font-bold text-white truncate block">${escapeHtml(d.title)}</span>
+                        <span class="font-bold text-white truncate block" title="${escapeHtml(d.title)}">${escapeHtml(d.title)}</span>
                     </td>
-                    <td class="py-3 px-3 text-center font-mono font-bold text-zinc-200">${total}</td>
-                    <td class="py-3 px-3 text-center font-mono font-bold text-emerald-400">
+                    <td class="py-3 px-3 text-center font-mono tabular-nums font-bold text-zinc-200 whitespace-nowrap">${total}</td>
+                    <td class="py-3 px-3 text-center font-mono tabular-nums font-bold text-emerald-400 whitespace-nowrap">
                         ${sold}${reserved > 0 ? ` <span class="text-amber-400 font-normal text-[10px]">(+${reserved})</span>` : ''}
                     </td>
-                    <td class="py-3 px-3 text-center">
+                    <td class="py-3 px-3 text-center whitespace-nowrap">
                         <div class="flex items-center justify-center gap-1.5">
                             <div class="w-16 bg-zinc-800 rounded-full h-2 overflow-hidden">
                                 <div class="bg-acid h-2 rounded-full" style="width: ${Math.min(100, sellThrough)}%"></div>
                             </div>
-                            <span class="font-mono text-xs font-bold text-white">${sellThrough}%</span>
+                            <span class="font-mono tabular-nums text-xs font-bold text-white">${sellThrough}%</span>
                         </div>
                     </td>
-                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${fmtEur(facturacion)}</td>
-                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(coste)}</td>
-                    <td class="py-3 px-3.5 text-right font-mono font-bold ${beneficio >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(beneficio)}</td>
-                    <td class="py-3 px-3 text-center">
-                        <button type="button" data-filter-this-drop="${escapeHtml(d.id)}" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-acid hover:text-obsidian text-xs font-mono font-bold text-zinc-300 transition-colors">
+                    <td class="py-3 px-3 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(facturacion)}</td>
+                    <td class="py-3 px-3 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap">${fmtEur(coste)}</td>
+                    <td class="py-3 px-3.5 text-right font-mono tabular-nums font-bold whitespace-nowrap ${beneficio >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(beneficio)}</td>
+                    <td class="py-3 px-3 text-center whitespace-nowrap">
+                        <button type="button" data-filter-this-drop="${escapeHtml(d.id)}" class="inline-flex items-center whitespace-nowrap px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-acid hover:text-obsidian text-xs font-mono font-bold text-zinc-300 transition-colors">
                             Ver Prendas
                         </button>
                     </td>
@@ -6090,32 +6091,32 @@
                 const isAllCleaned = cleanedCount === l.items.length;
                 const isSold = l.items.every(x => x.status === 'VENDIDA');
 
-                let cleanBadge = `<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">N/A</span>`;
+                let cleanBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">N/A</span>`;
                 if (isSold) {
                     cleanBadge = isAllCleaned
-                        ? `<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">✓ Limpio en Vinted</span>`
-                        : `<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/50 animate-pulse">⚠️ ${cleanedCount}/${l.items.length} borradas</span>`;
+                        ? `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">✓ Limpio en Vinted</span>`
+                        : `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/50 animate-pulse">⚠️ ${cleanedCount}/${l.items.length} borradas</span>`;
                 }
 
                 const refsList = l.items.map(i => i.ref).join(', ');
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
-                    <td class="py-3 px-3.5 font-mono font-bold text-white">${escapeHtml(l.groupId)}</td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3.5 font-mono font-bold text-white whitespace-nowrap">${escapeHtml(l.groupId)}</td>
+                    <td class="py-3 px-3 whitespace-nowrap">
                         <span class="font-mono text-xs font-semibold text-zinc-200">@${escapeHtml(l.buyerVinted.replace(/^@+/, '') || 'desconocido')}</span>
                     </td>
                     <td class="py-3 px-3 max-w-[200px]">
-                        <span class="font-bold text-white text-xs">${l.items.length} prendas</span>
+                        <span class="font-bold text-white text-xs whitespace-nowrap">${l.items.length} prendas</span>
                         <span class="block font-mono text-[10px] text-zinc-400 truncate" title="${escapeHtml(refsList)}">${escapeHtml(refsList)}</span>
                     </td>
-                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(baseSum)}</td>
-                    <td class="py-3 px-3 text-right font-mono font-bold text-acid">${fmtEur(finalSum)}</td>
-                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(costSum)}</td>
-                    <td class="py-3 px-3.5 text-right font-mono font-bold ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
-                    <td class="py-3 px-3 text-center">${cleanBadge}</td>
-                    <td class="py-3 px-3 text-center">
-                        <button type="button" data-open-lot-checklist="${escapeHtml(l.groupId)}" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-200 transition-colors">
+                    <td class="py-3 px-3 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap">${fmtEur(baseSum)}</td>
+                    <td class="py-3 px-3 text-right font-mono tabular-nums font-bold text-acid whitespace-nowrap">${fmtEur(finalSum)}</td>
+                    <td class="py-3 px-3 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap">${fmtEur(costSum)}</td>
+                    <td class="py-3 px-3.5 text-right font-mono tabular-nums font-bold whitespace-nowrap ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
+                    <td class="py-3 px-3 text-center whitespace-nowrap">${cleanBadge}</td>
+                    <td class="py-3 px-3 text-center whitespace-nowrap">
+                        <button type="button" data-open-lot-checklist="${escapeHtml(l.groupId)}" class="inline-flex items-center whitespace-nowrap px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-200 transition-colors">
                             Checklist Vinted
                         </button>
                     </td>
