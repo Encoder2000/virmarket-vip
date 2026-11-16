@@ -597,14 +597,17 @@
 
                 <!-- Navegación por Pestañas (Optimizada para pulgar en móvil) -->
                 <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                    <button type="button" data-tab="drops" class="tab-btn flex-1 min-w-[100px] py-3 px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors bg-acid text-obsidian">
+                    <button type="button" data-tab="drops" class="tab-btn flex-1 min-w-[95px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors bg-acid text-obsidian">
                         🚀 1. Drops
                     </button>
-                    <button type="button" data-tab="vinted" class="tab-btn flex-1 min-w-[110px] py-3 px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                    <button type="button" data-tab="vinted" class="tab-btn flex-1 min-w-[105px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
                         📋 2. Reservas
                     </button>
-                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[100px] py-3 px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
-                        ⚙️ 3. Ajustes
+                    <button type="button" data-tab="registro" class="tab-btn flex-1 min-w-[105px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                        📊 3. Registro
+                    </button>
+                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[95px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                        ⚙️ 4. Ajustes
                     </button>
                 </div>
 
@@ -629,7 +632,7 @@
                                     </button>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
                                     <div>
                                         <label for="dropIdInput" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Código del Drop *</label>
                                         <input type="text" id="dropIdInput" placeholder="DROP-01" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-acid uppercase focus:outline-none focus:border-acid">
@@ -715,7 +718,7 @@
                                         <p class="mt-1 text-[11px] text-zinc-500">La 1ª foto será la portada en el correo de Brevo y en el Escaparate VIP. Se optimizan automáticamente.</p>
                                     </div>
 
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                         <div>
                                             <div class="flex items-center justify-between mb-1">
                                                 <label for="gRef" class="block text-[11px] font-semibold uppercase text-zinc-400">Referencia *</label>
@@ -726,10 +729,14 @@
                                             <input type="text" id="gRef" required placeholder="REF-001" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-acid uppercase focus:outline-none focus:border-acid">
                                         </div>
                                         <div>
-                                            <label for="gPrice" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Precio Base (€) *</label>
+                                            <label for="gPrice" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">PVP Base (€) *</label>
                                             <input type="number" id="gPrice" step="0.01" min="0" required placeholder="35.00" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-white focus:outline-none focus:border-acid">
                                         </div>
-                                        <div class="col-span-2 sm:col-span-1">
+                                        <div>
+                                            <label for="gCost" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Coste (€)</label>
+                                            <input type="number" id="gCost" step="0.01" min="0" placeholder="0.00" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-zinc-200 focus:outline-none focus:border-acid" title="Coste unitario opcional para cálculo de beneficio neto y margen">
+                                        </div>
+                                        <div>
                                             <label for="gSize" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Talla Vinted *</label>
                                             <input type="text" id="gSize" placeholder="L / 42 / M" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
                                         </div>
@@ -959,7 +966,376 @@
                 </div>
 
                 <!-- =============================================================== -->
-                <!-- PESTAÑA 3: AJUSTES DE DESCUENTO CON TOPE Y PLANTILLA PIE VINTED -->
+                <!-- PESTAÑA 3: REGISTRO / ERP & CONTROL TOTAL DEL NEGOCIO           -->
+                <!-- =============================================================== -->
+                <div id="tab-registro" class="hidden space-y-6">
+
+                    <!-- Cabecera de la Pestaña Registro -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider">Centro de Control ERP</span>
+                                <span id="erpFilterIndicatorBadge" class="hidden px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold">Filtros Activos</span>
+                            </div>
+                            <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Registro Contable &amp; Auditoría de Negocio</h2>
+                            <p class="text-xs text-zinc-400 mt-0.5">Supervisión integral de ventas cerradas, márgenes netos, inventario valorado, CRM de clientes y rendimiento por Drop.</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button id="exportRegistroCsvBtn" type="button" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Descargar datos contables filtrados en formato CSV compatible con Excel">
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-acid"></i>
+                                <span>Exportar CSV</span>
+                            </button>
+                            <button id="refreshRegistroBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Recargar y sincronizar datos en vivo">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
+                                <span class="hidden sm:inline">Actualizar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Métricas / KPIs Financieros Reactivos -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Facturación Cobrada</span>
+                            <div id="kpiFacturacionReal" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">0,00 €</div>
+                            <span id="kpiFacturacionSub" class="text-[10px] text-zinc-500 font-mono mt-1">0 ventas cerradas</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Coste Stock + Gastos</span>
+                            <div id="kpiCosteTotal" class="mt-1 font-display text-xl sm:text-2xl font-bold text-zinc-300 tabular-nums">0,00 €</div>
+                            <span id="kpiCosteSub" class="text-[10px] text-zinc-500 font-mono mt-1">0,00 € en packaging</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-acid/40 shadow-lg shadow-acid/5 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-acid font-bold">Beneficio Neto</span>
+                                <span id="kpiMargenPercentBadge" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-acid text-obsidian font-bold">0%</span>
+                            </div>
+                            <div id="kpiBeneficioNeto" class="mt-1 font-display text-xl sm:text-2xl font-bold text-acid tabular-nums">0,00 €</div>
+                            <span id="kpiBeneficioSub" class="text-[10px] text-zinc-400 font-mono mt-1">Margen real s/ventas</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Liquidación (Sell-Through)</span>
+                            <div id="kpiSellThrough" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">0%</div>
+                            <span id="kpiSellThroughSub" class="text-[10px] text-zinc-500 font-mono mt-1">0 vendidas / 0 total</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Ticket Medio</span>
+                            <div id="kpiTicketMedio" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">0,00 €</div>
+                            <span id="kpiTicketMedioSub" class="text-[10px] text-zinc-500 font-mono mt-1">Por prenda vendida</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Stock Activo (Coste)</span>
+                            <div id="kpiCapitalInmovilizado" class="mt-1 font-display text-xl sm:text-2xl font-bold text-amber-300 tabular-nums">0,00 €</div>
+                            <span id="kpiCapitalPvpSub" class="text-[10px] text-zinc-400 font-mono mt-1">PVP pot.: 0,00 €</span>
+                        </div>
+                    </div>
+
+                    <!-- Motor de Filtros Multicriterio de Alto Volumen -->
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 space-y-3">
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
+                            <div class="relative flex-1">
+                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+                                <input type="search" id="erpFilterSearch" placeholder="Buscar por REF, título, marca, @vinted, email, lote..." class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="erpFilterPeriod" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                    <option value="ALL">Todo el Historial</option>
+                                    <option value="TODAY">Hoy</option>
+                                    <option value="7DAYS">Últimos 7 días</option>
+                                    <option value="THIS_MONTH" selected>Este Mes</option>
+                                    <option value="LAST_MONTH">Mes Anterior</option>
+                                    <option value="THIS_YEAR">Este Año</option>
+                                    <option value="CUSTOM">Rango de Fechas...</option>
+                                </select>
+                                <button type="button" id="erpResetFiltersBtn" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-rose-400 text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors" title="Restablecer todos los filtros">
+                                    Limpiar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Fila de Rango de Fechas Personalizado -->
+                        <div id="erpCustomDateRow" class="hidden flex flex-wrap items-center gap-2.5 pt-1 border-t border-zinc-800">
+                            <span class="text-[11px] font-mono text-zinc-400">Desde:</span>
+                            <input type="date" id="erpDateFrom" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
+                            <span class="text-[11px] font-mono text-zinc-400">Hasta:</span>
+                            <input type="date" id="erpDateTo" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
+                        </div>
+
+                        <!-- Fila de Selectores Desplegables Específicos -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-1 border-t border-zinc-800">
+                            <div>
+                                <label for="erpFilterDrop" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Drop</label>
+                                <select id="erpFilterDrop" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todos los Drops</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="erpFilterStatus" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Estado</label>
+                                <select id="erpFilterStatus" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todos los Estados</option>
+                                    <option value="VENDIDA">Vendidas</option>
+                                    <option value="RESERVADA">Reservadas VIP</option>
+                                    <option value="WAITLIST">En Cola de Espera</option>
+                                    <option value="DISPONIBLE">Disponibles</option>
+                                    <option value="OCULTA">Ocultas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="erpFilterChannel" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Canal de Venta</label>
+                                <select id="erpFilterChannel" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todos los Canales</option>
+                                    <option value="DROP_VIP">Drop VIP Web</option>
+                                    <option value="VINTED_DIRECT">Vinted Directo</option>
+                                    <option value="TELEGRAM">Telegram @virmarket_club</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="erpFilterBrand" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Marca</label>
+                                <select id="erpFilterBrand" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todas las Marcas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="erpFilterSize" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Talla</label>
+                                <select id="erpFilterSize" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todas las Tallas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="erpFilterProfit" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Rentabilidad / Coste</label>
+                                <select id="erpFilterProfit" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Cualquier Margen</option>
+                                    <option value="WITH_COST">Con Coste Registrado</option>
+                                    <option value="NO_COST">Sin Coste (Pendiente)</option>
+                                    <option value="HIGH_MARGIN">Margen Alto (&gt;50%)</option>
+                                    <option value="LOW_MARGIN">Margen Bajo (&lt;20%)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selector de Sub-vistas (Segmented Control) -->
+                    <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <button type="button" data-subview="ventas" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all bg-acid text-obsidian shadow-sm">
+                            💰 1. Ventas &amp; Pedidos <span id="badgeCountVentas" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-obsidian/20">0</span>
+                        </button>
+                        <button type="button" data-subview="prendas" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
+                            👕 2. Inventario Maestro <span id="badgeCountPrendas" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800">0</span>
+                        </button>
+                        <button type="button" data-subview="clientes" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
+                            👥 3. Clientes (CRM 360º) <span id="badgeCountClientes" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800">0</span>
+                        </button>
+                        <button type="button" data-subview="drops" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
+                            🚀 4. Rendimiento Drops <span id="badgeCountDrops" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800">0</span>
+                        </button>
+                        <button type="button" data-subview="lotes" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
+                            📦 5. Registro Lotes <span id="badgeCountLotes" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Barra Flotante de Acciones en Bloque -->
+                    <div id="erpBulkBar" class="hidden rounded-2xl bg-acid/15 border-2 border-acid p-3.5 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xl shadow-acid/10 animate-in fade-in duration-150">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-mono font-bold text-xs">✓</span>
+                            <div>
+                                <span id="erpBulkSelectedCount" class="font-display font-bold text-sm text-white">0 prendas seleccionadas</span>
+                                <span class="block text-[11px] text-zinc-300">Aplica operaciones en lote para ahorrar tiempo de gestión</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+                            <button type="button" id="erpOpenPackCostModalBtn" class="px-3 py-1.5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+                                <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+                                <span>🧮 Repartir Coste de Paca</span>
+                            </button>
+                            <button type="button" id="erpBulkChangeDropBtn" class="px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-zinc-500 text-xs font-mono text-zinc-200 flex items-center gap-1">
+                                <span>Mover de Drop</span>
+                            </button>
+                            <button type="button" id="erpBulkDeselectBtn" class="px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-400 hover:text-white">
+                                Deseleccionar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contenedores de Sub-vistas -->
+                    <div id="erpSubViewContainer" class="space-y-4">
+                        <!-- 1. Sub-vista Ventas -->
+                        <div id="subview-ventas" class="space-y-3">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
+                                    <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                        <span>Historial Detallado de Ventas Cerradas y Reservas VIP</span>
+                                    </h3>
+                                    <span id="ventasRowCountLabel" class="font-mono text-xs text-zinc-400">0 registros</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                <th class="py-3 px-3.5">Fecha</th>
+                                                <th class="py-3 px-3">REF</th>
+                                                <th class="py-3 px-3">Prenda</th>
+                                                <th class="py-3 px-3">Comprador</th>
+                                                <th class="py-3 px-3">Canal</th>
+                                                <th class="py-3 px-3 text-right">PVP Base</th>
+                                                <th class="py-3 px-3 text-right">Cobrado</th>
+                                                <th class="py-3 px-3 text-right">Coste + Gasto</th>
+                                                <th class="py-3 px-3.5 text-right text-acid font-bold">Beneficio</th>
+                                                <th class="py-3 px-3 text-center">Margen</th>
+                                                <th class="py-3 px-3 text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ventasTableBody" class="divide-y divide-obsidian-border">
+                                            <tr>
+                                                <td colspan="11" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando ventas...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Sub-vista Inventario Maestro -->
+                        <div id="subview-prendas" class="hidden space-y-3">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">Inventario General &amp; Valoración de Stock</h3>
+                                        <span class="text-[11px] text-zinc-500 hidden sm:inline">(Clic en Coste para editar en línea)</span>
+                                    </div>
+                                    <span id="prendasRowCountLabel" class="font-mono text-xs text-zinc-400">0 prendas</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                <th class="py-3 px-3 w-8 text-center">
+                                                    <input type="checkbox" id="erpSelectAllCheckbox" class="rounded border-zinc-700 text-acid focus:ring-0">
+                                                </th>
+                                                <th class="py-3 px-2 w-12">Foto</th>
+                                                <th class="py-3 px-3">REF</th>
+                                                <th class="py-3 px-3">Título / Marca</th>
+                                                <th class="py-3 px-2.5">Talla</th>
+                                                <th class="py-3 px-3">Drop</th>
+                                                <th class="py-3 px-3">Estado</th>
+                                                <th class="py-3 px-3 text-right">PVP Base</th>
+                                                <th class="py-3 px-3 text-right text-amber-300 font-bold">Coste (€)</th>
+                                                <th class="py-3 px-3 text-right">PVP Final</th>
+                                                <th class="py-3 px-3 text-center">Rentabilidad</th>
+                                                <th class="py-3 px-3 text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="prendasTableBody" class="divide-y divide-obsidian-border">
+                                            <tr>
+                                                <td colspan="12" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando inventario...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Sub-vista Clientes CRM 360º -->
+                        <div id="subview-clientes" class="hidden space-y-3">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                <div class="p-4 border-b border-obsidian-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <div>
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">Directorio CRM 360º (Compradores + Leads Tarjeta QR Brevo)</h3>
+                                        <p class="text-[11px] text-zinc-400 mt-0.5">Visión unificada de clientes recurrentes, compradores, leads en espera y notas privadas.</p>
+                                    </div>
+                                    <span id="clientesRowCountLabel" class="font-mono text-xs text-zinc-400 shrink-0">0 clientes</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                <th class="py-3 px-3.5">Cliente</th>
+                                                <th class="py-3 px-3">Email</th>
+                                                <th class="py-3 px-3 text-center">Perfil / Etiqueta</th>
+                                                <th class="py-3 px-3 text-center">Prendas / Pedidos</th>
+                                                <th class="py-3 px-3 text-right">Gasto Total (LTV)</th>
+                                                <th class="py-3 px-3 text-center">Cupón</th>
+                                                <th class="py-3 px-3">Notas Privadas</th>
+                                                <th class="py-3 px-3 text-center">Ficha</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="clientesTableBody" class="divide-y divide-obsidian-border">
+                                            <tr>
+                                                <td colspan="8" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando clientes...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Sub-vista Rendimiento Drops -->
+                        <div id="subview-drops" class="hidden space-y-3">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">Rendimiento Histórico y Liquidación por Drop</h3>
+                                    <span id="dropsRowCountLabel" class="font-mono text-xs text-zinc-400">0 drops</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                <th class="py-3 px-3.5">Código Drop</th>
+                                                <th class="py-3 px-3">Título</th>
+                                                <th class="py-3 px-3 text-center">Prendas</th>
+                                                <th class="py-3 px-3 text-center">Vendidas</th>
+                                                <th class="py-3 px-3 text-center">% Liquidación</th>
+                                                <th class="py-3 px-3 text-right">Facturación</th>
+                                                <th class="py-3 px-3 text-right">Coste Drop</th>
+                                                <th class="py-3 px-3.5 text-right text-acid font-bold">Beneficio Drop</th>
+                                                <th class="py-3 px-3 text-center">Filtrar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dropsTableBody" class="divide-y divide-obsidian-border">
+                                            <tr>
+                                                <td colspan="9" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando drops...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Sub-vista Registro de Lotes -->
+                        <div id="subview-lotes" class="hidden space-y-3">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">Auditoría de Lotes Multi-Prenda y Control de Limpieza</h3>
+                                    <span id="lotesRowCountLabel" class="font-mono text-xs text-zinc-400">0 lotes</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                <th class="py-3 px-3.5">ID Lote</th>
+                                                <th class="py-3 px-3">Comprador</th>
+                                                <th class="py-3 px-3">Prendas Incluidas</th>
+                                                <th class="py-3 px-3 text-right">PVP Base</th>
+                                                <th class="py-3 px-3 text-right">Precio Lote</th>
+                                                <th class="py-3 px-3 text-right">Coste Lote</th>
+                                                <th class="py-3 px-3.5 text-right text-acid font-bold">Beneficio</th>
+                                                <th class="py-3 px-3 text-center">Limpieza Vinted</th>
+                                                <th class="py-3 px-3 text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="lotesTableBody" class="divide-y divide-obsidian-border">
+                                            <tr>
+                                                <td colspan="9" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando lotes...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- =============================================================== -->
+                <!-- PESTAÑA 4: AJUSTES GLOBALES, REGLAS Y COSTES OPERATIVOS       -->
                 <!-- =============================================================== -->
                 <div id="tab-settings" class="hidden max-w-2xl mx-auto">
                     <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-7 space-y-5">
@@ -991,10 +1367,18 @@
 
                                 <div>
                                     <label for="cfgMaxItems" class="block text-xs font-semibold uppercase text-zinc-300 mb-1">
-                                        Máx. prendas por pedido
+                                        Máx. prendas / pedido
                                     </label>
                                     <input type="number" id="cfgMaxItems" min="0" step="1" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-base text-white focus:outline-none focus:border-acid">
                                     <p class="mt-1 text-[11px] text-zinc-500">0 = sin límite.</p>
+                                </div>
+
+                                <div>
+                                    <label for="cfgDefaultExtraExpense" class="block text-xs font-semibold uppercase text-zinc-300 mb-1">
+                                        Gasto extra / sobre (€)
+                                    </label>
+                                    <input type="number" id="cfgDefaultExtraExpense" min="0" step="0.1" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-base text-white focus:outline-none focus:border-acid">
+                                    <p class="mt-1 text-[11px] text-zinc-500">Imputado por venta (ej. 1.00 €).</p>
                                 </div>
                             </div>
 
@@ -1364,6 +1748,236 @@
         </div>
     </div>
 
+    <!-- Modal de Reparto de Coste de Paca / Remesa (Calculadora Masiva ERP) -->
+    <div id="packCostModal" role="dialog" aria-modal="true" aria-labelledby="packCostModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-acid/50 p-5 sm:p-7 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-acid/15 border border-acid/40 flex items-center justify-center text-acid shrink-0">
+                        <i data-lucide="calculator" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-acid/15 text-acid border border-acid/30 font-bold mb-0.5">Calculadora ERP</span>
+                        <h3 id="packCostModalTitle" class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Repartir Coste de Paca o Remesa</h3>
+                    </div>
+                </div>
+                <button type="button" id="closePackCostModalBtn" aria-label="Cerrar modal" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">✕</button>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 text-xs text-zinc-300 flex items-start gap-2.5">
+                <i data-lucide="info" class="w-4 h-4 text-acid shrink-0 mt-0.5"></i>
+                <div>
+                    <span class="font-semibold text-white">¿Cómo funciona el reparto de costes?</span>
+                    <p class="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">
+                        Introduce el coste total de adquisición que pagaste al proveedor por este lote de prendas. El sistema imputará automáticamente el coste unitario a cada una de las prendas seleccionadas para que conozcas tu beneficio neto exacto.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                    <label for="packTotalCostInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                        Coste Total de la Paca (€) *
+                    </label>
+                    <input type="number" id="packTotalCostInput" step="0.01" min="0" placeholder="Ej: 120.00" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-base text-acid focus:outline-none focus:border-acid">
+                </div>
+                <div>
+                    <label for="packSplitMethodSelect" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                        Método de Reparto *
+                    </label>
+                    <select id="packSplitMethodSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                        <option value="EQUAL" selected>Partes Iguales (Total / Nº Prendas)</option>
+                        <option value="PROPORTIONAL">Proporcional al PVP Base (Recomendado)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 font-bold">
+                        Previsualización del reparto (<span id="packSelectedCountLabel">0</span> prendas seleccionadas):
+                    </span>
+                    <span id="packPvpTotalSumLabel" class="font-mono text-[11px] text-zinc-300">PVP Total: 0,00 €</span>
+                </div>
+                <div id="packPreviewList" class="max-h-48 overflow-y-auto space-y-1.5 pr-1 border border-zinc-800 rounded-xl p-2 bg-obsidian"></div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-3 border-t border-zinc-800">
+                <button type="button" id="cancelPackCostModalBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="confirmPackCostBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-acid/20 transition-all">
+                    <span>✓ Asignar Costes en Bloque</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-Modal de Cierre de Venta Rápida (Registrar Venta en ERP) -->
+    <div id="markSoldModal" role="dialog" aria-modal="true" aria-labelledby="markSoldModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-lg my-auto rounded-3xl bg-obsidian-card border border-emerald-500/50 p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold mb-0.5">Cierre Contable</span>
+                        <h3 id="markSoldModalTitle" class="font-display text-lg font-bold text-white uppercase mt-0.5">Registrar Prenda como VENDIDA</h3>
+                    </div>
+                </div>
+                <button type="button" id="closeMarkSoldModalBtn" aria-label="Cerrar modal" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">✕</button>
+            </div>
+
+            <!-- Ficha Resumen de la Prenda -->
+            <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex items-center gap-3">
+                <img id="markSoldGarmentThumb" src="" alt="" class="w-12 h-14 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">
+                <div class="min-w-0 flex-1 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span id="markSoldGarmentRef" class="font-mono font-bold text-acid">REF-XXX</span>
+                        <span id="markSoldGarmentBasePrice" class="font-mono text-zinc-400">PVP: 0,00 €</span>
+                    </div>
+                    <h4 id="markSoldGarmentTitle" class="font-display font-bold text-white truncate text-sm mt-0.5">Título</h4>
+                    <p id="markSoldOriginHint" class="text-zinc-400 text-[11px] mt-0.5">Reserva VIP detectada</p>
+                </div>
+            </div>
+
+            <!-- Campos Económicos del Cierre -->
+            <form id="markSoldForm" class="space-y-3" novalidate>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="markSoldPriceInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Precio Cobrado (€) *
+                        </label>
+                        <input type="number" id="markSoldPriceInput" step="0.01" min="0" required class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 font-mono text-sm text-acid focus:outline-none focus:border-acid">
+                    </div>
+                    <div>
+                        <label for="markSoldChannelSelect" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Canal de Venta *
+                        </label>
+                        <select id="markSoldChannelSelect" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                            <option value="DROP_VIP">Drop VIP Web</option>
+                            <option value="VINTED_DIRECT">Vinted Directo</option>
+                            <option value="TELEGRAM">Telegram @virmarket_club</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="markSoldBuyerVintedInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Comprador (@usuario)
+                        </label>
+                        <input type="text" id="markSoldBuyerVintedInput" placeholder="usuario_vinted" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                    </div>
+                    <div>
+                        <label for="markSoldBuyerEmailInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Email Comprador
+                        </label>
+                        <input type="email" id="markSoldBuyerEmailInput" placeholder="comprador@email.com" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="markSoldCostInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Coste Prenda (€)
+                        </label>
+                        <input type="number" id="markSoldCostInput" step="0.01" min="0" placeholder="0.00" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 font-mono text-xs text-zinc-300 focus:outline-none focus:border-acid">
+                    </div>
+                    <div>
+                        <label for="markSoldExtraExpenseInput" class="block text-[11px] font-semibold uppercase text-zinc-300 mb-1">
+                            Gasto Extra / Sobre (€)
+                        </label>
+                        <input type="number" id="markSoldExtraExpenseInput" step="0.01" min="0" placeholder="1.00" class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 font-mono text-xs text-zinc-300 focus:outline-none focus:border-acid">
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-xl bg-obsidian border border-zinc-800 text-xs flex items-center justify-between">
+                    <span class="text-zinc-400">Beneficio Neto Estimado:</span>
+                    <span id="markSoldNetProfitPreview" class="font-mono text-sm font-bold text-acid">0,00 € (0%)</span>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-2 border-t border-zinc-800">
+                    <button type="button" id="cancelMarkSoldModalBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="confirmMarkSoldSubmitBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all">
+                        <span>✓ Confirmar Venta</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ficha 360º de Cliente (CRM Club VIP) -->
+    <div id="clientDetailsModal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-acid/50 p-5 sm:p-7 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div id="clientModalAvatar" class="w-12 h-12 rounded-2xl bg-acid/15 border border-acid/40 flex items-center justify-center text-acid font-display font-bold text-lg shrink-0">
+                        @
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span id="clientModalTagBadge" class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-acid/15 text-acid border border-acid/30 font-bold">VIP</span>
+                            <span id="clientModalEmailBadge" class="font-mono text-[11px] text-zinc-400">email@ejemplo.com</span>
+                        </div>
+                        <h3 id="clientModalTitle" class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">@usuario</h3>
+                    </div>
+                </div>
+                <button type="button" id="closeClientModalBtn" aria-label="Cerrar modal" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">✕</button>
+            </div>
+
+            <!-- Métricas Acumuladas del Cliente -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Gasto Total (LTV)</span>
+                    <div id="clientModalLtv" class="font-display text-lg font-bold text-acid mt-0.5">0,00 €</div>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Prendas Compradas</span>
+                    <div id="clientModalOrdersCount" class="font-display text-lg font-bold text-white mt-0.5">0</div>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Cupón Bienvenida</span>
+                    <div id="clientModalCouponStatus" class="font-mono text-xs font-bold text-zinc-300 mt-1">Disponible</div>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono text-[10px] uppercase text-zinc-400">Colas de Espera</span>
+                    <div id="clientModalWaitlistCount" class="font-display text-lg font-bold text-amber-300 mt-0.5">0</div>
+                </div>
+            </div>
+
+            <!-- Notas Privadas y Etiquetas del Cliente -->
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                <div class="flex items-center justify-between">
+                    <label for="clientModalNotesTextarea" class="font-mono text-[11px] font-bold text-zinc-300 uppercase">
+                        📝 Notas Privadas del Vendedor (solo visibles para ti):
+                    </label>
+                    <button type="button" id="clientModalSaveNotesBtn" class="px-2.5 py-1 rounded-lg bg-acid hover:bg-acid-hover text-obsidian font-mono text-[11px] font-bold uppercase transition-colors">
+                        Guardar Nota
+                    </button>
+                </div>
+                <textarea id="clientModalNotesTextarea" rows="2" placeholder="Ej: Paga muy rápido en Vinted, le gusta la marca Carhartt talla L..." class="w-full px-3 py-2 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid leading-relaxed"></textarea>
+            </div>
+
+            <!-- Historial / Timeline de Pedidos y Actividad -->
+            <div class="space-y-2">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">
+                    Historial de Compras, Reservas y Colas:
+                </span>
+                <div id="clientModalTimelineContainer" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
+            </div>
+
+            <div class="flex items-center justify-end pt-2 border-t border-zinc-800">
+                <button type="button" id="closeClientModalFooterBtn" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                    Cerrar Ficha
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notificación Toast Flotante -->
     <div id="adminToast" class="hidden fixed bottom-5 right-5 z-50 max-w-sm px-4 py-3 rounded-xl bg-obsidian-elevated border border-acid text-xs font-semibold text-white shadow-2xl"></div>
 
@@ -1429,10 +2043,10 @@
 
         function getStoredTab() {
             const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
-            if (['drops', 'vinted', 'settings'].includes(hash)) return hash;
+            if (['drops', 'vinted', 'registro', 'settings'].includes(hash)) return hash;
             try {
                 const saved = localStorage.getItem('vm_admin_active_tab');
-                if (['drops', 'vinted', 'settings'].includes(saved)) return saved;
+                if (['drops', 'vinted', 'registro', 'settings'].includes(saved)) return saved;
             } catch (e) {}
             return (deepLinkLote || deepLinkRef) ? 'vinted' : 'drops';
         }
@@ -1451,6 +2065,23 @@
             formPhotos: [],
             draftLotUrls: {},
             draftSingleUrls: {},
+            contacts: [],
+            registroFilters: {
+                search: '',
+                period: 'THIS_MONTH',
+                dateFrom: '',
+                dateTo: '',
+                dropId: 'ALL',
+                status: 'ALL',
+                channel: 'ALL',
+                brand: 'ALL',
+                size: 'ALL',
+                profit: 'ALL'
+            },
+            activeSubView: 'ventas',
+            selectedRefs: new Set(),
+            activeMarkSoldRef: null,
+            activeClientKey: null,
             config: {
                 discountPercent: 10,
                 maxDiscountEur: 15,
@@ -1458,7 +2089,9 @@
                 vintedFooterTemplate: '',
                 activeDropId: '',
                 activeDropTitle: '',
-                activeDropEndsAt: ''
+                activeDropEndsAt: '',
+                defaultExtraExpenseEur: 0,
+                crmClientsMeta: {}
             },
             garments: []
         };
@@ -2257,7 +2890,7 @@
         let autoPollingInterval = null;
 
         function setActiveTab(tabName) {
-            if (!['drops', 'vinted', 'settings'].includes(tabName)) tabName = 'drops';
+            if (!['drops', 'vinted', 'registro', 'settings'].includes(tabName)) tabName = 'drops';
             adminState.activeTab = tabName;
             try {
                 localStorage.setItem('vm_admin_active_tab', tabName);
@@ -2265,26 +2898,28 @@
                     window.history.replaceState(null, '', `#${tabName}`);
                 }
             } catch (e) {}
-            ['drops', 'vinted', 'settings'].forEach(t => {
+            ['drops', 'vinted', 'registro', 'settings'].forEach(t => {
                 const tabEl = document.getElementById(`tab-${t}`);
                 if (tabEl) tabEl.classList.toggle('hidden', t !== tabName);
             });
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 const isAct = btn.getAttribute('data-tab') === tabName;
-                btn.className = `tab-btn flex-1 min-w-[135px] py-3 px-3.5 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all ${
+                btn.className = `tab-btn flex-1 min-w-[95px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-all ${
                     isAct ? 'bg-acid text-obsidian shadow-md shadow-acid/20' : 'text-zinc-300 hover:text-white'
                 }`;
             });
-            // Si el usuario entra a la pestaña de Vinted y está autenticado, sincronizar reservas al instante
+            // Sincronizaciones instantáneas al conmutar de pestaña
             if (tabName === 'vinted' && adminState.password) {
                 syncDashboardQuietly(true);
+            } else if (tabName === 'registro') {
+                renderRegistroWorkspace();
             }
             lucide.createIcons();
         }
 
         window.addEventListener('hashchange', () => {
             const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
-            if (['drops', 'vinted', 'settings'].includes(hash) && hash !== adminState.activeTab) {
+            if (['drops', 'vinted', 'registro', 'settings'].includes(hash) && hash !== adminState.activeTab) {
                 setActiveTab(hash);
             }
         });
@@ -2353,6 +2988,7 @@
                 const data = await callAdminApi('get_dashboard');
                 adminState.config = data.config || adminState.config;
                 adminState.garments = Array.isArray(data.garments) ? data.garments : [];
+                if (Array.isArray(data.contacts)) adminState.contacts = data.contacts;
                 lastSyncTimestamp = Date.now();
 
                 // Actualizar cabecera de métricas
@@ -2379,6 +3015,7 @@
                     renderVintedWorkspace();
                 }
                 renderCurrentDropList();
+                renderRegistroWorkspace();
                 updateLiveSyncIndicator();
 
                 // Detectar si entraron nuevas reservas VIP y notificar con alerta destacada
@@ -2456,6 +3093,7 @@
             const data = await callAdminApi('get_dashboard');
             adminState.config = data.config || adminState.config;
             adminState.garments = Array.isArray(data.garments) ? data.garments : [];
+            adminState.contacts = Array.isArray(data.contacts) ? data.contacts : [];
 
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('studioSection').classList.remove('hidden');
@@ -2508,11 +3146,14 @@
             document.getElementById('cfgDiscountPct').value = cfg.discountPercent ?? 10;
             document.getElementById('cfgMaxDiscountEur').value = cfg.maxDiscountEur ?? 15;
             document.getElementById('cfgMaxItems').value = cfg.maxItemsPerOrder ?? 10;
+            const defExpenseIn = document.getElementById('cfgDefaultExtraExpense');
+            if (defExpenseIn) defExpenseIn.value = cfg.defaultExtraExpenseEur ?? 0;
             document.getElementById('cfgVintedFooter').value = cfg.vintedFooterTemplate || '';
 
             renderDropChipsAndSelect();
             renderCurrentDropList();
             renderVintedWorkspace();
+            renderRegistroWorkspace();
             lastSyncTimestamp = Date.now();
             updateLiveSyncIndicator();
             setActiveTab(adminState.activeTab);
@@ -2761,6 +3402,8 @@
             document.getElementById('resetGarmentFormBtn').classList.add('hidden');
             document.getElementById('gRef').value = generateUniqueRef();
             document.getElementById('gPrice').value = '';
+            const costIn = document.getElementById('gCost');
+            if (costIn) costIn.value = '';
             document.getElementById('gSize').value = '';
             document.getElementById('gTitle').value = '';
             document.getElementById('gBrand').value = '';
@@ -3039,6 +3682,8 @@
             if (g.dropTitle) document.getElementById('dropTitleInput').value = g.dropTitle;
             document.getElementById('gRef').value = g.ref;
             document.getElementById('gPrice').value = g.priceEur;
+            const costIn = document.getElementById('gCost');
+            if (costIn) costIn.value = (g.costEur && g.costEur > 0) ? g.costEur : '';
             document.getElementById('gSize').value = g.size || '';
             document.getElementById('gTitle').value = g.title || '';
             document.getElementById('gBrand').value = g.brand || '';
@@ -3063,6 +3708,7 @@
             const dropTitle = document.getElementById('dropTitleInput').value.trim() || 'Drop Privado 24h';
             const ref = document.getElementById('gRef').value.trim().toUpperCase();
             const priceEur = Number(document.getElementById('gPrice').value);
+            const costEur = Number(document.getElementById('gCost')?.value || 0);
             const size = document.getElementById('gSize').value.trim();
             const title = document.getElementById('gTitle').value.trim();
             const brand = document.getElementById('gBrand').value.trim();
@@ -3130,6 +3776,7 @@
                         vintedCondition,
                         description,
                         priceEur,
+                        costEur,
                         vintedUrl,
                         photos: finalPhotoUrls
                     }
@@ -4662,6 +5309,7 @@
                     discountPercent: Number(document.getElementById('cfgDiscountPct').value || 0),
                     maxDiscountEur: Number(document.getElementById('cfgMaxDiscountEur').value || 0),
                     maxItemsPerOrder: Number(document.getElementById('cfgMaxItems').value || 0),
+                    defaultExtraExpenseEur: Number(document.getElementById('cfgDefaultExtraExpense')?.value || 0),
                     vintedFooterTemplate: document.getElementById('cfgVintedFooter').value
                 });
                 toast('✓ Reglas de descuento y pie de Vinted actualizados en vivo');
@@ -4673,6 +5321,1440 @@
                 btn.textContent = 'Guardar Ajustes en Vivo';
             }
         });
+
+        // ======================== PESTAÑA 3: REGISTRO / ERP & CONTROL TOTAL DE NEGOCIO ========================
+        function parseIsoDate(str) {
+            if (!str) return null;
+            const d = new Date(str);
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        function getGarmentSoldPrice(g) {
+            if (g.soldPriceEur && Number(g.soldPriceEur) > 0) return Number(g.soldPriceEur);
+            if (g.reservedFinalPriceEur && Number(g.reservedFinalPriceEur) > 0) return Number(g.reservedFinalPriceEur);
+            return Number(g.priceEur || 0);
+        }
+
+        function getGarmentSoldAt(g) {
+            if (g.soldAt) return g.soldAt;
+            if (g.reservedAt) return g.reservedAt;
+            return g.updatedAt || '';
+        }
+
+        function getFilteredRegistroData() {
+            const f = adminState.registroFilters;
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const sevenDaysAgo = now.getTime() - 7 * 24 * 3600 * 1000;
+            const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+            const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime();
+            const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999).getTime();
+            const startOfThisYear = new Date(now.getFullYear(), 0, 1).getTime();
+
+            const customFromMs = f.dateFrom ? new Date(f.dateFrom + 'T00:00:00').getTime() : 0;
+            const customToMs = f.dateTo ? new Date(f.dateTo + 'T23:59:59').getTime() : Infinity;
+
+            const q = (f.search || '').trim().toLowerCase();
+
+            return adminState.garments.filter(g => {
+                // Filtro Drop
+                if (f.dropId !== 'ALL' && (g.dropId || '').toUpperCase() !== f.dropId.toUpperCase()) {
+                    return false;
+                }
+
+                // Filtro Estado
+                if (f.status !== 'ALL') {
+                    if (f.status === 'WAITLIST') {
+                        if (getGarmentWaitlist(g).length === 0) return false;
+                    } else if ((g.status || 'DISPONIBLE').toUpperCase() !== f.status) {
+                        return false;
+                    }
+                }
+
+                // Filtro Canal
+                if (f.channel !== 'ALL') {
+                    const ch = (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : '')).toUpperCase();
+                    if (ch !== f.channel) return false;
+                }
+
+                // Filtro Marca
+                if (f.brand !== 'ALL' && (g.brand || '').trim().toLowerCase() !== f.brand.toLowerCase()) {
+                    return false;
+                }
+
+                // Filtro Talla
+                if (f.size !== 'ALL' && (g.size || '').trim().toLowerCase() !== f.size.toLowerCase()) {
+                    return false;
+                }
+
+                // Filtro Rentabilidad / Coste
+                const cost = Number(g.costEur || 0);
+                const price = getGarmentSoldPrice(g);
+                const expense = Number(g.extraExpenseEur || 0);
+                const profit = price - (cost + expense);
+                const margin = price > 0 ? (profit / price) * 100 : 0;
+
+                if (f.profit === 'WITH_COST' && cost <= 0) return false;
+                if (f.profit === 'NO_COST' && cost > 0) return false;
+                if (f.profit === 'HIGH_MARGIN' && margin < 50) return false;
+                if (f.profit === 'LOW_MARGIN' && margin >= 20) return false;
+
+                // Filtro Periodo de Fecha (aplica a fecha de venta, reserva o actualizacion)
+                const dateStr = getGarmentSoldAt(g);
+                const itemDate = dateStr ? new Date(dateStr).getTime() : 0;
+
+                if (f.period !== 'ALL' && itemDate > 0) {
+                    if (f.period === 'TODAY' && itemDate < startOfToday) return false;
+                    if (f.period === '7DAYS' && itemDate < sevenDaysAgo) return false;
+                    if (f.period === 'THIS_MONTH' && itemDate < startOfThisMonth) return false;
+                    if (f.period === 'LAST_MONTH' && (itemDate < startOfLastMonth || itemDate > endOfLastMonth)) return false;
+                    if (f.period === 'THIS_YEAR' && itemDate < startOfThisYear) return false;
+                    if (f.period === 'CUSTOM' && (itemDate < customFromMs || itemDate > customToMs)) return false;
+                }
+
+                // Buscador Omnicanal
+                if (q) {
+                    const haystack = [
+                        g.ref,
+                        g.title,
+                        g.brand,
+                        g.size,
+                        g.dropId,
+                        g.dropTitle,
+                        g.soldToVinted,
+                        g.reservedByVinted,
+                        g.soldToEmail,
+                        g.reservedByEmail,
+                        g.reservationGroupId,
+                        g.description
+                    ].join(' ').toLowerCase();
+
+                    if (!haystack.includes(q)) return false;
+                }
+
+                return true;
+            });
+        }
+
+        function populateRegistroFilterDropdowns() {
+            // Drops
+            const dropsMap = new Map();
+            adminState.garments.forEach(g => {
+                const id = (g.dropId || '').trim();
+                if (id) dropsMap.set(id, g.dropTitle || id);
+            });
+            const dropSel = document.getElementById('erpFilterDrop');
+            if (dropSel) {
+                const currentVal = adminState.registroFilters.dropId;
+                dropSel.innerHTML = '<option value="ALL">Todos los Drops</option>' +
+                    [...dropsMap.keys()].sort().map(id => `<option value="${escapeHtml(id)}">${escapeHtml(id)}</option>`).join('');
+                dropSel.value = dropsMap.has(currentVal) ? currentVal : 'ALL';
+            }
+
+            // Marcas
+            const brands = new Set();
+            adminState.garments.forEach(g => {
+                if (g.brand && g.brand.trim()) brands.add(g.brand.trim());
+            });
+            const brandSel = document.getElementById('erpFilterBrand');
+            if (brandSel) {
+                const currentBrand = adminState.registroFilters.brand;
+                brandSel.innerHTML = '<option value="ALL">Todas las Marcas</option>' +
+                    [...brands].sort().map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+                brandSel.value = brands.has(currentBrand) ? currentBrand : 'ALL';
+            }
+
+            // Tallas
+            const sizes = new Set();
+            adminState.garments.forEach(g => {
+                if (g.size && g.size.trim()) sizes.add(g.size.trim().toUpperCase());
+            });
+            const sizeSel = document.getElementById('erpFilterSize');
+            if (sizeSel) {
+                const currentSize = adminState.registroFilters.size;
+                sizeSel.innerHTML = '<option value="ALL">Todas las Tallas</option>' +
+                    [...sizes].sort().map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+                sizeSel.value = sizes.has(currentSize) ? currentSize : 'ALL';
+            }
+        }
+
+        function renderRegistroKpis(filteredGarments) {
+            const soldItems = filteredGarments.filter(g => g.status === 'VENDIDA');
+            const reservedItems = filteredGarments.filter(g => g.status === 'RESERVADA');
+            const availableItems = filteredGarments.filter(g => g.status === 'DISPONIBLE');
+
+            // Facturacion cobrada real en ventas cerradas
+            const facturacionReal = soldItems.reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
+            const costeStockVendido = soldItems.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
+            const gastosOperativos = soldItems.reduce((acc, g) => acc + Number(g.extraExpenseEur || 0), 0);
+            const costeTotalVendido = costeStockVendido + gastosOperativos;
+            const beneficioNeto = facturacionReal - costeTotalVendido;
+            const margenPercent = facturacionReal > 0 ? round2((beneficioNeto / facturacionReal) * 100) : 0;
+
+            // Liquidacion
+            const totalPrendas = filteredGarments.length;
+            const sellThrough = totalPrendas > 0 ? round2((soldItems.length / totalPrendas) * 100) : 0;
+            const ticketMedio = soldItems.length > 0 ? round2(facturacionReal / soldItems.length) : 0;
+
+            // Capital inmovilizado
+            const capitalCoste = availableItems.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
+            const capitalPvp = availableItems.reduce((acc, g) => acc + Number(g.priceEur || 0), 0);
+
+            // Asignar al DOM
+            const elFact = document.getElementById('kpiFacturacionReal');
+            if (elFact) elFact.textContent = fmtEur(facturacionReal);
+            const elFactSub = document.getElementById('kpiFacturacionSub');
+            if (elFactSub) elFactSub.textContent = `${soldItems.length} venta${soldItems.length === 1 ? '' : 's'} (${reservedItems.length} en reserva)`;
+
+            const elCost = document.getElementById('kpiCosteTotal');
+            if (elCost) elCost.textContent = fmtEur(costeTotalVendido);
+            const elCostSub = document.getElementById('kpiCosteSub');
+            if (elCostSub) elCostSub.textContent = `${fmtEur(gastosOperativos)} en sobre/embalaje`;
+
+            const elBenef = document.getElementById('kpiBeneficioNeto');
+            if (elBenef) {
+                elBenef.textContent = fmtEur(beneficioNeto);
+                elBenef.className = beneficioNeto >= 0
+                    ? 'mt-1 font-display text-xl sm:text-2xl font-bold text-acid tabular-nums'
+                    : 'mt-1 font-display text-xl sm:text-2xl font-bold text-rose-400 tabular-nums';
+            }
+            const elMargenBadge = document.getElementById('kpiMargenPercentBadge');
+            if (elMargenBadge) {
+                elMargenBadge.textContent = `${margenPercent}%`;
+                elMargenBadge.className = margenPercent >= 30
+                    ? 'font-mono text-[10px] px-1.5 py-0.2 rounded bg-acid text-obsidian font-bold'
+                    : (margenPercent >= 0 ? 'font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-400 text-obsidian font-bold' : 'font-mono text-[10px] px-1.5 py-0.2 rounded bg-rose-500 text-white font-bold');
+            }
+
+            const elSell = document.getElementById('kpiSellThrough');
+            if (elSell) elSell.textContent = `${sellThrough}%`;
+            const elSellSub = document.getElementById('kpiSellThroughSub');
+            if (elSellSub) elSellSub.textContent = `${soldItems.length} vendidas / ${totalPrendas} total`;
+
+            const elTicket = document.getElementById('kpiTicketMedio');
+            if (elTicket) elTicket.textContent = fmtEur(ticketMedio);
+            const elTicketSub = document.getElementById('kpiTicketMedioSub');
+            if (elTicketSub) elTicketSub.textContent = `${availableItems.length} en stock activo`;
+
+            const elCap = document.getElementById('kpiCapitalInmovilizado');
+            if (elCap) elCap.textContent = fmtEur(capitalCoste);
+            const elCapSub = document.getElementById('kpiCapitalPvpSub');
+            if (elCapSub) elCapSub.textContent = `PVP pot.: ${fmtEur(capitalPvp)}`;
+
+            // Badge indicador de filtros activos
+            const isFiltering = adminState.registroFilters.search ||
+                adminState.registroFilters.period !== 'THIS_MONTH' ||
+                adminState.registroFilters.dropId !== 'ALL' ||
+                adminState.registroFilters.status !== 'ALL' ||
+                adminState.registroFilters.channel !== 'ALL' ||
+                adminState.registroFilters.brand !== 'ALL' ||
+                adminState.registroFilters.size !== 'ALL' ||
+                adminState.registroFilters.profit !== 'ALL';
+
+            const filterBadge = document.getElementById('erpFilterIndicatorBadge');
+            if (filterBadge) filterBadge.classList.toggle('hidden', !isFiltering);
+        }
+
+        // ======================== SUB-VISTA 1: VENTAS & PEDIDOS ========================
+        function renderSubViewVentas(filteredGarments) {
+            const tableBody = document.getElementById('ventasTableBody');
+            const countLabel = document.getElementById('ventasRowCountLabel');
+            if (!tableBody) return;
+
+            // Consideramos ventas cerradas ('VENDIDA') y reservas activas ('RESERVADA')
+            const sales = filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'RESERVADA');
+
+            if (countLabel) countLabel.textContent = `${sales.length} registro${sales.length === 1 ? '' : 's'}`;
+            const badgeCount = document.getElementById('badgeCountVentas');
+            if (badgeCount) badgeCount.textContent = `${sales.length}`;
+
+            if (sales.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="11" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay ventas ni reservas registradas con los filtros actuales.</td></tr>`;
+                return;
+            }
+
+            sales.sort((a, b) => {
+                const dateA = new Date(getGarmentSoldAt(a) || 0).getTime();
+                const dateB = new Date(getGarmentSoldAt(b) || 0).getTime();
+                return dateB - dateA;
+            });
+
+            tableBody.innerHTML = sales.map(g => {
+                const dateStr = getGarmentSoldAt(g);
+                let dateFmt = '-';
+                if (dateStr) {
+                    try {
+                        const d = new Date(dateStr);
+                        dateFmt = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    } catch (e) {}
+                }
+
+                const buyerVinted = g.soldToVinted || g.reservedByVinted || '-';
+                const buyerEmail = g.soldToEmail || g.reservedByEmail || '';
+                const channel = (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT')).toUpperCase();
+
+                let channelBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-300">Vinted</span>';
+                if (channel === 'DROP_VIP') {
+                    channelBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">Drop VIP</span>';
+                } else if (channel === 'TELEGRAM') {
+                    channelBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">Telegram</span>';
+                }
+
+                const basePrice = Number(g.priceEur || 0);
+                const finalPrice = getGarmentSoldPrice(g);
+                const cost = Number(g.costEur || 0);
+                const expense = Number(g.extraExpenseEur || 0);
+                const totalCost = cost + expense;
+                const profit = finalPrice - totalCost;
+                const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
+                const isSold = g.status === 'VENDIDA';
+
+                return `
+                <tr class="hover:bg-obsidian-elevated/40 transition-colors">
+                    <td class="py-3 px-3.5 font-mono text-[11px] text-zinc-400">${escapeHtml(dateFmt)}</td>
+                    <td class="py-3 px-3">
+                        <span class="font-mono font-bold text-acid">${escapeHtml(g.ref)}</span>
+                        ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
+                    </td>
+                    <td class="py-3 px-3 max-w-[200px]">
+                        <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
+                        <span class="font-mono text-[10px] text-zinc-400">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
+                    </td>
+                    <td class="py-3 px-3">
+                        <span class="font-mono text-xs font-semibold text-zinc-200">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
+                        ${buyerEmail ? `<span class="block text-[10px] text-zinc-500 truncate max-w-[140px]">${escapeHtml(buyerEmail)}</span>` : ''}
+                    </td>
+                    <td class="py-3 px-3">${channelBadge}</td>
+                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(basePrice)}</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${fmtEur(finalPrice)}</td>
+                    <td class="py-3 px-3 text-right font-mono text-zinc-400" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">${fmtEur(totalCost)}</td>
+                    <td class="py-3 px-3.5 text-right font-mono font-bold ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
+                    <td class="py-3 px-3 text-center">
+                        <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
+                            ${margin}%
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <div class="inline-flex items-center gap-1">
+                            <button type="button" data-edit-sale="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors" title="Editar datos económicos o reasignar venta">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                            </button>
+                            ${g.vintedUrl ? `<a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-acid transition-colors" title="Abrir anuncio en Vinted">🔗</a>` : ''}
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tableBody.querySelectorAll('[data-edit-sale]').forEach(btn => {
+                btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-edit-sale')));
+            });
+
+            lucide.createIcons();
+        }
+
+        // ======================== SUB-VISTA 2: INVENTARIO MAESTRO ========================
+        function renderSubViewPrendas(filteredGarments) {
+            const tableBody = document.getElementById('prendasTableBody');
+            const countLabel = document.getElementById('prendasRowCountLabel');
+            if (!tableBody) return;
+
+            if (countLabel) countLabel.textContent = `${filteredGarments.length} prenda${filteredGarments.length === 1 ? '' : 's'}`;
+            const badgeCount = document.getElementById('badgeCountPrendas');
+            if (badgeCount) badgeCount.textContent = `${filteredGarments.length}`;
+
+            if (filteredGarments.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay prendas registradas con los filtros actuales.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = filteredGarments.map(g => {
+                const isChecked = adminState.selectedRefs.has(g.ref);
+                const thumb = (g.photos && g.photos[0]) || '';
+                const cost = Number(g.costEur || 0);
+                const basePrice = Number(g.priceEur || 0);
+                const finalPrice = getGarmentSoldPrice(g);
+                const expense = Number(g.extraExpenseEur || 0);
+                const profit = finalPrice - (cost + expense);
+                const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
+
+                let statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
+                if (g.status === 'VENDIDA') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span>`;
+                } else if (g.status === 'RESERVADA') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">Reservada VIP</span>`;
+                } else if (g.status === 'DISPONIBLE') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-acid-muted text-acid border border-acid/40">Disponible</span>`;
+                }
+
+                return `
+                <tr class="hover:bg-obsidian-elevated/40 transition-colors ${isChecked ? 'bg-acid/5' : ''}">
+                    <td class="py-3 px-3 text-center">
+                        <input type="checkbox" data-check-ref="${escapeHtml(g.ref)}" ${isChecked ? 'checked' : ''} class="rounded border-zinc-700 text-acid focus:ring-0 cursor-pointer">
+                    </td>
+                    <td class="py-3 px-2">
+                        ${thumb
+                            ? `<img src="${escapeHtml(thumb)}" alt="" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
+                            : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
+                        }
+                    </td>
+                    <td class="py-3 px-3 font-mono font-bold text-acid">${escapeHtml(g.ref)}</td>
+                    <td class="py-3 px-3 max-w-[200px]">
+                        <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
+                        <span class="font-mono text-[10px] text-zinc-400">${escapeHtml(g.brand || 'Vintage')}</span>
+                    </td>
+                    <td class="py-3 px-2.5 font-mono text-xs text-zinc-300">${escapeHtml(g.size || '-')}</td>
+                    <td class="py-3 px-3 font-mono text-xs text-zinc-400">${escapeHtml(g.dropId || '-')}</td>
+                    <td class="py-3 px-3">${statusBadge}</td>
+                    <td class="py-3 px-3 text-right font-mono text-zinc-300">${fmtEur(basePrice)}</td>
+                    <td class="py-3 px-3 text-right">
+                        <button type="button" data-inline-cost="${escapeHtml(g.ref)}" data-current-cost="${cost}" class="px-2 py-1 rounded bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-amber-400 font-mono text-xs font-bold ${cost > 0 ? 'text-amber-300' : 'text-zinc-500'}" title="Clic para editar coste unitario">
+                            ${cost > 0 ? fmtEur(cost) : 'Sin coste'} ✎
+                        </button>
+                    </td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${fmtEur(finalPrice)}</td>
+                    <td class="py-3 px-3 text-center font-mono text-xs">
+                        ${cost > 0
+                            ? `<span class="font-bold ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">${margin}%</span>`
+                            : '<span class="text-zinc-500 text-[10px]">-</span>'
+                        }
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <div class="inline-flex items-center gap-1.5">
+                            <button type="button" data-edit-form="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors" title="Editar ficha completa en Pestaña 1">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i>
+                            </button>
+                            ${g.status !== 'VENDIDA' ? `
+                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
+                                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            // Eventos de Checkboxes
+            tableBody.querySelectorAll('[data-check-ref]').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const ref = chk.getAttribute('data-check-ref');
+                    if (chk.checked) adminState.selectedRefs.add(ref);
+                    else adminState.selectedRefs.delete(ref);
+                    updateBulkToolbar();
+                });
+            });
+
+            // Edición rápida inline de Coste
+            tableBody.querySelectorAll('[data-inline-cost]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-inline-cost');
+                    const currentCost = btn.getAttribute('data-current-cost') || '0';
+                    const newCostStr = window.prompt(`Nuevo coste unitario de adquisición para ${ref} (€):`, currentCost > 0 ? currentCost : '');
+                    if (newCostStr === null) return;
+                    const val = parseFloat(newCostStr.replace(',', '.'));
+                    if (isNaN(val) || val < 0) {
+                        toast('Introduce un número válido de coste en euros.', true);
+                        return;
+                    }
+                    try {
+                        toast(`Guardando coste de ${ref}...`);
+                        await callAdminApi('bulk_update_garments', {
+                            updates: [{ ref, costEur: val }]
+                        });
+                        toast(`✓ Coste de ${ref} actualizado a ${fmtEur(val)}`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+
+            // Botón Editar Ficha completa
+            tableBody.querySelectorAll('[data-edit-form]').forEach(btn => {
+                btn.addEventListener('click', () => loadGarmentIntoForm(btn.getAttribute('data-edit-form')));
+            });
+
+            // Botón Marcar Vendida
+            tableBody.querySelectorAll('[data-quick-sold]').forEach(btn => {
+                btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-quick-sold')));
+            });
+
+            lucide.createIcons();
+            updateBulkToolbar();
+        }
+
+        // ======================== SUB-VISTA 3: CLIENTES CRM 360º ========================
+        function renderSubViewClientes(filteredGarments) {
+            const tableBody = document.getElementById('clientesTableBody');
+            const countLabel = document.getElementById('clientesRowCountLabel');
+            if (!tableBody) return;
+
+            const crmMap = new Map();
+            const configCrm = adminState.config.crmClientsMeta || {};
+
+            // 1. Añadir leads de Brevo
+            (adminState.contacts || []).forEach(c => {
+                const email = String(c.email || '').trim().toLowerCase();
+                if (!email) return;
+                crmMap.set(email, {
+                    key: email,
+                    email,
+                    vintedUser: '',
+                    purchases: [],
+                    waitlists: [],
+                    brevoId: c.id,
+                    createdAt: c.createdAt || '',
+                    numReservas: Number(c.numReservas || 0),
+                    firstName: c.firstName || ''
+                });
+            });
+
+            // 2. Cruzar con todas las prendas vendidas, reservadas y colas de espera
+            adminState.garments.forEach(g => {
+                const waitlist = getGarmentWaitlist(g);
+                waitlist.forEach(w => {
+                    const wEmail = String(w.email || '').trim().toLowerCase();
+                    const wVinted = String(w.vintedUser || '').trim().replace(/^@+/, '');
+                    const k = wEmail || wVinted.toLowerCase();
+                    if (!k) return;
+
+                    if (!crmMap.has(k)) {
+                        crmMap.set(k, {
+                            key: k,
+                            email: wEmail,
+                            vintedUser: wVinted,
+                            purchases: [],
+                            waitlists: [],
+                            brevoId: null,
+                            createdAt: w.joinedAt || '',
+                            numReservas: 0
+                        });
+                    }
+                    const entry = crmMap.get(k);
+                    if (wVinted && !entry.vintedUser) entry.vintedUser = wVinted;
+                    if (wEmail && !entry.email) entry.email = wEmail;
+                    entry.waitlists.push({ ref: g.ref, title: g.title, joinedAt: w.joinedAt });
+                });
+
+                // Compras / Reservas
+                const buyerEmail = String(g.soldToEmail || g.reservedByEmail || '').trim().toLowerCase();
+                const buyerVinted = String(g.soldToVinted || g.reservedByVinted || '').trim().replace(/^@+/, '');
+                const clientKey = buyerEmail || buyerVinted.toLowerCase();
+
+                if (clientKey) {
+                    if (!crmMap.has(clientKey)) {
+                        crmMap.set(clientKey, {
+                            key: clientKey,
+                            email: buyerEmail,
+                            vintedUser: buyerVinted,
+                            purchases: [],
+                            waitlists: [],
+                            brevoId: null,
+                            createdAt: getGarmentSoldAt(g) || '',
+                            numReservas: 0
+                        });
+                    }
+                    const client = crmMap.get(clientKey);
+                    if (buyerVinted && !client.vintedUser) client.vintedUser = buyerVinted;
+                    if (buyerEmail && !client.email) client.email = buyerEmail;
+
+                    client.purchases.push({
+                        ref: g.ref,
+                        title: g.title,
+                        status: g.status,
+                        price: getGarmentSoldPrice(g),
+                        soldAt: getGarmentSoldAt(g)
+                    });
+                }
+            });
+
+            const clientsList = [...crmMap.values()];
+
+            // Filtrar por buscador si procede
+            const q = (adminState.registroFilters.search || '').trim().toLowerCase();
+            const filteredClients = clientsList.filter(c => {
+                if (!q) return true;
+                const hay = [c.email, c.vintedUser, c.firstName].join(' ').toLowerCase();
+                return hay.includes(q);
+            });
+
+            if (countLabel) countLabel.textContent = `${filteredClients.length} cliente${filteredClients.length === 1 ? '' : 's'}`;
+            const badgeCount = document.getElementById('badgeCountClientes');
+            if (badgeCount) badgeCount.textContent = `${filteredClients.length}`;
+
+            if (filteredClients.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay clientes coincidentes en el CRM.</td></tr>`;
+                return;
+            }
+
+            // Ordenar por LTV descendente
+            filteredClients.sort((a, b) => {
+                const ltvA = a.purchases.reduce((acc, p) => acc + (p.status === 'VENDIDA' ? p.price : 0), 0);
+                const ltvB = b.purchases.reduce((acc, p) => acc + (p.status === 'VENDIDA' ? p.price : 0), 0);
+                return ltvB - ltvA;
+            });
+
+            tableBody.innerHTML = filteredClients.map(c => {
+                const completedPurchases = c.purchases.filter(p => p.status === 'VENDIDA');
+                const reservedPurchases = c.purchases.filter(p => p.status === 'RESERVADA');
+                const ltv = completedPurchases.reduce((acc, p) => acc + p.price, 0);
+
+                let tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">🌱 Lead QR</span>';
+                if (completedPurchases.length >= 2) {
+                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid text-obsidian shadow-sm">🏆 VIP Recurrente</span>';
+                } else if (completedPurchases.length === 1) {
+                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🛍️ Comprador</span>';
+                } else if (reservedPurchases.length > 0) {
+                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">⏱️ Reserva Activa</span>';
+                } else if (c.waitlists.length > 0) {
+                    tagBadge = '<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">⏳ En Cola</span>';
+                }
+
+                const clientMeta = configCrm[c.key.toLowerCase()] || {};
+                const privateNote = clientMeta.note || '';
+
+                return `
+                <tr class="hover:bg-obsidian-elevated/40 transition-colors">
+                    <td class="py-3 px-3.5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-obsidian-elevated border border-zinc-700 flex items-center justify-center font-mono font-bold text-xs text-acid shrink-0">
+                                ${(c.vintedUser ? c.vintedUser.charAt(0) : (c.email ? c.email.charAt(0) : '?')).toUpperCase()}
+                            </div>
+                            <div class="min-w-0">
+                                <span class="font-mono text-xs font-bold text-white truncate block">
+                                    ${c.vintedUser ? '@' + escapeHtml(c.vintedUser.replace(/^@+/, '')) : 'Sin usuario'}
+                                </span>
+                                ${c.firstName ? `<span class="text-[10px] text-zinc-400">${escapeHtml(c.firstName)}</span>` : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 font-mono text-xs text-zinc-300">${escapeHtml(c.email || '-')}</td>
+                    <td class="py-3 px-3 text-center">${tagBadge}</td>
+                    <td class="py-3 px-3 text-center font-mono text-xs">
+                        <strong class="text-white">${completedPurchases.length}</strong>
+                        ${reservedPurchases.length > 0 ? `<span class="text-amber-400 text-[10px]"> (+${reservedPurchases.length} res.)</span>` : ''}
+                    </td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-acid">${fmtEur(ltv)}</td>
+                    <td class="py-3 px-3 text-center font-mono text-[10px]">
+                        ${c.numReservas === 0 ? '<span class="text-acid font-bold">Disponible</span>' : '<span class="text-zinc-500">Consumido</span>'}
+                    </td>
+                    <td class="py-3 px-3 max-w-[180px]">
+                        <span class="text-[11px] text-zinc-400 truncate block" title="${escapeHtml(privateNote)}">
+                            ${escapeHtml(privateNote || 'Sin notas')}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <button type="button" data-open-client="${escapeHtml(c.key)}" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs text-zinc-200 transition-colors">
+                            Ficha 360º
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tableBody.querySelectorAll('[data-open-client]').forEach(btn => {
+                btn.addEventListener('click', () => openClientDetailsModal(btn.getAttribute('data-open-client'), crmMap));
+            });
+
+            lucide.createIcons();
+        }
+
+        // ======================== SUB-VISTA 4: RENDIMIENTO DROPS ========================
+        function renderSubViewDrops(filteredGarments) {
+            const tableBody = document.getElementById('dropsTableBody');
+            const countLabel = document.getElementById('dropsRowCountLabel');
+            if (!tableBody) return;
+
+            const dropsMap = new Map();
+            adminState.garments.forEach(g => {
+                const dId = (g.dropId || 'DROP-01').toUpperCase();
+                if (!dropsMap.has(dId)) {
+                    dropsMap.set(dId, {
+                        id: dId,
+                        title: g.dropTitle || dId,
+                        garments: []
+                    });
+                }
+                dropsMap.get(dId).garments.push(g);
+            });
+
+            const drops = [...dropsMap.values()].sort((a, b) => b.id.localeCompare(a.id));
+
+            if (countLabel) countLabel.textContent = `${drops.length} drop${drops.length === 1 ? '' : 's'}`;
+            const badgeCount = document.getElementById('badgeCountDrops');
+            if (badgeCount) badgeCount.textContent = `${drops.length}`;
+
+            if (drops.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="9" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay Drops registrados.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = drops.map(d => {
+                const total = d.garments.length;
+                const sold = d.garments.filter(g => g.status === 'VENDIDA').length;
+                const reserved = d.garments.filter(g => g.status === 'RESERVADA').length;
+                const sellThrough = total > 0 ? round2((sold / total) * 100) : 0;
+
+                const facturacion = d.garments.filter(g => g.status === 'VENDIDA').reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
+                const coste = d.garments.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
+                const beneficio = facturacion - coste;
+
+                const isActive = (adminState.config.activeDropId || '').toUpperCase() === d.id;
+
+                return `
+                <tr class="hover:bg-obsidian-elevated/40 transition-colors">
+                    <td class="py-3 px-3.5">
+                        <span class="font-mono font-bold text-acid">${escapeHtml(d.id)}</span>
+                        ${isActive ? '<span class="ml-1.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-acid text-obsidian">ACTIVO</span>' : ''}
+                    </td>
+                    <td class="py-3 px-3 max-w-[220px]">
+                        <span class="font-bold text-white truncate block">${escapeHtml(d.title)}</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-zinc-200">${total}</td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-emerald-400">
+                        ${sold}${reserved > 0 ? ` <span class="text-amber-400 font-normal text-[10px]">(+${reserved})</span>` : ''}
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <div class="w-16 bg-zinc-800 rounded-full h-2 overflow-hidden">
+                                <div class="bg-acid h-2 rounded-full" style="width: ${Math.min(100, sellThrough)}%"></div>
+                            </div>
+                            <span class="font-mono text-xs font-bold text-white">${sellThrough}%</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${fmtEur(facturacion)}</td>
+                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(coste)}</td>
+                    <td class="py-3 px-3.5 text-right font-mono font-bold ${beneficio >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(beneficio)}</td>
+                    <td class="py-3 px-3 text-center">
+                        <button type="button" data-filter-this-drop="${escapeHtml(d.id)}" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-acid hover:text-obsidian text-xs font-mono font-bold text-zinc-300 transition-colors">
+                            Ver Prendas
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tableBody.querySelectorAll('[data-filter-this-drop]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const dropId = btn.getAttribute('data-filter-this-drop');
+                    adminState.registroFilters.dropId = dropId;
+                    const sel = document.getElementById('erpFilterDrop');
+                    if (sel) sel.value = dropId;
+                    setSubView('prendas');
+                });
+            });
+
+            lucide.createIcons();
+        }
+
+        // ======================== SUB-VISTA 5: REGISTRO DE LOTES ========================
+        function renderSubViewLotes(filteredGarments) {
+            const tableBody = document.getElementById('lotesTableBody');
+            const countLabel = document.getElementById('lotesRowCountLabel');
+            if (!tableBody) return;
+
+            const lotsMap = new Map();
+            adminState.garments.forEach(g => {
+                const gId = (g.reservationGroupId || '').trim();
+                if (!gId) return;
+
+                if (!lotsMap.has(gId)) {
+                    lotsMap.set(gId, {
+                        groupId: gId,
+                        buyerVinted: g.soldToVinted || g.reservedByVinted || '',
+                        buyerEmail: g.soldToEmail || g.reservedByEmail || '',
+                        items: [],
+                        lotPrice: Number(g.reservationLotPriceEur || 0)
+                    });
+                }
+                lotsMap.get(gId).items.push(g);
+            });
+
+            // Consideramos lotes los que tienen 2+ prendas o empiezan por LOTE-
+            const lots = [...lotsMap.values()].filter(l => l.items.length > 1 || l.groupId.startsWith('LOTE-'));
+
+            if (countLabel) countLabel.textContent = `${lots.length} lote${lots.length === 1 ? '' : 's'}`;
+            const badgeCount = document.getElementById('badgeCountLotes');
+            if (badgeCount) badgeCount.textContent = `${lots.length}`;
+
+            if (lots.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="9" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay lotes multi-prenda registrados en el sistema.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = lots.map(l => {
+                const baseSum = l.items.reduce((acc, x) => acc + Number(x.priceEur || 0), 0);
+                const finalSum = l.lotPrice > 0 ? l.lotPrice : l.items.reduce((acc, x) => acc + getGarmentSoldPrice(x), 0);
+                const costSum = l.items.reduce((acc, x) => acc + Number(x.costEur || 0), 0);
+                const profit = finalSum - costSum;
+
+                // Verificacion de limpieza en Vinted
+                const cleanedCount = l.items.filter(x => x.vintedCleanedAt).length;
+                const isAllCleaned = cleanedCount === l.items.length;
+                const isSold = l.items.every(x => x.status === 'VENDIDA');
+
+                let cleanBadge = `<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">N/A</span>`;
+                if (isSold) {
+                    cleanBadge = isAllCleaned
+                        ? `<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">✓ Limpio en Vinted</span>`
+                        : `<span class="px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/50 animate-pulse">⚠️ ${cleanedCount}/${l.items.length} borradas</span>`;
+                }
+
+                const refsList = l.items.map(i => i.ref).join(', ');
+
+                return `
+                <tr class="hover:bg-obsidian-elevated/40 transition-colors">
+                    <td class="py-3 px-3.5 font-mono font-bold text-white">${escapeHtml(l.groupId)}</td>
+                    <td class="py-3 px-3">
+                        <span class="font-mono text-xs font-semibold text-zinc-200">@${escapeHtml(l.buyerVinted.replace(/^@+/, '') || 'desconocido')}</span>
+                    </td>
+                    <td class="py-3 px-3 max-w-[200px]">
+                        <span class="font-bold text-white text-xs">${l.items.length} prendas</span>
+                        <span class="block font-mono text-[10px] text-zinc-400 truncate" title="${escapeHtml(refsList)}">${escapeHtml(refsList)}</span>
+                    </td>
+                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(baseSum)}</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-acid">${fmtEur(finalSum)}</td>
+                    <td class="py-3 px-3 text-right font-mono text-zinc-400">${fmtEur(costSum)}</td>
+                    <td class="py-3 px-3.5 text-right font-mono font-bold ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
+                    <td class="py-3 px-3 text-center">${cleanBadge}</td>
+                    <td class="py-3 px-3 text-center">
+                        <button type="button" data-open-lot-checklist="${escapeHtml(l.groupId)}" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-200 transition-colors">
+                            Checklist Vinted
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tableBody.querySelectorAll('[data-open-lot-checklist]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const gId = btn.getAttribute('data-open-lot-checklist');
+                    if (typeof openLotCleanupModal === 'function') {
+                        openLotCleanupModal(gId);
+                    } else {
+                        setActiveTab('vinted');
+                    }
+                });
+            });
+
+            lucide.createIcons();
+        }
+
+        // ======================== MOTOR DE RENDER Y EVENTOS DE REGISTRO ========================
+        function setSubView(subViewName) {
+            adminState.activeSubView = subViewName;
+            document.querySelectorAll('.erp-subview-btn').forEach(btn => {
+                const act = btn.getAttribute('data-subview') === subViewName;
+                btn.className = `erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all ${
+                    act ? 'bg-acid text-obsidian shadow-sm' : 'text-zinc-300 hover:text-white'
+                }`;
+            });
+
+            ['ventas', 'prendas', 'clientes', 'drops', 'lotes'].forEach(v => {
+                const el = document.getElementById(`subview-${v}`);
+                if (el) el.classList.toggle('hidden', v !== subViewName);
+            });
+
+            renderActiveSubView();
+            lucide.createIcons();
+        }
+
+        function renderActiveSubView() {
+            const filtered = getFilteredRegistroData();
+            renderRegistroKpis(filtered);
+
+            if (adminState.activeSubView === 'ventas') {
+                renderSubViewVentas(filtered);
+            } else if (adminState.activeSubView === 'prendas') {
+                renderSubViewPrendas(filtered);
+            } else if (adminState.activeSubView === 'clientes') {
+                renderSubViewClientes(filtered);
+            } else if (adminState.activeSubView === 'drops') {
+                renderSubViewDrops(filtered);
+            } else if (adminState.activeSubView === 'lotes') {
+                renderSubViewLotes(filtered);
+            }
+        }
+
+        function renderRegistroWorkspace() {
+            populateRegistroFilterDropdowns();
+            renderActiveSubView();
+        }
+
+        function updateBulkToolbar() {
+            const bar = document.getElementById('erpBulkBar');
+            const countLabel = document.getElementById('erpBulkSelectedCount');
+            const selectAllCheck = document.getElementById('erpSelectAllCheckbox');
+
+            const count = adminState.selectedRefs.size;
+            if (countLabel) countLabel.textContent = `${count} prenda${count === 1 ? '' : 's'} seleccionada${count === 1 ? '' : 's'}`;
+
+            if (bar) {
+                bar.classList.toggle('hidden', count === 0);
+            }
+
+            if (selectAllCheck) {
+                const filtered = getFilteredRegistroData();
+                selectAllCheck.checked = filtered.length > 0 && filtered.every(g => adminState.selectedRefs.has(g.ref));
+            }
+        }
+
+        // ======================== MODAL DE REPARTO DE COSTE DE PACA ========================
+        function openPackCostModal() {
+            if (adminState.selectedRefs.size === 0) {
+                toast('Selecciona al menos 1 prenda para repartir el coste.', true);
+                return;
+            }
+
+            const modal = document.getElementById('packCostModal');
+            const countLabel = document.getElementById('packSelectedCountLabel');
+            const pvpSumLabel = document.getElementById('packPvpTotalSumLabel');
+
+            const selectedGarments = adminState.garments.filter(g => adminState.selectedRefs.has(g.ref));
+            const pvpTotal = selectedGarments.reduce((acc, g) => acc + Number(g.priceEur || 0), 0);
+
+            if (countLabel) countLabel.textContent = `${selectedGarments.length}`;
+            if (pvpSumLabel) pvpSumLabel.textContent = `PVP Total: ${fmtEur(pvpTotal)}`;
+
+            calculatePackCostPreview();
+            modal?.classList.remove('hidden');
+        }
+
+        function closePackCostModal() {
+            document.getElementById('packCostModal')?.classList.add('hidden');
+        }
+
+        function calculatePackCostPreview() {
+            const previewList = document.getElementById('packPreviewList');
+            if (!previewList) return;
+
+            const totalCost = parseFloat(document.getElementById('packTotalCostInput')?.value || 0);
+            const method = document.getElementById('packSplitMethodSelect')?.value || 'EQUAL';
+
+            const selectedGarments = adminState.garments.filter(g => adminState.selectedRefs.has(g.ref));
+            const n = selectedGarments.length;
+            if (n === 0) {
+                previewList.innerHTML = '<p class="text-xs text-zinc-500 text-center py-2">Sin prendas seleccionadas.</p>';
+                return;
+            }
+
+            const pvpTotal = selectedGarments.reduce((acc, g) => acc + Number(g.priceEur || 0), 0);
+
+            previewList.innerHTML = selectedGarments.map(g => {
+                const basePvp = Number(g.priceEur || 0);
+                let assignedCost = 0;
+
+                if (totalCost > 0) {
+                    if (method === 'PROPORTIONAL' && pvpTotal > 0) {
+                        assignedCost = round2(totalCost * (basePvp / pvpTotal));
+                    } else {
+                        assignedCost = round2(totalCost / n);
+                    }
+                }
+
+                return `
+                <div class="flex items-center justify-between text-xs py-1 px-2 rounded bg-obsidian-elevated border border-zinc-800">
+                    <span class="font-mono font-bold text-acid">${escapeHtml(g.ref)}</span>
+                    <span class="text-zinc-300 truncate max-w-[180px]">${escapeHtml(g.title)}</span>
+                    <span class="font-mono text-zinc-400">PVP: ${fmtEur(basePvp)}</span>
+                    <span class="font-mono font-bold text-amber-300">Coste: ${fmtEur(assignedCost)}</span>
+                </div>`;
+            }).join('');
+        }
+
+        async function confirmPackCost() {
+            const totalCost = parseFloat(document.getElementById('packTotalCostInput')?.value || 0);
+            const method = document.getElementById('packSplitMethodSelect')?.value || 'EQUAL';
+
+            if (!Number.isFinite(totalCost) || totalCost <= 0) {
+                toast('Introduce un importe total válido de la paca o factura.', true);
+                return;
+            }
+
+            const selectedGarments = adminState.garments.filter(g => adminState.selectedRefs.has(g.ref));
+            const n = selectedGarments.length;
+            const pvpTotal = selectedGarments.reduce((acc, g) => acc + Number(g.priceEur || 0), 0);
+
+            const updates = selectedGarments.map(g => {
+                const basePvp = Number(g.priceEur || 0);
+                let assignedCost = 0;
+                if (method === 'PROPORTIONAL' && pvpTotal > 0) {
+                    assignedCost = round2(totalCost * (basePvp / pvpTotal));
+                } else {
+                    assignedCost = round2(totalCost / n);
+                }
+                return {
+                    ref: g.ref,
+                    costEur: assignedCost
+                };
+            });
+
+            const btn = document.getElementById('confirmPackCostBtn');
+            btn.disabled = true;
+            btn.textContent = 'Asignando costes...';
+
+            try {
+                await callAdminApi('bulk_update_garments', { updates });
+                toast(`✓ Coste de paca (${fmtEur(totalCost)}) repartido en ${n} prendas`);
+                closePackCostModal();
+                adminState.selectedRefs.clear();
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '✓ Asignar Costes en Bloque';
+            }
+        }
+
+        // ======================== MINI-MODAL CIERRE DE VENTA RÁPIDA ========================
+        function openMarkSoldModal(ref) {
+            const g = adminState.garments.find(x => x.ref === ref);
+            if (!g) return;
+
+            adminState.activeMarkSoldRef = ref;
+            const modal = document.getElementById('markSoldModal');
+
+            const thumbEl = document.getElementById('markSoldGarmentThumb');
+            const refEl = document.getElementById('markSoldGarmentRef');
+            const titleEl = document.getElementById('markSoldGarmentTitle');
+            const basePriceEl = document.getElementById('markSoldGarmentBasePrice');
+            const originHintEl = document.getElementById('markSoldOriginHint');
+
+            if (thumbEl) thumbEl.src = (g.photos && g.photos[0]) || '';
+            if (refEl) refEl.textContent = g.ref;
+            if (titleEl) titleEl.textContent = g.title || g.ref;
+            if (basePriceEl) basePriceEl.textContent = `PVP: ${fmtEur(g.priceEur)}`;
+
+            const isReserved = g.status === 'RESERVADA';
+            if (originHintEl) {
+                originHintEl.textContent = isReserved
+                    ? `Reserva VIP activa de @${g.reservedByVinted || 'comprador'} (Precio VIP: ${fmtEur(g.reservedFinalPriceEur)})`
+                    : 'Prenda disponible (Venta directa o negociada)';
+            }
+
+            // Autorrellenar campos
+            const priceIn = document.getElementById('markSoldPriceInput');
+            if (priceIn) priceIn.value = isReserved ? (g.reservedFinalPriceEur || g.priceEur) : (g.soldPriceEur || g.priceEur);
+
+            const channelSel = document.getElementById('markSoldChannelSelect');
+            if (channelSel) channelSel.value = g.saleChannel || (isReserved ? 'DROP_VIP' : 'VINTED_DIRECT');
+
+            const vintedIn = document.getElementById('markSoldBuyerVintedInput');
+            if (vintedIn) vintedIn.value = g.soldToVinted || g.reservedByVinted || '';
+
+            const emailIn = document.getElementById('markSoldBuyerEmailInput');
+            if (emailIn) emailIn.value = g.soldToEmail || g.reservedByEmail || '';
+
+            const costIn = document.getElementById('markSoldCostInput');
+            if (costIn) costIn.value = (g.costEur && g.costEur > 0) ? g.costEur : '';
+
+            const expenseIn = document.getElementById('markSoldExtraExpenseInput');
+            if (expenseIn) expenseIn.value = (g.extraExpenseEur !== undefined && g.extraExpenseEur > 0) ? g.extraExpenseEur : (adminState.config.defaultExtraExpenseEur || 0);
+
+            updateMarkSoldNetProfitPreview();
+            modal?.classList.remove('hidden');
+        }
+
+        function closeMarkSoldModal() {
+            document.getElementById('markSoldModal')?.classList.add('hidden');
+            adminState.activeMarkSoldRef = null;
+        }
+
+        function updateMarkSoldNetProfitPreview() {
+            const previewEl = document.getElementById('markSoldNetProfitPreview');
+            if (!previewEl) return;
+
+            const price = parseFloat(document.getElementById('markSoldPriceInput')?.value || 0);
+            const cost = parseFloat(document.getElementById('markSoldCostInput')?.value || 0);
+            const expense = parseFloat(document.getElementById('markSoldExtraExpenseInput')?.value || 0);
+
+            const profit = price - (cost + expense);
+            const margin = price > 0 ? round2((profit / price) * 100) : 0;
+
+            previewEl.textContent = `${fmtEur(profit)} (${margin}%)`;
+            previewEl.className = profit >= 0 ? 'font-mono text-sm font-bold text-acid' : 'font-mono text-sm font-bold text-rose-400';
+        }
+
+        // ======================== MODAL FICHA 360º DE CLIENTE ========================
+        function openClientDetailsModal(clientKey, crmMap) {
+            const c = crmMap.get(clientKey);
+            if (!c) return;
+
+            adminState.activeClientKey = clientKey;
+            const modal = document.getElementById('clientDetailsModal');
+
+            document.getElementById('clientModalTitle').textContent = c.vintedUser ? '@' + c.vintedUser.replace(/^@+/, '') : 'Cliente VIP';
+            document.getElementById('clientModalEmailBadge').textContent = c.email || 'Sin email registrado';
+
+            const completed = c.purchases.filter(p => p.status === 'VENDIDA');
+            const ltv = completed.reduce((acc, p) => acc + p.price, 0);
+
+            document.getElementById('clientModalLtv').textContent = fmtEur(ltv);
+            document.getElementById('clientModalOrdersCount').textContent = `${completed.length}`;
+            document.getElementById('clientModalCouponStatus').textContent = c.numReservas === 0 ? 'Disponible' : 'Consumido';
+            document.getElementById('clientModalWaitlistCount').textContent = `${c.waitlists.length}`;
+
+            // Notas
+            const configCrm = adminState.config.crmClientsMeta || {};
+            const meta = configCrm[clientKey.toLowerCase()] || {};
+            document.getElementById('clientModalNotesTextarea').value = meta.note || '';
+
+            // Timeline
+            const timelineEl = document.getElementById('clientModalTimelineContainer');
+            if (timelineEl) {
+                const allEvents = [];
+                c.purchases.forEach(p => {
+                    allEvents.push({
+                        type: p.status === 'VENDIDA' ? 'BUY' : 'RES',
+                        title: p.title,
+                        ref: p.ref,
+                        price: p.price,
+                        date: p.soldAt
+                    });
+                });
+                c.waitlists.forEach(w => {
+                    allEvents.push({
+                        type: 'WAIT',
+                        title: w.title,
+                        ref: w.ref,
+                        price: 0,
+                        date: w.joinedAt
+                    });
+                });
+
+                allEvents.sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime());
+
+                if (allEvents.length === 0) {
+                    timelineEl.innerHTML = '<p class="text-xs text-zinc-500 py-3 text-center font-mono">Sin actividad registrada aún.</p>';
+                } else {
+                    timelineEl.innerHTML = allEvents.map(ev => {
+                        let badge = '<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] font-bold">COMPRA</span>';
+                        if (ev.type === 'RES') badge = '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] font-bold">RESERVA</span>';
+                        else if (ev.type === 'WAIT') badge = '<span class="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono text-[9px]">EN COLA</span>';
+
+                        return `
+                        <div class="p-2.5 rounded-xl bg-obsidian border border-zinc-800 flex items-center justify-between text-xs gap-2">
+                            <div class="flex items-center gap-2 min-w-0">
+                                ${badge}
+                                <span class="font-mono font-bold text-acid">${escapeHtml(ev.ref)}</span>
+                                <span class="text-white truncate">${escapeHtml(ev.title)}</span>
+                            </div>
+                            <div class="font-mono text-zinc-300 shrink-0">
+                                ${ev.price > 0 ? fmtEur(ev.price) : '-'}
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            modal?.classList.remove('hidden');
+        }
+
+        function closeClientDetailsModal() {
+            document.getElementById('clientDetailsModal')?.classList.add('hidden');
+            adminState.activeClientKey = null;
+        }
+
+        // ======================== EXPORTADOR CSV CONTABLE ========================
+        function exportRegistroCsv() {
+            const filtered = getFilteredRegistroData();
+            if (filtered.length === 0) {
+                toast('No hay datos en la vista filtrada para exportar.', true);
+                return;
+            }
+
+            toast('Generando archivo CSV contable...');
+
+            const headers = [
+                'Fecha',
+                'Referencia',
+                'Prenda',
+                'Marca',
+                'Talla',
+                'Drop',
+                'Estado',
+                'Canal',
+                'Comprador_Vinted',
+                'Comprador_Email',
+                'PVP_Base_EUR',
+                'PVP_Final_EUR',
+                'Coste_EUR',
+                'Gasto_Extra_EUR',
+                'Beneficio_Neto_EUR',
+                'Margen_Percent'
+            ];
+
+            const rows = filtered.map(g => {
+                const soldPrice = getGarmentSoldPrice(g);
+                const cost = Number(g.costEur || 0);
+                const expense = Number(g.extraExpenseEur || 0);
+                const profit = soldPrice - (cost + expense);
+                const margin = soldPrice > 0 ? round2((profit / soldPrice) * 100) : 0;
+                const dateStr = getGarmentSoldAt(g) ? new Date(getGarmentSoldAt(g)).toISOString().split('T')[0] : '';
+
+                return [
+                    dateStr,
+                    g.ref || '',
+                    (g.title || '').replace(/"/g, '""'),
+                    (g.brand || '').replace(/"/g, '""'),
+                    g.size || '',
+                    g.dropId || '',
+                    g.status || '',
+                    g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT'),
+                    (g.soldToVinted || g.reservedByVinted || '').replace(/^@+/, ''),
+                    g.soldToEmail || g.reservedByEmail || '',
+                    round2(g.priceEur || 0).toFixed(2).replace('.', ','),
+                    round2(soldPrice).toFixed(2).replace('.', ','),
+                    round2(cost).toFixed(2).replace('.', ','),
+                    round2(expense).toFixed(2).replace('.', ','),
+                    round2(profit).toFixed(2).replace('.', ','),
+                    margin.toFixed(2).replace('.', ',') + '%'
+                ].map(val => `"${val}"`).join(';');
+            });
+
+            // Añadir UTF-8 BOM para que Excel en Windows reconozca caracteres y acentos de inmediato
+            const csvContent = '\uFEFF' + [headers.join(';'), ...rows].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const stamp = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `virmarket_registro_${adminState.activeSubView}_${stamp}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 4000);
+
+            toast(`✓ Descargado CSV con ${filtered.length} filas.`);
+        }
+
+        // ======================== ENLACE DE EVENTOS DEL MÓDULO DE REGISTRO ========================
+        document.querySelectorAll('.erp-subview-btn').forEach(btn => {
+            btn.addEventListener('click', () => setSubView(btn.getAttribute('data-subview')));
+        });
+
+        // Buscador
+        document.getElementById('erpFilterSearch')?.addEventListener('input', (e) => {
+            adminState.registroFilters.search = e.target.value;
+            renderActiveSubView();
+        });
+
+        // Selector Periodo
+        document.getElementById('erpFilterPeriod')?.addEventListener('change', (e) => {
+            const val = e.target.value;
+            adminState.registroFilters.period = val;
+            const customRow = document.getElementById('erpCustomDateRow');
+            if (customRow) customRow.classList.toggle('hidden', val !== 'CUSTOM');
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpDateFrom')?.addEventListener('change', (e) => {
+            adminState.registroFilters.dateFrom = e.target.value;
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpDateTo')?.addEventListener('change', (e) => {
+            adminState.registroFilters.dateTo = e.target.value;
+            renderActiveSubView();
+        });
+
+        // Selectores
+        document.getElementById('erpFilterDrop')?.addEventListener('change', (e) => {
+            adminState.registroFilters.dropId = e.target.value;
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpFilterStatus')?.addEventListener('change', (e) => {
+            adminState.registroFilters.status = e.target.value;
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpFilterChannel')?.addEventListener('change', (e) => {
+            adminState.registroFilters.channel = e.target.value;
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpFilterBrand')?.addEventListener('change', (e) => {
+            adminState.registroFilters.brand = e.target.value;
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpFilterSize')?.addEventListener('change', (e) => {
+            adminState.registroFilters.size = e.target.value;
+            renderActiveSubView();
+        });
+
+        document.getElementById('erpFilterProfit')?.addEventListener('change', (e) => {
+            adminState.registroFilters.profit = e.target.value;
+            renderActiveSubView();
+        });
+
+        // Reset filtros
+        document.getElementById('erpResetFiltersBtn')?.addEventListener('click', () => {
+            adminState.registroFilters = {
+                search: '',
+                period: 'THIS_MONTH',
+                dateFrom: '',
+                dateTo: '',
+                dropId: 'ALL',
+                status: 'ALL',
+                channel: 'ALL',
+                brand: 'ALL',
+                size: 'ALL',
+                profit: 'ALL'
+            };
+            const sIn = document.getElementById('erpFilterSearch');
+            if (sIn) sIn.value = '';
+            const pSel = document.getElementById('erpFilterPeriod');
+            if (pSel) pSel.value = 'THIS_MONTH';
+            const cRow = document.getElementById('erpCustomDateRow');
+            if (cRow) cRow.classList.add('hidden');
+            const dSel = document.getElementById('erpFilterDrop');
+            if (dSel) dSel.value = 'ALL';
+            const stSel = document.getElementById('erpFilterStatus');
+            if (stSel) stSel.value = 'ALL';
+            const chSel = document.getElementById('erpFilterChannel');
+            if (chSel) chSel.value = 'ALL';
+            const brSel = document.getElementById('erpFilterBrand');
+            if (brSel) brSel.value = 'ALL';
+            const szSel = document.getElementById('erpFilterSize');
+            if (szSel) szSel.value = 'ALL';
+            const prSel = document.getElementById('erpFilterProfit');
+            if (prSel) prSel.value = 'ALL';
+
+            renderRegistroWorkspace();
+            toast('✓ Filtros restablecidos');
+        });
+
+        // Boton Exportar CSV y Actualizar
+        document.getElementById('exportRegistroCsvBtn')?.addEventListener('click', exportRegistroCsv);
+        document.getElementById('refreshRegistroBtn')?.addEventListener('click', async () => {
+            toast('Sincronizando datos contables...');
+            await syncDashboardQuietly(false);
+        });
+
+        // Select All Checkbox
+        document.getElementById('erpSelectAllCheckbox')?.addEventListener('change', (e) => {
+            const filtered = getFilteredRegistroData();
+            if (e.target.checked) {
+                filtered.forEach(g => adminState.selectedRefs.add(g.ref));
+            } else {
+                adminState.selectedRefs.clear();
+            }
+            renderSubViewPrendas(filtered);
+            updateBulkToolbar();
+        });
+
+        document.getElementById('erpBulkDeselectBtn')?.addEventListener('click', () => {
+            adminState.selectedRefs.clear();
+            const filtered = getFilteredRegistroData();
+            renderSubViewPrendas(filtered);
+            updateBulkToolbar();
+        });
+
+        // Eventos Modal Reparto Paca
+        document.getElementById('erpOpenPackCostModalBtn')?.addEventListener('click', openPackCostModal);
+        document.getElementById('closePackCostModalBtn')?.addEventListener('click', closePackCostModal);
+        document.getElementById('cancelPackCostModalBtn')?.addEventListener('click', closePackCostModal);
+        document.getElementById('packTotalCostInput')?.addEventListener('input', calculatePackCostPreview);
+        document.getElementById('packSplitMethodSelect')?.addEventListener('change', calculatePackCostPreview);
+        document.getElementById('confirmPackCostBtn')?.addEventListener('click', confirmPackCost);
+
+        // Mover de Drop en lote
+        document.getElementById('erpBulkChangeDropBtn')?.addEventListener('click', async () => {
+            if (adminState.selectedRefs.size === 0) return;
+            const targetDrop = window.prompt(`Mover las ${adminState.selectedRefs.size} prendas seleccionadas al Drop:`, adminState.config.activeDropId || 'DROP-01');
+            if (!targetDrop || !targetDrop.trim()) return;
+            const cleanDrop = targetDrop.trim().toUpperCase();
+
+            const updates = [...adminState.selectedRefs].map(ref => ({ ref, dropId: cleanDrop }));
+            try {
+                toast(`Moviendo ${updates.length} prendas a ${cleanDrop}...`);
+                await callAdminApi('bulk_update_garments', { updates });
+                toast(`✓ ${updates.length} prendas trasladadas a ${cleanDrop}`);
+                adminState.selectedRefs.clear();
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        });
+
+        // Eventos Mini-Modal Marcar Vendida
+        document.getElementById('closeMarkSoldModalBtn')?.addEventListener('click', closeMarkSoldModal);
+        document.getElementById('cancelMarkSoldModalBtn')?.addEventListener('click', closeMarkSoldModal);
+        document.getElementById('markSoldPriceInput')?.addEventListener('input', updateMarkSoldNetProfitPreview);
+        document.getElementById('markSoldCostInput')?.addEventListener('input', updateMarkSoldNetProfitPreview);
+        document.getElementById('markSoldExtraExpenseInput')?.addEventListener('input', updateMarkSoldNetProfitPreview);
+
+        document.getElementById('markSoldForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const ref = adminState.activeMarkSoldRef;
+            if (!ref) return;
+
+            const soldPriceEur = parseFloat(document.getElementById('markSoldPriceInput')?.value || 0);
+            const saleChannel = document.getElementById('markSoldChannelSelect')?.value || 'VINTED_DIRECT';
+            const soldToVinted = document.getElementById('markSoldBuyerVintedInput')?.value.trim();
+            const soldToEmail = document.getElementById('markSoldBuyerEmailInput')?.value.trim().toLowerCase();
+            const costEur = parseFloat(document.getElementById('markSoldCostInput')?.value || 0);
+            const extraExpenseEur = parseFloat(document.getElementById('markSoldExtraExpenseInput')?.value || 0);
+
+            if (!Number.isFinite(soldPriceEur) || soldPriceEur < 0) {
+                toast('Introduce un precio cobrado válido.', true);
+                return;
+            }
+
+            const btn = document.getElementById('confirmMarkSoldSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Guardando cierre...';
+
+            try {
+                await callAdminApi('update_status', {
+                    ref,
+                    newStatus: 'VENDIDA',
+                    soldPriceEur,
+                    saleChannel,
+                    soldToVinted,
+                    soldToEmail,
+                    costEur,
+                    extraExpenseEur,
+                    soldAt: new Date().toISOString()
+                });
+
+                toast(`✓ ${ref} marcada como VENDIDA y registrada en el ERP`);
+                closeMarkSoldModal();
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '✓ Confirmar Venta';
+            }
+        });
+
+        // Eventos Modal Ficha 360º Cliente
+        document.getElementById('closeClientModalBtn')?.addEventListener('click', closeClientDetailsModal);
+        document.getElementById('closeClientModalFooterBtn')?.addEventListener('click', closeClientDetailsModal);
+        document.getElementById('clientModalSaveNotesBtn')?.addEventListener('click', async () => {
+            const clientKey = adminState.activeClientKey;
+            if (!clientKey) return;
+            const note = document.getElementById('clientModalNotesTextarea')?.value || '';
+
+            const btn = document.getElementById('clientModalSaveNotesBtn');
+            btn.disabled = true;
+            btn.textContent = 'Guardando...';
+
+            try {
+                await callAdminApi('save_client_note', {
+                    clientKey,
+                    note
+                });
+                toast('✓ Nota de cliente guardada en el CRM');
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Guardar Nota';
+            }
+        });
+
 
         // ======================== DIFUSIÓN SOCIAL Y TELEGRAM ========================
         let currentSocialData = null;
@@ -5109,14 +7191,26 @@
                     navLinks.classList.remove('hidden');
                     navLinks.classList.add('inline-flex');
                 }
+                adminState.config.defaultExtraExpenseEur = 0.20;
+                adminState.config.crmClientsMeta = {
+                    "comprador1@gmail.com": { note: "Compradora VIP habitual de ropa polar y calzado.", updatedAt: new Date().toISOString() },
+                    "maria_vintage": { note: "Prefiere envíos combinados por Correos Express.", updatedAt: new Date().toISOString() }
+                };
+                adminState.contacts = [
+                    { id: 101, email: "comprador1@gmail.com", firstName: "Laura", numReservas: 3, createdAt: "2026-10-15T12:00:00.000Z" },
+                    { id: 102, email: "maria@vintageclub.com", firstName: "María", numReservas: 1, createdAt: "2026-10-20T16:30:00.000Z" },
+                    { id: 103, email: "encoder2000@gmail.com", firstName: "Carlos", numReservas: 5, createdAt: "2026-09-01T09:15:00.000Z" }
+                ];
                 adminState.garments = [
                     {
                         ref: "REF-001",
                         dropId: "DROP-20261030",
-                        title: "Funda polar",
+                        title: "Funda polar sherpa",
                         brand: "VirMarket",
                         size: "Única",
                         priceEur: 14.0,
+                        costEur: 4.50,
+                        extraExpenseEur: 0.20,
                         status: "RESERVADA",
                         reservedByEmail: "comprador1@gmail.com",
                         reservedByVinted: "comprador1",
@@ -5130,12 +7224,50 @@
                         ]
                     },
                     {
+                        ref: "REF-002",
+                        dropId: "DROP-20261030",
+                        title: "Sudadera Vintage Champion 90s",
+                        brand: "Champion",
+                        size: "L",
+                        priceEur: 24.0,
+                        costEur: 8.00,
+                        extraExpenseEur: 0.20,
+                        soldPriceEur: 22.0,
+                        soldAt: new Date(Date.now() - 86400 * 1000 * 3).toISOString(),
+                        saleChannel: "DROP_VIP",
+                        soldToVinted: "maria_vintage",
+                        soldToEmail: "maria@vintageclub.com",
+                        status: "VENDIDA",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg"],
+                        waitlist: []
+                    },
+                    {
+                        ref: "REF-003",
+                        dropId: "DROP-20261101-01",
+                        title: "Chaqueta Denim Oversize Levis",
+                        brand: "Levi's",
+                        size: "M",
+                        priceEur: 32.0,
+                        costEur: 12.00,
+                        extraExpenseEur: 0.20,
+                        soldPriceEur: 32.0,
+                        soldAt: new Date(Date.now() - 86400 * 1000 * 1).toISOString(),
+                        saleChannel: "VINTED_DIRECT",
+                        soldToVinted: "carlos_vinted",
+                        soldToEmail: "encoder2000@gmail.com",
+                        status: "VENDIDA",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg"],
+                        waitlist: []
+                    },
+                    {
                         ref: "REF-004",
                         dropId: "DROP-20261101-01",
                         title: "Camiseta niña talla 6 años",
                         brand: "Zara",
                         size: "6 años",
                         priceEur: 1.75,
+                        costEur: 0.50,
+                        extraExpenseEur: 0.20,
                         status: "RESERVADA",
                         reservedByEmail: "lote_buyer@gmail.com",
                         reservedByVinted: "lote_buyer",
@@ -5153,6 +7285,8 @@
                         brand: "Benetton",
                         size: "3/6 meses",
                         priceEur: 2.25,
+                        costEur: 0.70,
+                        extraExpenseEur: 0.20,
                         status: "RESERVADA",
                         reservedByEmail: "lote_buyer@gmail.com",
                         reservedByVinted: "lote_buyer",
@@ -5162,11 +7296,24 @@
                         vintedUrl: "https://www.vinted.es/items/10612288197",
                         photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261101-01/ref-005-1-1793490035233.jpg"],
                         waitlist: []
+                    },
+                    {
+                        ref: "REF-006",
+                        dropId: "DROP-20261101-01",
+                        title: "Jersey cuello alto lana merino",
+                        brand: "Massimo Dutti",
+                        size: "S",
+                        priceEur: 18.0,
+                        costEur: 0,
+                        extraExpenseEur: 0.20,
+                        status: "DISPONIBLE",
+                        photos: ["https://raw.githubusercontent.com/Encoder2000/virmarket-vip/main/drops/drop-20261030/ref-001-1-1793395730121.jpg"],
+                        waitlist: []
                     }
                 ];
                 adminState.password = 'mock';
-                setActiveTab('vinted');
-                renderVintedWorkspace();
+                const initialTab = (window.location.hash || '').replace('#', '').trim().toLowerCase() || 'registro';
+                setActiveTab(['drops', 'vinted', 'registro', 'settings'].includes(initialTab) ? initialTab : 'registro');
                 return;
             }
 
