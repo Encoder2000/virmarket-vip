@@ -6352,7 +6352,7 @@
                     </td>
                     <td class="py-3 px-2 text-center whitespace-nowrap">
                         <div class="inline-flex items-center gap-1">
-                            <a href="?editRef=${encodeURIComponent(g.ref)}#drops" target="_blank" rel="noopener" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors inline-flex items-center justify-center" title="Abrir ficha en pestaña nueva para editar">
+                            <a href="?editRef=${encodeURIComponent(g.ref)}#drops" target="_blank" rel="noopener" data-edit-newtab="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors inline-flex items-center justify-center" title="Abrir ficha en pestaña nueva para editar">
                                 <i data-lucide="edit" class="w-3.5 h-3.5"></i>
                             </a>
                             ${g.status !== 'VENDIDA' ? `
@@ -6409,9 +6409,22 @@
                 });
             });
 
-            // Botón Editar Ficha completa
-            tableBody.querySelectorAll('[data-edit-form]').forEach(btn => {
-                btn.addEventListener('click', () => loadGarmentIntoForm(btn.getAttribute('data-edit-form')));
+            // Botón Editar Ficha completa en nueva pestaña/ventana (preserva filtros y scroll del listado)
+            tableBody.querySelectorAll('[data-edit-newtab]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const ref = link.getAttribute('data-edit-newtab');
+                    if (!ref) return;
+                    const targetUrl = new URL(window.location.href);
+                    targetUrl.searchParams.set('editRef', ref);
+                    targetUrl.hash = 'drops';
+                    const isStandalonePwa = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+                    if (isStandalonePwa) {
+                        window.open(targetUrl.toString(), `vm_edit_${ref}`, 'noopener,width=1180,height=860');
+                    } else {
+                        window.open(targetUrl.toString(), '_blank', 'noopener');
+                    }
+                });
             });
 
             // Botón Marcar Vendida
