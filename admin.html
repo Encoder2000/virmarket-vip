@@ -905,10 +905,16 @@
                                     <div id="activeDropControlsBox" class="hidden pt-3 border-t border-zinc-800">
                                         <div class="flex flex-wrap items-center justify-between gap-2">
                                             <span id="activeDropStatusNotice" class="font-mono text-[11px] text-zinc-400">Drop Activo</span>
-                                            <button id="closeActiveDropBtn" type="button" class="py-1.5 px-3 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/40 text-rose-300 font-display font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors">
-                                                <i data-lucide="square" class="w-3 h-3 text-rose-400"></i>
-                                                <span>Finalizar Drop Activo</span>
-                                            </button>
+                                            <div class="flex items-center gap-2">
+                                                <button id="remindActiveDropBtn" type="button" class="py-1.5 px-3 rounded-lg bg-sky-950/40 hover:bg-sky-900/60 border border-sky-400/40 text-sky-300 font-display font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors" title="Generar borrador de correo en Brevo solo con las prendas disponibles restantes">
+                                                    <i data-lucide="clock" class="w-3 h-3 text-sky-400"></i>
+                                                    <span>⏳ Recordatorio Últimas Horas</span>
+                                                </button>
+                                                <button id="closeActiveDropBtn" type="button" class="py-1.5 px-3 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/40 text-rose-300 font-display font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+                                                    <i data-lucide="square" class="w-3 h-3 text-rose-400"></i>
+                                                    <span>Finalizar Drop Activo</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -1069,6 +1075,11 @@
                             <p class="text-xs text-zinc-400 mt-0.5">Supervisión integral de ventas cerradas, márgenes netos, inventario valorado, CRM de clientes y rendimiento por Drop.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 shrink-0">
+                            <button id="openGlobalExpensesBtn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/60 text-xs font-mono font-bold text-amber-300 flex items-center gap-1.5 transition-colors" title="Gestionar compras de pacas y gastos generales del negocio">
+                                <i data-lucide="receipt" class="w-3.5 h-3.5 text-amber-400"></i>
+                                <span>💸 Pacas &amp; Gastos</span>
+                                <span id="globalExpensesCountBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-obsidian font-mono font-bold">0</span>
+                            </button>
                             <button id="openVintedSyncBtnTab3" type="button" title="Conciliar correos reales de Vinted e importar ventas al ERP" class="px-3.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/60 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors">
                                 <i data-lucide="mail-check" class="w-3.5 h-3.5 text-emerald-400"></i>
                                 <span>📬 Sincronizar Vinted</span>
@@ -1131,10 +1142,10 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <select id="erpFilterPeriod" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
-                                    <option value="ALL">Todo el Historial</option>
+                                    <option value="ALL" selected>Todo el Historial</option>
                                     <option value="TODAY">Hoy</option>
                                     <option value="7DAYS">Últimos 7 días</option>
-                                    <option value="THIS_MONTH" selected>Este Mes</option>
+                                    <option value="THIS_MONTH">Este Mes</option>
                                     <option value="LAST_MONTH">Mes Anterior</option>
                                     <option value="THIS_YEAR">Este Año</option>
                                     <option value="CUSTOM">Rango de Fechas...</option>
@@ -2142,22 +2153,41 @@
                 </div>
             </div>
 
-            <!-- Interruptores de Modo Manual / Automático -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-2xl bg-obsidian-elevated border border-zinc-800 text-xs">
-                <label class="flex items-start gap-2.5 cursor-pointer select-none">
-                    <input type="checkbox" id="syncToggleAutoApply" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
-                    <div>
-                        <span class="font-semibold text-white block">Modo Automático para Coincidencias Exactas</span>
-                        <span class="text-[11px] text-zinc-400">Si está activo, aplica automáticamente al escanear las ventas que coinciden al 100% con prendas o reservas de tu app.</span>
+            <!-- Interruptores de Modo Manual / Automático y Fecha de Corte 80/20 -->
+            <div class="space-y-2.5 p-3 rounded-2xl bg-obsidian-elevated border border-zinc-800 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                        <input type="checkbox" id="syncToggleAutoApply" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
+                        <div>
+                            <span class="font-semibold text-white block">Auto-Aplicar Drops</span>
+                            <span class="text-[11px] text-zinc-400">Aplica automáticamente ventas de Drops o reservas al escanear.</span>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                        <input type="checkbox" id="syncToggleAutoImportDirect" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
+                        <div>
+                            <span class="font-semibold text-white block">Auto-Importar a Caja</span>
+                            <span class="text-[11px] text-zinc-400">Registra ventas directas de tu armario en el ERP como VINTED-DIRECT sin confirmación.</span>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                        <input type="checkbox" id="syncToggleAutoPromote" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-amber-400 focus:ring-0">
+                        <div>
+                            <span class="font-semibold text-white block">Destacar Impagos 24h</span>
+                            <span class="text-[11px] text-zinc-400">Prioriza reservas vencidas sin correo de venta para pasar al suplente.</span>
+                        </div>
+                    </label>
+                </div>
+                <!-- Fila de Fecha de Corte -->
+                <div class="pt-2 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono text-[11px] text-zinc-400">📅 Fecha de corte para escanear correos:</span>
+                        <input type="date" id="syncFromDateInput" class="px-2.5 py-1 rounded-lg bg-obsidian border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-emerald-400" title="Ignorar correos de Vinted anteriores a esta fecha">
+                        <button type="button" id="saveSyncFromDateBtn" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-200 transition-colors">Guardar Fecha</button>
+                        <button type="button" id="clearSyncFromDateBtn" class="text-[11px] font-mono text-zinc-500 hover:text-rose-400 transition-colors" title="Escanear todo el histórico de correos">Limpiar</button>
                     </div>
-                </label>
-                <label class="flex items-start gap-2.5 cursor-pointer select-none">
-                    <input type="checkbox" id="syncToggleAutoPromote" class="mt-0.5 w-4 h-4 rounded border-zinc-700 text-amber-400 focus:ring-0">
-                    <div>
-                        <span class="font-semibold text-white block">Destacar Impagos 24h para Traspaso en Cola</span>
-                        <span class="text-[11px] text-zinc-400">Prioriza reservas vencidas sin correo de venta para pasar al #1 de espera tras ajustar el usuario en Vinted.</span>
-                    </div>
-                </label>
+                    <span id="syncFromDateStatus" class="font-mono text-[10px] text-emerald-400"></span>
+                </div>
             </div>
 
             <!-- Filtros y Buscador -->
@@ -2197,6 +2227,89 @@
                 <p class="text-xs font-mono text-zinc-200">Leyendo correos de Vinted en virmarket.oficial@gmail.com y cruzando con Supabase...</p>
             </div>
             <div id="vintedSyncListContainer" class="max-h-[48vh] overflow-y-auto space-y-2.5 pr-1"></div>
+        </div>
+    </div>
+
+    
+    <!-- Modal Libro de Gastos y Pacas Globales -->
+    <div id="globalExpensesModal" role="dialog" aria-modal="true" aria-labelledby="globalExpensesModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-3xl my-auto rounded-3xl bg-obsidian-card border border-amber-500/40 p-4 sm:p-6 shadow-2xl shadow-amber-950/60 space-y-4">
+            <!-- Cabecera -->
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3.5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-amber-400 shrink-0">
+                        <i data-lucide="receipt" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 id="globalExpensesModalTitle" class="font-display text-lg sm:text-xl font-bold uppercase text-white tracking-tight">Pacas &amp; Gastos Globales</h2>
+                        <p class="text-xs text-zinc-400 mt-0.5">Apunta compras de pacas, lotes y packaging para calcular tu beneficio neto real sin imputar costes prenda a prenda.</p>
+                    </div>
+                </div>
+                <button type="button" id="closeGlobalExpensesModalBtn" class="p-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors" title="Cerrar modal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Formulario Rápido de Nuevo Gasto -->
+            <form id="addGlobalExpenseForm" class="p-3.5 rounded-2xl bg-obsidian-elevated border border-zinc-800 space-y-3">
+                <div class="font-display text-xs font-bold uppercase tracking-wider text-amber-300">Añadir Nuevo Gasto o Paca</div>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+                    <div>
+                        <label class="block font-mono text-[10px] text-zinc-400 mb-1">Fecha</label>
+                        <input type="date" id="expenseDateInput" required class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-amber-400">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-mono text-[10px] text-zinc-400 mb-1">Concepto</label>
+                        <input type="text" id="expenseConceptInput" placeholder="Ej. Paca Invierno 50 prendas, 100 sobres..." required class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400">
+                    </div>
+                    <div>
+                        <label class="block font-mono text-[10px] text-zinc-400 mb-1">Categoría</label>
+                        <select id="expenseCategoryInput" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-amber-400">
+                            <option value="PACA">Paca / Stock</option>
+                            <option value="PACKAGING">Packaging</option>
+                            <option value="ENVIO">Envío</option>
+                            <option value="OTROS">Otros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end">
+                    <div>
+                        <label class="block font-mono text-[10px] text-zinc-400 mb-1">Importe Total (€)</label>
+                        <input type="number" step="0.01" min="0.01" id="expenseAmountInput" placeholder="0,00" required class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs font-mono text-amber-300 placeholder-zinc-500 font-bold focus:outline-none focus:border-amber-400">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-mono text-[10px] text-zinc-400 mb-1">Notas (Opcional)</label>
+                        <input type="text" id="expenseNotesInput" placeholder="Proveedor, desglose o referencia..." class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400">
+                    </div>
+                    <div>
+                        <button type="submit" id="saveExpenseBtn" class="w-full py-1.5 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs uppercase tracking-wider transition-colors">
+                            + Apuntar Gasto
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Lista de Gastos Registrados -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs font-mono text-zinc-400">
+                    <span>Historial de Pacas y Gastos Registrados:</span>
+                    <span id="expensesTotalSumSpan" class="font-bold text-amber-400">Total: 0,00 €</span>
+                </div>
+                <div class="max-h-[36vh] overflow-y-auto rounded-xl border border-zinc-800 bg-obsidian-elevated/40">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-zinc-800 font-mono text-[11px] text-zinc-400 uppercase bg-obsidian">
+                                <th class="py-2 px-3">Fecha</th>
+                                <th class="py-2 px-3">Categoría</th>
+                                <th class="py-2 px-3">Concepto</th>
+                                <th class="py-2 px-3 text-right">Importe</th>
+                                <th class="py-2 px-3 text-center">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="globalExpensesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2327,7 +2440,7 @@
             contacts: [],
             registroFilters: {
                 search: '',
-                period: 'THIS_MONTH',
+                period: 'ALL',
                 dateFrom: '',
                 dateTo: '',
                 dropId: 'ALL',
@@ -3391,9 +3504,13 @@
                 if (isExp) {
                     if (noticeEl) noticeEl.innerHTML = `<span class="text-rose-400 font-semibold">${escapeHtml(cfg.activeDropId)}</span> • Plazo VIP de 24h finalizado`;
                     if (closeBtn) closeBtn.classList.add('hidden');
+                    const remindBtn = document.getElementById('remindActiveDropBtn');
+                    if (remindBtn) remindBtn.classList.add('hidden');
                 } else {
                     if (noticeEl) noticeEl.innerHTML = `<span class="text-acid font-semibold">${escapeHtml(cfg.activeDropId)}</span> • Ventana 24h activa`;
                     if (closeBtn) closeBtn.classList.remove('hidden');
+                    const remindBtn = document.getElementById('remindActiveDropBtn');
+                    if (remindBtn) remindBtn.classList.remove('hidden');
                 }
             } else if (controlsBox) {
                 controlsBox.classList.add('hidden');
@@ -3414,6 +3531,9 @@
                 adminState.config = data.config || adminState.config;
                 adminState.garments = Array.isArray(data.garments) ? data.garments : [];
                 if (Array.isArray(data.contacts)) adminState.contacts = data.contacts;
+                if (Array.isArray(data.config?.globalExpenses)) adminState.config.globalExpenses = data.config.globalExpenses;
+                const expCountB = document.getElementById('globalExpensesCountBadge');
+                if (expCountB) expCountB.textContent = String((adminState.config.globalExpenses || []).length);
                 lastSyncTimestamp = Date.now();
 
                 // Actualizar cabecera de métricas
@@ -3519,6 +3639,9 @@
             adminState.config = data.config || adminState.config;
             adminState.garments = Array.isArray(data.garments) ? data.garments : [];
             adminState.contacts = Array.isArray(data.contacts) ? data.contacts : [];
+            adminState.config.globalExpenses = Array.isArray(data.config?.globalExpenses) ? data.config.globalExpenses : [];
+            const expCountBInit = document.getElementById('globalExpensesCountBadge');
+            if (expCountBInit) expCountBInit.textContent = String(adminState.config.globalExpenses.length);
 
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('studioSection').classList.remove('hidden');
@@ -5807,7 +5930,9 @@
 
             return adminState.garments.filter(g => {
                 // Filtro Drop
-                if (f.dropId !== 'ALL' && (g.dropId || '').toUpperCase() !== f.dropId.toUpperCase()) {
+                if (f.dropId === 'PROMO_DROPS') {
+                    if ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT') return false;
+                } else if (f.dropId !== 'ALL' && (g.dropId || '').toUpperCase() !== f.dropId.toUpperCase()) {
                     return false;
                 }
 
@@ -5895,9 +6020,9 @@
             const dropSel = document.getElementById('erpFilterDrop');
             if (dropSel) {
                 const currentVal = adminState.registroFilters.dropId;
-                dropSel.innerHTML = '<option value="ALL">Todos los Drops</option>' +
+                dropSel.innerHTML = '<option value="ALL">Todos los Drops y Canales</option><option value="PROMO_DROPS">⚡ Solo Drops Promocionales</option>' +
                     [...dropsMap.keys()].sort().map(id => `<option value="${escapeHtml(id)}">${escapeHtml(id)}</option>`).join('');
-                dropSel.value = dropsMap.has(currentVal) ? currentVal : 'ALL';
+                dropSel.value = (dropsMap.has(currentVal) || currentVal === 'PROMO_DROPS') ? currentVal : 'ALL';
             }
 
             // Marcas
@@ -5936,7 +6061,23 @@
             const facturacionReal = soldItems.reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
             const costeStockVendido = soldItems.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
             const gastosOperativos = soldItems.reduce((acc, g) => acc + Number(g.extraExpenseEur || 0), 0);
-            const costeTotalVendido = costeStockVendido + gastosOperativos;
+
+            // Gastos y Pacas Globales filtrados por el mismo periodo temporal
+            const allExpenses = Array.isArray(adminState.config.globalExpenses) ? adminState.config.globalExpenses : [];
+            const filteredExpenses = allExpenses.filter(x => {
+                const expMs = x.date ? new Date(x.date + (x.date.length === 10 ? 'T12:00:00Z' : '')).getTime() : 0;
+                if (f.period !== 'ALL' && expMs > 0) {
+                    if (f.period === 'TODAY' && expMs < startOfToday) return false;
+                    if (f.period === '7DAYS' && expMs < sevenDaysAgo) return false;
+                    if (f.period === 'THIS_MONTH' && expMs < startOfThisMonth) return false;
+                    if (f.period === 'LAST_MONTH' && (expMs < startOfLastMonth || expMs > endOfLastMonth)) return false;
+                    if (f.period === 'THIS_YEAR' && expMs < startOfThisYear) return false;
+                    if (f.period === 'CUSTOM' && (expMs < customFromMs || expMs > customToMs)) return false;
+                }
+                return true;
+            });
+            const totalGastosGlobales = filteredExpenses.reduce((acc, x) => acc + Number(x.amountEur || 0), 0);
+            const costeTotalVendido = costeStockVendido + gastosOperativos + totalGastosGlobales;
             const beneficioNeto = facturacionReal - costeTotalVendido;
             const margenPercent = facturacionReal > 0 ? round2((beneficioNeto / facturacionReal) * 100) : 0;
 
@@ -5958,7 +6099,7 @@
             const elCost = document.getElementById('kpiCosteTotal');
             if (elCost) elCost.textContent = fmtEur(costeTotalVendido);
             const elCostSub = document.getElementById('kpiCosteSub');
-            if (elCostSub) elCostSub.textContent = `${fmtEur(gastosOperativos)} en sobre/embalaje`;
+            if (elCostSub) elCostSub.textContent = totalGastosGlobales > 0 ? `${fmtEur(costeStockVendido)} stock + ${fmtEur(totalGastosGlobales)} pacas/gastos` : `${fmtEur(gastosOperativos)} en sobre/embalaje`;
 
             const elBenef = document.getElementById('kpiBeneficioNeto');
             if (elBenef) {
@@ -6055,7 +6196,8 @@
                 const expense = Number(g.extraExpenseEur || 0);
                 const totalCost = cost + expense;
                 const profit = finalPrice - totalCost;
-                const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
+                const isDirectWithoutCost = cost <= 0 && ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' || (g.saleChannel || '').toUpperCase() === 'VINTED_DIRECT');
+                const margin = (!isDirectWithoutCost && finalPrice > 0) ? round2((profit / finalPrice) * 100) : null;
                 const isSold = g.status === 'VENDIDA';
 
                 let stageBadgeHtml = '';
@@ -6091,9 +6233,13 @@
                     <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">${fmtEur(totalCost)}</td>
                     <td class="py-3 px-3 text-right font-mono tabular-nums font-bold whitespace-nowrap ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
                     <td class="py-3 px-2.5 text-center whitespace-nowrap">
-                        <span class="inline-block font-mono tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
-                            ${margin}%
-                        </span>
+                        ${isDirectWithoutCost ? `
+                            <span class="inline-block font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400" title="Venta de Vinted sin coste unitario asignado">Solo Ingreso</span>
+                        ` : `
+                            <span class="inline-block font-mono tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
+                                ${margin}%
+                            </span>
+                        `}
                     </td>
                     <td class="py-3 px-2.5 text-center whitespace-nowrap">
                         <div class="inline-flex items-center gap-1">
@@ -6180,7 +6326,7 @@
                     <td class="py-3 px-2 text-center font-mono tabular-nums text-xs whitespace-nowrap">
                         ${cost > 0
                             ? `<span class="font-bold ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">${margin}%</span>`
-                            : '<span class="text-zinc-500 text-[10px]">-</span>'
+                            : ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' ? '<span class="text-zinc-500 font-mono text-[10px]" title="Venta directa sin coste">N/D</span>' : '<span class="text-zinc-500 text-[10px]">-</span>')
                         }
                     </td>
                     <td class="py-3 px-2 text-center whitespace-nowrap">
@@ -6663,6 +6809,18 @@
             const filtered = getFilteredRegistroData();
             renderRegistroKpis(filtered);
 
+            // Sincronizacion reactiva de badges numericos de las 5 sub-vistas
+            const salesCount = filtered.filter(g => g.status === 'VENDIDA' || g.status === 'RESERVADA').length;
+            const bV = document.getElementById('badgeCountVentas');
+            if (bV) bV.textContent = String(salesCount);
+
+            const bP = document.getElementById('badgeCountPrendas');
+            if (bP) bP.textContent = String(filtered.length);
+
+            const dropsSet = new Set(filtered.map(g => g.dropId).filter(Boolean));
+            const bD = document.getElementById('badgeCountDrops');
+            if (bD) bD.textContent = String(dropsSet.size);
+
             if (adminState.activeSubView === 'ventas') {
                 renderSubViewVentas(filtered);
             } else if (adminState.activeSubView === 'prendas') {
@@ -7100,7 +7258,7 @@
         document.getElementById('erpResetFiltersBtn')?.addEventListener('click', () => {
             adminState.registroFilters = {
                 search: '',
-                period: 'THIS_MONTH',
+                period: 'ALL',
                 dateFrom: '',
                 dateTo: '',
                 dropId: 'ALL',
@@ -7113,7 +7271,7 @@
             const sIn = document.getElementById('erpFilterSearch');
             if (sIn) sIn.value = '';
             const pSel = document.getElementById('erpFilterPeriod');
-            if (pSel) pSel.value = 'THIS_MONTH';
+            if (pSel) pSel.value = 'ALL';
             const cRow = document.getElementById('erpCustomDateRow');
             if (cRow) cRow.classList.add('hidden');
             const dSel = document.getElementById('erpFilterDrop');
@@ -7863,9 +8021,16 @@
 
             const syncCfg = adminState.config?.vintedSyncConfig || {};
             const chkAuto = document.getElementById('syncToggleAutoApply');
+            const chkDirect = document.getElementById('syncToggleAutoImportDirect');
             const chkPromote = document.getElementById('syncToggleAutoPromote');
+            const inpFrom = document.getElementById('syncFromDateInput');
+            const stFrom = document.getElementById('syncFromDateStatus');
+
             if (chkAuto) chkAuto.checked = syncCfg.autoApplyExactMatches === true;
+            if (chkDirect) chkDirect.checked = syncCfg.autoImportDirectSales === true;
             if (chkPromote) chkPromote.checked = syncCfg.autoPromoteExpiredWaitlist === true;
+            if (inpFrom) inpFrom.value = syncCfg.syncFromDate || '';
+            if (stFrom) stFrom.textContent = syncCfg.syncFromDate ? `✓ Filtrando desde ${syncCfg.syncFromDate}` : '✓ Historial completo';
 
             const lastLbl = document.getElementById('vintedSyncLastScannedLabel');
             if (lastLbl && sync.lastScannedAt) {
@@ -7909,7 +8074,7 @@
                 return;
             }
 
-            const assignableGarments = (adminState.garments || []).filter(g => g.status === 'DISPONIBLE' || g.status === 'RESERVADA');
+            const assignableGarments = (adminState.garments || []).filter(g => (g.dropId || '').toUpperCase() !== 'VINTED-DIRECT' && (g.status === 'DISPONIBLE' || g.status === 'RESERVADA'));
 
             const expiredCards = filteredExpired.map(ex => `
                 <div class="p-3.5 rounded-2xl bg-rose-950/25 border border-rose-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -8264,16 +8429,34 @@
                 }
 
                 const autoApplyOn = adminState.config?.vintedSyncConfig?.autoApplyExactMatches === true;
+                const autoDirectOn = adminState.config?.vintedSyncConfig?.autoImportDirectSales === true;
                 const exactList = sync.events.filter(e => e.isExactAppMatch);
+                const directList = sync.events.filter(e => e.matchType === 'UNMATCHED_VINTED_SALE');
+
+                let anyApplied = false;
                 if (autoApplyIfEnabled && autoApplyOn && exactList.length > 0) {
                     const updates = exactList.flatMap(ev => buildUpdatesForExactSyncEvent(ev));
                     if (updates.length > 0) {
                         await callAdminApi('bulk_update_garments', { updates });
                         const appliedSet = new Set(exactList.map(e => e.eventKey));
                         sync.events = sync.events.filter(e => !appliedSet.has(e.eventKey));
-                        toast(`⚡ Modo Automático: ${exactList.length} coincidencia(s) aplicada(s) al catálogo y ERP.`);
-                        await loadDashboard();
+                        anyApplied = true;
                     }
+                }
+
+                if (autoApplyIfEnabled && autoDirectOn && directList.length > 0) {
+                    const updates = buildUpdatesForImportedEvents(directList);
+                    if (updates.length > 0) {
+                        await callAdminApi('bulk_update_garments', { updates });
+                        const directSet = new Set(directList.map(e => e.eventKey));
+                        sync.events = sync.events.filter(e => !directSet.has(e.eventKey));
+                        anyApplied = true;
+                    }
+                }
+
+                if (anyApplied) {
+                    toast(`⚡ Auto-Sincronización: Ventas aplicadas al catálogo y caja.`);
+                    await loadDashboard();
                 } else {
                     toast(`✓ Escaneo completado: ${sync.events.length} evento(s) pendiente(s) y ${sync.expiredUnpaidReservations.length} impago(s) 24h.`);
                 }
@@ -8361,6 +8544,193 @@
 
         document.getElementById('syncToggleAutoPromote')?.addEventListener('change', (e) => {
             saveVintedSyncToggle({ autoPromoteExpiredWaitlist: e.target.checked });
+        });
+
+        
+        // ======================== LIBRO DE PACAS & GASTOS GLOBALES ========================
+        function openGlobalExpensesModal() {
+            const modal = document.getElementById('globalExpensesModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            const dInput = document.getElementById('expenseDateInput');
+            if (dInput && !dInput.value) {
+                dInput.value = new Date().toISOString().slice(0, 10);
+            }
+            renderGlobalExpensesTable();
+            lucide.createIcons();
+        }
+
+        function closeGlobalExpensesModal() {
+            document.getElementById('globalExpensesModal')?.classList.add('hidden');
+        }
+
+        function renderGlobalExpensesTable() {
+            const tableBody = document.getElementById('globalExpensesTableBody');
+            const sumSpan = document.getElementById('expensesTotalSumSpan');
+            const countBadge = document.getElementById('globalExpensesCountBadge');
+            if (!tableBody) return;
+
+            const list = Array.isArray(adminState.config.globalExpenses) ? adminState.config.globalExpenses : [];
+            if (countBadge) countBadge.textContent = String(list.length);
+
+            const totalSum = list.reduce((acc, x) => acc + Number(x.amountEur || 0), 0);
+            if (sumSpan) sumSpan.textContent = `Total Histórico: ${fmtEur(totalSum)}`;
+
+            if (list.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-zinc-500 font-mono text-xs">No hay pacas ni gastos registrados todavía. Apunta compras para calcular tu beneficio neto real.</td></tr>';
+                return;
+            }
+
+            const sorted = [...list].sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime());
+
+            tableBody.innerHTML = sorted.map(x => {
+                let catBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/20 text-amber-300">PACA</span>';
+                if (x.category === 'PACKAGING') catBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300">PACKAGING</span>';
+                else if (x.category === 'ENVIO') catBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300">ENVÍO</span>';
+                else if (x.category === 'OTROS') catBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">OTROS</span>';
+
+                return `
+                <tr class="hover:bg-obsidian-elevated/60 transition-colors border-b border-zinc-800/60">
+                    <td class="py-2.5 px-3 font-mono text-[11px] text-zinc-300 whitespace-nowrap">${escapeHtml(x.date || '-')}</td>
+                    <td class="py-2.5 px-3 whitespace-nowrap">${catBadge}</td>
+                    <td class="py-2.5 px-3 min-w-[160px]">
+                        <span class="font-bold text-white block text-xs truncate" title="${escapeHtml(x.concept)}">${escapeHtml(x.concept)}</span>
+                        ${x.notes ? `<span class="text-[10px] text-zinc-400 block truncate">${escapeHtml(x.notes)}</span>` : ''}
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono tabular-nums font-bold text-amber-300 whitespace-nowrap">${fmtEur(x.amountEur)}</td>
+                    <td class="py-2.5 px-3 text-center whitespace-nowrap">
+                        <button type="button" data-delete-expense="${escapeHtml(x.id)}" class="p-1 rounded bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 transition-colors" title="Eliminar apunte de gasto">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tableBody.querySelectorAll('[data-delete-expense]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.getAttribute('data-delete-expense');
+                    const updated = (adminState.config.globalExpenses || []).filter(x => x.id !== id);
+                    try {
+                        toast('Eliminando apunte...');
+                        await callAdminApi('save_config', { onlyExpenses: true, globalExpenses: updated });
+                        adminState.config.globalExpenses = updated;
+                        renderGlobalExpensesTable();
+                        renderRegistroWorkspace();
+                        toast('✓ Apunte eliminado.');
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
+            });
+
+            lucide.createIcons();
+        }
+
+        document.getElementById('addGlobalExpenseForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const date = document.getElementById('expenseDateInput').value;
+            const concept = document.getElementById('expenseConceptInput').value.trim();
+            const category = document.getElementById('expenseCategoryInput').value;
+            const amountEur = parseFloat(document.getElementById('expenseAmountInput').value.replace(',', '.'));
+            const notes = (document.getElementById('expenseNotesInput')?.value || '').trim();
+
+            if (!date || !concept || isNaN(amountEur) || amountEur <= 0) {
+                toast('Completa fecha, concepto e importe válido.', true);
+                return;
+            }
+
+            const newEntry = {
+                id: 'EXP-' + Date.now().toString(36).toUpperCase(),
+                date,
+                concept,
+                category,
+                amountEur: round2(amountEur),
+                notes,
+                createdAt: new Date().toISOString()
+            };
+
+            const current = Array.isArray(adminState.config.globalExpenses) ? adminState.config.globalExpenses : [];
+            const updated = [newEntry, ...current];
+
+            const submitBtn = document.getElementById('saveExpenseBtn');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Guardando...'; }
+
+            try {
+                await callAdminApi('save_config', { onlyExpenses: true, globalExpenses: updated });
+                adminState.config.globalExpenses = updated;
+                document.getElementById('expenseConceptInput').value = '';
+                document.getElementById('expenseAmountInput').value = '';
+                document.getElementById('expenseNotesInput').value = '';
+                renderGlobalExpensesTable();
+                renderRegistroWorkspace();
+                toast('✓ Gasto / Paca registrada con éxito.');
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '+ Apuntar Gasto'; }
+            }
+        });
+
+        document.getElementById('openGlobalExpensesBtn')?.addEventListener('click', openGlobalExpensesModal);
+        document.getElementById('closeGlobalExpensesModalBtn')?.addEventListener('click', closeGlobalExpensesModal);
+        document.getElementById('globalExpensesModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('globalExpensesModal')) closeGlobalExpensesModal();
+        });
+
+        // Toggle Auto-Importar directas
+        document.getElementById('syncToggleAutoImportDirect')?.addEventListener('change', (e) => {
+            saveVintedSyncToggle({ autoImportDirectSales: e.target.checked });
+        });
+
+        // Fecha de corte Vinted
+        document.getElementById('saveSyncFromDateBtn')?.addEventListener('click', async () => {
+            const val = document.getElementById('syncFromDateInput')?.value || '';
+            await saveVintedSyncToggle({ syncFromDate: val });
+            const stEl = document.getElementById('syncFromDateStatus');
+            if (stEl) stEl.textContent = val ? `✓ Filtrando desde ${val}` : '✓ Historial completo';
+            runVintedEmailScan(true);
+        });
+
+        document.getElementById('clearSyncFromDateBtn')?.addEventListener('click', async () => {
+            const inp = document.getElementById('syncFromDateInput');
+            if (inp) inp.value = '';
+            await saveVintedSyncToggle({ syncFromDate: '' });
+            const stEl = document.getElementById('syncFromDateStatus');
+            if (stEl) stEl.textContent = '✓ Historial completo';
+            runVintedEmailScan(true);
+        });
+
+        // Boton Recordatorio en Drop Activo
+        document.getElementById('remindActiveDropBtn')?.addEventListener('click', async () => {
+            const cfg = adminState.config;
+            if (!cfg.activeDropId) return;
+            const availCount = (adminState.garments || []).filter(g => g.dropId === cfg.activeDropId && g.status === 'DISPONIBLE').length;
+            if (availCount === 0) {
+                toast('No quedan prendas disponibles en este Drop para enviar recordatorio.', true);
+                return;
+            }
+            const ok = window.confirm(`¿Crear borrador de campaña recordatorio en Brevo para las ${availCount} prendas disponibles del Drop ${cfg.activeDropId}?`);
+            if (!ok) return;
+
+            const btn = document.getElementById('remindActiveDropBtn');
+            btn.disabled = true;
+            btn.textContent = 'Generando en Brevo...';
+
+            try {
+                const res = await callAdminApi('publish_drop', {
+                    dropId: cfg.activeDropId,
+                    dropTitle: cfg.activeDropTitle,
+                    campaignMode: 'reminder',
+                    sendMode: 'draft'
+                });
+                toast(res.message || `✓ Borrador recordatorio generado en Brevo (${availCount} disponibles).`);
+            } catch (err) {
+                toast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="clock" class="w-3 h-3 text-sky-400"></i><span>⏳ Recordatorio Últimas Horas</span>';
+                lucide.createIcons();
+            }
         });
 
         // ======================== ARRANQUE ========================
