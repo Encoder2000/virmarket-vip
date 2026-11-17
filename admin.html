@@ -9075,6 +9075,9 @@
         }
 
         function formatSyncStageBadge(ev) {
+            if (ev.stage === 'CANCELLED' || ev.matchType === 'CANCELLED_SALE') {
+                return `<span class="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 font-mono text-[10px] font-bold">❌ Cancelado / Reembolso</span>`;
+            }
             if (ev.stage === 'COMPLETED') {
                 return `<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold">✅ Cobrada${ev.txId ? ' #' + escapeHtml(ev.txId) : ''}</span>`;
             }
@@ -9206,7 +9209,12 @@
 
                 let typeBadge = '';
                 let borderClass = 'border-zinc-800';
-                if (ev.isExactAppMatch) {
+                const isCancellation = ev.matchType === 'CANCELLED_SALE' || ev.stage === 'CANCELLED';
+
+                if (isCancellation) {
+                    borderClass = 'border-rose-500/60 bg-rose-950/20';
+                    typeBadge = `<span class="px-2 py-0.5 rounded bg-rose-600 text-white font-mono text-[10px] font-bold uppercase tracking-wide">🚨 Pedido Cancelado / Reembolso</span>`;
+                } else if (ev.isExactAppMatch) {
                     borderClass = 'border-acid/50 bg-acid/5';
                     const lbl = ev.matchType === 'STAGE_UPGRADE'
                         ? '🔄 Actualización Logística'
@@ -9226,7 +9234,7 @@
                 <div class="p-3.5 rounded-2xl bg-obsidian-elevated border ${borderClass} space-y-2.5">
                     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                         <div class="flex items-start gap-3 min-w-0">
-                            ${!ev.isExactAppMatch ? `
+                            ${!ev.isExactAppMatch && !isCancellation ? `
                                 <input type="checkbox" data-sync-select="${escapeHtml(ev.eventKey)}" ${isSelected ? 'checked' : ''} class="mt-1.5 w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0 cursor-pointer shrink-0">
                             ` : ''}
                             ${ev.thumbUrl
@@ -9255,7 +9263,23 @@
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2 shrink-0 justify-end">
-                            ${ev.isExactAppMatch ? `
+                            ${isCancellation ? `
+                                ${ev.matchedPreview?.some(mp => {
+                                    const g = adminState.garments.find(x => x.ref === mp.ref);
+                                    return (g?.dropId || '').toUpperCase() === 'VINTED-DIRECT';
+                                }) ? `
+                                    <button type="button" data-sync-cancel-hide="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-display font-bold text-xs uppercase tracking-wide transition-colors" title="Archivar venta fallida en Oculta con 0 €">
+                                        🗄️ Anular y Ocultar
+                                    </button>
+                                    <button type="button" data-sync-cancel-available="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-xs font-bold text-zinc-200 transition-colors" title="Pasar prenda a Disponible">
+                                        🔓 Pasar a Disponible
+                                    </button>
+                                ` : `
+                                    <button type="button" data-sync-cancel-available="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-display font-bold text-xs uppercase tracking-wide transition-colors" title="Devolver prenda a Disponible en el catálogo">
+                                        🔓 Revertir a Disponible
+                                    </button>
+                                `}
+                            ` : ev.isExactAppMatch ? `
                                 <button type="button" data-sync-apply-exact="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg ${ev.stage === 'COMPLETED' ? 'bg-acid hover:bg-acid-hover text-obsidian' : 'bg-sky-500 hover:bg-sky-400 text-obsidian'} font-display font-bold text-xs uppercase tracking-wide transition-colors">
                                     ${ev.stage === 'COMPLETED' ? '✓ Confirmar Venta Cobrada' : '🚚 Pasar a En Camino'}
                                 </button>
@@ -9317,6 +9341,22 @@
                     const key = btn.getAttribute('data-sync-apply-exact');
                     const ev = (sync.events || []).find(e => e.eventKey === key);
                     if (ev) await applyExactSyncEvents([ev]);
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-cancel-hide]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const key = btn.getAttribute('data-sync-cancel-hide');
+                    const ev = (sync.events || []).find(e => e.eventKey === key);
+                    if (ev) await resolveCancelledVintedSale(ev, 'OCULTA');
+                });
+            });
+
+            listEl.querySelectorAll('[data-sync-cancel-available]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const key = btn.getAttribute('data-sync-cancel-available');
+                    const ev = (sync.events || []).find(e => e.eventKey === key);
+                    if (ev) await resolveCancelledVintedSale(ev, 'DISPONIBLE');
                 });
             });
 
@@ -9390,8 +9430,57 @@
             });
         }
 
+        async function resolveCancelledVintedSale(ev, targetStatus) {
+            const refs = Array.isArray(ev.matchedRefs) ? ev.matchedRefs : [];
+            if (!refs.length) return;
+            const isHide = targetStatus === 'OCULTA';
+            const ok = await vmConfirm({
+                badge: isHide ? 'Anular y Archivar Venta' : 'Revertir a Disponible',
+                title: isHide ? `¿Anular y archivar venta de ${refs.join(', ')}?` : `¿Revertir ${refs.join(', ')} a Disponible?`,
+                message: isHide
+                    ? 'Vinted ha cancelado el pedido y reembolsado al comprador. La prenda pasará a OCULTA con 0,00 € de venta para mantener la trazabilidad sin alterar tu facturación ni stock.'
+                    : 'Vinted ha cancelado el pedido y reembolsado al comprador. La prenda volverá a estar DISPONIBLE en el catálogo para futuras ventas o Drops.',
+                confirmText: isHide ? 'Sí, anular y archivar' : 'Sí, pasar a Disponible',
+                cancelText: 'Cancelar'
+            });
+            if (!ok) return;
+
+            try {
+                toast(`Resolviendo cancelación para ${refs.join(', ')}...`);
+                for (const ref of refs) {
+                    await callAdminApi('update_status', {
+                        ref,
+                        newStatus: targetStatus,
+                        isCancelled: true,
+                        releaseReason: 'Pedido cancelado por comprador / reembolso Vinted'
+                    });
+                }
+
+                // Silenciar todos los correlation IDs asociados (compra original, envíos y cancelación)
+                const prev = Array.isArray(adminState.config?.vintedSyncConfig?.ignoredEventKeys)
+                    ? adminState.config.vintedSyncConfig.ignoredEventKeys
+                    : [];
+                const merged = [...new Set([...prev, ...(ev.eventKeys || [ev.eventKey])])];
+                await callAdminApi('save_config', {
+                    onlySyncConfig: true,
+                    vintedSyncConfig: { ignoredEventKeys: merged }
+                });
+                if (!adminState.config.vintedSyncConfig) adminState.config.vintedSyncConfig = {};
+                adminState.config.vintedSyncConfig.ignoredEventKeys = merged;
+
+                adminState.vintedSync.events = (adminState.vintedSync.events || []).filter(e => e.eventKey !== ev.eventKey);
+                adminState.vintedSync.selectedKeys.delete(ev.eventKey);
+
+                toast(`✓ Cancelación aplicada: ${refs.join(', ')} en ${targetStatus}.`);
+                await loadDashboard();
+                renderVintedSyncModal();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
         async function applyExactSyncEvents(eventsList) {
-            const updates = eventsList.flatMap(ev => buildUpdatesForExactSyncEvent(ev));
+            const updates = eventsList.filter(ev => ev.matchType !== 'CANCELLED_SALE').flatMap(ev => buildUpdatesForExactSyncEvent(ev));
             if (updates.length === 0) return;
             try {
                 toast(`Aplicando ${eventsList.length} coincidencia(s) en catálogo y ERP...`);
@@ -9514,7 +9603,7 @@
 
                 const autoApplyOn = adminState.config?.vintedSyncConfig?.autoApplyExactMatches === true;
                 const autoDirectOn = adminState.config?.vintedSyncConfig?.autoImportDirectSales === true;
-                const exactList = sync.events.filter(e => e.isExactAppMatch);
+                const exactList = sync.events.filter(e => e.isExactAppMatch && e.matchType !== 'CANCELLED_SALE');
                 const directList = sync.events.filter(e => e.matchType === 'UNMATCHED_VINTED_SALE');
 
                 let anyApplied = false;
@@ -9603,7 +9692,16 @@
 
         document.getElementById('applyAllExactSyncBtn')?.addEventListener('click', async () => {
             const exact = (adminState.vintedSync.events || []).filter(e => e.isExactAppMatch);
-            if (exact.length > 0) await applyExactSyncEvents(exact);
+            const nonCancelled = exact.filter(e => e.matchType !== 'CANCELLED_SALE');
+            const cancelledCount = exact.length - nonCancelled.length;
+            if (nonCancelled.length > 0) {
+                await applyExactSyncEvents(nonCancelled);
+                if (cancelledCount > 0) {
+                    toast(`ℹ️ Quedan ${cancelledCount} cancelación(es) de pedido pendiente(s) que requieren tu decisión individual.`);
+                }
+            } else if (cancelledCount > 0) {
+                toast('Las cancelaciones de pedido requieren que elijas si Anular y Ocultar o Pasar a Disponible.', true);
+            }
         });
 
         document.getElementById('importSelectedSyncBtn')?.addEventListener('click', async () => {
