@@ -954,50 +954,49 @@
                 <!-- =============================================================== -->
                 <div id="tab-vinted" class="hidden space-y-6">
 
-                    <!-- Barra de Filtros -->
-                    <!-- Barra de Filtros y Estado en Vivo -->
-                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button type="button" data-filter="ALL" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian flex items-center gap-1.5">
+                    <!-- Barra de Filtros y Estado en Vivo (Responsive Móvil / Desktop) -->
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4">
+                        <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto">
+                            <button type="button" data-filter="ALL" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs font-bold bg-acid text-obsidian flex items-center gap-1.5 shrink-0 whitespace-nowrap">
                                 <span>Todas</span>
                                 <span id="filterCount-ALL" class="px-1.5 py-0.2 rounded-full text-[10px] bg-obsidian/20 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="RESERVADA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
+                            <button type="button" data-filter="RESERVADA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5 shrink-0 whitespace-nowrap">
                                 <span>Reservadas VIP</span>
                                 <span id="filterCount-RESERVADA" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="WAITLIST" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-amber-500/30 text-amber-300 flex items-center gap-1.5 hover:border-amber-400">
+                            <button type="button" data-filter="WAITLIST" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-amber-500/30 text-amber-300 flex items-center gap-1.5 hover:border-amber-400 shrink-0 whitespace-nowrap">
                                 <span>⏳ En Cola de Espera</span>
                                 <span id="filterCount-WAITLIST" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/20 text-amber-300 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="DISPONIBLE" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
+                            <button type="button" data-filter="DISPONIBLE" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5 shrink-0 whitespace-nowrap">
                                 <span>Disponibles</span>
                                 <span id="filterCount-DISPONIBLE" class="px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800 text-zinc-400 font-bold">0</span>
                             </button>
-                            <button type="button" data-filter="VENDIDA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5">
+                            <button type="button" data-filter="VENDIDA" class="vinted-filter-btn px-3 py-1.5 rounded-lg font-mono text-xs bg-obsidian-elevated border border-zinc-800 text-zinc-300 flex items-center gap-1.5 shrink-0 whitespace-nowrap">
                                 <span>Vendidas</span>
                                 <span id="filterCount-VENDIDA" class="px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800 text-zinc-400 font-bold">0</span>
                             </button>
                         </div>
 
-                        <div class="flex items-center gap-2.5">
-                            <span id="liveSyncStatus" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[10px] text-zinc-400">
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 pt-2.5 xl:pt-0 border-t xl:border-t-0 border-zinc-800/60 w-full xl:w-auto">
+                            <span id="liveSyncStatus" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[10px] text-zinc-400 shrink-0 whitespace-nowrap min-w-max">
                                 <span class="w-1.5 h-1.5 rounded-full bg-acid animate-pulse"></span>
-                                <span id="liveSyncLabel">En vivo</span>
+                                <span id="liveSyncLabel" class="whitespace-nowrap">En vivo</span>
                             </span>
-                            <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
+                            <select id="filterDropSelect" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white shrink-0">
                                 <option value="ALL">Todos los Drops</option>
                             </select>
-                            <button id="openVintedSyncBtnTab2" type="button" title="Escanear correos reales de ventas y transacciones de Vinted" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-emerald-400/60 text-emerald-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+                            <button id="openVintedSyncBtnTab2" type="button" title="Escanear correos reales de ventas y transacciones de Vinted" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-emerald-400/60 text-emerald-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shrink-0 whitespace-nowrap">
                                 <i data-lucide="mail-check" class="w-3.5 h-3.5 text-emerald-400"></i>
                                 <span>📬 Sincronizar Vinted</span>
                                 <span class="vinted-sync-badge hidden px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-400 text-obsidian font-mono font-bold">0</span>
                             </button>
-                            <button id="openSocialModalBtn" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-sky-400/60 text-sky-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+                            <button id="openSocialModalBtn" type="button" title="Publicar prendas sobrantes en Telegram @virmarket_club" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-sky-400/60 text-sky-300 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shrink-0 whitespace-nowrap">
                                 <i data-lucide="send" class="w-3.5 h-3.5 text-sky-400"></i>
                                 <span>📢 Publicar Sobrantes</span>
                             </button>
-                            <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5 transition-colors">
+                            <button id="refreshDashboardBtn" type="button" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs text-zinc-200 flex items-center gap-1.5 transition-colors shrink-0 whitespace-nowrap">
                                 <i data-lucide="refresh-cw" id="refreshIcon" class="w-3.5 h-3.5 text-acid"></i>
                                 <span>Actualizar</span>
                             </button>
@@ -1069,31 +1068,31 @@
                 <div id="tab-registro" class="hidden space-y-6">
 
                     <!-- Cabecera de la Pestaña Registro -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider">Centro de Control ERP</span>
-                                <span id="erpFilterIndicatorBadge" class="hidden px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold">Filtros Activos</span>
+                    <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <div class="space-y-1 w-full xl:w-auto">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2.5 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0">Centro de Control ERP</span>
+                                <span id="erpFilterIndicatorBadge" class="hidden px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold whitespace-nowrap shrink-0">Filtros Activos</span>
                             </div>
                             <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Registro Contable &amp; Auditoría de Negocio</h2>
                             <p class="text-xs text-zinc-400 mt-0.5">Supervisión integral de ventas cerradas, márgenes netos, inventario valorado, CRM de clientes y rendimiento por Drop.</p>
                         </div>
-                        <div class="flex flex-wrap items-center gap-2 shrink-0">
-                            <button id="openGlobalExpensesBtn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/60 text-xs font-mono font-bold text-amber-300 flex items-center gap-1.5 transition-colors" title="Gestionar compras de pacas y gastos generales del negocio">
+                        <div class="flex flex-wrap items-center gap-2 shrink-0 w-full xl:w-auto pt-2.5 xl:pt-0 border-t xl:border-t-0 border-zinc-800/60">
+                            <button id="openGlobalExpensesBtn" type="button" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/60 text-xs font-mono font-bold text-amber-300 flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Gestionar compras de pacas y gastos generales del negocio">
                                 <i data-lucide="receipt" class="w-3.5 h-3.5 text-amber-400"></i>
                                 <span>💸 Pacas &amp; Gastos</span>
                                 <span id="globalExpensesCountBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-obsidian font-mono font-bold">0</span>
                             </button>
-                            <button id="openVintedSyncBtnTab3" type="button" title="Conciliar correos reales de Vinted e importar ventas al ERP" class="px-3.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/60 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors">
+                            <button id="openVintedSyncBtnTab3" type="button" title="Conciliar correos reales de Vinted e importar ventas al ERP" class="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/60 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0">
                                 <i data-lucide="mail-check" class="w-3.5 h-3.5 text-emerald-400"></i>
                                 <span>📬 Sincronizar Vinted</span>
                                 <span class="vinted-sync-badge hidden px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-400 text-obsidian font-mono font-bold">0</span>
                             </button>
-                            <button id="exportRegistroCsvBtn" type="button" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Descargar datos contables filtrados en formato CSV compatible con Excel">
+                            <button id="exportRegistroCsvBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Descargar datos contables filtrados en formato CSV compatible con Excel">
                                 <i data-lucide="download" class="w-3.5 h-3.5 text-acid"></i>
                                 <span>Exportar CSV</span>
                             </button>
-                            <button id="refreshRegistroBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Recargar y sincronizar datos en vivo">
+                            <button id="refreshRegistroBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Recargar y sincronizar datos en vivo">
                                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
                                 <span class="hidden sm:inline">Actualizar</span>
                             </button>
@@ -1604,35 +1603,34 @@
                 <div id="tab-logs" class="hidden space-y-5 sm:space-y-6">
 
                     <!-- Cabecera de la Pestaña Logs (Responsive Móvil / Desktop) -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
-                        <div>
+                    <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <div class="space-y-1 w-full xl:w-auto">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider">Auditoría 360º</span>
-                                <span id="logsActiveFilterBadge" class="hidden px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold">Filtros Activos</span>
-                                <span id="logsUnresolvedAlertBadge" class="hidden px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono text-[10px] font-bold animate-pulse">0 Errores Pendientes</span>
+                                <span class="px-2.5 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0">Auditoría 360º</span>
+                                <span id="logsActiveFilterBadge" class="hidden px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold whitespace-nowrap shrink-0">Filtros Activos</span>
+                                <span id="logsUnresolvedAlertBadge" class="hidden px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono text-[10px] font-bold whitespace-nowrap shrink-0 animate-pulse">0 Errores Pendientes</span>
                             </div>
                             <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Registro de Actividad &amp; Errores del Sistema</h2>
                             <p class="text-xs text-zinc-400 mt-0.5">Supervisión en vivo de acciones del admin, reservas de clientes, sincronización Vinted, automatizaciones y fallos de ejecución.</p>
                         </div>
-                        <div class="flex flex-wrap items-center gap-2 shrink-0">
-                            <button id="resolveAllLogsBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/50 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors" title="Marcar todos los errores pendientes como atendidos y revisados">
+                        <div class="flex flex-wrap items-center gap-2 shrink-0 w-full xl:w-auto pt-2.5 xl:pt-0 border-t xl:border-t-0 border-zinc-800/60">
+                            <button id="resolveAllLogsBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/50 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Marcar todos los errores pendientes como atendidos y revisados">
                                 <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                                <span class="hidden sm:inline">Marcar Errores Revisados</span>
-                                <span class="sm:hidden">Revisar Todo</span>
+                                <span>Marcar Errores Revisados</span>
                             </button>
-                            <button id="purgeLogsModalBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Limpiar logs antiguos o resueltos">
+                            <button id="purgeLogsModalBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Limpiar logs antiguos o resueltos">
                                 <i data-lucide="trash-2" class="w-3.5 h-3.5 text-zinc-400"></i>
                                 <span>Limpiar</span>
                             </button>
-                            <button id="exportLogsCsvBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Exportar registros filtrados en formato CSV compatible con Excel">
+                            <button id="exportLogsCsvBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Exportar registros filtrados en formato CSV compatible con Excel">
                                 <i data-lucide="download" class="w-3.5 h-3.5 text-acid"></i>
                                 <span>CSV</span>
                             </button>
-                            <button id="exportLogsJsonBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Exportar registros filtrados en formato JSON técnico">
+                            <button id="exportLogsJsonBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Exportar registros filtrados en formato JSON técnico">
                                 <i data-lucide="file-json" class="w-3.5 h-3.5 text-sky-400"></i>
                                 <span>JSON</span>
                             </button>
-                            <button id="refreshLogsBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Recargar logs desde Supabase">
+                            <button id="refreshLogsBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Recargar logs desde Supabase">
                                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
                                 <span class="hidden sm:inline">Actualizar</span>
                             </button>
