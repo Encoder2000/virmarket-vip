@@ -2207,12 +2207,17 @@
 
             <!-- Barra de Acción Masiva -->
             <div id="vintedSyncBulkBar" class="hidden flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/35 text-xs">
-                <label class="flex items-center gap-2 cursor-pointer select-none font-mono text-[11px] text-zinc-200">
-                    <input type="checkbox" id="selectAllSyncImportable" class="w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
-                    <span>Seleccionar ventas importables visibles</span>
-                </label>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button type="button" id="applyAllExactSyncBtn" class="hidden px-3 py-1.5 rounded-lg bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                <div id="syncImportableControls" class="flex items-center gap-2">
+                    <label class="flex items-center gap-2 cursor-pointer select-none font-mono text-[11px] text-zinc-200">
+                        <input type="checkbox" id="selectAllSyncImportable" class="w-4 h-4 rounded border-zinc-700 text-emerald-400 focus:ring-0">
+                        <span id="selectAllSyncImportableLabel">Seleccionar ventas importables</span>
+                    </label>
+                </div>
+                <div id="syncExactMatchesNotice" class="hidden flex items-center gap-1.5 font-mono text-[11px] text-acid">
+                    <span>⚡ Coincidencias de la app pendientes de aplicar:</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 ml-auto">
+                    <button type="button" id="applyAllExactSyncBtn" class="hidden px-3 py-1.5 rounded-lg bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors shadow-sm">
                         ⚡ Aplicar Coincidencias Exactas (<span id="applyExactCountSpan">0</span>)
                     </button>
                     <button type="button" id="importSelectedSyncBtn" disabled class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
@@ -8049,6 +8054,32 @@
                 bulkBar.classList.toggle('hidden', exactVisible.length === 0 && importableVisible.length === 0);
             }
 
+            const importControls = document.getElementById('syncImportableControls');
+            const exactNotice = document.getElementById('syncExactMatchesNotice');
+            const importBtn = document.getElementById('importSelectedSyncBtn');
+            const selectAllChk = document.getElementById('selectAllSyncImportable');
+            const selectAllLbl = document.getElementById('selectAllSyncImportableLabel');
+
+            if (importableVisible.length > 0) {
+                if (importControls) importControls.classList.remove('hidden');
+                if (exactNotice) exactNotice.classList.add('hidden');
+                if (importBtn) {
+                    importBtn.classList.remove('hidden');
+                    importBtn.disabled = selectedCount === 0;
+                }
+                if (selectAllChk) {
+                    selectAllChk.disabled = false;
+                    selectAllChk.checked = selectedCount > 0 && selectedCount === importableVisible.length;
+                }
+                if (selectAllLbl) {
+                    selectAllLbl.textContent = `Seleccionar ventas importables (${selectedCount}/${importableVisible.length})`;
+                }
+            } else {
+                if (importControls) importControls.classList.add('hidden');
+                if (importBtn) importBtn.classList.add('hidden');
+                if (exactNotice) exactNotice.classList.toggle('hidden', exactVisible.length === 0);
+            }
+
             const applyExactBtn = document.getElementById('applyAllExactSyncBtn');
             const applyExactSpan = document.getElementById('applyExactCountSpan');
             if (applyExactBtn) {
@@ -8056,15 +8087,8 @@
             }
             if (applyExactSpan) applyExactSpan.textContent = String(exactVisible.length);
 
-            const importBtn = document.getElementById('importSelectedSyncBtn');
             const importSpan = document.getElementById('importSelectedCountSpan');
             if (importSpan) importSpan.textContent = String(selectedCount);
-            if (importBtn) importBtn.disabled = selectedCount === 0;
-
-            const selectAllChk = document.getElementById('selectAllSyncImportable');
-            if (selectAllChk) {
-                selectAllChk.checked = importableVisible.length > 0 && importableVisible.every(ev => sync.selectedKeys.has(ev.eventKey));
-            }
         }
 
         function formatSyncStageBadge(ev) {
@@ -8584,6 +8608,11 @@
         document.getElementById('selectAllSyncImportable')?.addEventListener('change', (e) => {
             const { filteredEvents } = getFilteredSyncItems();
             const importable = filteredEvents.filter(ev => ev.matchType === 'UNMATCHED_VINTED_SALE' || ev.matchType === 'NATIVE_VINTED_LOT');
+            if (importable.length === 0) {
+                e.target.checked = false;
+                toast('No hay ventas directas importables pendientes (todas las ventas de tu armario ya están en el ERP).');
+                return;
+            }
             if (e.target.checked) importable.forEach(ev => adminState.vintedSync.selectedKeys.add(ev.eventKey));
             else importable.forEach(ev => adminState.vintedSync.selectedKeys.delete(ev.eventKey));
             renderVintedSyncModal();
