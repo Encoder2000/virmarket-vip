@@ -1279,7 +1279,8 @@
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
                                             <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
-                                                <th class="py-3 px-3">Fecha</th>
+                                                <th class="py-3 px-2 w-11">Foto</th>
+                                                <th class="py-3 px-2.5">Fecha</th>
                                                 <th class="py-3 px-2.5">REF</th>
                                                 <th class="py-3 px-2.5">Prenda</th>
                                                 <th class="py-3 px-2.5">Comprador</th>
@@ -1294,7 +1295,7 @@
                                         </thead>
                                         <tbody id="ventasTableBody" class="divide-y divide-obsidian-border">
                                             <tr>
-                                                <td colspan="11" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando ventas...</td>
+                                                <td colspan="12" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando ventas...</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -6206,7 +6207,7 @@
             if (badgeCount) badgeCount.textContent = `${sales.length}`;
 
             if (sales.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="11" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay ventas ni reservas registradas con los filtros actuales.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay ventas ni reservas registradas con los filtros actuales.</td></tr>`;
                 return;
             }
 
@@ -6217,6 +6218,7 @@
             });
 
             tableBody.innerHTML = sales.map(g => {
+                const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
                 const dateStr = getGarmentSoldAt(g);
                 let dateFmt = '-';
                 if (dateStr) {
@@ -6260,7 +6262,13 @@
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
-                    <td class="py-3 px-3 font-mono text-[11px] text-zinc-400 whitespace-nowrap">${escapeHtml(dateFmt)}</td>
+                    <td class="py-3 px-2">
+                        ${thumb
+                            ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
+                            : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
+                        }
+                    </td>
+                    <td class="py-3 px-2.5 font-mono text-[11px] text-zinc-400 whitespace-nowrap">${escapeHtml(dateFmt)}</td>
                     <td class="py-3 px-2.5 whitespace-nowrap">
                         <span class="font-mono font-bold text-acid">${escapeHtml(g.ref)}</span>
                         ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
