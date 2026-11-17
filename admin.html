@@ -6706,7 +6706,7 @@
             }).join('');
 
             tableBody.querySelectorAll('[data-open-client]').forEach(btn => {
-                btn.addEventListener('click', () => openClientDetailsModal(btn.getAttribute('data-open-client'), crmMap));
+                btn.addEventListener('click', () => openClientDetailsModal(btn.getAttribute('data-open-client')));
             });
 
             lucide.createIcons();
@@ -7170,28 +7170,85 @@
         }
 
         // ======================== MODAL FICHA 360º DE CLIENTE ========================
-        function openClientDetailsModal(clientKey, crmMap) {
-            const c = crmMap.get(clientKey);
-            if (!c) return;
+        function openClientDetailsModal(clientKey) {
+            if (!clientKey) return;
+            const clients = getComputedCrmClients();
+            const c = clients.find(x => String(x.key || '').toLowerCase() === String(clientKey).toLowerCase())
+                   || clients.find(x => String(x.email || '').toLowerCase() === String(clientKey).toLowerCase())
+                   || clients.find(x => String(x.vintedUser || '').toLowerCase().replace(/^@+/, '') === String(clientKey).toLowerCase().replace(/^@+/, ''));
+            if (!c) {
+                toast('No se encontró la ficha del cliente seleccionado.', true);
+                return;
+            }
 
-            adminState.activeClientKey = clientKey;
+            adminState.activeClientKey = c.key;
             const modal = document.getElementById('clientDetailsModal');
 
-            document.getElementById('clientModalTitle').textContent = c.vintedUser ? '@' + c.vintedUser.replace(/^@+/, '') : 'Cliente VIP';
-            document.getElementById('clientModalEmailBadge').textContent = c.email || 'Sin email registrado';
+            const titleEl = document.getElementById('clientModalTitle');
+            if (titleEl) titleEl.textContent = c.vintedUser ? '@' + c.vintedUser.replace(/^@+/, '') : (c.firstName || 'Cliente VIP');
+
+            const emailBadge = document.getElementById('clientModalEmailBadge');
+            if (emailBadge) emailBadge.textContent = c.email || 'Sin email registrado';
+
+            const avatarEl = document.getElementById('clientModalAvatar');
+            if (avatarEl) {
+                avatarEl.textContent = (c.vintedUser ? c.vintedUser.charAt(0) : (c.email ? c.email.charAt(0) : (c.firstName ? c.firstName.charAt(0) : '?'))).toUpperCase();
+            }
 
             const completed = c.purchases.filter(p => p.status === 'VENDIDA');
+            const inTransit = c.purchases.filter(p => p.status === 'EN_CAMINO');
+            const reserved = c.purchases.filter(p => p.status === 'RESERVADA');
             const ltv = completed.reduce((acc, p) => acc + p.price, 0);
 
-            document.getElementById('clientModalLtv').textContent = fmtEur(ltv);
-            document.getElementById('clientModalOrdersCount').textContent = `${completed.length}`;
-            document.getElementById('clientModalCouponStatus').textContent = c.numReservas === 0 ? 'Disponible' : 'Consumido';
-            document.getElementById('clientModalWaitlistCount').textContent = `${c.waitlists.length}`;
+            const tagEl = document.getElementById('clientModalTagBadge');
+            if (tagEl) {
+                if (completed.length >= 2) {
+                    tagEl.textContent = '🏆 VIP Recurrente';
+                    tagEl.className = 'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-acid text-obsidian font-bold';
+                } else if (completed.length === 1) {
+                    tagEl.textContent = '🛍️ Comprador';
+                    tagEl.className = 'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold';
+                } else if (inTransit.length > 0) {
+                    tagEl.textContent = '🚚 En Camino';
+                    tagEl.className = 'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/40 font-bold';
+                } else if (reserved.length > 0) {
+                    tagEl.textContent = '⏱️ Reserva Activa';
+                    tagEl.className = 'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 font-bold';
+                } else if (c.waitlists.length > 0) {
+                    tagEl.textContent = '⏳ En Cola';
+                    tagEl.className = 'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold';
+                } else {
+                    tagEl.textContent = '🌱 Lead QR';
+                    tagEl.className = 'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-bold';
+                }
+            }
+
+            const ltvEl = document.getElementById('clientModalLtv');
+            if (ltvEl) ltvEl.textContent = fmtEur(ltv);
+
+            const ordersEl = document.getElementById('clientModalOrdersCount');
+            if (ordersEl) {
+                ordersEl.textContent = inTransit.length > 0 ? `${completed.length} (+${inTransit.length} en camino)` : `${completed.length}`;
+            }
+
+            const couponEl = document.getElementById('clientModalCouponStatus');
+            if (couponEl) couponEl.textContent = c.numReservas === 0 ? 'Disponible' : 'Consumido';
+
+            const waitlistEl = document.getElementById('clientModalWaitlistCount');
+            if (waitlistEl) waitlistEl.textContent = `${c.waitlists.length}`;
 
             // Notas
-            const configCrm = adminState.config.crmClientsMeta || {};
-            const meta = configCrm[clientKey.toLowerCase()] || {};
-            document.getElementById('clientModalNotesTextarea').value = meta.note || '';
+            let configCrm = {};
+            try {
+                configCrm = typeof adminState.config.crmClientsMeta === 'string'
+                    ? JSON.parse(adminState.config.crmClientsMeta)
+                    : (adminState.config.crmClientsMeta || {});
+            } catch (e) {
+                configCrm = {};
+            }
+            const meta = configCrm[c.key.toLowerCase()] || {};
+            const notesEl = document.getElementById('clientModalNotesTextarea');
+            if (notesEl) notesEl.value = meta.note || '';
 
             // Timeline
             const timelineEl = document.getElementById('clientModalTimelineContainer');
@@ -7199,7 +7256,8 @@
                 const allEvents = [];
                 c.purchases.forEach(p => {
                     allEvents.push({
-                        type: p.status === 'VENDIDA' ? 'BUY' : 'RES',
+                        type: p.status === 'VENDIDA' ? 'BUY' : (p.status === 'EN_CAMINO' ? 'TRANSIT' : 'RES'),
+                        status: p.status,
                         title: p.title,
                         ref: p.ref,
                         price: p.price,
@@ -7209,6 +7267,7 @@
                 c.waitlists.forEach(w => {
                     allEvents.push({
                         type: 'WAIT',
+                        status: 'WAITLIST',
                         title: w.title,
                         ref: w.ref,
                         price: 0,
@@ -7223,7 +7282,8 @@
                 } else {
                     timelineEl.innerHTML = allEvents.map(ev => {
                         let badge = '<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] font-bold">COMPRA</span>';
-                        if (ev.type === 'RES') badge = '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] font-bold">RESERVA</span>';
+                        if (ev.status === 'EN_CAMINO') badge = '<span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono text-[9px] font-bold">EN CAMINO</span>';
+                        else if (ev.type === 'RES') badge = '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] font-bold">RESERVA</span>';
                         else if (ev.type === 'WAIT') badge = '<span class="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono text-[9px]">EN COLA</span>';
 
                         return `

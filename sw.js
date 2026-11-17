@@ -4,7 +4,7 @@
    y soporte nativo WebAPK / PWA sin degradación a Chrome Custom Tabs en Android.
    ========================================================================== */
 
-const CACHE_NAME = 'virmarket-cache-v11';
+const CACHE_NAME = 'virmarket-cache-v12';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
