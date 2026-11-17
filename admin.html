@@ -2326,6 +2326,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const deepLinkLote = (urlParams.get('lote') || '').trim().toUpperCase();
         const deepLinkRef = (urlParams.get('ref') || '').trim().toUpperCase();
+        const editRef = (urlParams.get('editRef') || '').trim().toUpperCase();
 
         const round2 = (n) => Math.round((Number(n || 0) + Number.EPSILON) * 100) / 100;
         const fmtEur = (n) => round2(n).toFixed(2).replace('.', ',') + ' €';
@@ -2420,6 +2421,7 @@
                 const saved = localStorage.getItem('vm_admin_active_tab');
                 if (['drops', 'vinted', 'registro', 'settings'].includes(saved)) return saved;
             } catch (e) {}
+            if (editRef) return 'drops';
             return (deepLinkLote || deepLinkRef) ? 'vinted' : 'drops';
         }
 
@@ -3706,6 +3708,25 @@
             updateLiveSyncIndicator();
             setActiveTab(adminState.activeTab);
             lucide.createIcons();
+
+            // Si viene con ?editRef=... en nueva pestaña, cargar la prenda directamente en el formulario de edición
+            if (!window.__admEditRefHandled && editRef) {
+                window.__admEditRefHandled = true;
+                setTimeout(() => {
+                    loadGarmentIntoForm(editRef);
+                    const formHeader = document.getElementById('garmentFormModeBadge');
+                    if (formHeader && !document.getElementById('closeEditTabBtn')) {
+                        const closeBtn = document.createElement('button');
+                        closeBtn.id = 'closeEditTabBtn';
+                        closeBtn.type = 'button';
+                        closeBtn.className = 'ml-2 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-[11px] font-mono text-zinc-200 transition-colors';
+                        closeBtn.textContent = '✕ Cerrar pestaña';
+                        closeBtn.title = 'Cerrar esta pestaña y volver al listado';
+                        closeBtn.addEventListener('click', () => window.close());
+                        formHeader.parentElement?.appendChild(closeBtn);
+                    }
+                }, 150);
+            }
 
             // Si viene desde el enlace directo del correo de orden (?lote=... o ?ref=...), hacer scroll y resaltar
             if (!window.__admDeepLinkHandled && (deepLinkLote || deepLinkRef)) {
@@ -6303,7 +6324,7 @@
                     </td>
                     <td class="py-3 px-1.5">
                         ${thumb
-                            ? `<img src="${escapeHtml(thumb)}" alt="" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
+                            ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
                             : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
                         }
                     </td>
@@ -6331,9 +6352,9 @@
                     </td>
                     <td class="py-3 px-2 text-center whitespace-nowrap">
                         <div class="inline-flex items-center gap-1">
-                            <button type="button" data-edit-form="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors" title="Editar ficha completa en Pestaña 1">
+                            <a href="?editRef=${encodeURIComponent(g.ref)}#drops" target="_blank" rel="noopener" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors inline-flex items-center justify-center" title="Abrir ficha en pestaña nueva para editar">
                                 <i data-lucide="edit" class="w-3.5 h-3.5"></i>
-                            </button>
+                            </a>
                             ${g.status !== 'VENDIDA' ? `
                                 <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>

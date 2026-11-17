@@ -4,7 +4,7 @@
    y soporte nativo WebAPK / PWA sin degradación a Chrome Custom Tabs en Android.
    ========================================================================== */
 
-const CACHE_NAME = 'virmarket-cache-v5';
+const CACHE_NAME = 'virmarket-cache-v6';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -56,7 +56,8 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (!event.request.url.startsWith('http')) return;
 
-  // No interceptar llamadas al backend dinámico (n8n / webhooks / easypanel)
+  // Solo interceptar peticiones del mismo origen (no interceptar CDNs externas como images1.vinted.net ni webhooks)
+  if (!event.request.url.startsWith(self.location.origin)) return;
   if (event.request.url.includes('/webhook/') || event.request.url.includes('easypanel.host')) {
     return;
   }
