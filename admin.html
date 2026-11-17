@@ -3800,8 +3800,13 @@
                         }
                     };
                 }
+                if (action !== 'get_dashboard' && action !== 'get_logs' && action !== 'create_log') {
+                    const mockEntry = buildAuditEntryForOperation(action, extraPayload, { ok: true }, 42, null);
+                    if (mockEntry) recordAuditLog(mockEntry);
+                }
                 return { ok: true, message: `[MOCK] Acción ${action} ejecutada correctamente.` };
             }
+            const opStartedAt = Date.now();
             let res;
             try {
                 res = await fetch(WEBHOOK_ADMIN_URL, {
@@ -3814,9 +3819,14 @@
                     })
                 });
             } catch (netErr) {
-                throw new Error(`Error de conexión con el backend de administración (${netErr.message || 'sin respuesta'}).`);
+                const dur = Math.max(0, Date.now() - opStartedAt);
+                const err = new Error(`Error de conexión con el backend de administración (${netErr.message || 'sin respuesta'}).`);
+                const errEntry = buildAuditEntryForOperation(action, extraPayload, null, dur, { statusCode: 0, message: err.message, stack: netErr.stack || '' });
+                if (errEntry) recordAuditLog(errEntry);
+                throw err;
             }
             const data = await res.json().catch(() => ({}));
+            const opDurationMs = Math.max(0, Date.now() - opStartedAt);
             if (res.status === 401) {
                 clearStoredPassword();
                 adminState.password = '';
@@ -3824,13 +3834,214 @@
                 throw new Error(data.message || 'No autorizado');
             }
             if (!res.ok || data.ok === false) {
-                throw new Error(data.message || 'Error al ejecutar la operación.');
+                const errMsg = data.message || 'Error al ejecutar la operación.';
+                const errEntry = buildAuditEntryForOperation(action, extraPayload, data, opDurationMs, { statusCode: res.status || 500, message: errMsg });
+                if (errEntry) recordAuditLog(errEntry);
+                throw new Error(errMsg);
             }
+            const okEntry = buildAuditEntryForOperation(action, extraPayload, data, opDurationMs, null);
+            if (okEntry) recordAuditLog(okEntry);
             return data;
+        }
+
+        // Sanitiza credenciales o binarios pesados antes de guardar payloads en auditoría
+        function sanitizeAuditPayload(obj, depth = 0) {
+            if (depth > 4) return '[TRUNCADO]';
+            if (obj === null || obj === undefined) return obj;
+            if (Array.isArray(obj)) {
+                return obj.slice(0, 25).map(item => sanitizeAuditPayload(item, depth + 1));
+            }
+            if (typeof obj === 'object') {
+                const out = {};
+                const sensitiveRe = /(password|pass|token|secret|apikey|api_key|otp|hash|salt|authorization)/i;
+                for (const [k, v] of Object.entries(obj)) {
+                    if (sensitiveRe.test(k)) {
+                        out[k] = '***ENMASCARADO***';
+                    } else if (k === 'base64Data' && typeof v === 'string') {
+                        out[k] = `[IMAGEN BASE64 ~${Math.round(v.length / 1024)} KB]`;
+                    } else {
+                        out[k] = sanitizeAuditPayload(v, depth + 1);
+                    }
+                }
+                return out;
+            }
+            if (typeof obj === 'string' && obj.length > 500) {
+                return obj.slice(0, 500) + '... [truncado]';
+            }
+            return obj;
+        }
+
+        // Construye una entrada estructurada de auditoría para cualquier acción del panel
+        function buildAuditEntryForOperation(action, extraPayload = {}, resData = {}, durationMs = 0, errObj = null) {
+            const silentSuccessActions = new Set(['get_dashboard', 'get_logs', 'create_log', 'resolve_logs']);
+            if (!errObj && silentSuccessActions.has(action)) return null;
+
+            const p = extraPayload || {};
+            let category = 'SISTEMA';
+            let mappedAction = action;
+            let level = 'SUCCESS';
+            let entityRef = '';
+            let dropId = '';
+            let message = `Acción ejecutada: ${action}`;
+
+            if (action === 'scan_vinted_emails') {
+                category = 'VINTED_SYNC';
+                const stats = resData?.stats || {};
+                const pending = Number(stats.pendingTotal ?? (resData?.events || []).length ?? 0);
+                const scanned = Number(stats.emailsScanned ?? 0);
+                level = pending > 0 ? 'SUCCESS' : 'INFO';
+                message = `Escaneo de bandeja Gmail Vinted: ${scanned} correos revisados, ${pending} movimientos pendientes (${stats.exactMatches || 0} exactos, ${stats.unmatchedSales || 0} directos).`;
+            } else if (action === 'bulk_update_garments') {
+                const updates = Array.isArray(p.updates) ? p.updates : [];
+                const refs = updates.map(u => u.ref).filter(Boolean);
+                entityRef = refs.slice(0, 4).join(', ') + (refs.length > 4 ? ` (+${refs.length - 4})` : '');
+                dropId = (updates.find(u => u.dropId) || {}).dropId || '';
+                const hasVintedSync = updates.some(u => u.upsertNew || u.syncSource === 'VINTED_EMAIL_SYNC' || u.saleChannel === 'VINTED_DIRECT' || u.vintedTxId);
+                const hasCostOnly = updates.length > 0 && updates.every(u => u.costEur !== undefined && !u.upsertNew && !u.status && !u.dropId);
+                if (hasVintedSync) {
+                    category = 'VINTED_SYNC';
+                    mappedAction = updates.some(u => u.upsertNew) ? 'import_vinted_sales_erp' : 'reconcile_vinted_sales';
+                    const titles = updates.map(u => u.title || u.ref).filter(Boolean).slice(0, 2).join(', ');
+                    message = `Importación/conciliación Vinted al ERP (${updates.length} prenda${updates.length === 1 ? '' : 's'}): ${titles || entityRef}.`;
+                } else if (hasCostOnly) {
+                    category = 'FINANZAS';
+                    mappedAction = 'update_garment_costs';
+                    message = `Coste actualizado en ${updates.length} prenda${updates.length === 1 ? '' : 's'} (${entityRef}).`;
+                } else {
+                    category = 'PRENDA';
+                    message = `Actualización masiva de ${updates.length} prenda${updates.length === 1 ? '' : 's'} (${entityRef}).`;
+                }
+            } else if (action === 'save_garment') {
+                const g = p.garment || {};
+                category = 'PRENDA';
+                entityRef = g.ref || '';
+                dropId = g.dropId || '';
+                message = `Prenda guardada: ${g.ref || 'sin ref'} — ${g.title || ''} (${g.priceEur ?? 0} €).`;
+            } else if (action === 'delete_garment') {
+                category = 'PRENDA';
+                level = 'INFO';
+                entityRef = p.ref || (Array.isArray(p.refs) ? p.refs.join(', ') : '');
+                message = `Prenda(s) eliminada(s) del inventario: ${entityRef || 'sin ref'}.`;
+            } else if (action === 'update_status') {
+                category = 'PRENDA';
+                entityRef = p.ref || '';
+                message = `Estado actualizado para ${entityRef || 'prenda'} → ${p.status || ''}.`;
+            } else if (action === 'promote_waitlist') {
+                category = 'RESERVA_VIP';
+                entityRef = p.ref || '';
+                message = `Lista de espera promovida manualmente para ${entityRef || 'prenda'}.`;
+            } else if (action === 'publish_drop') {
+                category = 'DROP';
+                dropId = p.dropId || '';
+                message = `Drop ${dropId} activado/publicado${p.sendEmailNow ? ' con campaña Brevo enviada' : ''}.`;
+            } else if (action === 'close_drop') {
+                category = 'DROP';
+                level = 'INFO';
+                dropId = p.dropId || adminState.config?.activeDropId || '';
+                message = `Ventana VIP 24h de Drop cerrada (${dropId}).`;
+            } else if (action === 'extract_vinted_url') {
+                category = 'PRENDA';
+                level = 'INFO';
+                message = `Extracción automática de ficha Vinted (${p.vintedUrl || ''}).`;
+            } else if (action === 'notify_vinted_ready') {
+                category = 'RESERVA_VIP';
+                entityRef = p.ref || p.reservationGroupId || '';
+                message = `Enlace Vinted notificado al comprador (${entityRef}).`;
+            } else if (action === 'save_client_note') {
+                category = 'FINANZAS';
+                level = 'INFO';
+                entityRef = p.clientKey || '';
+                message = `Nota de cliente actualizada en CRM (${entityRef}).`;
+            } else if (action === 'save_config') {
+                if (Array.isArray(p.globalExpenses)) {
+                    category = 'FINANZAS';
+                    mappedAction = 'save_global_expenses';
+                    message = `Pacas y gastos generales actualizados (${p.globalExpenses.length} registros).`;
+                } else if (p.vintedSyncConfig) {
+                    category = 'VINTED_SYNC';
+                    mappedAction = 'save_vinted_sync_config';
+                    message = `Preferencias de sincronización Vinted actualizadas.`;
+                } else {
+                    category = 'SISTEMA';
+                    message = `Ajustes globales y reglas de descuento guardados.`;
+                }
+            } else if (action === 'upload_photo') {
+                category = 'PRENDA';
+                level = 'INFO';
+                entityRef = p.ref || '';
+                message = `Fotografía subida a CDN GitHub (${entityRef || p.filename || 'imagen'}).`;
+            } else if (action === 'purge_logs') {
+                category = 'SISTEMA';
+                level = 'INFO';
+                message = `Purga de registros ejecutada (estrategia: ${p.strategy || 'routine_only'}).`;
+            } else if (action.startsWith('social_') || action === 'send_telegram_test' || action === 'publish_social_drop') {
+                category = 'TELEGRAM';
+                dropId = p.dropId || '';
+                message = `Difusión social/Telegram ejecutada (${action}).`;
+            }
+
+            let statusCode = 200;
+            let errorDetail = '';
+            if (errObj) {
+                statusCode = Number(errObj.statusCode || 500);
+                level = (statusCode === 401 || statusCode === 409) ? 'WARN' : 'ERROR';
+                message = `Fallo en ${mappedAction}: ${errObj.message || 'Error de ejecución'}`;
+                errorDetail = String(errObj.stack || errObj.message || '');
+            }
+
+            return {
+                level,
+                category,
+                action: mappedAction,
+                source: 'admin_web',
+                actor: 'admin',
+                entityRef,
+                dropId,
+                statusCode,
+                durationMs: Math.round(durationMs || 0),
+                message,
+                errorDetail,
+                payload: sanitizeAuditPayload({ request: p, resultOk: errObj ? false : true })
+            };
+        }
+
+        // Registra un evento en virmarket_logs sin bloquear la operación principal
+        function recordAuditLog(logEntry) {
+            if (!logEntry || !logEntry.action) return;
+            if (urlParams.get('mock') === '1') {
+                if (!window._mockLogsData) window._mockLogsData = [];
+                window._mockLogsData.unshift({
+                    id: Date.now() + Math.floor(Math.random() * 1000),
+                    createdAt: new Date().toISOString(),
+                    resolved: false,
+                    resolvedAt: null,
+                    payloadJson: typeof logEntry.payload === 'object' ? JSON.stringify(logEntry.payload) : (logEntry.payloadJson || '{}'),
+                    ...logEntry
+                });
+                return;
+            }
+            if (!adminState.password) return;
+            try {
+                fetch(WEBHOOK_ADMIN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'create_log',
+                        password: adminState.password,
+                        logEntry
+                    }),
+                    keepalive: true
+                }).then(() => {
+                    if (adminState.activeTab === 'logs' && typeof loadAndRenderLogs === 'function') {
+                        loadAndRenderLogs(false);
+                    }
+                }).catch(() => {});
+            } catch (e) {}
         }
 
         // Llamada autenticada al backend de difusión en redes sociales (Telegram / Cascada LLM)
         async function callSocialApi(action, extraPayload = {}) {
+            const opStartedAt = Date.now();
             let res;
             try {
                 res = await fetch(WEBHOOK_SOCIAL_URL, {
@@ -3843,9 +4054,24 @@
                     })
                 });
             } catch (netErr) {
-                throw new Error(`Error de conexión con el backend de redes (${netErr.message || 'sin respuesta'}).`);
+                const dur = Math.max(0, Date.now() - opStartedAt);
+                const err = new Error(`Error de conexión con el backend de redes (${netErr.message || 'sin respuesta'}).`);
+                recordAuditLog({
+                    level: 'ERROR',
+                    category: 'TELEGRAM',
+                    action: `social_${action}`,
+                    source: 'admin_web',
+                    actor: 'admin',
+                    statusCode: 0,
+                    durationMs: dur,
+                    message: `Fallo de red en difusión Telegram/Redes (${action}): ${err.message}`,
+                    errorDetail: netErr.stack || netErr.message || '',
+                    payload: sanitizeAuditPayload(extraPayload)
+                });
+                throw err;
             }
             const data = await res.json().catch(() => ({}));
+            const opDurationMs = Math.max(0, Date.now() - opStartedAt);
             if (res.status === 401) {
                 clearStoredPassword();
                 adminState.password = '';
@@ -3853,8 +4079,33 @@
                 throw new Error(data.message || 'No autorizado');
             }
             if (!res.ok || data.ok === false) {
-                throw new Error(data.message || 'Error en el backend de redes.');
+                const errMsg = data.message || 'Error en el backend de redes.';
+                recordAuditLog({
+                    level: 'ERROR',
+                    category: 'TELEGRAM',
+                    action: `social_${action}`,
+                    source: 'admin_web',
+                    actor: 'admin',
+                    statusCode: res.status || 500,
+                    durationMs: opDurationMs,
+                    message: `Error en difusión Telegram/Redes (${action}): ${errMsg}`,
+                    errorDetail: errMsg,
+                    payload: sanitizeAuditPayload(extraPayload)
+                });
+                throw new Error(errMsg);
             }
+            recordAuditLog({
+                level: 'SUCCESS',
+                category: 'TELEGRAM',
+                action: `social_${action}`,
+                source: 'admin_web',
+                actor: 'admin',
+                dropId: extraPayload.dropId || '',
+                statusCode: 200,
+                durationMs: opDurationMs,
+                message: `Difusión Telegram/Redes completada (${action}).`,
+                payload: sanitizeAuditPayload({ request: extraPayload, message: data.message || '' })
+            });
             return data;
         }
 
@@ -3956,6 +4207,15 @@
                 adminState.password = newPassword;
                 adminState.hasPasswordConfigured = true;
                 setStoredPassword(newPassword);
+                recordAuditLog({
+                    level: 'SUCCESS',
+                    category: 'AUTH',
+                    action: 'set_password',
+                    source: 'admin_web',
+                    actor: 'admin',
+                    statusCode: 200,
+                    message: 'Contraseña de administrador configurada/actualizada mediante OTP.'
+                });
                 toast('✓ Contraseña configurada. Cargando tu panel...');
                 await loadDashboard();
             } catch (err) {
@@ -3980,6 +4240,15 @@
                 adminState.password = pwd;
                 await loadDashboard();
                 setStoredPassword(pwd);
+                recordAuditLog({
+                    level: 'INFO',
+                    category: 'AUTH',
+                    action: 'login_success',
+                    source: 'admin_web',
+                    actor: 'admin',
+                    statusCode: 200,
+                    message: 'Inicio de sesión administrativo exitoso en VirMarket Studio.'
+                });
             } catch (err) {
                 adminState.password = '';
                 clearStoredPassword();
@@ -3991,6 +4260,15 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
+            recordAuditLog({
+                level: 'INFO',
+                category: 'AUTH',
+                action: 'logout',
+                source: 'admin_web',
+                actor: 'admin',
+                statusCode: 200,
+                message: 'Sesión administrativa cerrada manualmente.'
+            });
             clearStoredPassword();
             adminState.password = '';
             showAuthScreen('Has cerrado sesión correctamente.');
