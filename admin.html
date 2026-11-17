@@ -6467,13 +6467,8 @@
         }
 
         // ======================== SUB-VISTA 3: CLIENTES CRM 360º ========================
-        function renderSubViewClientes(filteredGarments) {
-            const tableBody = document.getElementById('clientesTableBody');
-            const countLabel = document.getElementById('clientesRowCountLabel');
-            if (!tableBody) return;
-
+        function getComputedCrmClients() {
             const crmMap = new Map();
-            const configCrm = adminState.config.crmClientsMeta || {};
 
             // 1. Añadir leads de Brevo
             (adminState.contacts || []).forEach(c => {
@@ -6493,7 +6488,7 @@
             });
 
             // 2. Cruzar con todas las prendas vendidas, reservadas y colas de espera
-            adminState.garments.forEach(g => {
+            (adminState.garments || []).forEach(g => {
                 const waitlist = getGarmentWaitlist(g);
                 waitlist.forEach(w => {
                     const wEmail = String(w.email || '').trim().toLowerCase();
@@ -6555,11 +6550,20 @@
 
             // Filtrar por buscador si procede
             const q = (adminState.registroFilters.search || '').trim().toLowerCase();
-            const filteredClients = clientsList.filter(c => {
-                if (!q) return true;
+            if (!q) return clientsList;
+            return clientsList.filter(c => {
                 const hay = [c.email, c.vintedUser, c.firstName].join(' ').toLowerCase();
                 return hay.includes(q);
             });
+        }
+
+        function renderSubViewClientes(filteredGarments, precomputedClients) {
+            const tableBody = document.getElementById('clientesTableBody');
+            const countLabel = document.getElementById('clientesRowCountLabel');
+            if (!tableBody) return;
+
+            const configCrm = adminState.config.crmClientsMeta || {};
+            const filteredClients = precomputedClients || getComputedCrmClients();
 
             if (countLabel) countLabel.textContent = `${filteredClients.length} cliente${filteredClients.length === 1 ? '' : 's'}`;
             const badgeCount = document.getElementById('badgeCountClientes');
@@ -6729,13 +6733,9 @@
         }
 
         // ======================== SUB-VISTA 5: REGISTRO DE LOTES ========================
-        function renderSubViewLotes(filteredGarments) {
-            const tableBody = document.getElementById('lotesTableBody');
-            const countLabel = document.getElementById('lotesRowCountLabel');
-            if (!tableBody) return;
-
+        function getComputedLots() {
             const lotsMap = new Map();
-            adminState.garments.forEach(g => {
+            (adminState.garments || []).forEach(g => {
                 const gId = (g.reservationGroupId || '').trim();
                 if (!gId) return;
 
@@ -6753,6 +6753,20 @@
 
             // Consideramos lotes los que tienen 2+ prendas o empiezan por LOTE-
             const lots = [...lotsMap.values()].filter(l => l.items.length > 1 || l.groupId.startsWith('LOTE-'));
+            const q = (adminState.registroFilters.search || '').trim().toLowerCase();
+            if (!q) return lots;
+            return lots.filter(l => {
+                const hay = [l.groupId, l.buyerVinted, l.buyerEmail, ...l.items.map(i => i.title || '')].join(' ').toLowerCase();
+                return hay.includes(q);
+            });
+        }
+
+        function renderSubViewLotes(filteredGarments, precomputedLots) {
+            const tableBody = document.getElementById('lotesTableBody');
+            const countLabel = document.getElementById('lotesRowCountLabel');
+            if (!tableBody) return;
+
+            const lots = precomputedLots || getComputedLots();
 
             if (countLabel) countLabel.textContent = `${lots.length} lote${lots.length === 1 ? '' : 's'}`;
             const badgeCount = document.getElementById('badgeCountLotes');
@@ -6828,6 +6842,12 @@
                 btn.className = `erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all ${
                     act ? 'bg-acid text-obsidian shadow-sm' : 'text-zinc-300 hover:text-white'
                 }`;
+                const badge = btn.querySelector('span[id^="badgeCount"]');
+                if (badge) {
+                    badge.className = `ml-1 px-1.5 py-0.2 rounded-full text-[10px] ${
+                        act ? 'bg-obsidian/20 text-obsidian font-black' : 'bg-zinc-800 text-zinc-400 font-mono'
+                    }`;
+                }
             });
 
             ['ventas', 'prendas', 'clientes', 'drops', 'lotes'].forEach(v => {
@@ -6855,16 +6875,24 @@
             const bD = document.getElementById('badgeCountDrops');
             if (bD) bD.textContent = String(dropsSet.size);
 
+            const computedClients = getComputedCrmClients();
+            const bC = document.getElementById('badgeCountClientes');
+            if (bC) bC.textContent = String(computedClients.length);
+
+            const computedLots = getComputedLots();
+            const bL = document.getElementById('badgeCountLotes');
+            if (bL) bL.textContent = String(computedLots.length);
+
             if (adminState.activeSubView === 'ventas') {
                 renderSubViewVentas(filtered);
             } else if (adminState.activeSubView === 'prendas') {
                 renderSubViewPrendas(filtered);
             } else if (adminState.activeSubView === 'clientes') {
-                renderSubViewClientes(filtered);
+                renderSubViewClientes(filtered, computedClients);
             } else if (adminState.activeSubView === 'drops') {
                 renderSubViewDrops(filtered);
             } else if (adminState.activeSubView === 'lotes') {
-                renderSubViewLotes(filtered);
+                renderSubViewLotes(filtered, computedLots);
             }
         }
 
