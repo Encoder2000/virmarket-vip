@@ -1858,6 +1858,38 @@
         </div>
     </div>
 
+    <!-- Modal de Entrada de Texto/Número Propio de la Aplicación (reemplaza prompt() nativo del navegador) -->
+    <div id="vmPromptModal" role="dialog" aria-modal="true" aria-labelledby="vmPromptTitle" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div id="vmPromptCard" class="relative w-full max-w-md rounded-3xl bg-obsidian-card border border-acid/40 p-6 shadow-2xl space-y-4">
+            <div class="flex items-start gap-3.5">
+                <div id="vmPromptIconBox" class="w-10 h-10 rounded-2xl bg-acid/15 border border-acid/40 flex items-center justify-center text-acid shrink-0">
+                    <i id="vmPromptIcon" data-lucide="edit-3" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <span id="vmPromptBadge" class="inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-acid/15 text-acid border border-acid/30 font-bold mb-1">VirMarket Studio</span>
+                    <h3 id="vmPromptTitle" class="font-display text-lg font-bold text-white leading-snug">Introducir valor</h3>
+                </div>
+            </div>
+
+            <div class="space-y-2.5">
+                <p id="vmPromptMessage" class="text-xs sm:text-[13px] text-zinc-300 leading-relaxed whitespace-pre-line break-words"></p>
+                <div class="relative">
+                    <input type="text" id="vmPromptInput" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                    <span id="vmPromptSuffix" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 font-mono text-xs font-bold text-zinc-400 pointer-events-none">€</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-1">
+                <button type="button" id="vmPromptCancelBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-semibold text-zinc-200 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="vmPromptOkBtn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-acid/20 transition-all">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de Reparto de Coste de Paca / Remesa (Calculadora Masiva ERP) -->
     <div id="packCostModal" role="dialog" aria-modal="true" aria-labelledby="packCostModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
         <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-acid/50 p-5 sm:p-7 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
@@ -2600,6 +2632,134 @@
                 document.addEventListener('keydown', onKey);
 
                 setTimeout(() => (variant === 'danger' ? cancelBtn : okBtn).focus(), 30);
+            });
+        }
+
+        let __vmPromptResolver = null;
+        function vmPrompt({
+            title = 'Introducir valor',
+            message = '',
+            badge = 'VirMarket Studio',
+            defaultValue = '',
+            placeholder = '',
+            inputType = 'text',
+            inputMode = 'text',
+            step = 'any',
+            min = '',
+            suffix = '',
+            confirmText = 'Aceptar',
+            cancelText = 'Cancelar',
+            icon = 'edit-3',
+            variant = 'acid'
+        } = {}) {
+            const modal = document.getElementById('vmPromptModal');
+            const card = document.getElementById('vmPromptCard');
+            const iconBox = document.getElementById('vmPromptIconBox');
+            const iconEl = document.getElementById('vmPromptIcon');
+            const badgeEl = document.getElementById('vmPromptBadge');
+            const titleEl = document.getElementById('vmPromptTitle');
+            const msgEl = document.getElementById('vmPromptMessage');
+            const inputEl = document.getElementById('vmPromptInput');
+            const suffixEl = document.getElementById('vmPromptSuffix');
+            const okBtn = document.getElementById('vmPromptOkBtn');
+            const cancelBtn = document.getElementById('vmPromptCancelBtn');
+
+            if (!modal || !inputEl || !okBtn || !cancelBtn) return Promise.resolve(null);
+
+            if (__vmPromptResolver) {
+                __vmPromptResolver(null);
+                __vmPromptResolver = null;
+            }
+
+            const variants = {
+                acid: {
+                    cardBorder: 'border-acid/50',
+                    iconBox: 'bg-acid/15 border-acid/40 text-acid',
+                    badge: 'bg-acid/15 text-acid border-acid/30',
+                    okBtn: 'bg-acid hover:bg-acid-hover text-obsidian shadow-acid/20'
+                },
+                amber: {
+                    cardBorder: 'border-amber-400/50',
+                    iconBox: 'bg-amber-500/15 border-amber-400/40 text-amber-300',
+                    badge: 'bg-amber-500/15 text-amber-300 border-amber-400/30',
+                    okBtn: 'bg-amber-400 hover:bg-amber-300 text-obsidian shadow-amber-400/20'
+                }
+            };
+            const v = variants[variant] || variants.acid;
+
+            card.className = `relative w-full max-w-md rounded-3xl bg-obsidian-card border ${v.cardBorder} p-6 shadow-2xl space-y-4`;
+            iconBox.className = `w-10 h-10 rounded-2xl border flex items-center justify-center shrink-0 ${v.iconBox}`;
+            badgeEl.className = `inline-block font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border font-bold mb-1 ${v.badge}`;
+            okBtn.className = `w-full sm:w-auto px-5 py-2.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider shadow-lg transition-all ${v.okBtn}`;
+
+            if (iconEl) iconEl.setAttribute('data-lucide', icon);
+            badgeEl.textContent = badge;
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+            msgEl.classList.toggle('hidden', !message);
+            okBtn.textContent = confirmText;
+            cancelBtn.textContent = cancelText;
+
+            inputEl.type = inputType;
+            inputEl.inputMode = inputMode;
+            if (inputType === 'number') {
+                inputEl.step = step;
+                if (min !== '') inputEl.min = min;
+                else inputEl.removeAttribute('min');
+            } else {
+                inputEl.removeAttribute('step');
+                inputEl.removeAttribute('min');
+            }
+            inputEl.placeholder = placeholder;
+            inputEl.value = defaultValue ?? '';
+
+            if (suffixEl) {
+                suffixEl.textContent = suffix;
+                suffixEl.classList.toggle('hidden', !suffix);
+                inputEl.classList.toggle('pr-9', Boolean(suffix));
+            }
+
+            lucide.createIcons();
+            modal.classList.remove('hidden');
+
+            return new Promise((resolve) => {
+                const cleanup = (result) => {
+                    modal.classList.add('hidden');
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    modal.removeEventListener('click', onBackdrop);
+                    inputEl.removeEventListener('keydown', onInputKey);
+                    document.removeEventListener('keydown', onKey);
+                    __vmPromptResolver = null;
+                    resolve(result);
+                };
+                const onOk = () => cleanup(inputEl.value);
+                const onCancel = () => cleanup(null);
+                const onBackdrop = (e) => { if (e.target === modal) cleanup(null); };
+                const onInputKey = (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        cleanup(inputEl.value);
+                    }
+                };
+                const onKey = (e) => {
+                    if (e.key === 'Escape') {
+                        e.stopPropagation();
+                        cleanup(null);
+                    }
+                };
+
+                __vmPromptResolver = cleanup;
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                modal.addEventListener('click', onBackdrop);
+                inputEl.addEventListener('keydown', onInputKey);
+                document.addEventListener('keydown', onKey);
+
+                setTimeout(() => {
+                    inputEl.focus();
+                    inputEl.select();
+                }, 30);
             });
         }
 
@@ -6435,8 +6595,20 @@
             tableBody.querySelectorAll('[data-inline-cost]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const ref = btn.getAttribute('data-inline-cost');
-                    const currentCost = btn.getAttribute('data-current-cost') || '0';
-                    const newCostStr = window.prompt(`Nuevo coste unitario de adquisición para ${ref} (€):`, currentCost > 0 ? currentCost : '');
+                    const currentCost = Number(btn.getAttribute('data-current-cost') || 0);
+                    const newCostStr = await vmPrompt({
+                        badge: 'Coste de Adquisición',
+                        title: `Coste unitario de ${ref}`,
+                        message: 'Introduce el coste de adquisición pagado por esta prenda (€):',
+                        defaultValue: currentCost > 0 ? String(currentCost) : '',
+                        placeholder: 'Ej: 4,50',
+                        inputType: 'text',
+                        inputMode: 'decimal',
+                        suffix: '€',
+                        confirmText: 'Guardar Coste',
+                        icon: 'euro',
+                        variant: 'amber'
+                    });
                     if (newCostStr === null) return;
                     const val = parseFloat(newCostStr.replace(',', '.'));
                     if (isNaN(val) || val < 0) {
@@ -7525,7 +7697,16 @@
         // Mover de Drop en lote
         document.getElementById('erpBulkChangeDropBtn')?.addEventListener('click', async () => {
             if (adminState.selectedRefs.size === 0) return;
-            const targetDrop = window.prompt(`Mover las ${adminState.selectedRefs.size} prendas seleccionadas al Drop:`, adminState.config.activeDropId || 'DROP-01');
+            const targetDrop = await vmPrompt({
+                badge: 'Organización de Catálogo',
+                title: `Mover ${adminState.selectedRefs.size} prendas de Drop`,
+                message: 'Introduce el código del Drop destino para las prendas seleccionadas:',
+                defaultValue: adminState.config.activeDropId || 'DROP-01',
+                placeholder: 'Ej: DROP-20261120-01',
+                confirmText: 'Mover Prendas',
+                icon: 'folder-input',
+                variant: 'acid'
+            });
             if (!targetDrop || !targetDrop.trim()) return;
             const cleanDrop = targetDrop.trim().toUpperCase();
 
@@ -8933,7 +9114,14 @@
                 toast('No quedan prendas disponibles en este Drop para enviar recordatorio.', true);
                 return;
             }
-            const ok = window.confirm(`¿Crear borrador de campaña recordatorio en Brevo para las ${availCount} prendas disponibles del Drop ${cfg.activeDropId}?`);
+            const ok = await vmConfirm({
+                badge: 'Recordatorio Brevo',
+                title: '¿Crear borrador de campaña recordatorio?',
+                message: `Se generará un borrador en Brevo con las ${availCount} prendas disponibles actualmente en el Drop ${cfg.activeDropId}.`,
+                confirmText: 'Sí, generar borrador',
+                cancelText: 'Cancelar',
+                variant: 'acid'
+            });
             if (!ok) return;
 
             const btn = document.getElementById('remindActiveDropBtn');
