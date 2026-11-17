@@ -1291,7 +1291,9 @@
                 const st = g.status;
 
                 let statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-acid/60 text-acid font-mono text-[10px] font-bold uppercase">Disponible</span>`;
-                if (st === 'RESERVADA') {
+                if (st === 'EN_CAMINO') {
+                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-sky-950/90 border border-sky-400/60 text-sky-300 font-mono text-[10px] font-bold uppercase">En camino</span>`;
+                } else if (st === 'RESERVADA') {
                     statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-amber-950/90 border border-amber-400/60 text-amber-300 font-mono text-[10px] font-bold uppercase">Reservada${g.waitlistCount > 0 ? ' • Cola: ' + g.waitlistCount : ''}</span>`;
                 } else if (st === 'VENDIDA') {
                     statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-zinc-900/90 border border-zinc-700 text-zinc-400 font-mono text-[10px] font-bold uppercase">Vendida</span>`;
@@ -1315,6 +1317,10 @@
                         : `<button type="button" data-toggle-ref="${escapeHtml(g.ref)}" class="w-full py-3 px-4 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-acid/50 hover:border-acid text-white font-display font-bold text-xs sm:text-sm uppercase tracking-wide flex items-center justify-center gap-1.5 transition-colors">
                                <span>+ Añadir a mi reserva</span>
                            </button>`;
+                } else if (st === 'EN_CAMINO') {
+                    actionBtnHtml = `<button type="button" disabled class="w-full py-3 px-4 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300 font-display font-bold text-xs uppercase cursor-not-allowed">
+                        🚚 En camino por Vinted
+                    </button>`;
                 } else if (st === 'RESERVADA') {
                     actionBtnHtml = `<button type="button" data-waitlist-ref="${escapeHtml(g.ref)}" data-waitlist-title="${escapeHtml(g.title)}" class="w-full py-3 px-4 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/50 text-amber-300 font-display font-bold text-xs uppercase tracking-wide flex items-center justify-center gap-1.5 transition-colors">
                         <span>⏳ Apuntarme en cola (por si queda libre)</span>

@@ -1176,7 +1176,8 @@
                                 <label for="erpFilterStatus" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Estado</label>
                                 <select id="erpFilterStatus" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
                                     <option value="ALL">Todos los Estados</option>
-                                    <option value="VENDIDA">Vendidas</option>
+                                    <option value="VENDIDA">Vendidas (Cobradas)</option>
+                                    <option value="EN_CAMINO">En Camino (Pdte. cobro)</option>
                                     <option value="RESERVADA">Reservadas VIP</option>
                                     <option value="WAITLIST">En Cola de Espera</option>
                                     <option value="DISPONIBLE">Disponibles</option>
@@ -6094,11 +6095,13 @@
 
         function renderRegistroKpis(filteredGarments) {
             const soldItems = filteredGarments.filter(g => g.status === 'VENDIDA');
+            const inTransitItems = filteredGarments.filter(g => g.status === 'EN_CAMINO');
             const reservedItems = filteredGarments.filter(g => g.status === 'RESERVADA');
             const availableItems = filteredGarments.filter(g => g.status === 'DISPONIBLE');
 
-            // Facturacion cobrada real en ventas cerradas
+            // Facturacion cobrada real en ventas cerradas (excluye pedidos en camino pendientes de entrega)
             const facturacionReal = soldItems.reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
+            const inTransitTotal = inTransitItems.reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
             const costeStockVendido = soldItems.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
             const gastosOperativos = soldItems.reduce((acc, g) => acc + Number(g.extraExpenseEur || 0), 0);
 
@@ -6134,7 +6137,11 @@
             const elFact = document.getElementById('kpiFacturacionReal');
             if (elFact) elFact.textContent = fmtEur(facturacionReal);
             const elFactSub = document.getElementById('kpiFacturacionSub');
-            if (elFactSub) elFactSub.textContent = `${soldItems.length} venta${soldItems.length === 1 ? '' : 's'} (${reservedItems.length} en reserva)`;
+            if (elFactSub) {
+                elFactSub.textContent = inTransitItems.length > 0
+                    ? `${soldItems.length} ventas cobradas (+${inTransitItems.length} en camino: ${fmtEur(inTransitTotal)})`
+                    : `${soldItems.length} venta${soldItems.length === 1 ? '' : 's'} (${reservedItems.length} en reserva)`;
+            }
 
             const elCost = document.getElementById('kpiCosteTotal');
             if (elCost) elCost.textContent = fmtEur(costeTotalVendido);
@@ -6191,8 +6198,8 @@
             const countLabel = document.getElementById('ventasRowCountLabel');
             if (!tableBody) return;
 
-            // Consideramos ventas cerradas ('VENDIDA') y reservas activas ('RESERVADA')
-            const sales = filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'RESERVADA');
+            // Consideramos ventas cobradas ('VENDIDA'), envíos en tránsito ('EN_CAMINO') y reservas activas ('RESERVADA')
+            const sales = filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA');
 
             if (countLabel) countLabel.textContent = `${sales.length} registro${sales.length === 1 ? '' : 's'}`;
             const badgeCount = document.getElementById('badgeCountVentas');
@@ -6242,13 +6249,13 @@
 
                 let stageBadgeHtml = '';
                 if (isSold) {
-                    if (g.vintedSaleStage === 'PAID_PENDING_SHIPMENT') {
-                        stageBadgeHtml = '<span class="inline-flex items-center whitespace-nowrap mt-0.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-amber-500/15 text-amber-300 border border-amber-400/30">📦 Pendiente envío</span>';
-                    } else if (g.vintedSaleStage === 'IN_TRANSIT') {
-                        stageBadgeHtml = `<span class="inline-flex items-center whitespace-nowrap mt-0.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-sky-500/15 text-sky-300 border border-sky-400/30">🚚 En camino${g.vintedDeliveryEstimate ? ' (' + escapeHtml(g.vintedDeliveryEstimate) + ')' : ''}</span>`;
-                    } else if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId) {
-                        stageBadgeHtml = `<span class="inline-flex items-center whitespace-nowrap mt-0.5 px-1.5 py-0.2 rounded font-mono text-[9px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">✅ Cobrada${g.vintedTxId ? ' #' + escapeHtml(g.vintedTxId) : ''}</span>`;
+                    if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
+                        stageBadgeHtml = `<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" title="Cobro confirmado con correo oficial de Vinted #${escapeHtml(g.vintedTxId || '')}">📧 Cobro Verificado</span>`;
+                    } else {
+                        stageBadgeHtml = '<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-amber-300 border border-amber-400/30" title="Marcada manualmente por el vendedor sin correo oficial de liquidación">✋ Venta Manual</span>';
                     }
+                } else if (g.status === 'EN_CAMINO') {
+                    stageBadgeHtml = `<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40" title="En camino por transportista. Cobro pendiente de entrega">🚚 En camino${g.vintedDeliveryEstimate ? ' (' + escapeHtml(g.vintedDeliveryEstimate) + ')' : ''}</span>`;
                 }
 
                 return `
@@ -6329,7 +6336,13 @@
 
                 let statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
                 if (g.status === 'VENDIDA') {
-                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span>`;
+                    if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
+                        statusBadge = `<div class="flex flex-col items-center gap-0.5"><span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span><span class="inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" title="Cobro verificado por correo #${escapeHtml(g.vintedTxId || '')}">📧 Correo verif.</span></div>`;
+                    } else {
+                        statusBadge = `<div class="flex flex-col items-center gap-0.5"><span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span><span class="inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-semibold bg-zinc-800 text-amber-300 border border-amber-400/30" title="Marcada manualmente sin correo de cobro">✋ Manual</span></div>`;
+                    }
+                } else if (g.status === 'EN_CAMINO') {
+                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40" title="En camino por transportista. Pendiente de entrega y cobro">🚚 En camino</span>`;
                 } else if (g.status === 'RESERVADA') {
                     statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">Reservada VIP</span>`;
                 } else if (g.status === 'DISPONIBLE') {
@@ -6374,11 +6387,18 @@
                             <a href="?editRef=${encodeURIComponent(g.ref)}#drops" target="_blank" rel="noopener" data-edit-newtab="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors inline-flex items-center justify-center" title="Abrir ficha en pestaña nueva para editar">
                                 <i data-lucide="edit" class="w-3.5 h-3.5"></i>
                             </a>
-                            ${g.status !== 'VENDIDA' ? `
+                            ${g.status === 'EN_CAMINO' ? `
+                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Confirmar cobro y pasar a VENDIDA">
+                                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button type="button" data-release-in-transit="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 transition-colors" title="Revertir a DISPONIBLE (Cancelación / Devolución)">
+                                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                </button>
+                            ` : (g.status !== 'VENDIDA' ? `
                                 <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                 </button>
-                            ` : ''}
+                            ` : '')}
                             ${canDelete ? `
                                 <button type="button" data-delete-garment="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-colors" title="Eliminar prenda errónea o duplicada (Sin historial)">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -6449,6 +6469,34 @@
             // Botón Marcar Vendida
             tableBody.querySelectorAll('[data-quick-sold]').forEach(btn => {
                 btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-quick-sold')));
+            });
+
+            // Botón Revertir En Camino a Disponible (Cancelación o devolución)
+            tableBody.querySelectorAll('[data-release-in-transit]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ref = btn.getAttribute('data-release-in-transit');
+                    const ok = await vmConfirm({
+                        badge: 'Devolución / Cancelación Vinted',
+                        title: `¿Revertir ${ref} a DISPONIBLE?`,
+                        message: `Esta prenda está actualmente EN CAMINO.\n\nAl revertirla a DISPONIBLE, se liberará para poder venderse o reservarse nuevamente y se cancelará el seguimiento de envío previo.`,
+                        confirmText: 'Sí, liberar a Disponible',
+                        cancelText: 'Cancelar',
+                        variant: 'warning'
+                    });
+                    if (!ok) return;
+                    try {
+                        toast(`Revirtiendo ${ref} a Disponible...`);
+                        await callAdminApi('update_status', {
+                            ref,
+                            newStatus: 'DISPONIBLE',
+                            releaseReason: 'Cancelación / Devolución de envío Vinted'
+                        });
+                        toast(`✓ ${ref} devuelta a DISPONIBLE`);
+                        await loadDashboard();
+                    } catch (err) {
+                        toast(err.message, true);
+                    }
+                });
             });
 
             // Botón Eliminar Prenda Errónea (Candado Anti-Trazabilidad)
@@ -6883,7 +6931,7 @@
             renderRegistroKpis(filtered);
 
             // Sincronizacion reactiva de badges numericos de las 5 sub-vistas
-            const salesCount = filtered.filter(g => g.status === 'VENDIDA' || g.status === 'RESERVADA').length;
+            const salesCount = filtered.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA').length;
             const bV = document.getElementById('badgeCountVentas');
             if (bV) bV.textContent = String(salesCount);
 
@@ -7496,9 +7544,10 @@
             btn.textContent = 'Guardando cierre...';
 
             try {
+                const targetStatus = (vintedSaleStage === 'COMPLETED') ? 'VENDIDA' : 'EN_CAMINO';
                 await callAdminApi('update_status', {
                     ref,
-                    newStatus: 'VENDIDA',
+                    newStatus: targetStatus,
                     soldPriceEur,
                     saleChannel,
                     soldToVinted,
@@ -7510,7 +7559,7 @@
                     soldAt: new Date().toISOString()
                 });
 
-                toast(`✓ ${ref} marcada como VENDIDA y registrada en el ERP`);
+                toast(targetStatus === 'VENDIDA' ? `✓ ${ref} marcada como VENDIDA y registrada en el ERP` : `✓ ${ref} marcada como EN CAMINO (pdte. cobro)`);
                 closeMarkSoldModal();
                 await loadDashboard();
             } catch (err) {
@@ -7945,10 +7994,11 @@
                         soldPrice = round2(targetTotal / matchedGarments.length);
                     }
                 }
+                const targetStatus = (ev.stage === 'COMPLETED') ? 'VENDIDA' : 'EN_CAMINO';
                 const upd = {
                     ref: g.ref,
-                    status: 'VENDIDA',
-                    vintedSaleStage: ev.stage || 'COMPLETED',
+                    status: targetStatus,
+                    vintedSaleStage: ev.stage || (targetStatus === 'VENDIDA' ? 'COMPLETED' : 'IN_TRANSIT'),
                     syncSource: 'VINTED_EMAIL_SYNC'
                 };
                 if (soldPrice > 0) upd.soldPriceEur = soldPrice;
@@ -7997,7 +8047,7 @@
                     title: title.slice(0, 140),
                     priceEur: Number(ev.priceEur || 0),
                     soldPriceEur: Number(ev.priceEur || 0),
-                    status: 'VENDIDA',
+                    status: (ev.stage === 'COMPLETED') ? 'VENDIDA' : 'EN_CAMINO',
                     saleChannel: 'VINTED_DIRECT',
                     soldToVinted: ev.buyerVinted || '',
                     soldAt: ev.soldAt || ev.completedAt || new Date().toISOString(),
@@ -8273,12 +8323,12 @@
 
                         <div class="flex flex-wrap items-center gap-2 shrink-0 justify-end">
                             ${ev.isExactAppMatch ? `
-                                <button type="button" data-sync-apply-exact="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
-                                    ✓ Aplicar Ahora
+                                <button type="button" data-sync-apply-exact="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg ${ev.stage === 'COMPLETED' ? 'bg-acid hover:bg-acid-hover text-obsidian' : 'bg-sky-500 hover:bg-sky-400 text-obsidian'} font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                                    ${ev.stage === 'COMPLETED' ? '✓ Confirmar Venta Cobrada' : '🚚 Pasar a En Camino'}
                                 </button>
                             ` : `
-                                <button type="button" data-sync-import-one="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-obsidian font-display font-bold text-xs uppercase tracking-wide transition-colors">
-                                    ➕ Importar al ERP
+                                <button type="button" data-sync-import-one="${escapeHtml(ev.eventKey)}" class="px-3 py-1.5 rounded-lg ${ev.stage === 'COMPLETED' ? 'bg-emerald-500 hover:bg-emerald-400 text-obsidian' : 'bg-sky-500 hover:bg-sky-400 text-obsidian'} font-display font-bold text-xs uppercase tracking-wide transition-colors">
+                                    ${ev.stage === 'COMPLETED' ? '➕ Importar Venta Cobrada' : '🚚 Importar En Camino'}
                                 </button>
                             `}
                             <button type="button" data-sync-ignore="${escapeHtml(ev.eventKey)}" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 hover:border-zinc-500 text-xs text-zinc-400 hover:text-white transition-colors" title="Ignorar este correo para que no vuelva a mostrarse">
