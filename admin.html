@@ -3519,6 +3519,16 @@
             }
         }
 
+        function normalizeGarments(arr) {
+            return (Array.isArray(arr) ? arr : []).map(g => {
+                const photos = Array.isArray(g.photos) ? g.photos.filter(Boolean) : [];
+                if (photos.length === 0 && g.vintedThumbUrl) {
+                    return { ...g, photos: [g.vintedThumbUrl] };
+                }
+                return { ...g, photos };
+            });
+        }
+
         async function syncDashboardQuietly(isAuto = false) {
             if (!adminState.password || urlParams.get('mock') === '1') return;
             const refreshIcon = document.getElementById('refreshIcon');
@@ -3531,7 +3541,7 @@
 
                 const data = await callAdminApi('get_dashboard');
                 adminState.config = data.config || adminState.config;
-                adminState.garments = Array.isArray(data.garments) ? data.garments : [];
+                adminState.garments = normalizeGarments(data.garments);
                 if (Array.isArray(data.contacts)) adminState.contacts = data.contacts;
                 if (Array.isArray(data.config?.globalExpenses)) adminState.config.globalExpenses = data.config.globalExpenses;
                 const expCountB = document.getElementById('globalExpensesCountBadge');
@@ -3639,7 +3649,7 @@
         async function loadDashboard() {
             const data = await callAdminApi('get_dashboard');
             adminState.config = data.config || adminState.config;
-            adminState.garments = Array.isArray(data.garments) ? data.garments : [];
+            adminState.garments = normalizeGarments(data.garments);
             adminState.contacts = Array.isArray(data.contacts) ? data.contacts : [];
             adminState.config.globalExpenses = Array.isArray(data.config?.globalExpenses) ? data.config.globalExpenses : [];
             const expCountBInit = document.getElementById('globalExpensesCountBadge');
@@ -4273,7 +4283,10 @@
             document.getElementById('gDesc').value = g.description || '';
             const vUrlIn = document.getElementById('gVintedUrl');
             if (vUrlIn) vUrlIn.value = g.vintedUrl || '';
-            adminState.formPhotos = (g.photos || []).map(url => ({ type: 'remote', url }));
+            const rawPhotos = (Array.isArray(g.photos) && g.photos.length > 0)
+                ? g.photos
+                : (g.vintedThumbUrl ? [g.vintedThumbUrl] : []);
+            adminState.formPhotos = rawPhotos.filter(Boolean).map(url => ({ type: 'remote', url }));
 
             document.getElementById('garmentFormHeading').textContent = `Editando ${g.ref}`;
             document.getElementById('saveGarmentBtnText').textContent = `Actualizar ${g.ref}`;
@@ -4360,7 +4373,8 @@
                         priceEur,
                         costEur,
                         vintedUrl,
-                        photos: finalPhotoUrls
+                        photos: finalPhotoUrls,
+                        vintedThumbUrl: finalPhotoUrls[0] || ''
                     }
                 });
 
@@ -7986,6 +8000,7 @@
                     vintedTxId: ev.txId || '',
                     vintedInboxUrl: ev.inboxUrl || '',
                     vintedThumbUrl: ev.thumbUrl || '',
+                    photos: ev.thumbUrl ? [ev.thumbUrl] : [],
                     vintedDeliveryEstimate: ev.deliveryEstimate || '',
                     completedAt: ev.completedAt || '',
                     reservationGroupId: ev.isNativeLot ? `LOTE-VTD-${ref.replace(/^VTD-/, '')}` : '',
