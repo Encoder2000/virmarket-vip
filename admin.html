@@ -491,19 +491,19 @@
 <body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
 
     <!-- Barra Superior -->
-    <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-            <div class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg">
+    <header class="sticky top-0 z-40 bg-obsidian shadow-lg border-b border-obsidian-border">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-3">
+            <div class="flex items-center space-x-2 sm:space-x-2.5 min-w-0 shrink-0">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-base sm:text-lg shrink-0">
                     V
                 </div>
-                <div class="leading-none">
-                    <span class="font-display text-base sm:text-lg font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span> STUDIO</span>
-                    <span class="block font-mono text-xs uppercase tracking-wider text-zinc-400 mt-0.5">Gestión de Drops &amp; Asistente Vinted</span>
+                <div class="leading-none min-w-0">
+                    <span class="font-display text-xs sm:text-base md:text-lg font-bold tracking-tight uppercase text-white whitespace-nowrap block">VIR<span class="text-acid">MARKET</span> STUDIO</span>
+                    <span class="hidden sm:block font-mono text-[10px] sm:text-xs uppercase tracking-wider text-zinc-400 mt-0.5 truncate">Gestión de Drops &amp; Asistente Vinted</span>
                 </div>
             </div>
 
-            <div class="flex items-center gap-1.5 sm:gap-2">
+            <div class="flex items-center gap-1 sm:gap-2 shrink-0">
                 <!-- Accesos directos al ecosistema (restringidos: solo visibles tras autenticación) -->
                 <div id="headerNavLinks" class="hidden items-center gap-1.5 sm:gap-2">
                     <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Landing Page de Captación QR">
@@ -689,8 +689,12 @@
                     <button type="button" data-tab="registro" class="tab-btn flex-1 min-w-[105px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
                         📊 3. Registro
                     </button>
-                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[95px] py-3 px-2 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                    <button type="button" data-tab="settings" class="tab-btn flex-1 min-w-[85px] sm:min-w-[95px] py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
                         ⚙️ 4. Ajustes
+                    </button>
+                    <button type="button" data-tab="logs" class="tab-btn flex-1 min-w-[85px] sm:min-w-[95px] py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white relative">
+                        <span class="inline-flex items-center gap-1">📜 5. Logs</span>
+                        <span id="logsNavErrorBadge" class="hidden ml-1 px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-rose-500 text-white animate-pulse">0</span>
                     </button>
                 </div>
 
@@ -1593,6 +1597,218 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- =============================================================== -->
+                <!-- PESTAÑA 5: REGISTRO DE LOGS, AUDITORÍA 360º Y CONTROL DE ERRORES -->
+                <!-- =============================================================== -->
+                <div id="tab-logs" class="hidden space-y-5 sm:space-y-6">
+
+                    <!-- Cabecera de la Pestaña Logs (Responsive Móvil / Desktop) -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider">Auditoría 360º</span>
+                                <span id="logsActiveFilterBadge" class="hidden px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold">Filtros Activos</span>
+                                <span id="logsUnresolvedAlertBadge" class="hidden px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono text-[10px] font-bold animate-pulse">0 Errores Pendientes</span>
+                            </div>
+                            <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Registro de Actividad &amp; Errores del Sistema</h2>
+                            <p class="text-xs text-zinc-400 mt-0.5">Supervisión en vivo de acciones del admin, reservas de clientes, sincronización Vinted, automatizaciones y fallos de ejecución.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 shrink-0">
+                            <button id="resolveAllLogsBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/50 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors" title="Marcar todos los errores pendientes como atendidos y revisados">
+                                <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                <span class="hidden sm:inline">Marcar Errores Revisados</span>
+                                <span class="sm:hidden">Revisar Todo</span>
+                            </button>
+                            <button id="purgeLogsModalBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Limpiar logs antiguos o resueltos">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5 text-zinc-400"></i>
+                                <span>Limpiar</span>
+                            </button>
+                            <button id="exportLogsCsvBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Exportar registros filtrados en formato CSV compatible con Excel">
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-acid"></i>
+                                <span>CSV</span>
+                            </button>
+                            <button id="exportLogsJsonBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors" title="Exportar registros filtrados en formato JSON técnico">
+                                <i data-lucide="file-json" class="w-3.5 h-3.5 text-sky-400"></i>
+                                <span>JSON</span>
+                            </button>
+                            <button id="refreshLogsBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Recargar logs desde Supabase">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
+                                <span class="hidden sm:inline">Actualizar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Métricas / KPIs de Salud del Sistema (Grid 2 cols móvil / 4 cols desktop) -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                        <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Total Eventos Registrados</span>
+                            <div id="kpiLogsTotalCount" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">0</div>
+                            <span id="kpiLogsTotalSub" class="text-[10px] text-zinc-500 font-mono mt-0.5 truncate">0 en periodo actual</span>
+                        </div>
+                        <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-emerald-500/30 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-emerald-400 font-bold">Éxito Operacional</span>
+                                <span id="kpiLogsSuccessRateBadge" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">100%</span>
+                            </div>
+                            <div id="kpiLogsSuccessCount" class="mt-1 font-display text-xl sm:text-2xl font-bold text-emerald-300 tabular-nums">0</div>
+                            <span id="kpiLogsLatencySub" class="text-[10px] text-zinc-400 font-mono mt-0.5 truncate">Latencia media: 0 ms</span>
+                        </div>
+                        <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-amber-500/30 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-amber-400 font-bold">Avisos &amp; Concurrencia</span>
+                                <span id="kpiLogsWarnRateBadge" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">0</span>
+                            </div>
+                            <div id="kpiLogsWarnCount" class="mt-1 font-display text-xl sm:text-2xl font-bold text-amber-300 tabular-nums">0</div>
+                            <span class="text-[10px] text-zinc-500 font-mono mt-0.5 truncate">Colisiones 409 / 401 / Drops</span>
+                        </div>
+                        <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-rose-500/30 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-rose-400 font-bold">Errores Críticos</span>
+                                <span id="kpiLogsUnresolvedBadge" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-bold">0 pendientes</span>
+                            </div>
+                            <div id="kpiLogsErrorCount" class="mt-1 font-display text-xl sm:text-2xl font-bold text-rose-400 tabular-nums">0</div>
+                            <span id="kpiLogsErrorSub" class="text-[10px] text-zinc-500 font-mono mt-0.5 truncate">0 revisados</span>
+                        </div>
+                    </div>
+
+                    <!-- Píldoras de Acceso Rápido (Touch-friendly scroll horizontal en móvil) -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                        <button type="button" data-log-pill="all" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-acid text-obsidian shadow-sm whitespace-nowrap shrink-0">
+                            🌐 Todos los Logs
+                        </button>
+                        <button type="button" data-log-pill="unresolved_errors" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-obsidian-card border border-rose-500/40 text-rose-300 hover:text-white whitespace-nowrap shrink-0 flex items-center gap-1">
+                            <span>🔥 Errores Pendientes</span>
+                            <span id="pillUnresolvedCount" class="hidden px-1.5 py-0.2 text-[10px] rounded-full bg-rose-500 text-white">0</span>
+                        </button>
+                        <button type="button" data-log-pill="all_errors" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white whitespace-nowrap shrink-0">
+                            ❌ Todos los Errores
+                        </button>
+                        <button type="button" data-log-pill="warns" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white whitespace-nowrap shrink-0">
+                            ⚠️ Avisos / 409
+                        </button>
+                        <button type="button" data-log-pill="reservas" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white whitespace-nowrap shrink-0">
+                            🛒 Reservas &amp; Ventas
+                        </button>
+                        <button type="button" data-log-pill="bots" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white whitespace-nowrap shrink-0">
+                            🤖 Bots &amp; Sync
+                        </button>
+                        <button type="button" data-log-pill="auth" class="log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white whitespace-nowrap shrink-0">
+                            🔐 Seguridad / Auth
+                        </button>
+                    </div>
+
+                    <!-- Motor de Filtros Multicriterio (Responsive Móvil / Desktop) -->
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-3.5 sm:p-4 space-y-3">
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
+                            <div class="relative flex-1">
+                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+                                <input type="search" id="logsFilterSearch" placeholder="Buscar por acción, mensaje, REF-XXX, DROP-XX, error, actor..." class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="logsFilterPeriod" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                    <option value="ALL" selected>Todo el Historial</option>
+                                    <option value="TODAY">Hoy</option>
+                                    <option value="24H">Últimas 24 horas</option>
+                                    <option value="7DAYS">Últimos 7 días</option>
+                                    <option value="THIS_MONTH">Este Mes</option>
+                                    <option value="CUSTOM">Rango de Fechas...</option>
+                                </select>
+                                <button type="button" id="logsResetFiltersBtn" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-rose-400 text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors" title="Restablecer todos los filtros">
+                                    Limpiar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Fila de Rango de Fechas Personalizado -->
+                        <div id="logsCustomDateRow" class="hidden flex flex-wrap items-center gap-2.5 pt-1 border-t border-zinc-800">
+                            <span class="text-[11px] font-mono text-zinc-400">Desde:</span>
+                            <input type="date" id="logsDateFrom" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
+                            <span class="text-[11px] font-mono text-zinc-400">Hasta:</span>
+                            <input type="date" id="logsDateTo" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white">
+                        </div>
+
+                        <!-- Fila de Selectores Desplegables Específicos -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 border-t border-zinc-800">
+                            <div>
+                                <label for="logsFilterLevel" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Severidad</label>
+                                <select id="logsFilterLevel" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todas las Severidades</option>
+                                    <option value="ERROR">❌ Error Crítico</option>
+                                    <option value="WARN">⚠️ Advertencia / 409</option>
+                                    <option value="SUCCESS">✅ Éxito Operacional</option>
+                                    <option value="INFO">ℹ️ Información / Rutina</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="logsFilterCategory" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Módulo / Ámbito</label>
+                                <select id="logsFilterCategory" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todos los Módulos</option>
+                                    <option value="AUTH">🔐 Autenticación &amp; OTP</option>
+                                    <option value="DROP">🚀 Drops &amp; Remesas</option>
+                                    <option value="PRENDA">👕 Prendas &amp; Catálogo</option>
+                                    <option value="RESERVA_VIP">🛒 Reservas VIP &amp; Colas</option>
+                                    <option value="VINTED_SYNC">📬 Sincronización Vinted</option>
+                                    <option value="TELEGRAM">🤖 Telegram &amp; Redes</option>
+                                    <option value="FINANZAS">💸 Finanzas &amp; Pacas</option>
+                                    <option value="LEAD_QR">🎯 Leads QR &amp; Brevo</option>
+                                    <option value="SISTEMA">⚙️ Sistema &amp; n8n</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="logsFilterSource" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Origen / Actor</label>
+                                <select id="logsFilterSource" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todos los Orígenes</option>
+                                    <option value="admin_web">💻 Admin Studio Web</option>
+                                    <option value="public_web">🛍️ Web Pública / Leads</option>
+                                    <option value="telegram_bot">🤖 Bot Telegram</option>
+                                    <option value="n8n_backend">⚙️ Backend n8n</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="logsFilterResolved" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Estado Errores</label>
+                                <select id="logsFilterResolved" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                                    <option value="ALL">Todos los Estados</option>
+                                    <option value="UNRESOLVED">🔴 Solo Pendientes</option>
+                                    <option value="RESOLVED">🟢 Solo Revisados</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla Densa de Logs (Con scroll horizontal táctil suave para móvil y desktop) -->
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                        <div class="p-3.5 sm:p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
+                            <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                <span>Historial Cronológico de Acciones &amp; Eventos</span>
+                            </h3>
+                            <span id="logsRowCountLabel" class="font-mono text-xs text-zinc-400">0 registros</span>
+                        </div>
+                        <div class="overflow-x-auto -webkit-overflow-scrolling-touch scrollbar-thin">
+                            <table class="w-full text-left text-xs border-collapse min-w-[700px] sm:min-w-[850px]">
+                                <thead>
+                                    <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                        <th class="py-3 px-3">Fecha y Hora</th>
+                                        <th class="py-3 px-2 text-center">Nivel</th>
+                                        <th class="py-3 px-2.5">Módulo</th>
+                                        <th class="py-3 px-2.5">Acción</th>
+                                        <th class="py-3 px-2.5">Actor / Origen</th>
+                                        <th class="py-3 px-2.5">REF / Drop</th>
+                                        <th class="py-3 px-3">Mensaje / Resumen</th>
+                                        <th class="py-3 px-2 text-right">Latencia</th>
+                                        <th class="py-3 px-2 text-center">Estado</th>
+                                        <th class="py-3 px-3 text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="logsTableBody" class="divide-y divide-obsidian-border">
+                                    <tr>
+                                        <td colspan="10" class="py-8 text-center text-zinc-500 font-mono text-xs">Cargando registros del sistema...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </main>
@@ -2455,10 +2671,10 @@
 
         function getStoredTab() {
             const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
-            if (['drops', 'vinted', 'registro', 'settings'].includes(hash)) return hash;
+            if (['drops', 'vinted', 'registro', 'settings', 'logs'].includes(hash)) return hash;
             try {
                 const saved = localStorage.getItem('vm_admin_active_tab');
-                if (['drops', 'vinted', 'registro', 'settings'].includes(saved)) return saved;
+                if (['drops', 'vinted', 'registro', 'settings', 'logs'].includes(saved)) return saved;
             } catch (e) {}
             if (editRef) return 'drops';
             return (deepLinkLote || deepLinkRef) ? 'vinted' : 'drops';
@@ -2492,6 +2708,24 @@
                 profit: 'ALL'
             },
             activeSubView: 'ventas',
+            logsState: {
+                logs: [],
+                isLoading: false,
+                lastFetchedAt: null,
+                unresolvedErrorCount: 0,
+                selectedLog: null,
+                activePill: 'all',
+                filters: {
+                    search: '',
+                    period: 'ALL',
+                    dateFrom: '',
+                    dateTo: '',
+                    level: 'ALL',
+                    category: 'ALL',
+                    source: 'ALL',
+                    resolved: 'ALL'
+                }
+            },
             selectedRefs: new Set(),
             activeMarkSoldRef: null,
             activeClientKey: null,
@@ -3290,6 +3524,178 @@
                         }
                     }
                 }
+                if (action === 'get_logs') {
+                    if (!window._mockLogsData) {
+                        const nowMs = Date.now();
+                        window._mockLogsData = [
+                            {
+                                id: 101,
+                                createdAt: new Date(nowMs - 12 * 60 * 1000).toISOString(),
+                                level: 'SUCCESS',
+                                category: 'RESERVA_VIP',
+                                action: 'reserve_vip_success',
+                                source: 'public_web',
+                                actor: 'laura.vinted88@gmail.com',
+                                entityRef: 'REF-004',
+                                dropId: 'DROP-20261101-01',
+                                statusCode: 200,
+                                durationMs: 142,
+                                message: 'Reserva VIP bloqueada con éxito (-10% bienvenida aplicado)',
+                                errorDetail: '',
+                                payloadJson: JSON.stringify({ ref: 'REF-004', priceEur: 15.0, finalPriceEur: 13.5, discountEur: 1.5 }),
+                                resolved: false,
+                                resolvedAt: null
+                            },
+                            {
+                                id: 102,
+                                createdAt: new Date(nowMs - 35 * 60 * 1000).toISOString(),
+                                level: 'WARN',
+                                category: 'RESERVA_VIP',
+                                action: 'conflict_409_already_reserved',
+                                source: 'public_web',
+                                actor: 'marcos_streetwear@gmail.com',
+                                entityRef: 'REF-001',
+                                dropId: 'DROP-20261101-01',
+                                statusCode: 409,
+                                durationMs: 88,
+                                message: 'Conflicto de concurrencia: Prenda REF-001 ya reservada por otro comprador',
+                                errorDetail: 'already_reserved (Bloqueo pesimista ACID en virmarket_lock_reservation)',
+                                payloadJson: JSON.stringify({ requestedRefs: ['REF-001'], unavailableRefs: ['REF-001'] }),
+                                resolved: false,
+                                resolvedAt: null
+                            },
+                            {
+                                id: 103,
+                                createdAt: new Date(nowMs - 75 * 60 * 1000).toISOString(),
+                                level: 'ERROR',
+                                category: 'SISTEMA',
+                                action: 'n8n_workflow_error',
+                                source: 'n8n_backend',
+                                actor: 'system',
+                                entityRef: 'uLMdWFNCxneNHpih',
+                                dropId: '',
+                                statusCode: 500,
+                                durationMs: 1250,
+                                message: 'VirMarket - Notificador Central de Errores - Error en nodo Enviar Alerta Telegram',
+                                errorDetail: 'Telegram API Error 400: Bad Request: chat not found\n    at Object.execute (n8n/nodes/Telegram:142)\n    at Workflow.runNode (n8n-core:215)',
+                                payloadJson: JSON.stringify({ workflowId: 'uLMdWFNCxneNHpih', node: 'Enviar Alerta Telegram', executionId: '8921' }),
+                                resolved: false,
+                                resolvedAt: null
+                            },
+                            {
+                                id: 104,
+                                createdAt: new Date(nowMs - 140 * 60 * 1000).toISOString(),
+                                level: 'SUCCESS',
+                                category: 'TELEGRAM',
+                                action: 'import_vinted_url_success',
+                                source: 'telegram_bot',
+                                actor: '1029692131',
+                                entityRef: 'REF-006',
+                                dropId: 'DROP-20261101-01',
+                                statusCode: 200,
+                                durationMs: 3120,
+                                message: 'Prenda importada desde Vinted: REF-006 con 3 fotos en CDN GitHub',
+                                errorDetail: '',
+                                payloadJson: JSON.stringify({ ref: 'REF-006', title: 'Jersey cuello alto lana merino', priceEur: 18.0, photosCount: 3 }),
+                                resolved: false,
+                                resolvedAt: null
+                            },
+                            {
+                                id: 105,
+                                createdAt: new Date(nowMs - 220 * 60 * 1000).toISOString(),
+                                level: 'INFO',
+                                category: 'VINTED_SYNC',
+                                action: 'scan_vinted_emails',
+                                source: 'admin_web',
+                                actor: 'admin',
+                                entityRef: 'virmarket.oficial@gmail.com',
+                                dropId: '',
+                                statusCode: 200,
+                                durationMs: 4200,
+                                message: 'Escaneo de Gmail completado: 48 correos analizados, 2 ventas listas para conciliar',
+                                errorDetail: '',
+                                payloadJson: JSON.stringify({ scanned: 48, exactMatches: 1, nativeLots: 1 }),
+                                resolved: true,
+                                resolvedAt: new Date(nowMs - 200 * 60 * 1000).toISOString()
+                            },
+                            {
+                                id: 106,
+                                createdAt: new Date(nowMs - 310 * 60 * 1000).toISOString(),
+                                level: 'WARN',
+                                category: 'AUTH',
+                                action: 'login_failed_password',
+                                source: 'admin_web',
+                                actor: 'admin',
+                                entityRef: '127.0.0.1',
+                                dropId: '',
+                                statusCode: 401,
+                                durationMs: 95,
+                                message: 'Intento de acceso denegado: contraseña administrativa errónea',
+                                errorDetail: 'Credencial inválida',
+                                payloadJson: JSON.stringify({ clientIp: '127.0.0.1', userAgent: 'Mozilla/5.0' }),
+                                resolved: true,
+                                resolvedAt: new Date(nowMs - 290 * 60 * 1000).toISOString()
+                            }
+                        ];
+                    }
+                    const logs = window._mockLogsData;
+                    const unresolvedErrorCount = logs.filter(l => (l.level === 'ERROR' || l.level === 'WARN') && !l.resolved).length;
+                    return { ok: true, logs, totalCount: logs.length, unresolvedErrorCount };
+                }
+                if (action === 'resolve_logs') {
+                    if (window._mockLogsData) {
+                        if (extraPayload.resolveAll) {
+                            window._mockLogsData.forEach(l => { if (!l.resolved) { l.resolved = true; l.resolvedAt = new Date().toISOString(); } });
+                        } else if (Array.isArray(extraPayload.ids)) {
+                            window._mockLogsData.forEach(l => {
+                                if (extraPayload.ids.includes(l.id)) {
+                                    l.resolved = true;
+                                    l.resolvedAt = new Date().toISOString();
+                                }
+                            });
+                        }
+                    }
+                    return { ok: true, message: 'Logs marcados como revisados.' };
+                }
+                if (action === 'purge_logs') {
+                    if (window._mockLogsData) {
+                        const strat = extraPayload.strategy || 'routine_only';
+                        if (strat === 'routine_only') {
+                            window._mockLogsData = window._mockLogsData.filter(l => l.level === 'ERROR' || l.level === 'WARN');
+                        } else if (strat === 'all_resolved') {
+                            window._mockLogsData = window._mockLogsData.filter(l => !l.resolved);
+                        } else if (strat === 'older_than_30d') {
+                            const limit = Date.now() - 30 * 86400000;
+                            window._mockLogsData = window._mockLogsData.filter(l => Date.parse(l.createdAt) >= limit || (!l.resolved && l.level === 'ERROR'));
+                        }
+                    }
+                    return { ok: true, message: 'Purga completada.' };
+                }
+                if (action === 'create_log') {
+                    const entry = extraPayload.logEntry || {};
+                    const newLog = {
+                        id: Date.now(),
+                        createdAt: new Date().toISOString(),
+                        level: entry.level || 'INFO',
+                        category: entry.category || 'SISTEMA',
+                        action: entry.action || '',
+                        source: entry.source || 'admin_web',
+                        actor: entry.actor || 'admin',
+                        entityRef: entry.entityRef || '',
+                        dropId: entry.dropId || '',
+                        statusCode: entry.statusCode || 200,
+                        durationMs: entry.durationMs || 0,
+                        message: entry.message || '',
+                        errorDetail: entry.errorDetail || '',
+                        payloadJson: typeof entry.payload === 'object' ? JSON.stringify(entry.payload) : (entry.payloadJson || '{}'),
+                        resolved: false,
+                        resolvedAt: null
+                    };
+                    if (!window._mockLogsData) window._mockLogsData = [];
+                    window._mockLogsData.unshift(newLog);
+                    return { ok: true, id: newLog.id };
+                }
+                
                 if (action === 'scan_vinted_emails') {
                     const ignored = new Set(adminState.config?.vintedSyncConfig?.ignoredEventKeys || []);
                     const mockEvents = [
@@ -3597,7 +4003,7 @@
         let autoPollingInterval = null;
 
         function setActiveTab(tabName) {
-            if (!['drops', 'vinted', 'registro', 'settings'].includes(tabName)) tabName = 'drops';
+            if (!['drops', 'vinted', 'registro', 'settings', 'logs'].includes(tabName)) tabName = 'drops';
             adminState.activeTab = tabName;
             try {
                 localStorage.setItem('vm_admin_active_tab', tabName);
@@ -3605,7 +4011,7 @@
                     window.history.replaceState(null, '', `#${tabName}`);
                 }
             } catch (e) {}
-            ['drops', 'vinted', 'registro', 'settings'].forEach(t => {
+            ['drops', 'vinted', 'registro', 'settings', 'logs'].forEach(t => {
                 const tabEl = document.getElementById(`tab-${t}`);
                 if (tabEl) tabEl.classList.toggle('hidden', t !== tabName);
             });
@@ -3620,13 +4026,15 @@
                 syncDashboardQuietly(true);
             } else if (tabName === 'registro') {
                 renderRegistroWorkspace();
+            } else if (tabName === 'logs') {
+                loadAndRenderLogs();
             }
             lucide.createIcons();
         }
 
         window.addEventListener('hashchange', () => {
             const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
-            if (['drops', 'vinted', 'registro', 'settings'].includes(hash) && hash !== adminState.activeTab) {
+            if (['drops', 'vinted', 'registro', 'settings', 'logs'].includes(hash) && hash !== adminState.activeTab) {
                 setActiveTab(hash);
             }
         });
@@ -9358,7 +9766,7 @@
                 ];
                 adminState.password = 'mock';
                 const initialTab = (window.location.hash || '').replace('#', '').trim().toLowerCase() || 'registro';
-                setActiveTab(['drops', 'vinted', 'registro', 'settings'].includes(initialTab) ? initialTab : 'registro');
+                setActiveTab(['drops', 'vinted', 'registro', 'settings', 'logs'].includes(initialTab) ? initialTab : 'registro');
                 return;
             }
 
@@ -9397,6 +9805,921 @@
             await checkServerAuthStatus();
             showAuthScreen();
         })();
+
+        // ===============================================================
+        // MÓDULO DE LOGS, AUDITORÍA 360º Y CONTROL DE ERRORES (PESTAÑA 5)
+        // ===============================================================
+
+        function formatLogDateTime(isoStr) {
+            if (!isoStr) return '-';
+            try {
+                const d = new Date(isoStr);
+                if (isNaN(d.getTime())) return String(isoStr);
+                return d.toLocaleString('es-ES', {
+                    timeZone: 'Europe/Madrid',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (e) {
+                return String(isoStr);
+            }
+        }
+
+        function formatLogShortTime(isoStr) {
+            if (!isoStr) return '-';
+            try {
+                const d = new Date(isoStr);
+                if (isNaN(d.getTime())) return String(isoStr);
+                return d.toLocaleTimeString('es-ES', {
+                    timeZone: 'Europe/Madrid',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (e) {
+                return String(isoStr);
+            }
+        }
+
+        function getLevelBadgeHtml(level) {
+            const lvl = String(level || 'INFO').toUpperCase();
+            if (lvl === 'ERROR') {
+                return '<span class="inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">❌ ERROR</span>';
+            }
+            if (lvl === 'WARN') {
+                return '<span class="inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">⚠️ AVISO</span>';
+            }
+            if (lvl === 'SUCCESS') {
+                return '<span class="inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">✅ ÉXITO</span>';
+            }
+            return '<span class="inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold bg-zinc-800 text-zinc-300 border border-zinc-700">ℹ️ INFO</span>';
+        }
+
+        function getCategoryBadgeHtml(cat) {
+            const c = String(cat || 'SISTEMA').toUpperCase();
+            const colors = {
+                AUTH: 'text-amber-300 bg-amber-500/10 border-amber-500/30',
+                DROP: 'text-acid bg-acid/10 border-acid/30',
+                PRENDA: 'text-sky-300 bg-sky-500/10 border-sky-500/30',
+                RESERVA_VIP: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30',
+                VINTED_SYNC: 'text-indigo-300 bg-indigo-500/10 border-indigo-500/30',
+                TELEGRAM: 'text-cyan-300 bg-cyan-500/10 border-cyan-500/30',
+                FINANZAS: 'text-yellow-300 bg-yellow-500/10 border-yellow-500/30',
+                LEAD_QR: 'text-fuchsia-300 bg-fuchsia-500/10 border-fuchsia-500/30',
+                SISTEMA: 'text-zinc-300 bg-zinc-800 border-zinc-700'
+            };
+            const cls = colors[c] || colors.SISTEMA;
+            return `<span class="font-mono text-[10px] px-1.5 py-0.2 rounded border ${cls} font-semibold">${escapeHtml(c)}</span>`;
+        }
+
+        function updateLogsNavBadge(unresolvedCount) {
+            const count = Number(unresolvedCount || 0);
+            adminState.logsState.unresolvedErrorCount = count;
+            const navBadge = document.getElementById('logsNavErrorBadge');
+            const alertBadge = document.getElementById('logsUnresolvedAlertBadge');
+            const pillBadge = document.getElementById('pillUnresolvedCount');
+
+            if (navBadge) {
+                if (count > 0) {
+                    navBadge.textContent = count > 99 ? '99+' : count;
+                    navBadge.classList.remove('hidden');
+                } else {
+                    navBadge.classList.add('hidden');
+                }
+            }
+
+            if (alertBadge) {
+                if (count > 0) {
+                    alertBadge.textContent = `${count} Error${count > 1 ? 'es' : ''} Pendiente${count > 1 ? 's' : ''}`;
+                    alertBadge.classList.remove('hidden');
+                } else {
+                    alertBadge.classList.add('hidden');
+                }
+            }
+
+            if (pillBadge) {
+                if (count > 0) {
+                    pillBadge.textContent = count;
+                    pillBadge.classList.remove('hidden');
+                } else {
+                    pillBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        async function refreshLogsBadgeQuietly() {
+            if (!adminState.password && urlParams.get('mock') !== '1') return;
+            try {
+                const res = await callAdminApi('get_logs', { limit: 100 });
+                if (res && res.ok && Array.isArray(res.logs)) {
+                    adminState.logsState.logs = res.logs;
+                    const count = typeof res.unresolvedErrorCount === 'number'
+                        ? res.unresolvedErrorCount
+                        : res.logs.filter(l => (l.level === 'ERROR' || l.level === 'WARN') && !l.resolved).length;
+                    updateLogsNavBadge(count);
+                }
+            } catch (e) {}
+        }
+
+        async function loadAndRenderLogs(forceRefresh = false) {
+            const tbody = document.getElementById('logsTableBody');
+            if (tbody && (forceRefresh || adminState.logsState.logs.length === 0)) {
+                tbody.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-zinc-400 font-mono text-xs"><div class="inline-flex items-center gap-2"><div class="w-4 h-4 border-2 border-acid border-t-transparent rounded-full animate-spin"></div><span>Consultando registros de auditoría en Supabase...</span></div></td></tr>';
+            }
+
+            adminState.logsState.isLoading = true;
+            try {
+                const res = await callAdminApi('get_logs', { limit: 500 });
+                if (res && res.ok && Array.isArray(res.logs)) {
+                    adminState.logsState.logs = res.logs;
+                    adminState.logsState.lastFetchedAt = Date.now();
+                    const count = typeof res.unresolvedErrorCount === 'number'
+                        ? res.unresolvedErrorCount
+                        : res.logs.filter(l => (l.level === 'ERROR' || l.level === 'WARN') && !l.resolved).length;
+                    updateLogsNavBadge(count);
+                }
+            } catch (err) {
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="10" class="py-6 text-center text-rose-300 font-mono text-xs">Error al cargar logs: ${escapeHtml(err.message || 'Error desconocido')}</td></tr>`;
+                }
+            } finally {
+                adminState.logsState.isLoading = false;
+                renderLogsView();
+            }
+        }
+
+        function filterLogsDataset(logs) {
+            const f = adminState.logsState.filters;
+            const activePill = adminState.logsState.activePill;
+            const query = (f.search || '').trim().toLowerCase();
+
+            return logs.filter(log => {
+                const lvl = String(log.level || 'INFO').toUpperCase();
+                const cat = String(log.category || 'SISTEMA').toUpperCase();
+                const resolved = Boolean(log.resolved);
+
+                if (activePill === 'unresolved_errors') {
+                    if (!['ERROR', 'WARN'].includes(lvl) || resolved) return false;
+                } else if (activePill === 'all_errors') {
+                    if (lvl !== 'ERROR') return false;
+                } else if (activePill === 'warns') {
+                    if (lvl !== 'WARN') return false;
+                } else if (activePill === 'reservas') {
+                    if (cat !== 'RESERVA_VIP') return false;
+                } else if (activePill === 'bots') {
+                    if (!['TELEGRAM', 'VINTED_SYNC'].includes(cat) && !['telegram_bot'].includes(log.source)) return false;
+                } else if (activePill === 'auth') {
+                    if (cat !== 'AUTH') return false;
+                }
+
+                if (f.level !== 'ALL' && lvl !== f.level) return false;
+                if (f.category !== 'ALL' && cat !== f.category) return false;
+                if (f.source !== 'ALL' && log.source !== f.source) return false;
+                if (f.resolved === 'UNRESOLVED' && (!['ERROR', 'WARN'].includes(lvl) || resolved)) return false;
+                if (f.resolved === 'RESOLVED' && !resolved) return false;
+
+                if (f.period !== 'ALL' && log.createdAt) {
+                    const logTs = Date.parse(log.createdAt);
+                    const now = new Date();
+                    if (!isNaN(logTs)) {
+                        if (f.period === 'TODAY') {
+                            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+                            if (logTs < todayStart) return false;
+                        } else if (f.period === '24H') {
+                            if (logTs < Date.now() - 24 * 3600 * 1000) return false;
+                        } else if (f.period === '7DAYS') {
+                            if (logTs < Date.now() - 7 * 86400 * 1000) return false;
+                        } else if (f.period === 'THIS_MONTH') {
+                            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+                            if (logTs < monthStart) return false;
+                        } else if (f.period === 'CUSTOM') {
+                            if (f.dateFrom) {
+                                const fromTs = new Date(f.dateFrom + 'T00:00:00').getTime();
+                                if (logTs < fromTs) return false;
+                            }
+                            if (f.dateTo) {
+                                const toTs = new Date(f.dateTo + 'T23:59:59.999').getTime();
+                                if (logTs > toTs) return false;
+                            }
+                        }
+                    }
+                }
+
+                if (query) {
+                    const textCorpus = [
+                        log.action,
+                        log.message,
+                        log.errorDetail,
+                        log.actor,
+                        log.entityRef,
+                        log.dropId,
+                        log.statusCode,
+                        log.payloadJson
+                    ].map(v => String(v || '').toLowerCase()).join(' ');
+                    if (!textCorpus.includes(query)) return false;
+                }
+
+                return true;
+            });
+        }
+
+        function renderLogsView() {
+            const rawLogs = adminState.logsState.logs || [];
+            const filtered = filterLogsDataset(rawLogs);
+
+            const total = filtered.length;
+            const successList = filtered.filter(l => l.level === 'SUCCESS');
+            const warnList = filtered.filter(l => l.level === 'WARN');
+            const errorList = filtered.filter(l => l.level === 'ERROR');
+            const unresolvedCount = errorList.filter(l => !l.resolved).length;
+            const resolvedCount = errorList.filter(l => l.resolved).length;
+
+            const successRate = total > 0 ? Math.round((successList.length / total) * 100) : 100;
+            const totalDuration = successList.reduce((acc, l) => acc + (Number(l.durationMs) || 0), 0);
+            const avgLatency = successList.length > 0 ? Math.round(totalDuration / successList.length) : 0;
+
+            const elTotal = document.getElementById('kpiLogsTotalCount');
+            const elTotalSub = document.getElementById('kpiLogsTotalSub');
+            const elSuccess = document.getElementById('kpiLogsSuccessCount');
+            const elSuccessRate = document.getElementById('kpiLogsSuccessRateBadge');
+            const elLatencySub = document.getElementById('kpiLogsLatencySub');
+            const elWarn = document.getElementById('kpiLogsWarnCount');
+            const elWarnRate = document.getElementById('kpiLogsWarnRateBadge');
+            const elError = document.getElementById('kpiLogsErrorCount');
+            const elUnresolved = document.getElementById('kpiLogsUnresolvedBadge');
+            const elErrorSub = document.getElementById('kpiLogsErrorSub');
+            const elRowCount = document.getElementById('logsRowCountLabel');
+            const elFilterBadge = document.getElementById('logsActiveFilterBadge');
+
+            if (elTotal) elTotal.textContent = total;
+            if (elTotalSub) elTotalSub.textContent = `${total} de ${rawLogs.length} en historial`;
+            if (elSuccess) elSuccess.textContent = successList.length;
+            if (elSuccessRate) elSuccessRate.textContent = `${successRate}%`;
+            if (elLatencySub) elLatencySub.textContent = `Latencia media: ${avgLatency} ms`;
+            if (elWarn) elWarn.textContent = warnList.length;
+            if (elWarnRate) elWarnRate.textContent = warnList.length;
+            if (elError) elError.textContent = errorList.length;
+            if (elUnresolved) elUnresolved.textContent = `${unresolvedCount} pendiente${unresolvedCount === 1 ? '' : 's'}`;
+            if (elErrorSub) elErrorSub.textContent = `${resolvedCount} resuelto${resolvedCount === 1 ? '' : 's'}`;
+            if (elRowCount) elRowCount.textContent = `${total} registro${total === 1 ? '' : 's'}`;
+
+            const f = adminState.logsState.filters;
+            const hasActiveFilters = Boolean(
+                f.search || f.period !== 'ALL' || f.level !== 'ALL' || f.category !== 'ALL' || f.source !== 'ALL' || f.resolved !== 'ALL' || adminState.logsState.activePill !== 'all'
+            );
+            if (elFilterBadge) elFilterBadge.classList.toggle('hidden', !hasActiveFilters);
+
+            const tbody = document.getElementById('logsTableBody');
+            if (!tbody) return;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="py-10 text-center text-zinc-500 font-mono text-xs">No se han encontrado registros con los filtros actuales.<br><button type="button" onclick="resetLogsFilters()" class="mt-2 text-acid underline hover:text-white">Restablecer filtros</button></td></tr>`;
+                lucide.createIcons();
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(log => {
+                const lvl = String(log.level || 'INFO').toUpperCase();
+                const isError = lvl === 'ERROR';
+                const isWarn = lvl === 'WARN';
+                const isResolved = Boolean(log.resolved);
+                const hasTrace = Boolean(log.errorDetail);
+
+                let statusBadge = '<span class="text-[10px] font-mono text-zinc-500">-</span>';
+                if (isError || isWarn) {
+                    statusBadge = isResolved
+                        ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🟢 Revisado</span>'
+                        : '<span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">🔴 Pendiente</span>';
+                }
+
+                const rowBg = isError && !isResolved
+                    ? 'bg-rose-950/20 hover:bg-rose-950/30'
+                    : isWarn && !isResolved
+                        ? 'bg-amber-950/15 hover:bg-amber-950/25'
+                        : 'hover:bg-obsidian-elevated/60';
+
+                return `
+                    <tr class="transition-colors ${rowBg}">
+                        <td class="py-2.5 px-3 font-mono text-[11px] text-zinc-300 whitespace-nowrap">
+                            <span class="block">${formatLogDateTime(log.createdAt)}</span>
+                        </td>
+                        <td class="py-2.5 px-2 text-center whitespace-nowrap">
+                            ${getLevelBadgeHtml(log.level)}
+                        </td>
+                        <td class="py-2.5 px-2.5 whitespace-nowrap">
+                            ${getCategoryBadgeHtml(log.category)}
+                        </td>
+                        <td class="py-2.5 px-2.5 font-mono text-xs text-white whitespace-nowrap">
+                            <code class="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 text-[11px]">${escapeHtml(log.action || '-')}</code>
+                        </td>
+                        <td class="py-2.5 px-2.5 text-xs text-zinc-300 whitespace-nowrap">
+                            <span class="font-semibold text-white block text-[11px]">${escapeHtml(log.actor || 'system')}</span>
+                            <span class="text-[10px] text-zinc-500 font-mono">${escapeHtml(log.source || '')}</span>
+                        </td>
+                        <td class="py-2.5 px-2.5 font-mono text-xs text-acid whitespace-nowrap">
+                            <span class="block">${escapeHtml(log.entityRef || '-')}</span>
+                            ${log.dropId ? `<span class="text-[10px] text-zinc-500 block">${escapeHtml(log.dropId)}</span>` : ''}
+                        </td>
+                        <td class="py-2.5 px-3 text-xs text-zinc-200 max-w-xs sm:max-w-md truncate" title="${escapeHtml(log.message || '')}">
+                            <div class="truncate font-sans">${escapeHtml(log.message || '-')}</div>
+                            ${hasTrace ? `<span class="text-[10px] font-mono text-rose-400 block truncate">⚠ ${escapeHtml(log.errorDetail.split('\n')[0])}</span>` : ''}
+                        </td>
+                        <td class="py-2.5 px-2 font-mono text-xs text-right whitespace-nowrap ${Number(log.durationMs) > 2000 ? 'text-amber-400' : 'text-zinc-400'}">
+                            ${Number(log.durationMs) > 0 ? `${log.durationMs} ms` : '-'}
+                        </td>
+                        <td class="py-2.5 px-2 text-center whitespace-nowrap">
+                            ${statusBadge}
+                        </td>
+                        <td class="py-2.5 px-3 text-center whitespace-nowrap">
+                            <div class="inline-flex items-center gap-1.5">
+                                <button type="button" onclick="openLogDetail(${log.id})" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-[11px] font-mono text-acid transition-colors flex items-center gap-1" title="Ver detalle técnico completo y JSON">
+                                    <i data-lucide="search" class="w-3 h-3"></i>
+                                    <span>Detalle</span>
+                                </button>
+                                ${(isError || isWarn) ? `
+                                    <button type="button" onclick="toggleLogResolvedState(${log.id}, ${!isResolved})" class="px-2 py-1 rounded-lg text-[11px] font-mono transition-colors ${
+                                        isResolved
+                                            ? 'bg-zinc-800 text-zinc-400 hover:text-white'
+                                            : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25'
+                                    }" title="${isResolved ? 'Reabrir como pendiente' : 'Marcar como revisado'}">
+                                        ${isResolved ? 'Reabrir' : 'Revisar'}
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        window.openLogDetail = function(logId) {
+            const log = (adminState.logsState.logs || []).find(l => l.id === logId);
+            if (!log) return;
+            adminState.logsState.selectedLog = log;
+
+            const modal = document.getElementById('logDetailModal');
+            const titleEl = document.getElementById('logDetailModalTitle');
+            const iconEl = document.getElementById('logModalSeverityIcon');
+            const levelBadge = document.getElementById('logModalLevelBadge');
+            const catBadge = document.getElementById('logModalCategoryBadge');
+            const resolvedBadge = document.getElementById('logModalResolvedBadge');
+            const dateEl = document.getElementById('logModalDate');
+            const actorEl = document.getElementById('logModalActor');
+            const entityEl = document.getElementById('logModalEntity');
+            const statusDurationEl = document.getElementById('logModalStatusDuration');
+            const msgEl = document.getElementById('logModalMessage');
+            const errorWrap = document.getElementById('logModalErrorWrap');
+            const errorText = document.getElementById('logModalErrorText');
+            const payloadPre = document.getElementById('logModalPayloadJson');
+            const toggleBtn = document.getElementById('toggleLogResolvedBtn');
+            const toggleLabel = document.getElementById('toggleLogResolvedLabel');
+
+            if (titleEl) titleEl.textContent = log.action ? `Acción: ${log.action}` : 'Detalle de Registro';
+            if (dateEl) dateEl.textContent = formatLogDateTime(log.createdAt);
+            if (actorEl) actorEl.textContent = `${log.actor || 'system'} (${log.source || 'web'})`;
+            if (entityEl) entityEl.textContent = log.entityRef ? `${log.entityRef}${log.dropId ? ` • ${log.dropId}` : ''}` : (log.dropId || '-');
+            if (statusDurationEl) statusDurationEl.textContent = `${log.statusCode || 200} • ${log.durationMs || 0} ms`;
+            if (msgEl) msgEl.textContent = log.message || '-';
+
+            const lvl = String(log.level || 'INFO').toUpperCase();
+            if (levelBadge) {
+                levelBadge.textContent = lvl;
+                levelBadge.className = `font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                    lvl === 'ERROR' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' :
+                    lvl === 'WARN' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
+                    lvl === 'SUCCESS' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+                    'bg-zinc-800 text-zinc-300 border border-zinc-700'
+                }`;
+            }
+
+            if (iconEl) {
+                iconEl.className = `w-10 h-10 rounded-2xl flex items-center justify-center text-white shrink-0 ${
+                    lvl === 'ERROR' ? 'bg-rose-600 shadow-lg shadow-rose-600/30' :
+                    lvl === 'WARN' ? 'bg-amber-600 shadow-lg shadow-amber-600/30' :
+                    lvl === 'SUCCESS' ? 'bg-emerald-600 shadow-lg shadow-emerald-600/30' :
+                    'bg-zinc-700'
+                }`;
+            }
+
+            if (catBadge) catBadge.textContent = log.category || 'SISTEMA';
+
+            if (resolvedBadge) {
+                if (log.resolved) {
+                    resolvedBadge.textContent = `Revisado (${formatLogShortTime(log.resolvedAt)})`;
+                    resolvedBadge.classList.remove('hidden');
+                } else {
+                    resolvedBadge.classList.add('hidden');
+                }
+            }
+
+            if (errorWrap && errorText) {
+                if (log.errorDetail) {
+                    errorText.textContent = log.errorDetail;
+                    errorWrap.classList.remove('hidden');
+                } else {
+                    errorWrap.classList.add('hidden');
+                }
+            }
+
+            if (payloadPre) {
+                let formatted = '{}';
+                try {
+                    const parsed = typeof log.payloadJson === 'string' ? JSON.parse(log.payloadJson || '{}') : log.payloadJson;
+                    formatted = JSON.stringify(parsed, null, 2);
+                } catch (e) {
+                    formatted = String(log.payloadJson || '{}');
+                }
+                payloadPre.textContent = formatted;
+            }
+
+            if (toggleBtn && toggleLabel) {
+                if (lvl === 'ERROR' || lvl === 'WARN') {
+                    toggleBtn.classList.remove('hidden');
+                    if (log.resolved) {
+                        toggleLabel.textContent = 'Reabrir Incidencia';
+                        toggleBtn.className = 'px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors';
+                    } else {
+                        toggleLabel.textContent = 'Marcar como Revisado';
+                        toggleBtn.className = 'px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/50 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors';
+                    }
+                } else {
+                    toggleBtn.classList.add('hidden');
+                }
+            }
+
+            if (modal) modal.classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.toggleLogResolvedState = async function(logId, newResolved) {
+            const log = (adminState.logsState.logs || []).find(l => l.id === logId);
+            if (!log) return;
+            try {
+                await callAdminApi('resolve_logs', { ids: [logId] });
+                log.resolved = newResolved;
+                log.resolvedAt = newResolved ? new Date().toISOString() : null;
+                const unresolved = (adminState.logsState.logs || []).filter(l => (l.level === 'ERROR' || l.level === 'WARN') && !l.resolved).length;
+                updateLogsNavBadge(unresolved);
+                renderLogsView();
+
+                if (adminState.logsState.selectedLog && adminState.logsState.selectedLog.id === logId) {
+                    window.openLogDetail(logId);
+                }
+            } catch (err) {
+                alert(`Error al actualizar estado del log: ${err.message || 'Error desconocido'}`);
+            }
+        };
+
+        async function resolveAllLogs() {
+            const unresolved = (adminState.logsState.logs || []).filter(l => (l.level === 'ERROR' || l.level === 'WARN') && !l.resolved);
+            if (unresolved.length === 0) {
+                alert('No hay errores pendientes de revisar.');
+                return;
+            }
+            if (!confirm(`¿Deseas marcar los ${unresolved.length} errores pendientes como atendidos y revisados?`)) {
+                return;
+            }
+            try {
+                await callAdminApi('resolve_logs', { resolveAll: true });
+                (adminState.logsState.logs || []).forEach(l => {
+                    if (!l.resolved) {
+                        l.resolved = true;
+                        l.resolvedAt = new Date().toISOString();
+                    }
+                });
+                updateLogsNavBadge(0);
+                renderLogsView();
+            } catch (err) {
+                alert(`Error al resolver errores: ${err.message || 'Error desconocido'}`);
+            }
+        }
+
+        async function executePurgeLogs() {
+            const sel = document.querySelector('input[name="purgeStrategy"]:checked');
+            const strat = sel ? sel.value : 'routine_only';
+            const btn = document.getElementById('confirmPurgeBtn');
+            if (btn) btn.disabled = true;
+
+            try {
+                await callAdminApi('purge_logs', { strategy: strat });
+                document.getElementById('purgeLogsModal').classList.add('hidden');
+                await loadAndRenderLogs(true);
+            } catch (err) {
+                alert(`Error al purgar logs: ${err.message || 'Error desconocido'}`);
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function exportLogsCsv() {
+            const rawLogs = adminState.logsState.logs || [];
+            const filtered = filterLogsDataset(rawLogs);
+            if (filtered.length === 0) {
+                alert('No hay registros coincidentes para exportar.');
+                return;
+            }
+
+            const headers = ['ID', 'Fecha_Hora_ISO', 'Nivel', 'Modulo', 'Accion', 'Actor', 'Origen', 'Referencia', 'Drop', 'Codigo_HTTP', 'Duracion_ms', 'Mensaje', 'Error_Detalle', 'Revisado'];
+            const rows = filtered.map(l => [
+                l.id,
+                `"${l.createdAt || ''}"`,
+                `"${l.level || 'INFO'}"`,
+                `"${l.category || 'SISTEMA'}"`,
+                `"${l.action || ''}"`,
+                `"${(l.actor || '').replace(/"/g, '""')}"`,
+                `"${l.source || ''}"`,
+                `"${(l.entityRef || '').replace(/"/g, '""')}"`,
+                `"${(l.dropId || '').replace(/"/g, '""')}"`,
+                l.statusCode || 200,
+                l.durationMs || 0,
+                `"${(l.message || '').replace(/"/g, '""')}"`,
+                `"${(l.errorDetail || '').replace(/"/g, '""')}"`,
+                l.resolved ? 'SI' : 'NO'
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `virmarket_logs_${dateStr}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportLogsJson() {
+            const rawLogs = adminState.logsState.logs || [];
+            const filtered = filterLogsDataset(rawLogs);
+            if (filtered.length === 0) {
+                alert('No hay registros coincidentes para exportar.');
+                return;
+            }
+
+            const jsonStr = JSON.stringify(filtered, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `virmarket_logs_${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        window.resetLogsFilters = function() {
+            adminState.logsState.filters = {
+                search: '',
+                period: 'ALL',
+                dateFrom: '',
+                dateTo: '',
+                level: 'ALL',
+                category: 'ALL',
+                source: 'ALL',
+                resolved: 'ALL'
+            };
+            adminState.logsState.activePill = 'all';
+
+            const sInput = document.getElementById('logsFilterSearch');
+            const pSel = document.getElementById('logsFilterPeriod');
+            const lSel = document.getElementById('logsFilterLevel');
+            const cSel = document.getElementById('logsFilterCategory');
+            const srcSel = document.getElementById('logsFilterSource');
+            const rSel = document.getElementById('logsFilterResolved');
+            const customRow = document.getElementById('logsCustomDateRow');
+            const fromInp = document.getElementById('logsDateFrom');
+            const toInp = document.getElementById('logsDateTo');
+
+            if (sInput) sInput.value = '';
+            if (pSel) pSel.value = 'ALL';
+            if (lSel) lSel.value = 'ALL';
+            if (cSel) cSel.value = 'ALL';
+            if (srcSel) srcSel.value = 'ALL';
+            if (rSel) rSel.value = 'ALL';
+            if (customRow) customRow.classList.add('hidden');
+            if (fromInp) fromInp.value = '';
+            if (toInp) toInp.value = '';
+
+            document.querySelectorAll('.log-filter-pill').forEach(btn => {
+                const isAct = btn.getAttribute('data-log-pill') === 'all';
+                btn.className = `log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all whitespace-nowrap shrink-0 ${
+                    isAct ? 'bg-acid text-obsidian shadow-sm' : 'bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white'
+                }`;
+            });
+
+            renderLogsView();
+        };
+
+        // ======================== REGISTRO DE LISTENERS DE LOGS ========================
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.log-filter-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const pill = btn.getAttribute('data-log-pill') || 'all';
+                    adminState.logsState.activePill = pill;
+                    document.querySelectorAll('.log-filter-pill').forEach(b => {
+                        const isAct = b.getAttribute('data-log-pill') === pill;
+                        b.className = `log-filter-pill px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all whitespace-nowrap shrink-0 ${
+                            isAct ? 'bg-acid text-obsidian shadow-sm' : 'bg-obsidian-card border border-zinc-700 text-zinc-300 hover:text-white'
+                        }`;
+                    });
+                    renderLogsView();
+                });
+            });
+
+            const searchInp = document.getElementById('logsFilterSearch');
+            if (searchInp) {
+                let debounceTimer;
+                searchInp.addEventListener('input', (e) => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        adminState.logsState.filters.search = e.target.value;
+                        renderLogsView();
+                    }, 200);
+                });
+            }
+
+            const periodSel = document.getElementById('logsFilterPeriod');
+            const customRow = document.getElementById('logsCustomDateRow');
+            if (periodSel) {
+                periodSel.addEventListener('change', (e) => {
+                    adminState.logsState.filters.period = e.target.value;
+                    if (customRow) {
+                        customRow.classList.toggle('hidden', e.target.value !== 'CUSTOM');
+                    }
+                    renderLogsView();
+                });
+            }
+
+            const fromInp = document.getElementById('logsDateFrom');
+            if (fromInp) {
+                fromInp.addEventListener('change', (e) => {
+                    adminState.logsState.filters.dateFrom = e.target.value;
+                    renderLogsView();
+                });
+            }
+
+            const toInp = document.getElementById('logsDateTo');
+            if (toInp) {
+                toInp.addEventListener('change', (e) => {
+                    adminState.logsState.filters.dateTo = e.target.value;
+                    renderLogsView();
+                });
+            }
+
+            ['logsFilterLevel:level', 'logsFilterCategory:category', 'logsFilterSource:source', 'logsFilterResolved:resolved'].forEach(pair => {
+                const [elId, prop] = pair.split(':');
+                const sel = document.getElementById(elId);
+                if (sel) {
+                    sel.addEventListener('change', (e) => {
+                        adminState.logsState.filters[prop] = e.target.value;
+                        renderLogsView();
+                    });
+                }
+            });
+
+            const resetBtn = document.getElementById('logsResetFiltersBtn');
+            if (resetBtn) resetBtn.addEventListener('click', window.resetLogsFilters);
+
+            const refreshBtn = document.getElementById('refreshLogsBtn');
+            if (refreshBtn) refreshBtn.addEventListener('click', () => loadAndRenderLogs(true));
+
+            const resolveAllBtn = document.getElementById('resolveAllLogsBtn');
+            if (resolveAllBtn) resolveAllBtn.addEventListener('click', resolveAllLogs);
+
+            const purgeModalBtn = document.getElementById('purgeLogsModalBtn');
+            if (purgeModalBtn) {
+                purgeModalBtn.addEventListener('click', () => {
+                    document.getElementById('purgeLogsModal').classList.remove('hidden');
+                });
+            }
+
+            const closePurgeBtn = document.getElementById('closePurgeModalBtn');
+            if (closePurgeBtn) {
+                closePurgeBtn.addEventListener('click', () => {
+                    document.getElementById('purgeLogsModal').classList.add('hidden');
+                });
+            }
+
+            const cancelPurgeBtn = document.getElementById('cancelPurgeBtn');
+            if (cancelPurgeBtn) {
+                cancelPurgeBtn.addEventListener('click', () => {
+                    document.getElementById('purgeLogsModal').classList.add('hidden');
+                });
+            }
+
+            const confirmPurgeBtn = document.getElementById('confirmPurgeBtn');
+            if (confirmPurgeBtn) confirmPurgeBtn.addEventListener('click', executePurgeLogs);
+
+            const exportCsvBtn = document.getElementById('exportLogsCsvBtn');
+            if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportLogsCsv);
+
+            const exportJsonBtn = document.getElementById('exportLogsJsonBtn');
+            if (exportJsonBtn) exportJsonBtn.addEventListener('click', exportLogsJson);
+
+            const closeDetailBtn = document.getElementById('closeLogDetailModalBtn');
+            const closeDetailBottomBtn = document.getElementById('closeLogDetailModalBottomBtn');
+            if (closeDetailBtn) closeDetailBtn.addEventListener('click', () => document.getElementById('logDetailModal').classList.add('hidden'));
+            if (closeDetailBottomBtn) closeDetailBottomBtn.addEventListener('click', () => document.getElementById('logDetailModal').classList.add('hidden'));
+
+            const copyTraceBtn = document.getElementById('copyLogStackTraceBtn');
+            if (copyTraceBtn) {
+                copyTraceBtn.addEventListener('click', async () => {
+                    const text = document.getElementById('logModalErrorText').textContent;
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        copyTraceBtn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-emerald-400"></i><span>Copiado</span>';
+                        lucide.createIcons();
+                        setTimeout(() => {
+                            copyTraceBtn.innerHTML = '<i data-lucide="copy" class="w-3 h-3"></i><span>Copiar Traza</span>';
+                            lucide.createIcons();
+                        }, 2000);
+                    } catch (e) {}
+                });
+            }
+
+            const copyPayloadBtn = document.getElementById('copyLogPayloadBtn');
+            if (copyPayloadBtn) {
+                copyPayloadBtn.addEventListener('click', async () => {
+                    const text = document.getElementById('logModalPayloadJson').textContent;
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        copyPayloadBtn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-emerald-400"></i><span>Copiado</span>';
+                        lucide.createIcons();
+                        setTimeout(() => {
+                            copyPayloadBtn.innerHTML = '<i data-lucide="copy" class="w-3 h-3"></i><span>Copiar JSON</span>';
+                            lucide.createIcons();
+                        }, 2000);
+                    } catch (e) {}
+                });
+            }
+
+            const toggleResolvedBtn = document.getElementById('toggleLogResolvedBtn');
+            if (toggleResolvedBtn) {
+                toggleResolvedBtn.addEventListener('click', () => {
+                    if (adminState.logsState.selectedLog) {
+                        const newResolved = !adminState.logsState.selectedLog.resolved;
+                        window.toggleLogResolvedState(adminState.logsState.selectedLog.id, newResolved);
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                refreshLogsBadgeQuietly();
+            }, 800);
+        });
+    
     </script>
+    <!-- Modal de Detalle Técnico de Log / Auditoría -->
+    <div id="logDetailModal" role="dialog" aria-modal="true" aria-labelledby="logDetailModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-zinc-700 p-5 sm:p-7 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <!-- Cabecera del Modal -->
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div id="logModalSeverityIcon" class="w-10 h-10 rounded-2xl flex items-center justify-center text-white shrink-0 bg-zinc-800">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span id="logModalLevelBadge" class="font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300">INFO</span>
+                            <span id="logModalCategoryBadge" class="font-mono text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-acid font-bold">SISTEMA</span>
+                            <span id="logModalResolvedBadge" class="hidden font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Revisado</span>
+                        </div>
+                        <h3 id="logDetailModalTitle" class="font-display text-lg font-bold text-white uppercase mt-0.5">Detalle de Registro</h3>
+                    </div>
+                </div>
+                <button type="button" id="closeLogDetailModalBtn" aria-label="Cerrar detalle" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Metadatos Clave en Cuadrícula -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 text-xs">
+                <div>
+                    <span class="block text-[10px] font-mono text-zinc-400 uppercase">Fecha y Hora</span>
+                    <span id="logModalDate" class="font-mono text-white text-[11px]">-</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-mono text-zinc-400 uppercase">Actor / Origen</span>
+                    <span id="logModalActor" class="text-zinc-200 text-[11px] truncate block">-</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-mono text-zinc-400 uppercase">Referencia / Drop</span>
+                    <span id="logModalEntity" class="font-mono text-acid text-[11px] truncate block">-</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-mono text-zinc-400 uppercase">HTTP / Duración</span>
+                    <span id="logModalStatusDuration" class="font-mono text-zinc-200 text-[11px]">-</span>
+                </div>
+            </div>
+
+            <!-- Mensaje Legible del Evento -->
+            <div class="p-3.5 rounded-xl bg-obsidian-elevated/80 border border-zinc-800 text-xs space-y-1">
+                <span class="block text-[10px] font-mono uppercase text-zinc-400">Mensaje de Resumen:</span>
+                <p id="logModalMessage" class="text-white text-xs leading-relaxed font-sans"></p>
+            </div>
+
+            <!-- Bloque de Error / Stack Trace (si procede) -->
+            <div id="logModalErrorWrap" class="hidden space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono uppercase text-rose-400 font-bold flex items-center gap-1.5">
+                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-400"></i>
+                        <span>Traza Técnica del Error:</span>
+                    </span>
+                    <button type="button" id="copyLogStackTraceBtn" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] font-mono text-zinc-300 flex items-center gap-1">
+                        <i data-lucide="copy" class="w-3 h-3"></i>
+                        <span>Copiar Traza</span>
+                    </button>
+                </div>
+                <pre id="logModalErrorText" class="p-3 rounded-xl bg-rose-950/40 border border-rose-500/40 text-[11px] font-mono text-rose-200 whitespace-pre-wrap break-all max-h-40 overflow-y-auto"></pre>
+            </div>
+
+            <!-- Bloque de Payload JSON Sanitizado -->
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono uppercase text-zinc-400 font-bold">Datos Técnicos / Payload Sanitizado:</span>
+                    <button type="button" id="copyLogPayloadBtn" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] font-mono text-zinc-300 flex items-center gap-1">
+                        <i data-lucide="copy" class="w-3 h-3"></i>
+                        <span>Copiar JSON</span>
+                    </button>
+                </div>
+                <pre id="logModalPayloadJson" class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 text-[11px] font-mono text-zinc-300 whitespace-pre-wrap break-all max-h-48 overflow-y-auto"></pre>
+            </div>
+
+            <!-- Botones de Acción en Footer -->
+            <div class="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-zinc-800">
+                <button type="button" id="toggleLogResolvedBtn" class="px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/50 text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5 transition-colors">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                    <span id="toggleLogResolvedLabel">Marcar como Revisado</span>
+                </button>
+                <button type="button" id="closeLogDetailModalBottomBtn" class="px-4 py-2.5 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white transition-colors">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Purga / Limpieza Selectiva de Logs -->
+    <div id="purgeLogsModal" role="dialog" aria-modal="true" aria-labelledby="purgeModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-md my-auto rounded-3xl bg-obsidian-card border border-zinc-700 p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 id="purgeModalTitle" class="font-display text-base font-bold text-white uppercase">Limpieza de Registros</h3>
+                        <p class="text-[11px] text-zinc-400">Selecciona el criterio de purga segura en Supabase</p>
+                    </div>
+                </div>
+                <button type="button" id="closePurgeModalBtn" aria-label="Cerrar modal" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2 text-xs">
+                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 flex items-start gap-2.5 cursor-pointer">
+                    <input type="radio" name="purgeStrategy" value="routine_only" checked class="mt-0.5 text-acid focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-white block">Solo Eventos de Rutina (INFO y SUCCESS)</span>
+                        <span class="text-[11px] text-zinc-400">Conserva todos los errores y advertencias para auditoría continua.</span>
+                    </div>
+                </label>
+                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 flex items-start gap-2.5 cursor-pointer">
+                    <input type="radio" name="purgeStrategy" value="older_than_30d" class="mt-0.5 text-acid focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-white block">Antiguos con más de 30 días</span>
+                        <span class="text-[11px] text-zinc-400">Elimina eventos de rutina y errores ya resueltos con más de un mes.</span>
+                    </div>
+                </label>
+                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 flex items-start gap-2.5 cursor-pointer">
+                    <input type="radio" name="purgeStrategy" value="all_resolved" class="mt-0.5 text-acid focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-white block">Todos los Errores Revisados</span>
+                        <span class="text-[11px] text-zinc-400">Limpia cualquier incidencia que ya haya sido marcada como resuelta.</span>
+                    </div>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800">
+                <button type="button" id="cancelPurgeBtn" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white">
+                    Cancelar
+                </button>
+                <button type="button" id="confirmPurgeBtn" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-display font-bold text-xs uppercase tracking-wide shadow-md">
+                    Confirmar Limpieza
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
