@@ -388,6 +388,31 @@
             border-color: #BAE6FD !important;
             color: #0369A1 !important;
         }
+        /* Modal Ficha de Producto 360º Editable en Modo Claro */
+        html.theme-light #garment360Modal .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.22) !important;
+        }
+        html.theme-light #garment360Modal .bg-obsidian-elevated {
+            background-color: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light #garment360Modal .bg-obsidian {
+            background-color: #F1F5F9 !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light #garment360Modal input,
+        html.theme-light #garment360Modal select,
+        html.theme-light #garment360Modal textarea {
+            background-color: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
+        }
+        html.theme-light #garment360Modal label {
+            color: #475569 !important;
+        }
+
         /* Modal Checklist de Limpieza de Lotes en Modo Claro */
         html.theme-light #lotCleanupModal .bg-obsidian-card {
             background-color: #FFFFFF !important;
@@ -1272,13 +1297,40 @@
                         <!-- 1. Sub-vista Ventas -->
                         <div id="subview-ventas" class="space-y-3">
                             <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
-                                    <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
-                                        <span>Historial Detallado de Ventas Cerradas y Reservas VIP</span>
-                                    </h3>
-                                    <span id="ventasRowCountLabel" class="font-mono text-xs text-zinc-400">0 registros</span>
+                                <div class="p-3.5 sm:p-4 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-3">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                            <span>Historial Detallado de Ventas Cerradas y Reservas VIP</span>
+                                        </h3>
+                                        <span id="ventasRowCountLabel" class="font-mono text-xs text-zinc-400">0 registros</span>
+                                    </div>
+                                    <div class="flex items-center gap-2.5">
+                                        <!-- Selector de volumen visible -->
+                                        <div class="flex items-center gap-1.5 text-xs text-zinc-400">
+                                            <span class="text-[11px] font-mono uppercase text-zinc-400">Ver:</span>
+                                            <select id="ventasPageSizeSelect" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="ALL">Todo</option>
+                                            </select>
+                                        </div>
+                                        <!-- Conmutador de Vistas Tabla / Escaparate -->
+                                        <div class="inline-flex p-0.5 rounded-xl bg-obsidian-elevated border border-zinc-700">
+                                            <button type="button" id="ventasViewTableBtn" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all bg-acid text-obsidian shadow-sm" title="Vista Tabla detallada">
+                                                <i data-lucide="table-2" class="w-3.5 h-3.5"></i>
+                                                <span class="hidden sm:inline">Tabla</span>
+                                            </button>
+                                            <button type="button" id="ventasViewCardsBtn" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all text-zinc-400 hover:text-white" title="Vista Escaparate con fotos grandes">
+                                                <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                                                <span class="hidden sm:inline">Escaparate</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="overflow-x-auto">
+
+                                <!-- Vista Tabla Ventas -->
+                                <div id="ventasTableWrap" class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
                                             <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
@@ -1303,20 +1355,57 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <!-- Vista Escaparate Ventas (Cards) -->
+                                <div id="ventasCardsWrap" class="hidden p-3.5 sm:p-5">
+                                    <div id="ventasCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+                                        <!-- Tarjetas inyectadas dinámicamente -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- 2. Sub-vista Inventario Maestro -->
                         <div id="subview-prendas" class="hidden space-y-3">
                             <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
+                                <div class="p-3.5 sm:p-4 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-3">
                                     <div class="flex items-center gap-2">
                                         <h3 class="font-display text-sm font-bold text-white uppercase">Inventario General &amp; Valoración de Stock</h3>
                                         <span class="text-[11px] text-zinc-500 hidden sm:inline">(Clic en Coste para editar en línea)</span>
+                                        <span id="prendasRowCountLabel" class="font-mono text-xs text-zinc-400">0 prendas</span>
                                     </div>
-                                    <span id="prendasRowCountLabel" class="font-mono text-xs text-zinc-400">0 prendas</span>
+                                    <div class="flex items-center gap-2.5">
+                                        <!-- Botón Seleccionar Visibles (sincronizado con acciones masivas) -->
+                                        <button type="button" id="prendasSelectVisibleBtn" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 shadow-sm" title="Seleccionar todas las prendas visibles actualmente">
+                                            <i data-lucide="check-square" class="w-3.5 h-3.5 text-acid"></i>
+                                            <span>Seleccionar visibles</span>
+                                        </button>
+                                        <!-- Selector de volumen visible -->
+                                        <div class="flex items-center gap-1.5 text-xs text-zinc-400">
+                                            <span class="text-[11px] font-mono uppercase text-zinc-400">Ver:</span>
+                                            <select id="prendasPageSizeSelect" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="ALL">Todo</option>
+                                            </select>
+                                        </div>
+                                        <!-- Conmutador de Vistas Tabla / Escaparate -->
+                                        <div class="inline-flex p-0.5 rounded-xl bg-obsidian-elevated border border-zinc-700">
+                                            <button type="button" id="prendasViewTableBtn" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all bg-acid text-obsidian shadow-sm" title="Vista Tabla detallada">
+                                                <i data-lucide="table-2" class="w-3.5 h-3.5"></i>
+                                                <span class="hidden sm:inline">Tabla</span>
+                                            </button>
+                                            <button type="button" id="prendasViewCardsBtn" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all text-zinc-400 hover:text-white" title="Vista Escaparate con fotos grandes">
+                                                <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                                                <span class="hidden sm:inline">Escaparate</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="overflow-x-auto">
+
+                                <!-- Vista Tabla Inventario -->
+                                <div id="prendasTableWrap" class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
                                             <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
@@ -1342,6 +1431,13 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <!-- Vista Escaparate Inventario (Cards) -->
+                                <div id="prendasCardsWrap" class="hidden p-3.5 sm:p-5">
+                                    <div id="prendasCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+                                        <!-- Tarjetas inyectadas dinámicamente -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2169,6 +2265,252 @@
         </div>
     </div>
 
+    <!-- MODAL FICHA DE PRODUCTO 360º EDITABLE (VIRMARKET STUDIO) -->
+    <div id="garment360Modal" role="dialog" aria-modal="true" aria-labelledby="g360ModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-5xl my-auto rounded-3xl bg-obsidian-card border border-obsidian-border shadow-2xl flex flex-col max-h-[94vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <!-- Cabecera Fija del Modal 360º -->
+            <div class="px-5 py-3.5 border-b border-obsidian-border flex items-center justify-between gap-3 bg-obsidian-elevated/80 shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span id="g360RefBadge" class="font-mono text-sm sm:text-base font-bold text-acid px-2.5 py-0.5 rounded-lg bg-obsidian border border-zinc-700 shrink-0">REF-000</span>
+                    <span id="g360DropBadge" class="hidden sm:inline-block font-mono text-xs text-zinc-400 px-2 py-0.5 rounded bg-zinc-800 shrink-0 truncate max-w-[150px]">DROP</span>
+                    <div id="g360StatusBadgeWrap" class="shrink-0"></div>
+                </div>
+
+                <!-- Navegación secuencial entre prendas filtradas -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button type="button" id="g360PrevBtn" class="px-2.5 py-1 rounded-xl bg-obsidian-card hover:bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                        <span>‹</span>
+                        <span class="hidden md:inline">Anterior</span>
+                    </button>
+                    <span id="g360NavIndexLabel" class="font-mono text-xs text-zinc-400 px-1.5">0 / 0</span>
+                    <button type="button" id="g360NextBtn" class="px-2.5 py-1 rounded-xl bg-obsidian-card hover:bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                        <span class="hidden md:inline">Siguiente</span>
+                        <span>›</span>
+                    </button>
+                </div>
+
+                <button type="button" id="closeG360ModalBtn" aria-label="Cerrar ficha" class="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors shrink-0">✕</button>
+            </div>
+
+            <!-- Contenido Scrollable en 2 Columnas -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+                <form id="g360Form" class="grid grid-cols-1 lg:grid-cols-12 gap-6" novalidate>
+                    <!-- Columna Izquierda: Galería y Fotos (5 cols) -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-mono font-bold uppercase text-zinc-300">Galería de Fotos (1 a 4)</span>
+                                <span id="g360PhotoCountLabel" class="font-mono text-[11px] text-zinc-400">0 / 4 fotos</span>
+                            </div>
+
+                            <!-- Visor Grande 4:5 -->
+                            <div class="relative aspect-[4/5] rounded-2xl bg-obsidian-elevated border border-obsidian-border overflow-hidden select-none group">
+                                <img id="g360MainPhotoImg" src="" alt="Foto prenda" class="w-full h-full object-cover">
+                                
+                                <!-- Flechas visor -->
+                                <button type="button" id="g360ViewerPrevBtn" class="keep-text-white absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 text-sm shadow transition-transform active:scale-95">‹</button>
+                                <button type="button" id="g360ViewerNextBtn" class="keep-text-white absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 text-sm shadow transition-transform active:scale-95">›</button>
+
+                                <!-- Puntos inferiores -->
+                                <div id="g360ViewerDots" class="absolute bottom-2.5 inset-x-0 flex justify-center gap-1.5 pointer-events-none"></div>
+
+                                <!-- Botón Zoom Lightbox -->
+                                <a id="g360OpenFullImgBtn" href="#" target="_blank" rel="noopener" class="keep-text-white absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-black/70 hover:bg-black/90 text-white border border-white/20 text-xs shadow transition-all" title="Ver foto en tamaño completo">
+                                    🔍
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Tira de Miniaturas Editables (Reordenar, Eliminar, Hacer Portada, Subir) -->
+                        <div class="space-y-2">
+                            <div id="g360ThumbsGrid" class="grid grid-cols-4 gap-2">
+                                <!-- Slots de miniaturas generados dinámicamente -->
+                            </div>
+                            
+                            <!-- Botón Subir Foto Nueva -->
+                            <div class="pt-1">
+                                <input type="file" id="g360AddPhotoInput" accept="image/*" class="hidden">
+                                <button type="button" id="g360AddPhotoBtn" class="w-full py-2 px-3 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-dashed border-zinc-700 hover:border-acid text-xs font-mono text-zinc-300 hover:text-white flex items-center justify-center gap-2 transition-colors">
+                                    <i data-lucide="image-plus" class="w-4 h-4 text-acid"></i>
+                                    <span>Añadir o hacer foto (máx. 4)</span>
+                                </button>
+                                <p id="g360UploadNotice" class="hidden text-[11px] font-mono text-acid text-center mt-1 animate-pulse">Optimizando y subiendo foto...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Catálogo, Finanzas y Estado (7 cols) -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <!-- SECCIÓN 1: DATOS DE CATÁLOGO -->
+                        <div class="space-y-3 p-4 rounded-2xl bg-obsidian-elevated/50 border border-zinc-800/80">
+                            <h4 class="font-display text-xs font-bold text-acid uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="tag" class="w-3.5 h-3.5"></i>
+                                <span>Información de Catálogo</span>
+                            </h4>
+
+                            <div>
+                                <label for="g360TitleInput" class="block text-[11px] font-semibold uppercase text-zinc-400 mb-1">Título de la Prenda *</label>
+                                <input type="text" id="g360TitleInput" required class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid font-semibold">
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <div>
+                                    <label for="g360BrandInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Marca</label>
+                                    <input type="text" id="g360BrandInput" placeholder="Vintage" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360SizeInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Talla</label>
+                                    <input type="text" id="g360SizeInput" placeholder="M / 38" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360ConditionSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Estado Prenda</label>
+                                    <select id="g360ConditionSelect" class="w-full px-2 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                        <option value="Nuevo con etiquetas">Nuevo con etiquetas</option>
+                                        <option value="Nuevo sin etiquetas">Nuevo sin etiquetas</option>
+                                        <option value="Muy bueno">Muy bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Satisfactorio">Satisfactorio</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="g360DropIdInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Código de Drop</label>
+                                    <input type="text" id="g360DropIdInput" placeholder="DROP-20261101-01" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360StatusSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Estado del Artículo</label>
+                                    <select id="g360StatusSelect" class="w-full px-2 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid font-bold">
+                                        <option value="DISPONIBLE">DISPONIBLE</option>
+                                        <option value="RESERVADA">RESERVADA (VIP 24h)</option>
+                                        <option value="EN_CAMINO">EN CAMINO (Vinted)</option>
+                                        <option value="VENDIDA">VENDIDA (Cerrada)</option>
+                                        <option value="OCULTA">OCULTA</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="g360PriceInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">PVP Base (€) *</label>
+                                    <input type="number" id="g360PriceInput" step="0.01" min="0" required class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-acid font-bold focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360VintedUrlInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Enlace Anuncio Vinted</label>
+                                    <input type="url" id="g360VintedUrlInput" placeholder="https://www.vinted.es/items/..." class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="g360DescInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Descripción</label>
+                                <textarea id="g360DescInput" rows="2" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid leading-relaxed"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN 2: CONTROL ECONÓMICO Y LOGÍSTICA -->
+                        <div class="space-y-3 p-4 rounded-2xl bg-obsidian-elevated/50 border border-zinc-800/80">
+                            <h4 class="font-display text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+                                <span>Control Financiero, Venta &amp; Cierre</span>
+                            </h4>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="g360CostInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Coste Prenda (€)</label>
+                                    <input type="number" id="g360CostInput" step="0.01" min="0" placeholder="0.00" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-amber-300 focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360ExpenseInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Gasto Extra / Sobre (€)</label>
+                                    <input type="number" id="g360ExpenseInput" step="0.01" min="0" placeholder="1.00" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-zinc-300 focus:outline-none focus:border-acid">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="g360SoldPriceInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Precio Cobrado (€)</label>
+                                    <input type="number" id="g360SoldPriceInput" step="0.01" min="0" placeholder="0.00" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white font-bold focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360ChannelSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Canal de Venta</label>
+                                    <select id="g360ChannelSelect" class="w-full px-2 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                        <option value="DROP_VIP">Drop VIP Web</option>
+                                        <option value="VINTED_DIRECT">Vinted Directo</option>
+                                        <option value="TELEGRAM">Telegram @virmarket_club</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="g360BuyerVintedInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Comprador (@vinted)</label>
+                                    <input type="text" id="g360BuyerVintedInput" placeholder="usuario_vinted" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                                </div>
+                                <div>
+                                    <label for="g360BuyerEmailInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Email Comprador</label>
+                                    <input type="email" id="g360BuyerEmailInput" placeholder="comprador@email.com" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="g360StageSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">Etapa Logística Vinted</label>
+                                    <select id="g360StageSelect" class="w-full px-2 py-1.5 rounded-lg bg-obsidian border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                        <option value="">(Sin etapa específica)</option>
+                                        <option value="PAID_PENDING_SHIPMENT">📦 Pendiente de enviar (5d)</option>
+                                        <option value="IN_TRANSIT">🚚 En camino</option>
+                                        <option value="COMPLETED">✅ Cobrada en saldo</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="g360TxIdInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-0.5">N.º Transacción (#TX)</label>
+                                    <input type="text" id="g360TxIdInput" placeholder="#22978145321" class="w-full px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                                </div>
+                            </div>
+
+                            <!-- Cálculo en Vivo de Margen y Beneficio -->
+                            <div class="p-3 rounded-xl bg-obsidian border border-zinc-800 flex items-center justify-between text-xs">
+                                <div>
+                                    <span class="text-zinc-400 text-[11px] block">Rentabilidad Estimada:</span>
+                                    <span id="g360CostTotalPreview" class="text-zinc-500 font-mono text-[10px]">Coste total: 0,00 €</span>
+                                </div>
+                                <div class="text-right">
+                                    <span id="g360NetProfitPreview" class="font-mono text-sm font-bold text-acid">0,00 €</span>
+                                    <span id="g360MarginPreview" class="block font-mono text-[10px] text-zinc-400">(0% margen)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN 3: TRAZABILIDAD Y COLA (Colapsable) -->
+                        <details class="group p-3 rounded-xl bg-obsidian-elevated/40 border border-zinc-800 text-xs">
+                            <summary class="font-mono text-xs font-bold text-zinc-300 uppercase cursor-pointer flex items-center justify-between">
+                                <span>📜 Trazabilidad, Cola y Auditoría</span>
+                                <span class="group-open:rotate-180 transition-transform">▼</span>
+                            </summary>
+                            <div id="g360TraceabilityContent" class="pt-3 space-y-2 text-[11px] font-mono text-zinc-400">
+                                <!-- Datos inyectados dinámicamente -->
+                            </div>
+                        </details>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Pie Fijo del Modal -->
+            <div class="px-5 py-3.5 border-t border-obsidian-border flex flex-col-reverse sm:flex-row items-center justify-between gap-3 bg-obsidian-elevated/80 shrink-0">
+                <span id="g360StatusNotice" class="text-xs text-zinc-400">Modifica cualquier dato y pulsa Guardar Cambios.</span>
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button type="button" id="cancelG360Btn" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="button" id="saveG360SubmitBtn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-acid/20 transition-all">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>✓ Guardar Cambios</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mini-Modal de Cierre de Venta Rápida (Registrar Venta en ERP) -->
     <div id="markSoldModal" role="dialog" aria-modal="true" aria-labelledby="markSoldModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
         <div class="relative w-full max-w-lg my-auto rounded-3xl bg-obsidian-card border border-emerald-500/50 p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
@@ -2706,6 +3048,23 @@
                 profit: 'ALL'
             },
             activeSubView: 'ventas',
+            erpViewModes: {
+                ventas: localStorage.getItem('vm_erp_view_ventas') || 'table',
+                prendas: localStorage.getItem('vm_erp_view_prendas') || 'table'
+            },
+            erpPageSizes: {
+                ventas: localStorage.getItem('vm_erp_pagesize_ventas') || '25',
+                prendas: localStorage.getItem('vm_erp_pagesize_prendas') || '25'
+            },
+            erpCarouselIdx: {
+                ventas: {},
+                prendas: {}
+            },
+            activeG360Ref: null,
+            g360Mode: 'prendas',
+            g360Photos: [],
+            g360ViewerIndex: 0,
+            g360FilteredRefs: [],
             logsState: {
                 logs: [],
                 isLoading: false,
@@ -7041,19 +7400,30 @@
         function renderSubViewVentas(filteredGarments) {
             const tableBody = document.getElementById('ventasTableBody');
             const countLabel = document.getElementById('ventasRowCountLabel');
-            if (!tableBody) return;
+            const tableWrap = document.getElementById('ventasTableWrap');
+            const cardsWrap = document.getElementById('ventasCardsWrap');
+            const cardsGrid = document.getElementById('ventasCardsGrid');
+            const mode = adminState.erpViewModes.ventas || 'table';
+            const pageSizeVal = adminState.erpPageSizes.ventas || '25';
 
-            // Consideramos ventas cobradas ('VENDIDA'), envíos en tránsito ('EN_CAMINO') y reservas activas ('RESERVADA')
-            const sales = filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA');
+            // Sincronizar botones de modo de vista
+            const tableBtn = document.getElementById('ventasViewTableBtn');
+            const cardsBtn = document.getElementById('ventasViewCardsBtn');
+            const sizeSelect = document.getElementById('ventasPageSizeSelect');
+            if (sizeSelect && sizeSelect.value !== pageSizeVal) sizeSelect.value = pageSizeVal;
 
-            if (countLabel) countLabel.textContent = `${sales.length} registro${sales.length === 1 ? '' : 's'}`;
-            const badgeCount = document.getElementById('badgeCountVentas');
-            if (badgeCount) badgeCount.textContent = `${sales.length}`;
-
-            if (sales.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay ventas ni reservas registradas con los filtros actuales.</td></tr>`;
-                return;
+            if (tableBtn && cardsBtn) {
+                if (mode === 'cards') {
+                    cardsBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all bg-acid text-obsidian shadow-sm';
+                    tableBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all text-zinc-400 hover:text-white';
+                } else {
+                    tableBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all bg-acid text-obsidian shadow-sm';
+                    cardsBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all text-zinc-400 hover:text-white';
+                }
             }
+
+            // Filtrar ventas cobradas, envíos y reservas activas
+            const sales = filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA');
 
             sales.sort((a, b) => {
                 const dateA = new Date(getGarmentSoldAt(a) || 0).getTime();
@@ -7061,100 +7431,134 @@
                 return dateB - dateA;
             });
 
-            tableBody.innerHTML = sales.map(g => {
-                const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
-                const dateStr = getGarmentSoldAt(g);
-                let dateFmt = '-';
-                if (dateStr) {
-                    try {
-                        const d = new Date(dateStr);
-                        dateFmt = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    } catch (e) {}
+            const badgeCount = document.getElementById('badgeCountVentas');
+            if (badgeCount) badgeCount.textContent = `${sales.length}`;
+
+            // Manejo de lista vacía
+            if (sales.length === 0) {
+                if (countLabel) countLabel.textContent = '0 registros';
+                if (tableBody) tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay ventas ni reservas registradas con los filtros actuales.</td></tr>`;
+                if (cardsGrid) cardsGrid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 font-mono text-xs">No hay ventas ni reservas registradas con los filtros actuales.</div>`;
+                return;
+            }
+
+            // Paginación / Límite de visualización según selector
+            const limit = (pageSizeVal === 'ALL') ? sales.length : parseInt(pageSizeVal, 10);
+            const visibleSales = sales.slice(0, limit);
+
+            if (countLabel) {
+                countLabel.textContent = (limit < sales.length)
+                    ? `${visibleSales.length} de ${sales.length} registros`
+                    : `${sales.length} registro${sales.length === 1 ? '' : 's'}`;
+            }
+
+            if (mode === 'cards') {
+                if (tableWrap) tableWrap.classList.add('hidden');
+                if (cardsWrap) cardsWrap.classList.remove('hidden');
+                if (cardsGrid) {
+                    cardsGrid.innerHTML = visibleSales.map(g => buildErpProductCard(g, 'ventas')).join('');
+                    bindErpCardEvents(cardsGrid, 'ventas', visibleSales);
                 }
-
-                const buyerVinted = g.soldToVinted || g.reservedByVinted || '-';
-                const buyerEmail = g.soldToEmail || g.reservedByEmail || '';
-                const channel = (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT')).toUpperCase();
-
-                let channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-300">Vinted</span>';
-                if (channel === 'DROP_VIP') {
-                    channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">Drop VIP</span>';
-                } else if (channel === 'TELEGRAM') {
-                    channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">Telegram</span>';
-                }
-
-                const basePrice = Number(g.priceEur || 0);
-                const finalPrice = getGarmentSoldPrice(g);
-                const cost = Number(g.costEur || 0);
-                const expense = Number(g.extraExpenseEur || 0);
-                const totalCost = cost + expense;
-                const profit = finalPrice - totalCost;
-                const isDirectWithoutCost = cost <= 0 && ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' || (g.saleChannel || '').toUpperCase() === 'VINTED_DIRECT');
-                const margin = (!isDirectWithoutCost && finalPrice > 0) ? round2((profit / finalPrice) * 100) : null;
-                const isSold = g.status === 'VENDIDA';
-
-                let stageBadgeHtml = '';
-                if (isSold) {
-                    if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
-                        stageBadgeHtml = `<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" title="Cobro confirmado con correo oficial de Vinted #${escapeHtml(g.vintedTxId || '')}">📧 Cobro Verificado</span>`;
-                    } else {
-                        stageBadgeHtml = '<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-amber-300 border border-amber-400/30" title="Marcada manualmente por el vendedor sin correo oficial de liquidación">✋ Venta Manual</span>';
-                    }
-                } else if (g.status === 'EN_CAMINO') {
-                    stageBadgeHtml = `<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40" title="En camino por transportista. Cobro pendiente de entrega">🚚 En camino${g.vintedDeliveryEstimate ? ' (' + escapeHtml(g.vintedDeliveryEstimate) + ')' : ''}</span>`;
-                }
-
-                return `
-                <tr class="hover:bg-obsidian-elevated/40 transition-colors">
-                    <td class="py-3 px-2">
-                        ${thumb
-                            ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
-                            : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
+            } else {
+                if (cardsWrap) cardsWrap.classList.add('hidden');
+                if (tableWrap) tableWrap.classList.remove('hidden');
+                if (tableBody) {
+                    tableBody.innerHTML = visibleSales.map(g => {
+                        const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
+                        const dateStr = getGarmentSoldAt(g);
+                        let dateFmt = '-';
+                        if (dateStr) {
+                            try {
+                                const d = new Date(dateStr);
+                                dateFmt = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            } catch (e) {}
                         }
-                    </td>
-                    <td class="py-3 px-2.5 font-mono text-[11px] text-zinc-400 whitespace-nowrap">${escapeHtml(dateFmt)}</td>
-                    <td class="py-3 px-2.5 whitespace-nowrap">
-                        <span class="font-mono font-bold text-acid">${escapeHtml(g.ref)}</span>
-                        ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
-                    </td>
-                    <td class="py-3 px-2.5 max-w-[210px]">
-                        <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
-                        <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
-                        ${stageBadgeHtml}
-                    </td>
-                    <td class="py-3 px-2.5">
-                        <span class="font-mono text-xs font-semibold text-zinc-200 whitespace-nowrap">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
-                        ${buyerEmail ? `<span class="block text-[10px] text-zinc-500 truncate max-w-[140px]">${escapeHtml(buyerEmail)}</span>` : ''}
-                    </td>
-                    <td class="py-3 px-2.5 text-center whitespace-nowrap">${channelBadge}</td>
-                    <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap">${fmtEur(basePrice)}</td>
-                    <td class="py-3 px-2.5 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(finalPrice)}</td>
-                    <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">${fmtEur(totalCost)}</td>
-                    <td class="py-3 px-3 text-right font-mono tabular-nums font-bold whitespace-nowrap ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
-                    <td class="py-3 px-2.5 text-center whitespace-nowrap">
-                        ${isDirectWithoutCost ? `
-                            <span class="inline-block font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400" title="Venta de Vinted sin coste unitario asignado">Solo Ingreso</span>
-                        ` : `
-                            <span class="inline-block font-mono tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
-                                ${margin}%
-                            </span>
-                        `}
-                    </td>
-                    <td class="py-3 px-2.5 text-center whitespace-nowrap">
-                        <div class="inline-flex items-center gap-1">
-                            <button type="button" data-edit-sale="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors" title="Editar datos económicos o reasignar venta">
-                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                            </button>
-                            ${g.vintedInboxUrl ? `<a href="${escapeHtml(g.vintedInboxUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-emerald-300 transition-colors" title="Abrir conversación con comprador en Vinted">💬</a>` : ''}
-                            ${g.vintedUrl ? `<a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-acid transition-colors" title="Abrir anuncio en Vinted">🔗</a>` : ''}
-                        </div>
-                    </td>
-                </tr>`;
-            }).join('');
 
-            tableBody.querySelectorAll('[data-edit-sale]').forEach(btn => {
-                btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-edit-sale')));
-            });
+                        const buyerVinted = g.soldToVinted || g.reservedByVinted || '-';
+                        const buyerEmail = g.soldToEmail || g.reservedByEmail || '';
+                        const channel = (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT')).toUpperCase();
+
+                        let channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-300">Vinted</span>';
+                        if (channel === 'DROP_VIP') {
+                            channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">Drop VIP</span>';
+                        } else if (channel === 'TELEGRAM') {
+                            channelBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">Telegram</span>';
+                        }
+
+                        const basePrice = Number(g.priceEur || 0);
+                        const finalPrice = getGarmentSoldPrice(g);
+                        const cost = Number(g.costEur || 0);
+                        const expense = Number(g.extraExpenseEur || 0);
+                        const totalCost = cost + expense;
+                        const profit = finalPrice - totalCost;
+                        const isDirectWithoutCost = cost <= 0 && ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' || (g.saleChannel || '').toUpperCase() === 'VINTED_DIRECT');
+                        const margin = (!isDirectWithoutCost && finalPrice > 0) ? round2((profit / finalPrice) * 100) : null;
+                        const isSold = g.status === 'VENDIDA';
+
+                        let stageBadgeHtml = '';
+                        if (isSold) {
+                            if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
+                                stageBadgeHtml = `<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" title="Cobro confirmado con correo oficial de Vinted #${escapeHtml(g.vintedTxId || '')}">📧 Cobro Verificado</span>`;
+                            } else {
+                                stageBadgeHtml = '<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-amber-300 border border-amber-400/30" title="Marcada manualmente por el vendedor sin correo oficial de liquidación">✋ Venta Manual</span>';
+                            }
+                        } else if (g.status === 'EN_CAMINO') {
+                            stageBadgeHtml = `<span class="inline-flex items-center gap-1 whitespace-nowrap mt-0.5 px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40" title="En camino por transportista. Cobro pendiente de entrega">🚚 En camino${g.vintedDeliveryEstimate ? ' (' + escapeHtml(g.vintedDeliveryEstimate) + ')' : ''}</span>`;
+                        }
+
+                        return `
+                        <tr class="hover:bg-obsidian-elevated/40 transition-colors">
+                            <td class="py-3 px-2">
+                                ${thumb
+                                    ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0 cursor-pointer" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'ventas')">`
+                                    : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
+                                }
+                            </td>
+                            <td class="py-3 px-2.5 font-mono text-[11px] text-zinc-400 whitespace-nowrap">${escapeHtml(dateFmt)}</td>
+                            <td class="py-3 px-2.5 whitespace-nowrap">
+                                <button type="button" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'ventas')" class="font-mono font-bold text-acid hover:underline">${escapeHtml(g.ref)}</button>
+                                ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
+                            </td>
+                            <td class="py-3 px-2.5 max-w-[210px]">
+                                <div class="font-bold text-white truncate cursor-pointer hover:text-acid" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'ventas')" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
+                                <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
+                                ${stageBadgeHtml}
+                            </td>
+                            <td class="py-3 px-2.5">
+                                <span class="font-mono text-xs font-semibold text-zinc-200 whitespace-nowrap">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
+                                ${buyerEmail ? `<span class="block text-[10px] text-zinc-500 truncate max-w-[140px]">${escapeHtml(buyerEmail)}</span>` : ''}
+                            </td>
+                            <td class="py-3 px-2.5 text-center whitespace-nowrap">${channelBadge}</td>
+                            <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap">${fmtEur(basePrice)}</td>
+                            <td class="py-3 px-2.5 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(finalPrice)}</td>
+                            <td class="py-3 px-2.5 text-right font-mono tabular-nums text-zinc-400 whitespace-nowrap" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">${fmtEur(totalCost)}</td>
+                            <td class="py-3 px-3 text-right font-mono tabular-nums font-bold whitespace-nowrap ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</td>
+                            <td class="py-3 px-2.5 text-center whitespace-nowrap">
+                                ${isDirectWithoutCost ? `
+                                    <span class="inline-block font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400" title="Venta de Vinted sin coste unitario asignado">Solo Ingreso</span>
+                                ` : `
+                                    <span class="inline-block font-mono tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded ${margin >= 40 ? 'bg-acid/15 text-acid' : (margin >= 0 ? 'bg-amber-500/15 text-amber-300' : 'bg-rose-500/15 text-rose-300')}">
+                                        ${margin}%
+                                    </span>
+                                `}
+                            </td>
+                            <td class="py-3 px-2.5 text-center whitespace-nowrap">
+                                <div class="inline-flex items-center gap-1">
+                                    <button type="button" data-edit-sale-360="${escapeHtml(g.ref)}" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors" title="Abrir Ficha de Producto 360º Editable">
+                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    ${g.vintedInboxUrl ? `<a href="${escapeHtml(g.vintedInboxUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-emerald-300 transition-colors" title="Abrir conversación con comprador en Vinted">💬</a>` : ''}
+                                    ${g.vintedUrl ? `<a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-acid transition-colors" title="Abrir anuncio en Vinted">🔗</a>` : ''}
+                                </div>
+                            </td>
+                        </tr>`;
+                    }).join('');
+
+                    tableBody.querySelectorAll('[data-edit-sale-360]').forEach(btn => {
+                        btn.addEventListener('click', () => openGarment360Modal(btn.getAttribute('data-edit-sale-360'), 'ventas'));
+                    });
+                }
+            }
 
             lucide.createIcons();
         }
@@ -7163,238 +7567,1046 @@
         function renderSubViewPrendas(filteredGarments) {
             const tableBody = document.getElementById('prendasTableBody');
             const countLabel = document.getElementById('prendasRowCountLabel');
-            if (!tableBody) return;
+            const tableWrap = document.getElementById('prendasTableWrap');
+            const cardsWrap = document.getElementById('prendasCardsWrap');
+            const cardsGrid = document.getElementById('prendasCardsGrid');
+            const mode = adminState.erpViewModes.prendas || 'table';
+            const pageSizeVal = adminState.erpPageSizes.prendas || '25';
 
-            if (countLabel) countLabel.textContent = `${filteredGarments.length} prenda${filteredGarments.length === 1 ? '' : 's'}`;
+            // Sincronizar botones de modo de vista
+            const tableBtn = document.getElementById('prendasViewTableBtn');
+            const cardsBtn = document.getElementById('prendasViewCardsBtn');
+            const sizeSelect = document.getElementById('prendasPageSizeSelect');
+            if (sizeSelect && sizeSelect.value !== pageSizeVal) sizeSelect.value = pageSizeVal;
+
+            if (tableBtn && cardsBtn) {
+                if (mode === 'cards') {
+                    cardsBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all bg-acid text-obsidian shadow-sm';
+                    tableBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all text-zinc-400 hover:text-white';
+                } else {
+                    tableBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all bg-acid text-obsidian shadow-sm';
+                    cardsBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all text-zinc-400 hover:text-white';
+                }
+            }
+
             const badgeCount = document.getElementById('badgeCountPrendas');
             if (badgeCount) badgeCount.textContent = `${filteredGarments.length}`;
 
+            // Manejo de lista vacía
             if (filteredGarments.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay prendas registradas con los filtros actuales.</td></tr>`;
+                if (countLabel) countLabel.textContent = '0 prendas';
+                if (tableBody) tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay prendas registradas con los filtros actuales.</td></tr>`;
+                if (cardsGrid) cardsGrid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 font-mono text-xs">No hay prendas registradas con los filtros actuales.</div>`;
+                updateBulkToolbar();
                 return;
             }
 
-            tableBody.innerHTML = filteredGarments.map(g => {
-                const isChecked = adminState.selectedRefs.has(g.ref);
-                const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
-                const cost = Number(g.costEur || 0);
-                const basePrice = Number(g.priceEur || 0);
-                const finalPrice = getGarmentSoldPrice(g);
-                const expense = Number(g.extraExpenseEur || 0);
-                const profit = finalPrice - (cost + expense);
-                const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
-                const canDelete = isGarmentDeletable(g);
+            // Paginación / Límite de visualización según selector
+            const limit = (pageSizeVal === 'ALL') ? filteredGarments.length : parseInt(pageSizeVal, 10);
+            const visiblePrendas = filteredGarments.slice(0, limit);
+
+            if (countLabel) {
+                countLabel.textContent = (limit < filteredGarments.length)
+                    ? `${visiblePrendas.length} de ${filteredGarments.length} prendas`
+                    : `${filteredGarments.length} prenda${filteredGarments.length === 1 ? '' : 's'}`;
+            }
+
+            if (mode === 'cards') {
+                if (tableWrap) tableWrap.classList.add('hidden');
+                if (cardsWrap) cardsWrap.classList.remove('hidden');
+                if (cardsGrid) {
+                    cardsGrid.innerHTML = visiblePrendas.map(g => buildErpProductCard(g, 'prendas')).join('');
+                    bindErpCardEvents(cardsGrid, 'prendas', visiblePrendas);
+                }
+            } else {
+                if (cardsWrap) cardsWrap.classList.add('hidden');
+                if (tableWrap) tableWrap.classList.remove('hidden');
+                if (tableBody) {
+                    tableBody.innerHTML = visiblePrendas.map(g => {
+                        const isChecked = adminState.selectedRefs.has(g.ref);
+                        const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
+                        const cost = Number(g.costEur || 0);
+                        const basePrice = Number(g.priceEur || 0);
+                        const finalPrice = getGarmentSoldPrice(g);
+                        const expense = Number(g.extraExpenseEur || 0);
+                        const profit = finalPrice - (cost + expense);
+                        const margin = finalPrice > 0 ? round2((profit / finalPrice) * 100) : 0;
+                        const canDelete = isGarmentDeletable(g);
+                        const blockReason = getGarmentDeletionBlockReason(g);
+
+                        let statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
+                        if (g.status === 'VENDIDA') {
+                            if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
+                                statusBadge = `<div class="flex flex-col items-center gap-0.5"><span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span><span class="inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" title="Cobro verificado por correo #${escapeHtml(g.vintedTxId || '')}">📧 Correo verif.</span></div>`;
+                            } else {
+                                statusBadge = `<div class="flex flex-col items-center gap-0.5"><span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span><span class="inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-semibold bg-zinc-800 text-amber-300 border border-amber-400/30" title="Marcada manualmente sin correo de cobro">✋ Manual</span></div>`;
+                            }
+                        } else if (g.status === 'EN_CAMINO') {
+                            statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40" title="En camino por transportista. Pendiente de entrega y cobro">🚚 En camino</span>`;
+                        } else if (g.status === 'RESERVADA') {
+                            statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">Reservada VIP</span>`;
+                        } else if (g.status === 'DISPONIBLE') {
+                            statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-acid-muted text-acid border border-acid/40">Disponible</span>`;
+                        }
+
+                        return `
+                        <tr class="hover:bg-obsidian-elevated/40 transition-colors ${isChecked ? 'bg-acid/5' : ''}">
+                            <td class="py-3 px-2 text-center">
+                                <input type="checkbox" data-check-ref="${escapeHtml(g.ref)}" ${isChecked ? 'checked' : ''} class="rounded border-zinc-700 text-acid focus:ring-0 cursor-pointer">
+                            </td>
+                            <td class="py-3 px-1.5">
+                                ${thumb
+                                    ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0 cursor-pointer" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'prendas')">`
+                                    : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
+                                }
+                            </td>
+                            <td class="py-3 px-2 font-mono font-bold text-acid whitespace-nowrap">
+                                <button type="button" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'prendas')" class="hover:underline">${escapeHtml(g.ref)}</button>
+                            </td>
+                            <td class="py-3 px-2 min-w-[130px] max-w-[170px]">
+                                <div class="font-bold text-white truncate cursor-pointer hover:text-acid" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'prendas')" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
+                                <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}</span>
+                            </td>
+                            <td class="py-3 px-2 font-mono text-xs text-zinc-300 max-w-[105px] truncate whitespace-nowrap" title="${escapeHtml(g.size || '-')}">${escapeHtml(g.size || '-')}</td>
+                            <td class="py-3 px-2 font-mono text-xs text-zinc-400 whitespace-nowrap">${escapeHtml(g.dropId || '-')}</td>
+                            <td class="py-3 px-2 text-center whitespace-nowrap">${statusBadge}</td>
+                            <td class="py-3 px-2 text-right font-mono tabular-nums text-zinc-300 whitespace-nowrap">${fmtEur(basePrice)}</td>
+                            <td class="py-3 px-2 text-center whitespace-nowrap">
+                                <button type="button" data-inline-cost="${escapeHtml(g.ref)}" data-current-cost="${cost}" class="inline-flex items-center justify-center gap-1 whitespace-nowrap px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-amber-400 font-mono tabular-nums text-xs font-bold transition-colors ${cost > 0 ? 'text-amber-300' : 'text-zinc-500'}" title="Clic para editar coste unitario">
+                                    <span>${cost > 0 ? fmtEur(cost) : 'Sin coste'}</span>
+                                    <span class="text-[10px] opacity-80">✎</span>
+                                </button>
+                            </td>
+                            <td class="py-3 px-2 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(finalPrice)}</td>
+                            <td class="py-3 px-2 text-center font-mono tabular-nums text-xs whitespace-nowrap">
+                                ${cost > 0
+                                    ? `<span class="font-bold ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">${margin}%</span>`
+                                    : ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' ? '<span class="text-zinc-500 font-mono text-[10px]" title="Venta directa sin coste">N/D</span>' : '<span class="text-zinc-500 text-[10px]">-</span>')
+                                }
+                            </td>
+                            <td class="py-3 px-2 text-center whitespace-nowrap">
+                                <div class="inline-flex items-center gap-1">
+                                    <button type="button" data-edit-garment-360="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white transition-colors inline-flex items-center justify-center" title="Abrir Ficha de Producto 360º Editable">
+                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    ${g.status === 'EN_CAMINO' ? `
+                                        <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Confirmar cobro y pasar a VENDIDA">
+                                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                        <button type="button" data-release-in-transit="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 transition-colors" title="Revertir a DISPONIBLE (Cancelación / Devolución)">
+                                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    ` : (g.status !== 'VENDIDA' ? `
+                                        <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
+                                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    ` : '')}
+                                    ${canDelete ? `
+                                        <button type="button" data-delete-garment="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-colors" title="Eliminar prenda errónea o duplicada (Sin historial)">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    ` : `
+                                        <span class="p-1.5 rounded bg-zinc-900/60 text-zinc-600 cursor-not-allowed inline-flex items-center justify-center select-none" title="${escapeHtml(blockReason)}">
+                                            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                                        </span>
+                                    `}
+                                </div>
+                            </td>
+                        </tr>`;
+                    }).join('');
+
+                    tableBody.querySelectorAll('[data-edit-garment-360]').forEach(btn => {
+                        btn.addEventListener('click', () => openGarment360Modal(btn.getAttribute('data-edit-garment-360'), 'prendas'));
+                    });
+
+                    // Eventos de Checkboxes en Tabla
+                    tableBody.querySelectorAll('[data-check-ref]').forEach(chk => {
+                        chk.addEventListener('change', () => {
+                            const ref = chk.getAttribute('data-check-ref');
+                            if (chk.checked) adminState.selectedRefs.add(ref);
+                            else adminState.selectedRefs.delete(ref);
+                            updateBulkToolbar();
+                        });
+                    });
+
+                    // Edición rápida inline de Coste
+                    tableBody.querySelectorAll('[data-inline-cost]').forEach(btn => {
+                        btn.addEventListener('click', () => handleInlineCostEdit(btn.getAttribute('data-inline-cost'), btn.getAttribute('data-current-cost')));
+                    });
+
+                    // Botón Marcar Vendida
+                    tableBody.querySelectorAll('[data-quick-sold]').forEach(btn => {
+                        btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-quick-sold')));
+                    });
+
+                    // Botón Revertir En Camino
+                    tableBody.querySelectorAll('[data-release-in-transit]').forEach(btn => {
+                        btn.addEventListener('click', () => handleReleaseInTransit(btn.getAttribute('data-release-in-transit')));
+                    });
+
+                    // Botón Eliminar Prenda Errónea
+                    tableBody.querySelectorAll('[data-delete-garment]').forEach(btn => {
+                        btn.addEventListener('click', () => handleDeleteGarment(btn.getAttribute('data-delete-garment')));
+                    });
+                }
+            }
+
+            lucide.createIcons();
+            updateBulkToolbar();
+        }
+
+        // ======================== MOTOR DE TARJETAS ESTILO ESCAPARATE ========================
+        function buildErpProductCard(g, mode) {
+            const photos = (Array.isArray(g.photos) && g.photos.length > 0) ? g.photos.filter(Boolean) : (g.vintedThumbUrl ? [g.vintedThumbUrl] : []);
+            const carouselMap = adminState.erpCarouselIdx[mode] || {};
+            const idx = carouselMap[g.ref] || 0;
+            const safeIdx = (photos.length > 0) ? (idx % photos.length) : 0;
+            const currentPhoto = photos[safeIdx] || '';
+            const st = g.status;
+            const isSelected = adminState.selectedRefs.has(g.ref);
+
+            // Badge de Estado
+            let statusBadge = `<span class="px-2 py-0.5 rounded-full bg-zinc-900/90 border border-zinc-700 text-zinc-300 font-mono text-[10px] font-bold uppercase">${escapeHtml(st)}</span>`;
+            if (st === 'DISPONIBLE') {
+                statusBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-950/90 border border-acid/60 text-acid font-mono text-[10px] font-bold uppercase">Disponible</span>`;
+            } else if (st === 'RESERVADA') {
+                const waitCount = getGarmentWaitlist(g).length;
+                statusBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-950/90 border border-amber-400/60 text-amber-300 font-mono text-[10px] font-bold uppercase">Reservada${waitCount > 0 ? ' • Cola: ' + waitCount : ''}</span>`;
+            } else if (st === 'EN_CAMINO') {
+                statusBadge = `<span class="px-2 py-0.5 rounded-full bg-sky-950/90 border border-sky-400/60 text-sky-300 font-mono text-[10px] font-bold uppercase">En camino</span>`;
+            } else if (st === 'VENDIDA') {
+                if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-400/60 text-emerald-300 font-mono text-[10px] font-bold uppercase" title="Cobro Verificado por Correo">📧 Vendida</span>`;
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full bg-zinc-900/90 border border-zinc-700 text-zinc-400 font-mono text-[10px] font-bold uppercase">Vendida</span>`;
+                }
+            }
+
+            // Flechas y Puntos del Carrusel
+            const arrowsHtml = photos.length > 1
+                ? `<button type="button" aria-label="Foto anterior" data-erp-prev-photo="${escapeHtml(g.ref)}" data-erp-mode="${mode}" class="keep-text-white absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 text-xs shadow transition-transform active:scale-95 z-10">‹</button>
+                   <button type="button" aria-label="Foto siguiente" data-erp-next-photo="${escapeHtml(g.ref)}" data-erp-mode="${mode}" class="keep-text-white absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 text-xs shadow transition-transform active:scale-95 z-10">›</button>`
+                : '';
+
+            const dotsHtml = photos.length > 1
+                ? `<div class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 pointer-events-none z-10">
+                    ${photos.map((_, i) => `<span class="w-1.5 h-1.5 rounded-full transition-all ${i === safeIdx ? 'bg-acid scale-125' : 'bg-white/50'}"></span>`).join('')}
+                   </div>`
+                : '';
+
+            // Checkbox para selección en Inventario
+            const checkboxHtml = (mode === 'prendas')
+                ? `<div class="absolute top-2.5 left-2.5 z-20" onclick="event.stopPropagation()">
+                     <input type="checkbox" data-card-check="${escapeHtml(g.ref)}" ${isSelected ? 'checked' : ''} class="w-4 h-4 rounded border-zinc-700 text-acid focus:ring-0 cursor-pointer bg-obsidian/90">
+                   </div>`
+                : '';
+
+            const photoCountBadge = photos.length > 1
+                ? `<span class="px-1.5 py-0.5 rounded bg-black/60 text-[10px] font-mono text-white/90 border border-white/10">${safeIdx + 1}/${photos.length}</span>`
+                : '';
+
+            // Cálculos Financieros
+            const basePrice = Number(g.priceEur || 0);
+            const finalPrice = getGarmentSoldPrice(g);
+            const cost = Number(g.costEur || 0);
+            const expense = Number(g.extraExpenseEur || 0);
+            const totalCost = cost + expense;
+            const profit = finalPrice - totalCost;
+            const isDirectWithoutCost = cost <= 0 && ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' || (g.saleChannel || '').toUpperCase() === 'VINTED_DIRECT');
+            const margin = (!isDirectWithoutCost && finalPrice > 0) ? round2((profit / finalPrice) * 100) : null;
+
+            let bodyContent = '';
+
+            if (mode === 'prendas') {
+                const canDel = isGarmentDeletable(g);
                 const blockReason = getGarmentDeletionBlockReason(g);
 
-                let statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300">${escapeHtml(g.status)}</span>`;
-                if (g.status === 'VENDIDA') {
-                    if (g.vintedSaleStage === 'COMPLETED' || g.vintedTxId || g.completedAt) {
-                        statusBadge = `<div class="flex flex-col items-center gap-0.5"><span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span><span class="inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" title="Cobro verificado por correo #${escapeHtml(g.vintedTxId || '')}">📧 Correo verif.</span></div>`;
-                    } else {
-                        statusBadge = `<div class="flex flex-col items-center gap-0.5"><span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Vendida</span><span class="inline-flex items-center whitespace-nowrap px-1.5 py-0.2 rounded font-mono text-[9px] font-semibold bg-zinc-800 text-amber-300 border border-amber-400/30" title="Marcada manualmente sin correo de cobro">✋ Manual</span></div>`;
-                    }
-                } else if (g.status === 'EN_CAMINO') {
-                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40" title="En camino por transportista. Pendiente de entrega y cobro">🚚 En camino</span>`;
-                } else if (g.status === 'RESERVADA') {
-                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">Reservada VIP</span>`;
-                } else if (g.status === 'DISPONIBLE') {
-                    statusBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-acid-muted text-acid border border-acid/40">Disponible</span>`;
-                }
+                bodyContent = `
+                <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between cursor-pointer" data-open-g360="${escapeHtml(g.ref)}" data-erp-mode="prendas">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between gap-1 text-[11px] font-mono">
+                            <div class="flex items-center gap-1.5 text-zinc-400 truncate">
+                                <span class="text-zinc-200 font-semibold uppercase truncate">${escapeHtml(g.brand || 'Vintage')}</span>
+                                ${g.vintedCondition ? `<span class="text-zinc-600">•</span><span class="truncate">${escapeHtml(g.vintedCondition)}</span>` : ''}
+                            </div>
+                            ${g.size ? `<span class="px-2 py-0.5 rounded bg-acid-muted text-acid font-bold text-[10px] shrink-0">Talla ${escapeHtml(g.size)}</span>` : ''}
+                        </div>
 
-                return `
-                <tr class="hover:bg-obsidian-elevated/40 transition-colors ${isChecked ? 'bg-acid/5' : ''}">
-                    <td class="py-3 px-2 text-center">
-                        <input type="checkbox" data-check-ref="${escapeHtml(g.ref)}" ${isChecked ? 'checked' : ''} class="rounded border-zinc-700 text-acid focus:ring-0 cursor-pointer">
-                    </td>
-                    <td class="py-3 px-1.5">
-                        ${thumb
-                            ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-9 h-11 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
-                            : `<div class="w-9 h-11 rounded-lg bg-zinc-800 border border-zinc-700 shrink-0"></div>`
-                        }
-                    </td>
-                    <td class="py-3 px-2 font-mono font-bold text-acid whitespace-nowrap">${escapeHtml(g.ref)}</td>
-                    <td class="py-3 px-2 min-w-[130px] max-w-[170px]">
-                        <div class="font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
-                        <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}</span>
-                    </td>
-                    <td class="py-3 px-2 font-mono text-xs text-zinc-300 max-w-[105px] truncate whitespace-nowrap" title="${escapeHtml(g.size || '-')}">${escapeHtml(g.size || '-')}</td>
-                    <td class="py-3 px-2 font-mono text-xs text-zinc-400 whitespace-nowrap">${escapeHtml(g.dropId || '-')}</td>
-                    <td class="py-3 px-2 text-center whitespace-nowrap">${statusBadge}</td>
-                    <td class="py-3 px-2 text-right font-mono tabular-nums text-zinc-300 whitespace-nowrap">${fmtEur(basePrice)}</td>
-                    <td class="py-3 px-2 text-center whitespace-nowrap">
-                        <button type="button" data-inline-cost="${escapeHtml(g.ref)}" data-current-cost="${cost}" class="inline-flex items-center justify-center gap-1 whitespace-nowrap px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-amber-400 font-mono tabular-nums text-xs font-bold transition-colors ${cost > 0 ? 'text-amber-300' : 'text-zinc-500'}" title="Clic para editar coste unitario">
-                            <span>${cost > 0 ? fmtEur(cost) : 'Sin coste'}</span>
-                            <span class="text-[10px] opacity-80">✎</span>
+                        <h4 class="font-display text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug group-hover:text-acid transition-colors" title="${escapeHtml(g.title || g.ref)}">
+                            ${escapeHtml(g.title || g.ref)}
+                        </h4>
+
+                        <div class="flex items-center justify-between gap-1 text-[10px] font-mono text-zinc-400">
+                            <span class="px-1.5 py-0.5 rounded bg-obsidian-elevated border border-zinc-800 truncate max-w-[140px]">${escapeHtml(g.dropId || '-')}</span>
+                            ${cost > 0
+                                ? `<span class="font-bold tabular-nums ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">Rentab: ${margin}%</span>`
+                                : ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' ? '<span class="text-zinc-500">Rentab: N/D</span>' : '<span class="text-zinc-500">Sin coste</span>')
+                            }
+                        </div>
+
+                        <!-- Fila Económica -->
+                        <div class="p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800/80 flex items-center justify-between gap-2 text-xs">
+                            <div>
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500">PVP Base</span>
+                                <span class="font-mono font-bold text-zinc-200 tabular-nums">${fmtEur(basePrice)}</span>
+                            </div>
+                            <div class="text-center" onclick="event.stopPropagation()">
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500">Coste</span>
+                                <button type="button" data-inline-cost="${escapeHtml(g.ref)}" data-current-cost="${cost}" class="inline-flex items-center gap-0.5 font-mono text-xs font-bold px-1.5 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 ${cost > 0 ? 'text-amber-300' : 'text-zinc-500'} transition-colors" title="Clic para editar coste">
+                                    <span>${cost > 0 ? fmtEur(cost) : 'Sin coste'}</span>
+                                    <span class="text-[9px] opacity-70">✎</span>
+                                </button>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500">PVP Final</span>
+                                <span class="font-mono font-bold text-white tabular-nums">${fmtEur(finalPrice)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botonera Rápida Inferior -->
+                    <div class="pt-3 border-t border-obsidian-border flex items-center justify-between gap-2 mt-2" onclick="event.stopPropagation()">
+                        <button type="button" data-open-g360="${escapeHtml(g.ref)}" data-erp-mode="prendas" class="px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white text-xs font-mono font-semibold flex items-center gap-1 transition-colors" title="Abrir Ficha de Producto 360º">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-acid"></i>
+                            <span>Ficha</span>
                         </button>
-                    </td>
-                    <td class="py-3 px-2 text-right font-mono tabular-nums font-bold text-white whitespace-nowrap">${fmtEur(finalPrice)}</td>
-                    <td class="py-3 px-2 text-center font-mono tabular-nums text-xs whitespace-nowrap">
-                        ${cost > 0
-                            ? `<span class="font-bold ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">${margin}%</span>`
-                            : ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' ? '<span class="text-zinc-500 font-mono text-[10px]" title="Venta directa sin coste">N/D</span>' : '<span class="text-zinc-500 text-[10px]">-</span>')
-                        }
-                    </td>
-                    <td class="py-3 px-2 text-center whitespace-nowrap">
-                        <div class="inline-flex items-center gap-1">
-                            <a href="?editRef=${encodeURIComponent(g.ref)}#drops" target="_blank" rel="noopener" data-edit-newtab="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors inline-flex items-center justify-center" title="Abrir ficha en pestaña nueva para editar">
-                                <i data-lucide="edit" class="w-3.5 h-3.5"></i>
-                            </a>
-                            ${g.status === 'EN_CAMINO' ? `
-                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Confirmar cobro y pasar a VENDIDA">
+
+                        <div class="flex items-center gap-1">
+                            ${st === 'EN_CAMINO' ? `
+                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Confirmar cobro y pasar a VENDIDA">
                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                 </button>
-                                <button type="button" data-release-in-transit="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 transition-colors" title="Revertir a DISPONIBLE (Cancelación / Devolución)">
+                                <button type="button" data-release-in-transit="${escapeHtml(g.ref)}" class="p-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 transition-colors" title="Revertir a DISPONIBLE (Cancelación / Devolución)">
                                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                                 </button>
-                            ` : (g.status !== 'VENDIDA' ? `
-                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors" title="Marcar como VENDIDA y registrar cierre contable">
+                            ` : (st !== 'VENDIDA' ? `
+                                <button type="button" data-quick-sold="${escapeHtml(g.ref)}" class="px-2.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-semibold flex items-center gap-1 transition-colors" title="Marcar como VENDIDA">
                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                    <span>Vendida</span>
                                 </button>
-                            ` : '')}
-                            ${canDelete ? `
-                                <button type="button" data-delete-garment="${escapeHtml(g.ref)}" class="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-colors" title="Eliminar prenda errónea o duplicada (Sin historial)">
+                            ` : '<span class="text-[10px] font-mono text-zinc-500 px-2 py-1">Cobrada</span>')}
+
+                            ${canDel ? `
+                                <button type="button" data-delete-garment="${escapeHtml(g.ref)}" class="p-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-colors" title="Eliminar prenda errónea (sin historial)">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>
                             ` : `
-                                <span class="p-1.5 rounded bg-zinc-900/60 text-zinc-600 cursor-not-allowed inline-flex items-center justify-center select-none" title="${escapeHtml(blockReason)}">
+                                <span class="p-1.5 rounded-xl bg-zinc-900/60 text-zinc-600 select-none inline-flex items-center justify-center" title="${escapeHtml(blockReason)}">
                                     <i data-lucide="lock" class="w-3.5 h-3.5"></i>
                                 </span>
                             `}
                         </div>
-                    </td>
-                </tr>`;
-            }).join('');
+                    </div>
+                </div>`;
+            } else {
+                // Modo Ventas
+                const dateStr = getGarmentSoldAt(g);
+                let dateFmt = '-';
+                if (dateStr) {
+                    try {
+                        const d = new Date(dateStr);
+                        dateFmt = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    } catch (e) {}
+                }
+                const buyerVinted = g.soldToVinted || g.reservedByVinted || '-';
+                const channel = (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT')).toUpperCase();
 
-            // Eventos de Checkboxes
-            tableBody.querySelectorAll('[data-check-ref]').forEach(chk => {
-                chk.addEventListener('change', (e) => {
-                    const ref = chk.getAttribute('data-check-ref');
+                let channelBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-300">Vinted</span>';
+                if (channel === 'DROP_VIP') {
+                    channelBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">Drop VIP</span>';
+                } else if (channel === 'TELEGRAM') {
+                    channelBadge = '<span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">Telegram</span>';
+                }
+
+                bodyContent = `
+                <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between cursor-pointer" data-open-g360="${escapeHtml(g.ref)}" data-erp-mode="ventas">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between gap-1 text-[11px] font-mono">
+                            <span class="text-zinc-400">${escapeHtml(dateFmt)}</span>
+                            <div class="flex items-center gap-1">
+                                ${channelBadge}
+                                ${g.size ? `<span class="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 font-mono text-[10px]">T.${escapeHtml(g.size)}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <h4 class="font-display text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug group-hover:text-acid transition-colors" title="${escapeHtml(g.title || g.ref)}">
+                            ${escapeHtml(g.title || g.ref)}
+                        </h4>
+
+                        <div class="flex items-center justify-between gap-1 text-xs">
+                            <span class="font-mono text-zinc-300 truncate font-semibold">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
+                            ${g.reservationGroupId ? `<span class="font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
+                        </div>
+
+                        <!-- Fila Financiera Ventas -->
+                        <div class="p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800/80 flex items-center justify-between gap-2 text-xs">
+                            <div>
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500">Cobrado</span>
+                                <span class="font-mono font-bold text-white tabular-nums">${fmtEur(finalPrice)}</span>
+                            </div>
+                            <div class="text-center">
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500" title="Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)}">Coste+G.</span>
+                                <span class="font-mono text-zinc-400 tabular-nums">${fmtEur(totalCost)}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500">Beneficio</span>
+                                <span class="font-mono font-bold tabular-nums ${profit >= 0 ? 'text-acid' : 'text-rose-400'}">${fmtEur(profit)}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-[9px] font-mono uppercase text-zinc-500">Margen</span>
+                                ${isDirectWithoutCost
+                                    ? '<span class="font-mono text-[9px] text-zinc-500">Ingreso</span>'
+                                    : `<span class="font-mono font-bold tabular-nums text-[11px] ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}">${margin}%</span>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botonera Inferior Ventas -->
+                    <div class="pt-3 border-t border-obsidian-border flex items-center justify-between gap-2 mt-2" onclick="event.stopPropagation()">
+                        <button type="button" data-open-g360="${escapeHtml(g.ref)}" data-erp-mode="ventas" class="px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white text-xs font-mono font-semibold flex items-center gap-1 transition-colors" title="Abrir Ficha de Producto 360º">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-acid"></i>
+                            <span>Ficha</span>
+                        </button>
+
+                        <div class="flex items-center gap-1">
+                            ${g.vintedInboxUrl ? `<a href="${escapeHtml(g.vintedInboxUrl)}" target="_blank" rel="noopener" class="p-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-emerald-300 transition-colors" title="Abrir chat con comprador en Vinted">💬</a>` : ''}
+                            ${g.vintedUrl ? `<a href="${escapeHtml(g.vintedUrl)}" target="_blank" rel="noopener" class="p-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-acid transition-colors" title="Abrir anuncio en Vinted">🔗</a>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            return `
+            <article id="card-${mode}-${escapeHtml(g.ref)}" class="group rounded-2xl bg-obsidian-card border ${isSelected ? 'border-acid ring-1 ring-acid/40' : 'border-obsidian-border hover:border-zinc-700'} overflow-hidden flex flex-col justify-between transition-all duration-200 shadow-lg">
+                <div class="relative aspect-[4/5] bg-obsidian-elevated overflow-hidden select-none cursor-pointer" data-open-g360="${escapeHtml(g.ref)}" data-erp-mode="${mode}" data-erp-swipe="${escapeHtml(g.ref)}">
+                    ${checkboxHtml}
+                    ${currentPhoto
+                        ? `<img id="img-${mode}-${escapeHtml(g.ref)}" src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(g.title || g.ref)}" loading="lazy" referrerpolicy="no-referrer" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02] ${st !== 'DISPONIBLE' && st !== 'RESERVADA' ? 'opacity-85' : ''}">`
+                        : `<div class="w-full h-full flex flex-col items-center justify-center text-zinc-600 font-mono text-xs"><span>VIRMARKET</span><span>${escapeHtml(g.ref)}</span></div>`
+                    }
+                    <div class="absolute top-2.5 ${mode === 'prendas' ? 'left-9' : 'left-2.5'} right-2.5 flex items-center justify-between gap-1.5 pointer-events-none z-10">
+                        <span class="px-2 py-0.5 rounded bg-obsidian/90 border border-zinc-700 font-mono text-[11px] font-bold text-acid pointer-events-auto">${escapeHtml(g.ref)}</span>
+                        <div class="flex items-center gap-1 pointer-events-auto">
+                            ${photoCountBadge}
+                            ${statusBadge}
+                        </div>
+                    </div>
+                    ${arrowsHtml}
+                    ${dotsHtml}
+                </div>
+                ${bodyContent}
+            </article>`;
+        }
+
+        // ======================== EVENTOS DE TARJETAS ========================
+        function bindErpCardEvents(container, mode, visibleGarments) {
+            if (!container) return;
+
+            // Apertura de Ficha 360º al pinchar foto o cuerpo
+            container.querySelectorAll('[data-open-g360]').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    const ref = el.getAttribute('data-open-g360');
+                    if (!ref) return;
+                    openGarment360Modal(ref, mode);
+                });
+            });
+
+            // Flechas Carrusel en tarjeta (detienen propagación para no abrir modal)
+            container.querySelectorAll('[data-erp-prev-photo]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const ref = btn.getAttribute('data-erp-prev-photo');
+                    const m = btn.getAttribute('data-erp-mode') || mode;
+                    updateErpCardCarousel(ref, m, -1);
+                });
+            });
+
+            container.querySelectorAll('[data-erp-next-photo]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const ref = btn.getAttribute('data-erp-next-photo');
+                    const m = btn.getAttribute('data-erp-mode') || mode;
+                    updateErpCardCarousel(ref, m, 1);
+                });
+            });
+
+            // Soporte Swipe táctil horizontal
+            container.querySelectorAll('[data-erp-swipe]').forEach(el => {
+                let startX = 0;
+                el.addEventListener('touchstart', (e) => { startX = e.changedTouches[0].screenX; }, { passive: true });
+                el.addEventListener('touchend', (e) => {
+                    const dx = e.changedTouches[0].screenX - startX;
+                    if (Math.abs(dx) < 35) return;
+                    const ref = el.getAttribute('data-erp-swipe');
+                    updateErpCardCarousel(ref, mode, dx < 0 ? 1 : -1);
+                }, { passive: true });
+            });
+
+            // Checkboxes en modo Prendas
+            container.querySelectorAll('[data-card-check]').forEach(chk => {
+                chk.addEventListener('change', () => {
+                    const ref = chk.getAttribute('data-card-check');
                     if (chk.checked) adminState.selectedRefs.add(ref);
                     else adminState.selectedRefs.delete(ref);
+                    
+                    // Sincronizar estilo de la tarjeta
+                    const card = document.getElementById(`card-prendas-${ref}`);
+                    if (card) {
+                        card.classList.toggle('border-acid', chk.checked);
+                        card.classList.toggle('ring-1', chk.checked);
+                        card.classList.toggle('ring-acid/40', chk.checked);
+                    }
                     updateBulkToolbar();
                 });
             });
 
             // Edición rápida inline de Coste
-            tableBody.querySelectorAll('[data-inline-cost]').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const ref = btn.getAttribute('data-inline-cost');
-                    const currentCost = Number(btn.getAttribute('data-current-cost') || 0);
-                    const newCostStr = await vmPrompt({
-                        badge: 'Coste de Adquisición',
-                        title: `Coste unitario de ${ref}`,
-                        message: 'Introduce el coste de adquisición pagado por esta prenda (€):',
-                        defaultValue: currentCost > 0 ? String(currentCost) : '',
-                        placeholder: 'Ej: 4,50',
-                        inputType: 'text',
-                        inputMode: 'decimal',
-                        suffix: '€',
-                        confirmText: 'Guardar Coste',
-                        icon: 'euro',
-                        variant: 'amber'
-                    });
-                    if (newCostStr === null) return;
-                    const val = parseFloat(newCostStr.replace(',', '.'));
-                    if (isNaN(val) || val < 0) {
-                        toast('Introduce un número válido de coste en euros.', true);
-                        return;
-                    }
-                    try {
-                        toast(`Guardando coste de ${ref}...`);
-                        await callAdminApi('bulk_update_garments', {
-                            updates: [{ ref, costEur: val }]
-                        });
-                        toast(`✓ Coste de ${ref} actualizado a ${fmtEur(val)}`);
-                        await loadDashboard();
-                    } catch (err) {
-                        toast(err.message, true);
-                    }
+            container.querySelectorAll('[data-inline-cost]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    handleInlineCostEdit(btn.getAttribute('data-inline-cost'), btn.getAttribute('data-current-cost'));
                 });
             });
 
-            // Botón Editar Ficha completa en nueva pestaña/ventana (preserva filtros y scroll del listado)
-            tableBody.querySelectorAll('[data-edit-newtab]').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const ref = link.getAttribute('data-edit-newtab');
-                    if (!ref) return;
-                    const targetUrl = new URL(window.location.href);
-                    targetUrl.searchParams.set('editRef', ref);
-                    targetUrl.hash = 'drops';
-                    const isStandalonePwa = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-                    if (isStandalonePwa) {
-                        window.open(targetUrl.toString(), `vm_edit_${ref}`, 'noopener,width=1180,height=860');
+            // Marcar Vendida
+            container.querySelectorAll('[data-quick-sold]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openMarkSoldModal(btn.getAttribute('data-quick-sold'));
+                });
+            });
+
+            // Revertir En Camino
+            container.querySelectorAll('[data-release-in-transit]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    handleReleaseInTransit(btn.getAttribute('data-release-in-transit'));
+                });
+            });
+
+            // Eliminar prenda
+            container.querySelectorAll('[data-delete-garment]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    handleDeleteGarment(btn.getAttribute('data-delete-garment'));
+                });
+            });
+        }
+
+        // ======================== TRANSICIÓN SUAVE DE FOTOS EN TARJETA ========================
+        function updateErpCardCarousel(ref, mode, delta) {
+            const list = (mode === 'ventas')
+                ? getFilteredRegistroData().filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA')
+                : getFilteredRegistroData();
+            const g = list.find(x => x.ref === ref);
+            if (!g) return;
+            const photos = (Array.isArray(g.photos) && g.photos.length > 0) ? g.photos.filter(Boolean) : (g.vintedThumbUrl ? [g.vintedThumbUrl] : []);
+            if (photos.length <= 1) return;
+
+            if (!adminState.erpCarouselIdx[mode]) adminState.erpCarouselIdx[mode] = {};
+            const curr = adminState.erpCarouselIdx[mode][ref] || 0;
+            const nextIdx = (curr + delta + photos.length) % photos.length;
+            adminState.erpCarouselIdx[mode][ref] = nextIdx;
+
+            const imgEl = document.getElementById(`img-${mode}-${ref}`);
+            if (imgEl) imgEl.src = photos[nextIdx];
+
+            // Actualizar puntos
+            const cardEl = document.getElementById(`card-${mode}-${ref}`);
+            if (cardEl) {
+                const dots = cardEl.querySelectorAll('.bottom-2 span');
+                dots.forEach((dot, idx) => {
+                    if (idx === nextIdx) {
+                        dot.className = 'w-1.5 h-1.5 rounded-full transition-all bg-acid scale-125';
                     } else {
-                        window.open(targetUrl.toString(), '_blank', 'noopener');
+                        dot.className = 'w-1.5 h-1.5 rounded-full transition-all bg-white/50';
                     }
                 });
-            });
+            }
+        }
 
-            // Botón Marcar Vendida
-            tableBody.querySelectorAll('[data-quick-sold]').forEach(btn => {
-                btn.addEventListener('click', () => openMarkSoldModal(btn.getAttribute('data-quick-sold')));
+        // Handlers auxiliares compartidos
+        async function handleInlineCostEdit(ref, currentCost) {
+            const current = Number(currentCost || 0);
+            const newCostStr = await vmPrompt({
+                badge: 'Coste de Adquisición',
+                title: `Coste unitario de ${ref}`,
+                message: 'Introduce el coste de adquisición pagado por esta prenda (€):',
+                defaultValue: current > 0 ? String(current) : '',
+                placeholder: 'Ej: 4,50',
+                inputType: 'text',
+                inputMode: 'decimal',
+                suffix: '€',
+                confirmText: 'Guardar Coste',
+                icon: 'euro',
+                variant: 'amber'
             });
-
-            // Botón Revertir En Camino a Disponible (Cancelación o devolución)
-            tableBody.querySelectorAll('[data-release-in-transit]').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const ref = btn.getAttribute('data-release-in-transit');
-                    const ok = await vmConfirm({
-                        badge: 'Devolución / Cancelación Vinted',
-                        title: `¿Revertir ${ref} a DISPONIBLE?`,
-                        message: `Esta prenda está actualmente EN CAMINO.\n\nAl revertirla a DISPONIBLE, se liberará para poder venderse o reservarse nuevamente y se cancelará el seguimiento de envío previo.`,
-                        confirmText: 'Sí, liberar a Disponible',
-                        cancelText: 'Cancelar',
-                        variant: 'warning'
-                    });
-                    if (!ok) return;
-                    try {
-                        toast(`Revirtiendo ${ref} a Disponible...`);
-                        await callAdminApi('update_status', {
-                            ref,
-                            newStatus: 'DISPONIBLE',
-                            releaseReason: 'Cancelación / Devolución de envío Vinted'
-                        });
-                        toast(`✓ ${ref} devuelta a DISPONIBLE`);
-                        await loadDashboard();
-                    } catch (err) {
-                        toast(err.message, true);
-                    }
+            if (newCostStr === null) return;
+            const val = parseFloat(newCostStr.replace(',', '.'));
+            if (isNaN(val) || val < 0) {
+                toast('Introduce un número válido de coste en euros.', true);
+                return;
+            }
+            try {
+                toast(`Guardando coste de ${ref}...`);
+                await callAdminApi('bulk_update_garments', {
+                    updates: [{ ref, costEur: val }]
                 });
-            });
+                toast(`✓ Coste de ${ref} actualizado a ${fmtEur(val)}`);
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
 
-            // Botón Eliminar Prenda Errónea (Candado Anti-Trazabilidad)
-            tableBody.querySelectorAll('[data-delete-garment]').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const ref = btn.getAttribute('data-delete-garment');
-                    const garment = (adminState.garments || []).find(x => x.ref === ref);
-                    if (!garment || !isGarmentDeletable(garment)) {
-                        toast(getGarmentDeletionBlockReason(garment) || 'Prenda protegida por trazabilidad contable o reservas.', true);
-                        return;
-                    }
-                    const ok = await vmConfirm({
-                        badge: 'Borrado Seguro de Catálogo',
-                        title: `¿Eliminar la prenda ${ref}?`,
-                        message: `Esta acción eliminará de forma definitiva la ficha de ${ref} ("${garment.title || 'Sin título'}").\n\nSolo se permite porque la prenda no tiene ventas, reservas ni trazabilidad previa registrada.`,
-                        confirmText: 'Sí, eliminar prenda',
-                        cancelText: 'Cancelar',
-                        variant: 'danger'
-                    });
-                    if (!ok) return;
-                    try {
-                        toast(`Eliminando ${ref}...`);
-                        await callAdminApi('delete_garment', { ref });
-                        adminState.selectedRefs.delete(ref);
-                        toast(`✓ Prenda ${ref} eliminada del catálogo.`);
-                        await loadDashboard();
-                    } catch (err) {
-                        toast(err.message, true);
-                    }
+        async function handleReleaseInTransit(ref) {
+            const ok = await vmConfirm({
+                badge: 'Devolución / Cancelación Vinted',
+                title: `¿Revertir ${ref} a DISPONIBLE?`,
+                message: `Esta prenda está actualmente EN CAMINO.
+
+Al revertirla a DISPONIBLE, se liberará para poder venderse o reservarse nuevamente y se cancelará el seguimiento de envío previo.`,
+                confirmText: 'Sí, liberar a Disponible',
+                cancelText: 'Cancelar',
+                variant: 'warning'
+            });
+            if (!ok) return;
+            try {
+                toast(`Revirtiendo ${ref} a Disponible...`);
+                await callAdminApi('update_status', {
+                    ref,
+                    newStatus: 'DISPONIBLE',
+                    releaseReason: 'Cancelación / Devolución de envío Vinted'
                 });
-            });
+                toast(`✓ ${ref} devuelta a DISPONIBLE`);
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
 
+        async function handleDeleteGarment(ref) {
+            const garment = (adminState.garments || []).find(x => x.ref === ref);
+            if (!garment || !isGarmentDeletable(garment)) {
+                toast(getGarmentDeletionBlockReason(garment) || 'Prenda protegida por trazabilidad contable o reservas.', true);
+                return;
+            }
+            const ok = await vmConfirm({
+                badge: 'Borrado Seguro de Catálogo',
+                title: `¿Eliminar la prenda ${ref}?`,
+                message: `Esta acción eliminará de forma definitiva la ficha de ${ref} ("${garment.title || 'Sin título'}").
+
+Solo se permite porque la prenda no tiene ventas, reservas ni trazabilidad previa registrada.`,
+                confirmText: 'Sí, eliminar prenda',
+                cancelText: 'Cancelar',
+                variant: 'danger'
+            });
+            if (!ok) return;
+            try {
+                toast(`Eliminando ${ref}...`);
+                await callAdminApi('delete_garment', { ref });
+                adminState.selectedRefs.delete(ref);
+                toast(`✓ Prenda ${ref} eliminada del catálogo.`);
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+            }
+        }
+
+        // ======================== MODAL FICHA DE PRODUCTO 360º EDITABLE ========================
+        function openGarment360Modal(ref, mode = 'prendas') {
+            const g = (adminState.garments || []).find(x => x.ref === ref);
+            if (!g) {
+                toast(`No se encontró la ficha de la prenda ${ref}.`, true);
+                return;
+            }
+
+            adminState.activeG360Ref = ref;
+            adminState.g360Mode = mode;
+
+            // Determinar lista filtrada actual para navegación Anterior / Siguiente
+            const list = (mode === 'ventas')
+                ? getFilteredRegistroData().filter(x => x.status === 'VENDIDA' || x.status === 'EN_CAMINO' || x.status === 'RESERVADA')
+                : getFilteredRegistroData();
+            
+            if (mode === 'ventas') {
+                list.sort((a, b) => new Date(getGarmentSoldAt(b) || 0) - new Date(getGarmentSoldAt(a) || 0));
+            }
+            adminState.g360FilteredRefs = list.map(x => x.ref);
+
+            const currIdx = adminState.g360FilteredRefs.indexOf(ref);
+            const total = adminState.g360FilteredRefs.length;
+            const indexLabel = document.getElementById('g360NavIndexLabel');
+            if (indexLabel) indexLabel.textContent = (currIdx >= 0) ? `${currIdx + 1} / ${total}` : '1 / 1';
+
+            const prevBtn = document.getElementById('g360PrevBtn');
+            const nextBtn = document.getElementById('g360NextBtn');
+            if (prevBtn) prevBtn.disabled = (currIdx <= 0);
+            if (nextBtn) nextBtn.disabled = (currIdx < 0 || currIdx >= total - 1);
+
+            // Cabecera
+            const refBadge = document.getElementById('g360RefBadge');
+            const dropBadge = document.getElementById('g360DropBadge');
+            const statusWrap = document.getElementById('g360StatusBadgeWrap');
+            if (refBadge) refBadge.textContent = g.ref;
+            if (dropBadge) dropBadge.textContent = g.dropId || 'Sin Drop';
+            
+            if (statusWrap) {
+                let stBadge = `<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-zinc-800 text-zinc-300 uppercase">${escapeHtml(g.status)}</span>`;
+                if (g.status === 'DISPONIBLE') stBadge = '<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-acid-muted text-acid border border-acid/40 uppercase">Disponible</span>';
+                else if (g.status === 'RESERVADA') stBadge = '<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40 uppercase">Reservada VIP</span>';
+                else if (g.status === 'EN_CAMINO') stBadge = '<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40 uppercase">En camino</span>';
+                else if (g.status === 'VENDIDA') stBadge = '<span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase">Vendida</span>';
+                statusWrap.innerHTML = stBadge;
+            }
+
+            // Fotos
+            const rawPhotos = (Array.isArray(g.photos) && g.photos.length > 0)
+                ? g.photos.filter(Boolean)
+                : (g.vintedThumbUrl ? [g.vintedThumbUrl] : []);
+            
+            adminState.g360Photos = rawPhotos.map(url => ({ type: 'remote', url }));
+            adminState.g360ViewerIndex = 0;
+            renderG360Gallery();
+
+            // Rellenar formulario
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+            setVal('g360TitleInput', g.title || '');
+            setVal('g360BrandInput', g.brand || '');
+            setVal('g360SizeInput', g.size || '');
+            setVal('g360ConditionSelect', g.vintedCondition || 'Muy bueno');
+            setVal('g360DropIdInput', g.dropId || '');
+            setVal('g360StatusSelect', g.status || 'DISPONIBLE');
+            setVal('g360PriceInput', Number(g.priceEur || 0));
+            setVal('g360VintedUrlInput', g.vintedUrl || '');
+            setVal('g360DescInput', g.description || '');
+
+            setVal('g360CostInput', (g.costEur && g.costEur > 0) ? g.costEur : '');
+            setVal('g360ExpenseInput', (g.extraExpenseEur !== undefined && g.extraExpenseEur > 0) ? g.extraExpenseEur : (adminState.config?.defaultExtraExpenseEur || 0));
+            setVal('g360SoldPriceInput', getGarmentSoldPrice(g) || g.priceEur || 0);
+            setVal('g360ChannelSelect', g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT'));
+            setVal('g360BuyerVintedInput', g.soldToVinted || g.reservedByVinted || '');
+            setVal('g360BuyerEmailInput', g.soldToEmail || g.reservedByEmail || '');
+            setVal('g360StageSelect', g.vintedSaleStage || (g.status === 'VENDIDA' ? 'COMPLETED' : (g.status === 'EN_CAMINO' ? 'IN_TRANSIT' : '')));
+            setVal('g360TxIdInput', g.vintedTxId || '');
+
+            updateG360ProfitPreview();
+
+            // Trazabilidad
+            const traceBox = document.getElementById('g360TraceabilityContent');
+            if (traceBox) {
+                const waitlist = getGarmentWaitlist(g);
+                const history = Array.isArray(g.historyLog) ? g.historyLog : [];
+                traceBox.innerHTML = `
+                    <div class="space-y-1">
+                        <div><strong>Grupo de Reserva:</strong> ${escapeHtml(g.reservationGroupId || 'Ninguno')}</div>
+                        <div><strong>Precio VIP Reservado:</strong> ${g.reservedFinalPriceEur ? fmtEur(g.reservedFinalPriceEur) : '-'}</div>
+                        <div><strong>En lista de espera:</strong> ${waitlist.length} persona${waitlist.length === 1 ? '' : 's'} ${waitlist.map(w => '@' + escapeHtml(w.vintedUser || w.email || '')).join(', ')}</div>
+                        ${g.soldAt ? `<div><strong>Fecha Cierre Venta:</strong> ${escapeHtml(new Date(g.soldAt).toLocaleString('es-ES'))}</div>` : ''}
+                        ${history.length > 0 ? `
+                            <div class="mt-2 pt-2 border-t border-zinc-800">
+                                <strong>Historial de Eventos (${history.length}):</strong>
+                                <ul class="list-disc pl-4 mt-1 space-y-0.5 text-[10px]">
+                                    ${history.map(h => `<li><span class="text-zinc-300">${escapeHtml(h.event || '')}</span> • ${escapeHtml(h.timestamp || '')} ${h.reason ? '(' + escapeHtml(h.reason) + ')' : ''}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            const notice = document.getElementById('g360StatusNotice');
+            if (notice) notice.textContent = 'Modifica cualquier dato y pulsa Guardar Cambios.';
+
+            document.getElementById('garment360Modal')?.classList.remove('hidden');
             lucide.createIcons();
-            updateBulkToolbar();
+        }
+
+        function closeGarment360Modal() {
+            document.getElementById('garment360Modal')?.classList.add('hidden');
+            adminState.activeG360Ref = null;
+        }
+
+        function navigateG360(delta) {
+            const currIdx = adminState.g360FilteredRefs.indexOf(adminState.activeG360Ref);
+            if (currIdx === -1) return;
+            const nextIdx = currIdx + delta;
+            if (nextIdx >= 0 && nextIdx < adminState.g360FilteredRefs.length) {
+                openGarment360Modal(adminState.g360FilteredRefs[nextIdx], adminState.g360Mode);
+            }
+        }
+
+        function renderG360Gallery() {
+            const photos = adminState.g360Photos;
+            const countLabel = document.getElementById('g360PhotoCountLabel');
+            if (countLabel) countLabel.textContent = `${photos.length} / 4 fotos`;
+
+            if (adminState.g360ViewerIndex >= photos.length) {
+                adminState.g360ViewerIndex = Math.max(0, photos.length - 1);
+            }
+            const curr = photos[adminState.g360ViewerIndex];
+            const mainImg = document.getElementById('g360MainPhotoImg');
+            const fullLink = document.getElementById('g360OpenFullImgBtn');
+
+            if (curr) {
+                const src = curr.previewUrl || curr.url || '';
+                if (mainImg) mainImg.src = src;
+                if (fullLink) fullLink.href = curr.url || curr.previewUrl || '#';
+            } else {
+                if (mainImg) mainImg.src = '';
+                if (fullLink) fullLink.href = '#';
+            }
+
+            // Puntos
+            const dotsWrap = document.getElementById('g360ViewerDots');
+            if (dotsWrap) {
+                dotsWrap.innerHTML = photos.length > 1
+                    ? photos.map((_, i) => `<span class="w-2 h-2 rounded-full transition-all ${i === adminState.g360ViewerIndex ? 'bg-acid scale-125' : 'bg-white/50'}"></span>`).join('')
+                    : '';
+            }
+
+            // Grid de 4 slots
+            const thumbsGrid = document.getElementById('g360ThumbsGrid');
+            if (thumbsGrid) {
+                let html = '';
+                for (let i = 0; i < 4; i++) {
+                    if (i < photos.length) {
+                        const item = photos[i];
+                        const src = item.previewUrl || item.url || '';
+                        const isCover = (i === 0);
+                        const isCurrent = (i === adminState.g360ViewerIndex);
+
+                        html += `
+                        <div class="relative aspect-square rounded-xl overflow-hidden border ${isCurrent ? 'border-acid ring-1 ring-acid/50' : 'border-zinc-700'} bg-zinc-900 group">
+                            <img src="${escapeHtml(src)}" alt="Miniatura ${i + 1}" class="w-full h-full object-cover cursor-pointer" onclick="setG360ViewerIndex(${i})">
+                            ${isCover
+                                ? `<span class="absolute top-1 left-1 px-1 py-0.2 rounded bg-acid text-obsidian font-mono text-[9px] font-bold">★</span>`
+                                : `<button type="button" onclick="makeG360Cover(${i})" class="absolute top-1 left-1 p-1 rounded bg-black/70 hover:bg-black text-amber-300 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" title="Hacer portada">★</button>`
+                            }
+                            <div class="absolute bottom-1 inset-x-1 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="flex items-center gap-0.5">
+                                    ${i > 0 ? `<button type="button" onclick="moveG360Photo(${i}, -1)" class="p-1 rounded bg-black/70 hover:bg-black text-white text-[10px]" title="Mover izquierda">←</button>` : ''}
+                                    ${i < photos.length - 1 ? `<button type="button" onclick="moveG360Photo(${i}, 1)" class="p-1 rounded bg-black/70 hover:bg-black text-white text-[10px]" title="Mover derecha">→</button>` : ''}
+                                </div>
+                                <button type="button" onclick="deleteG360Photo(${i})" class="p-1 rounded bg-rose-600/80 hover:bg-rose-600 text-white text-[10px]" title="Eliminar foto">✕</button>
+                            </div>
+                        </div>`;
+                    } else {
+                        // Slot vacío
+                        html += `
+                        <button type="button" onclick="document.getElementById('g360AddPhotoInput').click()" class="aspect-square rounded-xl border border-dashed border-zinc-700 hover:border-acid/60 bg-obsidian-elevated/40 flex flex-col items-center justify-center text-zinc-500 hover:text-acid transition-colors">
+                            <span class="text-base leading-none">+</span>
+                            <span class="text-[9px] font-mono mt-0.5">${i + 1}</span>
+                        </button>`;
+                    }
+                }
+                thumbsGrid.innerHTML = html;
+            }
+
+            const addBtn = document.getElementById('g360AddPhotoBtn');
+            if (addBtn) addBtn.classList.toggle('hidden', photos.length >= 4);
+        }
+
+        function setG360ViewerIndex(idx) {
+            adminState.g360ViewerIndex = idx;
+            renderG360Gallery();
+        }
+
+        function makeG360Cover(idx) {
+            if (idx <= 0 || idx >= adminState.g360Photos.length) return;
+            const item = adminState.g360Photos.splice(idx, 1)[0];
+            adminState.g360Photos.unshift(item);
+            adminState.g360ViewerIndex = 0;
+            renderG360Gallery();
+        }
+
+        function moveG360Photo(idx, delta) {
+            const target = idx + delta;
+            if (target < 0 || target >= adminState.g360Photos.length) return;
+            const tmp = adminState.g360Photos[target];
+            adminState.g360Photos[target] = adminState.g360Photos[idx];
+            adminState.g360Photos[idx] = tmp;
+            adminState.g360ViewerIndex = target;
+            renderG360Gallery();
+        }
+
+        function deleteG360Photo(idx) {
+            if (adminState.g360Photos.length <= 1) {
+                toast('La prenda debe conservar al menos 1 foto.', true);
+                return;
+            }
+            adminState.g360Photos.splice(idx, 1);
+            if (adminState.g360ViewerIndex >= adminState.g360Photos.length) {
+                adminState.g360ViewerIndex = adminState.g360Photos.length - 1;
+            }
+            renderG360Gallery();
+        }
+
+        function updateG360ProfitPreview() {
+            const price = parseFloat(document.getElementById('g360PriceInput')?.value || 0);
+            const soldPrice = parseFloat(document.getElementById('g360SoldPriceInput')?.value || price);
+            const cost = parseFloat(document.getElementById('g360CostInput')?.value || 0);
+            const expense = parseFloat(document.getElementById('g360ExpenseInput')?.value || 0);
+
+            const totalCost = cost + expense;
+            const profit = soldPrice - totalCost;
+            const margin = soldPrice > 0 ? round2((profit / soldPrice) * 100) : 0;
+
+            const costTotalEl = document.getElementById('g360CostTotalPreview');
+            const netProfitEl = document.getElementById('g360NetProfitPreview');
+            const marginEl = document.getElementById('g360MarginPreview');
+
+            if (costTotalEl) costTotalEl.textContent = `Coste total: ${fmtEur(totalCost)} (Coste: ${fmtEur(cost)} + Sobre: ${fmtEur(expense)})`;
+            if (netProfitEl) {
+                netProfitEl.textContent = `${profit >= 0 ? '+' : ''}${fmtEur(profit)}`;
+                netProfitEl.className = profit >= 0 ? 'font-mono text-sm font-bold text-acid' : 'font-mono text-sm font-bold text-rose-400';
+            }
+            if (marginEl) {
+                marginEl.textContent = `(${margin}% margen)`;
+                marginEl.className = `block font-mono text-[10px] ${margin >= 40 ? 'text-acid' : (margin >= 0 ? 'text-amber-300' : 'text-rose-400')}`;
+            }
+        }
+
+        async function saveGarment360(e) {
+            if (e) e.preventDefault();
+            const ref = adminState.activeG360Ref;
+            if (!ref) return;
+
+            const title = document.getElementById('g360TitleInput')?.value.trim();
+            const brand = document.getElementById('g360BrandInput')?.value.trim();
+            const size = document.getElementById('g360SizeInput')?.value.trim();
+            const vintedCondition = document.getElementById('g360ConditionSelect')?.value || 'Muy bueno';
+            const dropId = (document.getElementById('g360DropIdInput')?.value || 'DROP-01').trim().toUpperCase();
+            const status = document.getElementById('g360StatusSelect')?.value || 'DISPONIBLE';
+            const priceEur = parseFloat(document.getElementById('g360PriceInput')?.value || 0);
+            const vintedUrl = (document.getElementById('g360VintedUrlInput')?.value || '').trim();
+            const description = document.getElementById('g360DescInput')?.value.trim();
+
+            const costEur = parseFloat(document.getElementById('g360CostInput')?.value || 0);
+            const extraExpenseEur = parseFloat(document.getElementById('g360ExpenseInput')?.value || 0);
+            const soldPriceEur = parseFloat(document.getElementById('g360SoldPriceInput')?.value || 0);
+            const saleChannel = document.getElementById('g360ChannelSelect')?.value || 'VINTED_DIRECT';
+            const soldToVinted = (document.getElementById('g360BuyerVintedInput')?.value || '').trim();
+            const soldToEmail = (document.getElementById('g360BuyerEmailInput')?.value || '').trim().toLowerCase();
+            const vintedSaleStage = document.getElementById('g360StageSelect')?.value || '';
+            const vintedTxId = (document.getElementById('g360TxIdInput')?.value || '').trim().replace(/^#+/, '');
+
+            if (!title) {
+                toast('Indica un título para la prenda.', true);
+                return;
+            }
+            if (!Number.isFinite(priceEur) || priceEur < 0) {
+                toast('Indica un precio PVP válido.', true);
+                return;
+            }
+            if (adminState.g360Photos.length === 0) {
+                toast('La prenda debe tener al menos 1 foto.', true);
+                return;
+            }
+
+            const prevG = (adminState.garments || []).find(x => x.ref === ref);
+            const oldStatus = prevG?.status || 'DISPONIBLE';
+
+            // Confirmación si cambia estado de RESERVADA a DISPONIBLE
+            if (oldStatus === 'RESERVADA' && status === 'DISPONIBLE') {
+                const ok = await vmConfirm({
+                    badge: 'Liberación de Reserva VIP',
+                    title: `¿Liberar reserva de ${ref}?`,
+                    message: `La prenda está actualmente reservada por @${prevG.reservedByVinted || 'comprador'}.
+
+Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registrará en el historial de auditoría.`,
+                    confirmText: 'Sí, liberar reserva',
+                    cancelText: 'Cancelar',
+                    variant: 'warning'
+                });
+                if (!ok) return;
+            }
+
+            const saveBtn = document.getElementById('saveG360SubmitBtn');
+            const notice = document.getElementById('g360StatusNotice');
+            if (saveBtn) { saveBtn.disabled = true; saveBtn.innerHTML = '<span>Guardando cambios...</span>'; }
+
+            try {
+                // Subir fotos locales al CDN si las hay
+                const finalPhotos = [];
+                for (let i = 0; i < adminState.g360Photos.length; i++) {
+                    const item = adminState.g360Photos[i];
+                    if (item.type === 'remote') {
+                        finalPhotos.push(item.url);
+                    } else {
+                        if (notice) notice.textContent = `Subiendo foto ${i + 1} de ${adminState.g360Photos.length} al CDN...`;
+                        const up = await callAdminApi('upload_photo', {
+                            dropId,
+                            ref,
+                            index: i + 1,
+                            base64Data: item.base64
+                        });
+                        finalPhotos.push(up.photoUrl);
+                        item.type = 'remote';
+                        item.url = up.photoUrl;
+                    }
+                }
+
+                if (notice) notice.textContent = 'Persistiendo datos en la base de datos...';
+
+                // Si cambió el estado a VENDIDA, EN_CAMINO o DISPONIBLE, actualizar estado primero
+                if (status !== oldStatus) {
+                    await callAdminApi('update_status', {
+                        ref,
+                        newStatus: status,
+                        soldPriceEur,
+                        saleChannel,
+                        soldToVinted,
+                        soldToEmail,
+                        costEur,
+                        extraExpenseEur,
+                        vintedSaleStage,
+                        vintedTxId,
+                        soldAt: (status === 'VENDIDA') ? (prevG.soldAt || new Date().toISOString()) : undefined,
+                        releaseReason: (oldStatus === 'RESERVADA' && status === 'DISPONIBLE') ? 'Liberada manualmente desde Ficha 360º' : undefined
+                    });
+                }
+
+                // Guardar catálogo completo
+                await callAdminApi('save_garment', {
+                    garment: {
+                        ref,
+                        dropId,
+                        title,
+                        brand,
+                        size,
+                        vintedCondition,
+                        description,
+                        priceEur,
+                        costEur,
+                        extraExpenseEur,
+                        soldPriceEur,
+                        saleChannel,
+                        soldToVinted,
+                        soldToEmail,
+                        vintedSaleStage,
+                        vintedTxId,
+                        vintedUrl,
+                        status,
+                        photos: finalPhotos,
+                        vintedThumbUrl: finalPhotos[0] || prevG?.vintedThumbUrl || ''
+                    }
+                });
+
+                toast(`✓ Prenda ${ref} guardada correctamente`);
+                closeGarment360Modal();
+                await loadDashboard();
+            } catch (err) {
+                toast(err.message, true);
+                if (notice) notice.textContent = `Error: ${err.message}`;
+            } finally {
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>✓ Guardar Cambios</span>';
+                    lucide.createIcons();
+                }
+            }
         }
 
         // ======================== SUB-VISTA 3: CLIENTES CRM 360º ========================
@@ -8251,7 +9463,124 @@
             btn.addEventListener('click', () => setSubView(btn.getAttribute('data-subview')));
         });
 
-        // Buscador
+        // Conmutadores de Modo de Vista (Tabla | Escaparate) y Selectores de Volumen
+        document.getElementById('ventasViewTableBtn')?.addEventListener('click', () => {
+            adminState.erpViewModes.ventas = 'table';
+            localStorage.setItem('vm_erp_view_ventas', 'table');
+            renderActiveSubView();
+        });
+        document.getElementById('ventasViewCardsBtn')?.addEventListener('click', () => {
+            adminState.erpViewModes.ventas = 'cards';
+            localStorage.setItem('vm_erp_view_ventas', 'cards');
+            renderActiveSubView();
+        });
+        document.getElementById('ventasPageSizeSelect')?.addEventListener('change', (e) => {
+            adminState.erpPageSizes.ventas = e.target.value;
+            localStorage.setItem('vm_erp_pagesize_ventas', e.target.value);
+            renderActiveSubView();
+        });
+
+        document.getElementById('prendasViewTableBtn')?.addEventListener('click', () => {
+            adminState.erpViewModes.prendas = 'table';
+            localStorage.setItem('vm_erp_view_prendas', 'table');
+            renderActiveSubView();
+        });
+        document.getElementById('prendasViewCardsBtn')?.addEventListener('click', () => {
+            adminState.erpViewModes.prendas = 'cards';
+            localStorage.setItem('vm_erp_view_prendas', 'cards');
+            renderActiveSubView();
+        });
+        document.getElementById('prendasPageSizeSelect')?.addEventListener('change', (e) => {
+            adminState.erpPageSizes.prendas = e.target.value;
+            localStorage.setItem('vm_erp_pagesize_prendas', e.target.value);
+            renderActiveSubView();
+        });
+
+        // Botón Seleccionar Visibles en Inventario
+        document.getElementById('prendasSelectVisibleBtn')?.addEventListener('click', () => {
+            const filtered = getFilteredRegistroData();
+            const pageSizeVal = adminState.erpPageSizes.prendas || '25';
+            const limit = (pageSizeVal === 'ALL') ? filtered.length : parseInt(pageSizeVal, 10);
+            const visible = filtered.slice(0, limit);
+            if (visible.length === 0) return;
+
+            const allSelected = visible.every(g => adminState.selectedRefs.has(g.ref));
+            if (allSelected) {
+                visible.forEach(g => adminState.selectedRefs.delete(g.ref));
+                toast('Prendas visibles deseleccionadas.');
+            } else {
+                visible.forEach(g => adminState.selectedRefs.add(g.ref));
+                toast(`✓ ${visible.length} prendas visibles seleccionadas.`);
+            }
+            updateBulkToolbar();
+            renderActiveSubView();
+        });
+
+        // Listeners del Modal Ficha 360º
+        document.getElementById('closeG360ModalBtn')?.addEventListener('click', closeGarment360Modal);
+        document.getElementById('cancelG360Btn')?.addEventListener('click', closeGarment360Modal);
+        document.getElementById('saveG360SubmitBtn')?.addEventListener('click', saveGarment360);
+        document.getElementById('g360Form')?.addEventListener('submit', saveGarment360);
+
+        document.getElementById('g360PrevBtn')?.addEventListener('click', () => navigateG360(-1));
+        document.getElementById('g360NextBtn')?.addEventListener('click', () => navigateG360(1));
+        document.getElementById('g360ViewerPrevBtn')?.addEventListener('click', () => {
+            if (adminState.g360Photos.length <= 1) return;
+            adminState.g360ViewerIndex = (adminState.g360ViewerIndex - 1 + adminState.g360Photos.length) % adminState.g360Photos.length;
+            renderG360Gallery();
+        });
+        document.getElementById('g360ViewerNextBtn')?.addEventListener('click', () => {
+            if (adminState.g360Photos.length <= 1) return;
+            adminState.g360ViewerIndex = (adminState.g360ViewerIndex + 1) % adminState.g360Photos.length;
+            renderG360Gallery();
+        });
+
+        // Subida de Foto Nueva en Modal 360º
+        document.getElementById('g360AddPhotoBtn')?.addEventListener('click', () => {
+            document.getElementById('g360AddPhotoInput')?.click();
+        });
+        document.getElementById('g360AddPhotoInput')?.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files || []);
+            if (files.length === 0) return;
+            const availableSlots = 4 - adminState.g360Photos.length;
+            if (availableSlots <= 0) {
+                toast('Máximo 4 fotos por prenda.', true);
+                return;
+            }
+            const toProcess = files.slice(0, availableSlots);
+            const notice = document.getElementById('g360UploadNotice');
+            if (notice) notice.classList.remove('hidden');
+
+            try {
+                for (const f of toProcess) {
+                    const dataUrl = await compressImageFile(f);
+                    adminState.g360Photos.push({
+                        type: 'local',
+                        base64: dataUrl,
+                        previewUrl: dataUrl
+                    });
+                }
+                adminState.g360ViewerIndex = adminState.g360Photos.length - 1;
+                renderG360Gallery();
+                toast(`✓ ${toProcess.length} foto(s) añadida(s). Recuerda guardar cambios.`);
+            } catch (err) {
+                toast('Error al procesar la imagen: ' + err.message, true);
+            } finally {
+                if (notice) notice.classList.add('hidden');
+                e.target.value = '';
+            }
+        });
+
+        // Recálculo en tiempo real de rentabilidad en Modal 360º
+        ['g360PriceInput', 'g360SoldPriceInput', 'g360CostInput', 'g360ExpenseInput'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', updateG360ProfitPreview);
+                el.addEventListener('change', updateG360ProfitPreview);
+            }
+        });
+
+                // Buscador
         document.getElementById('erpFilterSearch')?.addEventListener('input', (e) => {
             adminState.registroFilters.search = e.target.value;
             renderActiveSubView();
