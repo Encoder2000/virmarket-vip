@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" id="metaThemeColor" content="#09090B">
+    <script>
+        (function() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const paramTheme = urlParams.get('theme') || urlParams.get('modo');
+                if (paramTheme === 'light' || paramTheme === 'claro') {
+                    localStorage.setItem('vm_theme', 'light');
+                } else if (paramTheme === 'dark' || paramTheme === 'oscuro') {
+                    localStorage.setItem('vm_theme', 'dark');
+                }
+                const savedTheme = localStorage.getItem('vm_theme');
+                const isLight = savedTheme === 'light';
+                if (isLight) {
+                    document.documentElement.classList.add('theme-light');
+                    document.documentElement.classList.remove('dark');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('theme-light');
+                }
+                const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
+                if (metaTheme) {
+                    metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <title>Política de Privacidad y Protección de Datos | VirMarket</title>
+    <meta name="description" content="Información sobre el tratamiento de datos personales, consentimiento Doble Opt-In, baja inmediata y derechos RGPD en el Club Privado de VirMarket.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        acid: {
+                            DEFAULT: '#A3E635',
+                            hover: '#BEF264',
+                            muted: 'rgba(163, 230, 53, 0.12)'
+                        },
+                        obsidian: {
+                            DEFAULT: '#09090B',
+                            card: '#121215',
+                            elevated: '#18181B',
+                            border: '#27272A'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #09090B;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.12), transparent 55%),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+        }
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .skip-link:focus {
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            width: auto;
+            height: auto;
+            z-index: 100;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background-color: #A3E635;
+            color: #09090B;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        html.theme-light { color-scheme: light; }
+        html.theme-light body {
+            background-color: #F8FAFC !important;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.16), transparent 55%),
+                linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+                linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px) !important;
+            color: #0F172A !important;
+        }
+        html.theme-light header {
+            background-color: rgba(255, 255, 255, 0.94) !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light footer {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .bg-obsidian-elevated {
+            background-color: #F1F5F9 !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .text-white { color: #0F172A !important; }
+        html.theme-light .text-zinc-100,
+        html.theme-light .text-zinc-200 { color: #0F172A !important; }
+        html.theme-light .text-zinc-300,
+        html.theme-light .text-zinc-400 { color: #334155 !important; }
+        html.theme-light .text-acid { color: #3F6212 !important; }
+        html.theme-light .bg-acid { background-color: #A3E635 !important; color: #09090B !important; }
+        html.theme-light .bg-acid-muted {
+            background-color: #ECFCCB !important;
+            border-color: #BEF264 !important;
+            color: #365314 !important;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
+    <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+    <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+            <a href="./" class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg tracking-tighter">
+                    V
+                </div>
+                <div class="leading-none">
+                    <span class="font-display text-lg sm:text-xl font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span></span>
+                    <span class="block font-mono text-xs uppercase tracking-wider text-zinc-300 mt-0.5">Privacidad &amp; RGPD</span>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2">
+                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-acid/60 border border-obsidian-border font-mono text-xs font-semibold text-zinc-200 transition-all cursor-pointer">
+                    <i id="themeToggleIcon" data-lucide="sun" aria-hidden="true" class="w-3.5 h-3.5 text-amber-300"></i>
+                    <span id="themeToggleLabel">Modo Claro</span>
+                </button>
+                <a href="./" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-acid text-obsidian font-mono text-xs font-bold uppercase tracking-wider hover:bg-acid-hover transition-colors">
+                    <i data-lucide="arrow-left" aria-hidden="true" class="w-3.5 h-3.5"></i>
+                    <span>Volver</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main id="contenido-principal" class="flex-1 py-10 sm:py-14 px-4 sm:px-6">
+        <article class="max-w-3xl mx-auto rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-10 shadow-2xl space-y-8">
+            <div class="border-b border-obsidian-border pb-6">
+                <span class="inline-block px-3 py-1 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-xs font-bold uppercase tracking-wider mb-3">
+                    Versión v1.0-2026-11 • RGPD &amp; LSSI-CE
+                </span>
+                <h1 class="font-display text-2xl sm:text-4xl font-bold text-white uppercase tracking-tight">
+                    Política de Privacidad y Condiciones del Club VIP
+                </h1>
+                <p class="mt-3 text-sm text-zinc-300 leading-relaxed">
+                    En VirMarket tratamos tus datos con total transparencia y mínimo almacenamiento necesario, cumpliendo el Reglamento General de Protección de Datos (UE) 2016/679 (RGPD), la Ley Orgánica 3/2018 (LOPDGDD) y la Ley 34/2002 (LSSI-CE).
+                </p>
+            </div>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">1. Responsable del Tratamiento</h2>
+                <ul class="text-sm text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-5">
+                    <li><strong>Denominación comercial:</strong> VirMarket (iniciativa particular de venta de prendas de segunda mano a través de Vinted, sin entidad societaria).</li>
+                    <li><strong>Ubicación:</strong> Cádiz, España.</li>
+                    <li><strong>Correo de contacto y ejercicio de derechos:</strong> <a href="mailto:contacto@virmarsolutions.com" class="text-acid underline font-semibold">contacto@virmarsolutions.com</a></li>
+                </ul>
+            </section>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">2. Qué datos recopilamos y con qué finalidad</h2>
+                <ul class="text-sm text-zinc-300 space-y-2 leading-relaxed list-disc pl-5">
+                    <li><strong>Alta en el Club Privado (QR o web):</strong> Tu dirección de correo electrónico para enviarte avisos privados de nuevos lanzamientos (<em>Drops</em>) 24 horas antes de su publicación abierta en Vinted y gestionar tu ventaja de bienvenida.</li>
+                    <li><strong>Reservas y cola de espera:</strong> Tu correo electrónico y tu nombre de usuario de Vinted (<code>@usuario</code>) exclusivamente para reservar la prenda o lote a tu nombre dentro de Vinted y enviarte el enlace directo de compra o aviso de turno en cola.</li>
+                    <li><strong>Registro técnico de prueba de consentimiento (Doble Opt-In):</strong> Al solicitar el alta y al confirmarla desde tu bandeja de entrada, guardamos la marca temporal UTC, la dirección IP, el navegador (<em>User-Agent</em>), la URL de origen y la versión del texto legal aceptado, con la única finalidad de acreditar tu consentimiento voluntario conforme al Art. 7.1 del RGPD.</li>
+                </ul>
+            </section>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">3. Base jurídica y Verificación Doble Opt-In</h2>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    La base legal para el envío de alertas del Club VIP es tu <strong>consentimiento expreso e inequívoco</strong> (Art. 6.1.a RGPD y Art. 21 LSSI-CE). Para evitar altas no deseadas por parte de terceros, empleamos un sistema de <strong>Doble Opt-In (DOI)</strong>: solo te añadiremos a la lista de envíos cuando pulses el enlace de verificación enviado a tu propio buzón de correo.
+                </p>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    Para las reservas y notificaciones transaccionales solicitadas por ti en el Escaparate VIP, la base jurídica es la ejecución de la solicitud/medida precontractual de reserva (Art. 6.1.b RGPD).
+                </p>
+            </section>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">4. Destinatarios y Encargados del Tratamiento</h2>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    No vendemos ni cedemos tus datos a terceros con fines comerciales. Únicamente utilizamos proveedores técnicos necesarios para prestar el servicio bajo garantías del RGPD (Cláusulas Contractuales Tipo cuando procede):
+                </p>
+                <ul class="text-sm text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-5">
+                    <li><strong>Brevo (Sendinblue SAS, UE):</strong> Gestión de la lista de suscriptores verificados y envío de alertas de Drops.</li>
+                    <li><strong>Resend:</strong> Envío de correos transaccionales (verificación Doble Opt-In, bienvenida y enlaces directos de reserva).</li>
+                    <li><strong>Supabase (PostgreSQL):</strong> Base de datos cifrada con control de acceso estricto (RLS) para reservas y registro probatorio de consentimientos.</li>
+                    <li><strong>n8n (alojamiento privado) y GitHub Pages:</strong> Orquestación de webhooks y alojamiento estático de la web.</li>
+                </ul>
+            </section>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">5. Plazo de Conservación</h2>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    Conservaremos tu correo en la lista de envíos mientras no revoques tu consentimiento. Si te das de baja, dejaremos de enviarte comunicaciones de inmediato y bloquearemos tu correo para envíos comerciales. El registro histórico del consentimiento y su revocación se conservará debidamente bloqueado durante el plazo legal necesario para atender posibles responsabilidades o requerimientos de la autoridad de control (AEPD).
+                </p>
+            </section>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">6. Baja en 1 clic y Derechos ARSOLP</h2>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    Puedes retirar tu consentimiento en cualquier momento pulsando el enlace <strong>«Darme de baja con 1 clic»</strong> incluido al pie de nuestros correos, o ejerciendo tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a <a href="mailto:contacto@virmarsolutions.com" class="text-acid underline font-semibold">contacto@virmarsolutions.com</a>. También tienes derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" class="text-acid underline">www.aepd.es</a>).
+                </p>
+            </section>
+
+            <section class="space-y-2.5">
+                <h2 class="font-display text-lg font-bold text-white uppercase">7. Cookies y Almacenamiento Local</h2>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    Esta web <strong>no utiliza cookies de seguimiento ni analítica publicitaria de terceros</strong>. Únicamente empleamos almacenamiento local técnico del navegador (<code>localStorage</code>) para recordar tu preferencia visual (Modo Claro / Modo Oscuro) y agilizar tus reservas en el escaparate si así lo has indicado.
+                </p>
+            </section>
+        </article>
+    </main>
+
+    <footer class="border-t border-obsidian-border bg-obsidian py-6 px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-300">
+            <span>© 2026 VirMarket • Cádiz, España</span>
+            <div class="flex items-center gap-4">
+                <a href="./" class="hover:text-acid underline">Inicio</a>
+                <a href="./#faqs" class="hover:text-acid underline">Preguntas frecuentes</a>
+                <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid underline">contacto@virmarsolutions.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        const themeBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeToggleIcon');
+        const themeLabel = document.getElementById('themeToggleLabel');
+        function syncThemeBtn() {
+            const isLight = document.documentElement.classList.contains('theme-light');
+            if (themeLabel) themeLabel.textContent = isLight ? 'Modo Oscuro' : 'Modo Claro';
+            if (themeIcon) themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+            const metaTheme = document.getElementById('metaThemeColor');
+            if (metaTheme) metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+            lucide.createIcons();
+        }
+        syncThemeBtn();
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const nextLight = !document.documentElement.classList.contains('theme-light');
+                document.documentElement.classList.toggle('theme-light', nextLight);
+                document.documentElement.classList.toggle('dark', !nextLight);
+                try { localStorage.setItem('vm_theme', nextLight ? 'light' : 'dark'); } catch (e) {}
+                syncThemeBtn();
+            });
+        }
+    </script>
+</body>
+</html>

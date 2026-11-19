@@ -188,6 +188,38 @@
             color: #FFFFFF !important;
         }
 
+        /* Accesibilidad: Skip link y contraste >= 4.5:1 */
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .skip-link:focus {
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            width: auto;
+            height: auto;
+            z-index: 100;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background-color: #A3E635;
+            color: #09090B;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+        }
+        html:not(.theme-light) .text-zinc-500 {
+            color: #A1A1AA !important;
+        }
+        html:not(.theme-light) input::placeholder,
+        html:not(.theme-light) textarea::placeholder {
+            color: #A1A1AA !important;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, ::before, ::after {
                 animation-duration: 0.01ms !important;
@@ -258,7 +290,7 @@
             color: #475569 !important;
         }
         html.theme-light .text-zinc-500 {
-            color: #64748B !important;
+            color: #475569 !important;
         }
         /* Botones y Acentos que deben conservar el texto oscuro del diseño */
         html.theme-light .bg-acid {
@@ -327,7 +359,7 @@
         }
         html.theme-light input::placeholder,
         html.theme-light textarea::placeholder {
-            color: #94A3B8 !important;
+            color: #475569 !important;
         }
         html.theme-light input:focus,
         html.theme-light textarea:focus,
@@ -390,6 +422,7 @@
     </style>
 </head>
 <body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
+    <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
 
     <!-- Cabecera Minimalista Mobile-First -->
     <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
@@ -406,7 +439,7 @@
 
             <div class="flex items-center gap-2">
                 <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-acid/60 border border-obsidian-border font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all shadow-sm cursor-pointer">
-                    <i id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
+                    <i aria-hidden="true" id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
                     <span id="themeToggleLabel">Modo Claro</span>
                 </button>
                 <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-obsidian-elevated border border-obsidian-border font-mono text-[10px] uppercase tracking-wider text-acid">
@@ -417,7 +450,10 @@
         </div>
     </header>
 
-    <main class="flex-1 pb-28">
+    <main id="contenido-principal" class="flex-1 pb-28">
+        <!-- Banner de Retorno Doble Opt-In / Baja RGPD (?doi=..., ?baja=...) -->
+        <div id="doiReturnBanner" role="status" aria-live="polite" class="hidden max-w-xl mx-auto mt-6 px-4 sm:px-6"></div>
+
         <!-- =================================================================== -->
         <!-- VISTA 1: MODO CAPTACIÓN QR (Mostrada por defecto al escanear tarjeta) -->
         <!-- =================================================================== -->
@@ -428,7 +464,7 @@
                     <!-- Etiqueta de agradecimiento post-compra -->
                     <div class="flex justify-center mb-6">
                         <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
-                            <i data-lucide="package-check" class="w-3.5 h-3.5"></i>
+                            <i aria-hidden="true" data-lucide="package-check" class="w-3.5 h-3.5"></i>
                             <span>Gracias por tu pedido • Acceso VIP Clientes</span>
                         </div>
                     </div>
@@ -459,7 +495,7 @@
                                     Tu correo electrónico
                                 </label>
                                 <div class="relative">
-                                    <i data-lucide="mail" class="w-5 h-5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                                    <i aria-hidden="true" data-lucide="mail" class="w-5 h-5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                     <input
                                         type="email"
                                         id="userEmail"
@@ -480,10 +516,15 @@
                                     required
                                     class="custom-checkbox mt-0.5 w-4 h-4 rounded border-zinc-600 bg-obsidian text-acid focus:ring-acid focus:ring-offset-obsidian shrink-0 accent-[#A3E635]"
                                 >
-                                <span class="text-xs text-zinc-300 leading-relaxed select-none">
-                                    Acepto recibir alertas privadas de lanzamientos (Drops) y mi ventaja de bienvenida. <strong>Cero spam y baja inmediata con un clic.</strong>
+                                <span id="rgpdConsentLabelText" class="text-xs text-zinc-300 leading-relaxed select-none">
+                                    Acepto recibir alertas privadas de lanzamientos (Drops) y mi ventaja de bienvenida conforme a la <a href="privacidad.html" class="text-acid underline font-semibold hover:text-acid-hover" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>. <strong>Verificación por correo y baja inmediata con un clic.</strong>
                                 </span>
                             </label>
+
+                            <!-- Primera Capa Informativa RGPD (Art. 13) -->
+                            <p class="text-[11px] text-zinc-400 leading-relaxed px-1">
+                                <strong>Información básica RGPD:</strong> Responsable: VirMarket (Cádiz, España). Finalidad: envío de avisos de Drops 24h y gestión de reservas VIP. Legitimación: consentimiento expreso verificado por Doble Opt-In. Puedes darte de baja en 1 clic o ejercer tus derechos en <a href="privacidad.html" class="text-acid underline">Política de Privacidad</a> y <a href="mailto:contacto@virmarsolutions.com" class="underline hover:text-acid">contacto@virmarsolutions.com</a>.
+                            </p>
 
                             <button
                                 type="submit"
@@ -491,20 +532,20 @@
                                 class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm sm:text-base uppercase tracking-wide transition-all shadow-lg shadow-acid/20 flex items-center justify-center space-x-2 active:scale-[0.99]"
                             >
                                 <span id="dynSubmitText">Activar mi -10% y Acceso VIP</span>
-                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                <i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
                         </form>
 
-                        <!-- Confirmación de Éxito -->
-                        <div id="formSuccess" class="hidden p-5 rounded-xl bg-acid-muted border border-acid/50 text-left">
+                        <!-- Confirmación de Éxito / Pendiente Doble Opt-In -->
+                        <div id="formSuccess" role="status" aria-live="polite" class="hidden p-5 rounded-xl bg-acid-muted border border-acid/50 text-left">
                             <div class="flex items-start space-x-3">
                                 <div class="w-9 h-9 rounded-lg bg-acid text-obsidian flex items-center justify-center shrink-0 mt-0.5">
-                                    <i data-lucide="check" class="w-5 h-5 stroke-[2.5]"></i>
+                                    <i aria-hidden="true" data-lucide="mail-check" class="w-5 h-5 stroke-[2.5]"></i>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="font-display font-bold text-white text-base uppercase">¡Estás dentro del Club Privado!</p>
+                                    <p id="leadSuccessTitle" class="font-display font-bold text-white text-base uppercase">¡Revisa tu correo para confirmar!</p>
                                     <p id="dynLeadSuccessCopy" class="mt-1 text-xs sm:text-sm text-zinc-200 leading-relaxed">
-                                        Tu descuento de bienvenida ya ha quedado vinculado a tu correo para tu primera reserva. Revisa tu bandeja de entrada (remitente <strong>contacto@virmarsolutions.com</strong>).
+                                        Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu ventaja de bienvenida.
                                     </p>
                                     <button id="afterLeadShowroomBtn" type="button" class="hidden mt-3.5 w-full py-2.5 px-4 rounded-xl bg-acid text-obsidian font-display font-bold text-xs uppercase tracking-wide items-center justify-center gap-1.5">
                                         <span>⚡ Ver el Drop Privado Activo Ahora</span>
@@ -514,8 +555,8 @@
                         </div>
 
                         <!-- Alerta de Error -->
-                        <div id="formError" class="hidden mt-4 p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-start space-x-2.5 text-left">
-                            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+                        <div id="formError" role="alert" aria-live="assertive" class="hidden mt-4 p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-start space-x-2.5 text-left">
+                            <i aria-hidden="true" data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
                             <div>
                                 <p class="font-bold text-rose-100">Revisa los datos antes de continuar</p>
                                 <p id="formErrorMessage" class="mt-0.5 text-rose-300">Comprueba tu correo y marca la casilla de aceptación.</p>
@@ -524,7 +565,7 @@
 
                         <!-- Sello de confianza Vinted -->
                         <div class="mt-5 pt-4 border-t border-zinc-800/80 flex items-center justify-center space-x-2 text-[11px] text-zinc-400 text-center">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-acid shrink-0"></i>
+                            <i aria-hidden="true" data-lucide="shield-check" class="w-4 h-4 text-acid shrink-0"></i>
                             <span>Compras 100% seguras siempre a través de Vinted</span>
                         </div>
                     </div>
@@ -596,17 +637,17 @@
                 <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-7 mb-6 shadow-xl">
                     <div class="flex flex-wrap items-center justify-between gap-2.5 mb-3">
                         <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
-                            <i data-lucide="flame" class="w-3.5 h-3.5"></i>
+                            <i aria-hidden="true" data-lucide="flame" class="w-3.5 h-3.5"></i>
                             <span id="dropBadgeId">ESCAPARATE VIP 24H</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <div id="dropCountdownPill" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[11px] text-zinc-300">
-                                <i data-lucide="clock" class="w-3.5 h-3.5 text-acid"></i>
+                                <i aria-hidden="true" data-lucide="clock" class="w-3.5 h-3.5 text-acid"></i>
                                 <span id="dropCountdownText" class="tabular-nums">Prioridad miembros activa</span>
                             </div>
                             <button id="refreshCatalogBtn" type="button" aria-label="Actualizar stock en vivo" title="Actualizar stock en vivo" class="p-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-zinc-300 hover:text-acid transition-colors">
-                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                                <i aria-hidden="true" data-lucide="refresh-cw" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
@@ -621,7 +662,7 @@
                     <!-- Estado de elegibilidad de bienvenida -->
                     <div id="discountStatusBanner" class="mt-4 p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-xs">
                         <div class="flex items-center space-x-2 text-zinc-200">
-                            <i data-lucide="tag" class="w-4 h-4 text-acid shrink-0"></i>
+                            <i aria-hidden="true" data-lucide="tag" class="w-4 h-4 text-acid shrink-0"></i>
                             <span id="discountStatusText">Calculando ventajas de tu cuenta VIP...</span>
                         </div>
                         <a href="./" class="text-[11px] font-mono text-acid hover:underline">¿Nuevo aquí? Únete al Club →</a>
@@ -638,7 +679,7 @@
                 <!-- Estado Vacío / Sin Prendas -->
                 <div id="catalogEmpty" class="hidden rounded-2xl bg-obsidian-card border border-obsidian-border p-8 sm:p-12 text-center max-w-lg mx-auto">
                     <div class="w-12 h-12 rounded-2xl bg-acid-muted border border-acid/40 text-acid flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        <i aria-hidden="true" data-lucide="sparkles" class="w-6 h-6"></i>
                     </div>
                     <h2 class="font-display text-xl font-bold text-white uppercase">Próximo Drop en preparación</h2>
                     <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
@@ -649,7 +690,7 @@
                             Ir al Registro del Club VIP
                         </button>
                         <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-zinc-950 font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
-                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <i aria-hidden="true" data-lucide="send" class="w-4 h-4"></i>
                             <span>Canal Telegram @virmarket_club</span>
                         </a>
                     </div>
@@ -676,7 +717,7 @@
                 <div class="telegram-banner mt-6 p-4 rounded-2xl bg-gradient-to-r from-sky-950/40 via-obsidian-elevated to-sky-950/30 border border-sky-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-lg">
                     <div class="flex items-center space-x-3 w-full sm:w-auto">
                         <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
-                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <i aria-hidden="true" data-lucide="send" class="w-4 h-4"></i>
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
@@ -688,7 +729,7 @@
                     </div>
                     <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-zinc-950 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-1.5 shrink-0">
                         <span>Unirme al Canal</span>
-                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        <i aria-hidden="true" data-lucide="external-link" class="w-3.5 h-3.5"></i>
                     </a>
                 </div>
             </div>
@@ -701,7 +742,7 @@
             <div class="max-w-2xl mx-auto">
                 <div class="text-center mb-10">
                     <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
-                        <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                        <i aria-hidden="true" data-lucide="help-circle" class="w-3.5 h-3.5"></i>
                         <span>Centro de Ayuda • Club VIP</span>
                     </div>
                     <h2 class="font-display text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">
@@ -717,7 +758,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>1. ¿Dónde se realiza el pago y el envío de las prendas?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             Siempre dentro de <strong>Vinted</strong>. Nunca te pediremos datos bancarios fuera de la plataforma: subimos la prenda o tu lote reservado directamente a tu nombre de usuario de Vinted para que compres con toda la protección al comprador y los métodos de envío oficiales habituales.
@@ -728,7 +769,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>2. ¿Cómo funciona el descuento de bienvenida y los Lotes?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p id="dynFaqDiscount" class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             En tu primera reserva del Club (tanto si eliges 1 prenda como un Lote de varias prendas a la vez), el Escaparate Web calcula automáticamente tu <strong>10% de descuento</strong> (con tope máximo de 15,00 €) y subimos el anuncio reservado para ti en Vinted con el precio final ya rebajado.
@@ -739,7 +780,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>3. ¿Qué ocurre si una prenda ya aparece como RESERVADA?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             Son piezas únicas (stock 1 de 1). Puedes pulsar <strong>«Apuntarme en cola»</strong> gratis y sin gastar tu descuento de bienvenida: si el primer comprador no completa la compra en Vinted dentro del plazo establecido, te avisaremos de inmediato por orden de llegada.
@@ -750,7 +791,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>4. ¿Cada cuánto salen los Drops y cuánto dura el acceso VIP?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             No enviamos spam: recibirás <strong>1 único correo</strong> cada vez que preparemos un nuevo Drop. Desde ese momento dispones de <strong>24 horas de acceso exclusivo</strong> al Escaparate Web VIP para elegir y reservar antes de que las prendas restantes salgan publicadas en abierto en Vinted.
@@ -761,7 +802,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>5. ¿Cuánto tiempo tengo para pagar una prenda o lote reservado?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             Una vez que recibas el enlace directo de tu anuncio reservado en Vinted, dispones de <strong>24 horas</strong> para completar el pago en la app. Si pasado ese tiempo no se ha realizado la compra, la reserva se libera de forma automática para el siguiente miembro en cola.
@@ -772,7 +813,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>6. ¿Caduca mi descuento de bienvenida si no compro en el primer Drop?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             <strong>No.</strong> Tu descuento de bienvenida permanece vinculado a tu correo hasta que completes tu <strong>primera reserva efectiva</strong>. Si un Drop no encaja con tu estilo o talla, lo conservas intacto para las siguientes colecciones.
@@ -783,7 +824,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>7. Si reservo varias prendas en un Lote, ¿pago un solo envío en Vinted?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             <strong>Sí.</strong> Cuando reservas 2 o más prendas a la vez desde el Escaparate VIP, creamos un <strong>único anuncio de Lote unificado</strong> en Vinted con todas tus prendas agrupadas y el descuento aplicado sobre el total, para que pagues un único paquete y un solo envío.
@@ -794,7 +835,7 @@
                     <details class="group p-4 sm:p-5 rounded-xl bg-obsidian-card border border-obsidian-border cursor-pointer transition-all hover:border-zinc-700">
                         <summary class="font-semibold text-sm sm:text-base text-white flex justify-between items-center list-none select-none">
                             <span>8. ¿Puedo pedir medidas adicionales o más fotos antes de reservar?</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
+                            <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180 shrink-0 ml-3"></i>
                         </summary>
                         <p class="mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                             En el Escaparate VIP incluimos hasta 4 fotos en alta definición, talla, estado oficial de Vinted y medidas principales. Si necesitas algún detalle específico antes de que se agote la prenda, escríbenos a <a href="mailto:contacto@virmarsolutions.com" class="text-acid hover:underline">contacto@virmarsolutions.com</a> indicando su referencia (ej. <code>REF-001</code>).
@@ -824,7 +865,7 @@
 
             <button id="openCheckoutBtn" type="button" class="shrink-0 py-3.5 px-5 sm:px-7 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center gap-2 active:scale-[0.99]">
                 <span>Reservar en Vinted</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
         </div>
     </div>
@@ -840,7 +881,7 @@
                     <h3 id="checkoutModalTitle" class="font-display text-lg font-bold text-white uppercase">Tu Reserva para Vinted</h3>
                 </div>
                 <button id="closeCheckoutBtn" type="button" aria-label="Cerrar modal de reserva" class="p-2 rounded-lg bg-obsidian-elevated text-zinc-400 hover:text-white">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                    <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
 
@@ -900,11 +941,11 @@
                     >
                 </div>
 
-                <div id="checkoutErrorBox" class="hidden p-3 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs"></div>
+                <div id="checkoutErrorBox" role="alert" aria-live="assertive" class="hidden p-3 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs"></div>
 
                 <button id="checkoutSubmitBtn" type="submit" class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center justify-center gap-2">
                     <span>Confirmar Reserva Exclusiva</span>
-                    <i data-lucide="lock" class="w-4 h-4"></i>
+                    <i aria-hidden="true" data-lucide="lock" class="w-4 h-4"></i>
                 </button>
             </form>
 
@@ -912,7 +953,7 @@
             <div id="checkoutSuccessBox" class="hidden mt-4 p-5 rounded-xl bg-acid-muted border border-acid/50">
                 <div class="flex items-start gap-3">
                     <div class="w-9 h-9 rounded-lg bg-acid text-obsidian flex items-center justify-center shrink-0">
-                        <i data-lucide="check" class="w-5 h-5 stroke-[2.5]"></i>
+                        <i aria-hidden="true" data-lucide="check" class="w-5 h-5 stroke-[2.5]"></i>
                     </div>
                     <div>
                         <h4 class="font-display font-bold text-white text-base uppercase">¡Prendas bloqueadas a tu nombre!</h4>
@@ -922,7 +963,7 @@
                                 Volver al Escaparate
                             </button>
                             <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-zinc-950 font-display font-bold text-xs uppercase">
-                                <i data-lucide="send" class="w-4 h-4"></i>
+                                <i aria-hidden="true" data-lucide="send" class="w-4 h-4"></i>
                                 <span>Canal Telegram @virmarket_club</span>
                             </a>
                         </div>
@@ -943,7 +984,7 @@
                     <h3 id="waitlistModalTitle" class="font-display text-lg font-bold text-white uppercase">Apuntarme en Cola</h3>
                 </div>
                 <button id="closeWaitlistBtn" type="button" aria-label="Cerrar modal de lista de espera" class="p-2 rounded-lg bg-obsidian-elevated text-zinc-400 hover:text-white">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                    <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
 
@@ -984,7 +1025,7 @@
                     >
                 </div>
 
-                <div id="waitlistFeedback" class="hidden p-3 rounded-xl text-xs"></div>
+                <div id="waitlistFeedback" role="status" aria-live="polite" class="hidden p-3 rounded-xl text-xs"></div>
 
                 <button id="waitlistSubmitBtn" type="submit" class="w-full py-3.5 px-5 rounded-xl bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide">
                     Guardar mi Turno en la Cola
@@ -998,7 +1039,7 @@
     <!-- ========================================================================= -->
     <div id="lightboxModal" role="dialog" aria-modal="true" aria-label="Visor ampliado de fotos" class="hidden fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4">
         <button id="closeLightboxBtn" type="button" aria-label="Cerrar visor de fotos" class="absolute top-4 right-4 p-2.5 rounded-full bg-zinc-900 border border-zinc-700 text-white hover:border-acid keep-text-white">
-            <i data-lucide="x" class="w-5 h-5"></i>
+            <i aria-hidden="true" data-lucide="x" class="w-5 h-5"></i>
         </button>
         <img id="lightboxImg" src="" alt="Vista ampliada" class="max-h-[82vh] max-w-full rounded-xl object-contain border border-zinc-800">
         <div class="mt-4 flex items-center gap-4">
@@ -1009,26 +1050,30 @@
     </div>
 
     <!-- Toast rápido -->
-    <div id="toastNotice" class="hidden fixed top-20 right-4 z-50 max-w-xs px-4 py-3 rounded-xl bg-obsidian-elevated border border-acid/60 text-xs text-white shadow-2xl"></div>
+    <div id="toastNotice" role="status" aria-live="polite" class="hidden fixed top-20 right-4 z-50 max-w-xs px-4 py-3 rounded-xl bg-obsidian-elevated border border-acid/60 text-xs text-white shadow-2xl"></div>
 
     <!-- Footer Minimalista (sin enlaces al perfil público de Vinted) -->
     <footer class="border-t border-obsidian-border bg-obsidian py-8 px-4 sm:px-6">
-        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
             <div class="flex items-center space-x-2">
-                <span class="font-display font-bold text-zinc-300 uppercase">VIR<span class="text-acid">MARKET</span></span>
-                <span>• Club Privado de Drops 24h</span>
+                <span class="font-display font-bold text-zinc-200 uppercase">VIR<span class="text-acid">MARKET</span></span>
+                <span>• Club Privado de Drops 24h • Cádiz, España</span>
             </div>
             <div class="flex items-center gap-4 flex-wrap justify-center">
-                <a href="#faqs" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
-                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                <a href="#faqs" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-300">
+                    <i aria-hidden="true" data-lucide="help-circle" class="w-3.5 h-3.5"></i>
                     <span>Preguntas frecuentes</span>
                 </a>
+                <a href="privacidad.html" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-300">
+                    <i aria-hidden="true" data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                    <span>Política de Privacidad</span>
+                </a>
                 <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors flex items-center space-x-1.5 text-sky-400 font-medium">
-                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <i aria-hidden="true" data-lucide="send" class="w-3.5 h-3.5"></i>
                     <span>Telegram @virmarket_club</span>
                 </a>
-                <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-400">
-                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                <a href="mailto:contacto@virmarsolutions.com" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-300">
+                    <i aria-hidden="true" data-lucide="mail" class="w-3.5 h-3.5"></i>
                     <span>contacto@virmarsolutions.com</span>
                 </a>
             </div>
@@ -1036,7 +1081,14 @@
     </footer>
 
     <script>
-        lucide.createIcons();
+        function refreshLucideIcons() {
+            document.querySelectorAll('i[data-lucide]').forEach((el) => el.setAttribute('aria-hidden', 'true'));
+            if (window.lucide && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+                document.querySelectorAll('svg[data-lucide], svg.lucide').forEach((svg) => svg.setAttribute('aria-hidden', 'true'));
+            }
+        }
+        refreshLucideIcons();
 
         // Endpoints productivos en n8n
         const WEBHOOK_CATALOGO_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-catalogo';
@@ -1107,7 +1159,7 @@
                 document.getElementById('dynSubmitText').textContent = `Activar mi -${pct}% y Acceso VIP`;
                 document.getElementById('dynPillPct').textContent = `-${pct}%`;
                 document.getElementById('dynLeadSuccessCopy').innerHTML =
-                    `Tu <strong>${pct}% de descuento de bienvenida</strong>${cap > 0 ? ' (máx. ' + fmtEur(cap) + ')' : ''} ya ha quedado vinculado a tu correo para tu primera reserva. Revisa tu bandeja (remitente <strong>contacto@virmarsolutions.com</strong>).`;
+                    `Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu <strong>${pct}% de descuento de bienvenida</strong>${cap > 0 ? ' (máx. ' + fmtEur(cap) + ')' : ''}.`;
                 document.getElementById('dynFaqDiscount').innerHTML =
                     `En tu primera reserva del Club (tanto si eliges 1 prenda como un Lote de varias prendas a la vez), el Escaparate Web calcula automáticamente tu <strong>${pct}% de descuento</strong>${cap > 0 ? ' (con tope máximo de ' + fmtEur(cap) + ')' : ''} y subimos el anuncio reservado para ti en Vinted con el precio final ya rebajado.`;
             } else {
@@ -1117,7 +1169,7 @@
                 document.getElementById('dynSubmitText').textContent = 'Activar mi Pase VIP 24h';
                 document.getElementById('dynPillPct').textContent = 'VIP';
                 document.getElementById('dynLeadSuccessCopy').innerHTML =
-                    'Tu <strong>Pase Miembro VIP</strong> ya ha quedado vinculado a tu correo. Recibirás alertas privadas 24h antes de que cada Drop salga en abierto en Vinted. Revisa tu bandeja (remitente <strong>contacto@virmarsolutions.com</strong>).';
+                    'Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu <strong>Pase Miembro VIP</strong>.';
                 document.getElementById('dynFaqDiscount').innerHTML =
                     'Como miembro VIP disfrutas de <strong>acceso prioritario 24h</strong> a cada nuevo Drop para reservar prendas antes de publicarlas en Vinted a público general.';
             }
@@ -1347,8 +1399,8 @@
                     <div>
                         <div class="relative aspect-[4/5] bg-obsidian-elevated overflow-hidden select-none" data-swipe-ref="${escapeHtml(g.ref)}">
                             ${currentPhoto
-                                ? `<img src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(g.title)}" loading="lazy" data-lightbox-ref="${escapeHtml(g.ref)}" class="w-full h-full object-cover cursor-zoom-in ${st !== 'DISPONIBLE' ? 'opacity-75' : ''}">`
-                                : `<div class="w-full h-full flex flex-col items-center justify-center text-zinc-600 font-mono text-xs"><span>VIRMARKET</span><span>${escapeHtml(g.ref)}</span></div>`
+                                ? `<button type="button" data-lightbox-ref="${escapeHtml(g.ref)}" aria-label="Ampliar foto de ${escapeHtml(g.title)}" class="block w-full h-full p-0 border-0 bg-transparent cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-inset focus:ring-acid"><img src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(g.title)}" loading="lazy" class="w-full h-full object-cover ${st !== 'DISPONIBLE' ? 'opacity-75' : ''}"></button>`
+                                : `<div class="w-full h-full flex flex-col items-center justify-center text-zinc-400 font-mono text-xs"><span>VIRMARKET</span><span>${escapeHtml(g.ref)}</span></div>`
                             }
                             <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 pointer-events-none">
                                 <span class="px-2 py-0.5 rounded bg-obsidian/90 border border-zinc-700 font-mono text-[11px] font-bold text-acid">${escapeHtml(g.ref)}</span>
@@ -1492,15 +1544,37 @@
             });
         }
 
+        // Gestión accesible de modales (foco y retorno)
+        let lastFocusedTrigger = null;
+        function focusModalFirstElement(modalEl) {
+            if (!modalEl) return;
+            lastFocusedTrigger = document.activeElement;
+            const target = modalEl.querySelector('button, [href], input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (target && typeof target.focus === 'function') {
+                setTimeout(() => target.focus(), 20);
+            }
+        }
+        function closeAllModalsAndRestoreFocus() {
+            ['checkoutModal', 'waitlistModal', 'lightboxModal'].forEach((id) => {
+                document.getElementById(id)?.classList.add('hidden');
+            });
+            if (lastFocusedTrigger && typeof lastFocusedTrigger.focus === 'function') {
+                lastFocusedTrigger.focus();
+                lastFocusedTrigger = null;
+            }
+        }
+
         // Lightbox con soporte táctil, teclado y backdrop
         function openLightbox() {
             const modal = document.getElementById('lightboxModal');
+            const wasHidden = modal.classList.contains('hidden');
             document.getElementById('lightboxImg').src = state.lightboxPhotos[state.lightboxIndex];
             document.getElementById('lightboxCounter').textContent = `${state.lightboxIndex + 1} / ${state.lightboxPhotos.length}`;
             modal.classList.remove('hidden');
+            if (wasHidden) focusModalFirstElement(modal);
         }
         document.getElementById('closeLightboxBtn').addEventListener('click', () => {
-            document.getElementById('lightboxModal').classList.add('hidden');
+            closeAllModalsAndRestoreFocus();
         });
         document.getElementById('lightboxPrevBtn').addEventListener('click', () => {
             if (!state.lightboxPhotos.length) return;
@@ -1533,7 +1607,7 @@
         [document.getElementById('checkoutModal'), document.getElementById('waitlistModal'), document.getElementById('lightboxModal')].forEach(modal => {
             if (modal) {
                 modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.classList.add('hidden');
+                    if (e.target === modal) closeAllModalsAndRestoreFocus();
                 });
             }
         });
@@ -1541,9 +1615,7 @@
         // Cierre con Escape y navegación con flechas en teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                document.getElementById('checkoutModal')?.classList.add('hidden');
-                document.getElementById('waitlistModal')?.classList.add('hidden');
-                document.getElementById('lightboxModal')?.classList.add('hidden');
+                closeAllModalsAndRestoreFocus();
             } else if (e.key === 'ArrowLeft') {
                 const lb = document.getElementById('lightboxModal');
                 if (lb && !lb.classList.contains('hidden')) document.getElementById('lightboxPrevBtn')?.click();
@@ -1637,7 +1709,8 @@
 
             renderCheckoutModalContents();
             modal.classList.remove('hidden');
-            lucide.createIcons();
+            refreshLucideIcons();
+            focusModalFirstElement(modal);
         }
 
         function renderCheckoutModalContents() {
@@ -1705,10 +1778,10 @@
         document.getElementById('openCheckoutBtn').addEventListener('click', openCheckoutModal);
         document.getElementById('legacyOpenCheckoutBtn').addEventListener('click', openCheckoutModal);
         document.getElementById('closeCheckoutBtn').addEventListener('click', () => {
-            document.getElementById('checkoutModal').classList.add('hidden');
+            closeAllModalsAndRestoreFocus();
         });
         document.getElementById('checkoutDoneBtn').addEventListener('click', () => {
-            document.getElementById('checkoutModal').classList.add('hidden');
+            closeAllModalsAndRestoreFocus();
         });
 
         // Revalidar elegibilidad de bienvenida al introducir correo en el checkout
@@ -1799,7 +1872,7 @@
                 errBox.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<span>Confirmar Reserva Exclusiva</span><i data-lucide="lock" class="w-4 h-4"></i>';
+                btn.innerHTML = '<span>Confirmar Reserva Exclusiva</span><i aria-hidden="true" data-lucide="lock" class="w-4 h-4"></i>';
                 lucide.createIcons();
             }
         });
@@ -1813,10 +1886,11 @@
             if (memberVinted) document.getElementById('waitlistVintedUser').value = memberVinted;
             if (memberEmail) document.getElementById('waitlistEmail').value = memberEmail;
             document.getElementById('waitlistModal').classList.remove('hidden');
+            focusModalFirstElement(document.getElementById('waitlistModal'));
         }
 
         document.getElementById('closeWaitlistBtn').addEventListener('click', () => {
-            document.getElementById('waitlistModal').classList.add('hidden');
+            closeAllModalsAndRestoreFocus();
         });
 
         document.getElementById('waitlistForm').addEventListener('submit', async (e) => {
@@ -1909,8 +1983,10 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>Activando tu pase VIP...</span>';
+            submitBtn.innerHTML = '<span>Enviando verificación...</span>';
             const sourceParam = cleanParam(params.get('utm_source') || params.get('origen')) || 'tarjeta_qr';
+            const consentLabelEl = document.getElementById('rgpdConsentLabelText');
+            const consentTextVal = consentLabelEl ? consentLabelEl.textContent.replace(/\s+/g, ' ').trim() : 'Acepto recibir alertas privadas de lanzamientos (Drops) y mi ventaja de bienvenida conforme a la Política de Privacidad.';
 
             try {
                 const response = await fetch(WEBHOOK_LEADS_URL, {
@@ -1920,6 +1996,9 @@
                         email,
                         rgpdConsent: true,
                         source: sourceParam,
+                        landingUrl: window.location.href,
+                        policyVersion: 'v1.0-2026-11',
+                        consentText: consentTextVal,
                         timestamp: new Date().toISOString()
                     })
                 });
@@ -1931,19 +2010,75 @@
                 memberEmail = email;
                 localStorage.setItem('vm_member_email', email);
                 leadForm.classList.add('hidden');
+                const titleEl = document.getElementById('leadSuccessTitle');
+                const copyEl = document.getElementById('dynLeadSuccessCopy');
+                if (payload.alreadyConfirmed) {
+                    if (titleEl) titleEl.textContent = '¡Ya eres miembro confirmado del Club!';
+                    if (copyEl) copyEl.innerHTML = `Tu correo <strong>${escapeHtml(email)}</strong> ya estaba verificado en el Club Privado. Recibirás acceso 24h antes de cada nuevo Drop.`;
+                } else {
+                    if (titleEl) titleEl.textContent = '¡Revisa tu correo para confirmar!';
+                    applyDynamicConfigCopy();
+                }
                 document.getElementById('formSuccess').classList.remove('hidden');
-                lucide.createIcons();
+                refreshLucideIcons();
             } catch (err) {
                 errorMessageEl.textContent = err.message || 'Hubo un problema de conexión. Inténtalo de nuevo en unos segundos.';
                 errorBox.classList.remove('hidden');
                 submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span id="dynSubmitText">Activar mi Acceso VIP</span><i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>';
                 applyDynamicConfigCopy();
-                lucide.createIcons();
+                refreshLucideIcons();
             }
         });
 
+        function renderDoiReturnBanner() {
+            const doi = cleanParam(params.get('doi')).toLowerCase();
+            const baja = cleanParam(params.get('baja')).toLowerCase();
+            const banner = document.getElementById('doiReturnBanner');
+            if (!banner || (!doi && !baja)) return;
+
+            let isOk = false;
+            let title = '';
+            let msg = '';
+
+            if (doi === 'ok') {
+                isOk = true;
+                title = '¡Correo verificado y Acceso VIP activado!';
+                msg = 'Tu consentimiento ha quedado confirmado. Revisa tu bandeja de entrada: te acabamos de enviar tu bienvenida oficial.';
+            } else if (doi === 'ya_confirmado') {
+                isOk = true;
+                title = 'Tu correo ya estaba confirmado';
+                msg = 'Ya formas parte del Club Privado VirMarket. Recibirás aviso 24h antes de cada nuevo Drop.';
+            } else if (doi === 'expirado') {
+                title = 'Enlace de confirmación caducado';
+                msg = 'Han pasado más de 48 horas desde tu solicitud. Vuelve a introducir tu correo aquí abajo para recibir un enlace nuevo.';
+            } else if (doi === 'invalido' || doi === 'revocado') {
+                title = 'Enlace de verificación no válido';
+                msg = 'El enlace ya no es válido. Introduce tu correo en el formulario inferior si deseas solicitar un nuevo acceso.';
+            } else if (baja === 'ok') {
+                isOk = true;
+                title = 'Baja tramitada correctamente';
+                msg = 'Hemos cancelado tu suscripción en VirMarket. No volverás a recibir alertas comerciales.';
+            } else if (baja === 'invalido') {
+                title = 'Enlace de baja no reconocido';
+                msg = 'Si deseas darte de baja manualmente, escríbenos a contacto@virmarsolutions.com y lo tramitamos de inmediato.';
+            } else {
+                return;
+            }
+
+            banner.className = isOk
+                ? 'max-w-xl mx-auto mt-6 px-4 sm:px-6'
+                : 'max-w-xl mx-auto mt-6 px-4 sm:px-6';
+            const boxClass = isOk
+                ? 'p-4 rounded-xl bg-acid-muted border border-acid/60 text-sm text-zinc-100 shadow-lg'
+                : 'p-4 rounded-xl bg-rose-950/60 border border-rose-500/50 text-sm text-rose-100 shadow-lg';
+            banner.innerHTML = `<div class="${boxClass}"><p class="font-display font-bold uppercase text-sm">${escapeHtml(title)}</p><p class="mt-1 text-xs leading-relaxed">${escapeHtml(msg)}</p></div>`;
+            banner.classList.remove('hidden');
+        }
+
         // Inicialización
         initThemeEngine();
+        renderDoiReturnBanner();
         updateViewVisibility();
         fetchCatalog(false);
         if (window.location.hash === '#faqs') {
@@ -1971,7 +2106,7 @@
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo oscuro');
                         btn.setAttribute('aria-label', 'Cambiar a modo oscuro');
-                        btn.innerHTML = '<i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-500"></i><span class="font-mono text-[11px] font-semibold text-zinc-800">Modo Oscuro</span>';
+                        btn.innerHTML = '<i aria-hidden="true" data-lucide="moon" class="w-3.5 h-3.5 text-indigo-500"></i><span class="font-mono text-[11px] font-semibold text-zinc-800">Modo Oscuro</span>';
                     }
                 } else {
                     document.documentElement.classList.remove('theme-light');
@@ -1981,11 +2116,11 @@
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo claro');
                         btn.setAttribute('aria-label', 'Cambiar a modo claro');
-                        btn.innerHTML = '<i data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i><span class="font-mono text-[11px] font-semibold text-zinc-200">Modo Claro</span>';
+                        btn.innerHTML = '<i aria-hidden="true" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i><span class="font-mono text-[11px] font-semibold text-zinc-200">Modo Claro</span>';
                     }
                 }
-                if (window.lucide && typeof lucide.createIcons === 'function') {
-                    lucide.createIcons();
+                if (typeof refreshLucideIcons === 'function') {
+                    refreshLucideIcons();
                 }
             }
 
