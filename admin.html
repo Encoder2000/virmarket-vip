@@ -496,6 +496,19 @@
             background-color: #FFF1F2 !important;
             border-color: #FDA4AF !important;
         }
+        html.theme-light #socialReminderBanner {
+            background-color: #E0F2FE !important;
+            border-color: #0284C7 !important;
+        }
+        html.theme-light #socialReminderBanner h3 {
+            color: #0C4A6E !important;
+        }
+        html.theme-light #socialReminderBanner p {
+            color: #0369A1 !important;
+        }
+        html.theme-light #socialReminderDropBadge {
+            color: #0284C7 !important;
+        }
         html.theme-light .reservation-timer-tag.bg-rose-500\/20 {
             background-color: #FEE2E2 !important;
             color: #B91C1C !important;
@@ -700,6 +713,26 @@
                     <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border col-span-2 sm:col-span-1">
                         <span class="font-mono text-[10px] uppercase text-zinc-400">Regla Bienvenida</span>
                         <div id="statDiscountRule" class="mt-1 font-display text-base sm:text-lg font-bold text-acid">-10% (máx 15€)</div>
+                    </div>
+                </div>
+
+                <!-- BANNER RECORDATORIO FIN DE EXCLUSIVIDAD 24H VIP (@virmarket_club) -->
+                <div id="socialReminderBanner" class="hidden rounded-2xl bg-sky-950/40 border-2 border-sky-400/60 p-4 sm:p-5 shadow-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl shrink-0">📢</span>
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="px-2 py-0.5 rounded bg-sky-400 text-obsidian font-mono text-[10px] font-bold uppercase">Fin Exclusividad 24h VIP</span>
+                                    <span id="socialReminderDropBadge" class="font-mono text-[11px] text-sky-300 font-bold"></span>
+                                </div>
+                                <h3 class="font-display text-base font-bold text-white mt-1">Prendas sobrantes listas para publicar en @virmarket_club</h3>
+                                <p id="socialReminderDesc" class="text-xs text-zinc-300 leading-relaxed mt-0.5"></p>
+                            </div>
+                        </div>
+                        <button type="button" id="socialReminderPublishBtn" class="shrink-0 px-4 py-2.5 rounded-xl bg-sky-400 hover:bg-sky-300 text-obsidian font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-400/20 transition-all cursor-pointer">
+                            🚀 Publicar Sobrantes Ahora
+                        </button>
                     </div>
                 </div>
 
@@ -2921,6 +2954,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const deepLinkLote = (urlParams.get('lote') || '').trim().toUpperCase();
         const deepLinkRef = (urlParams.get('ref') || '').trim().toUpperCase();
+        const deepLinkOpenSocial = (urlParams.get('openSocial') || '').trim().toUpperCase();
         const editRef = (urlParams.get('editRef') || '').trim().toUpperCase();
 
         const round2 = (n) => Math.round((Number(n || 0) + Number.EPSILON) * 100) / 100;
@@ -4727,6 +4761,41 @@
             } else if (controlsBox) {
                 controlsBox.classList.add('hidden');
             }
+            renderSocialReminderBanner();
+        }
+
+        function renderSocialReminderBanner() {
+            const banner = document.getElementById('socialReminderBanner');
+            if (!banner) return;
+            const cfg = adminState.config || {};
+            const activeId = (cfg.activeDropId || '').trim();
+            const endsMs = cfg.activeDropEndsAt ? Date.parse(cfg.activeDropEndsAt) : NaN;
+            // Respetar corte histórico: solo alertar para Drops cuya ventana VIP finalice a partir del 19/11/2026
+            const cutoffMs = Date.parse('2026-11-19T00:00:00Z');
+            const isExpRecent = Boolean(activeId && Number.isFinite(endsMs) && endsMs <= Date.now() && endsMs >= cutoffMs);
+            if (!isExpRecent) {
+                banner.classList.add('hidden');
+                return;
+            }
+            const pending = adminState.garments.filter(g => {
+                if ((g.dropId || '').trim().toUpperCase() !== activeId.toUpperCase()) return false;
+                if (String(g.status || '').toUpperCase() !== 'DISPONIBLE') return false;
+                const alreadyPub = Boolean(g.publishedToSocialAt || (g.photos_object && String(g.photos_object).includes('publishedToSocialAt')));
+                return !alreadyPub;
+            });
+            if (pending.length === 0) {
+                banner.classList.add('hidden');
+                return;
+            }
+            const badge = document.getElementById('socialReminderDropBadge');
+            const desc = document.getElementById('socialReminderDesc');
+            const btn = document.getElementById('socialReminderPublishBtn');
+            if (badge) badge.textContent = `${activeId} • ${pending.length} pendiente(s)`;
+            if (desc) {
+                desc.textContent = `Han concluido las 24h de exclusividad VIP de ${activeId}. Recuerda desocultar estas ${pending.length} prenda(s) en Vinted a precio general y publicarlas en @virmarket_club.`;
+            }
+            if (btn) btn.onclick = () => openSocialPublishModal(activeId);
+            banner.classList.remove('hidden');
         }
 
         function normalizeGarments(arr) {
@@ -4960,6 +5029,12 @@
                         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }, 250);
+            }
+
+            // Si viene desde el enlace directo del recordatorio Telegram/Email (?openSocial=DROP-XXXX)
+            if (!window.__admSocialDeepLinkHandled && deepLinkOpenSocial) {
+                window.__admSocialDeepLinkHandled = true;
+                setTimeout(() => openSocialPublishModal(deepLinkOpenSocial), 300);
             }
         }
 
@@ -9990,6 +10065,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     });
                 }
                 renderVintedWorkspace();
+                renderSocialReminderBanner();
 
             } catch (err) {
                 toast(`Error al publicar en Telegram: ${err.message}`, true);
