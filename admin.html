@@ -3869,7 +3869,7 @@
         }
 
         // Llamada autenticada al backend de administración
-        async function callAdminApi(action, extraPayload = {}) {
+        async function callAdminApi(action, extraPayload = {}, opts = {}) {
             if (urlParams.get('mock') === '1') {
                 if (action === 'delete_garment') {
                     const refsToDelete = extraPayload.refs || (extraPayload.ref ? [extraPayload.ref] : []);
@@ -4214,8 +4214,10 @@
             } catch (netErr) {
                 const dur = Math.max(0, Date.now() - opStartedAt);
                 const err = new Error(`Error de conexión con el backend de administración (${netErr.message || 'sin respuesta'}).`);
-                const errEntry = buildAuditEntryForOperation(action, extraPayload, null, dur, { statusCode: 0, message: err.message, stack: netErr.stack || '' });
-                if (errEntry) recordAuditLog(errEntry);
+                if (!opts.suppressNetworkErrorLog) {
+                    const errEntry = buildAuditEntryForOperation(action, extraPayload, null, dur, { statusCode: 0, message: err.message, stack: netErr.stack || '' });
+                    if (errEntry) recordAuditLog(errEntry);
+                }
                 throw err;
             }
             const data = await res.json().catch(() => ({}));
@@ -4246,7 +4248,7 @@
             }
             if (typeof obj === 'object') {
                 const out = {};
-                const sensitiveRe = /(password|pass|token|secret|apikey|api_key|otp|hash|salt|authorization)/i;
+                const sensitiveRe = /(?:^|_|-)(password|pass|token|secret|apikey|api_key|otp|otphash|otp_hash|adminhash|adminsalt|hash|salt|authorization)(?:$|_|-)|PassHash|Salt$/i;
                 for (const [k, v] of Object.entries(obj)) {
                     if (sensitiveRe.test(k)) {
                         out[k] = '***ENMASCARADO***';
@@ -4266,7 +4268,7 @@
 
         // Construye una entrada estructurada de auditoría para cualquier acción del panel
         function buildAuditEntryForOperation(action, extraPayload = {}, resData = {}, durationMs = 0, errObj = null) {
-            const silentSuccessActions = new Set(['get_dashboard', 'get_logs', 'create_log', 'resolve_logs']);
+            const silentSuccessActions = new Set(['get_dashboard', 'get_logs', 'create_log']);
             if (!errObj && silentSuccessActions.has(action)) return null;
 
             const p = extraPayload || {};
@@ -4367,6 +4369,13 @@
                 category = 'SISTEMA';
                 level = 'INFO';
                 message = `Purga de registros ejecutada (estrategia: ${p.strategy || 'routine_only'}).`;
+            } else if (action === 'resolve_logs') {
+                category = 'SISTEMA';
+                level = 'INFO';
+                entityRef = Array.isArray(p.ids) ? p.ids.map(id => `#${id}`).join(', ') : '';
+                message = p.resolveAll
+                    ? 'Todos los errores pendientes marcados como revisados.'
+                    : `Incidencia(s) marcada(s) como revisada(s) (${entityRef || 'log'}).`;
             } else if (action.startsWith('social_') || action === 'send_telegram_test' || action === 'publish_social_drop') {
                 category = 'TELEGRAM';
                 dropId = p.dropId || '';
@@ -4818,7 +4827,7 @@
                     adminState.garments.filter(g => g.status === 'RESERVADA').map(g => g.ref)
                 );
 
-                const data = await callAdminApi('get_dashboard');
+                const data = await callAdminApi('get_dashboard', {}, { suppressNetworkErrorLog: isAuto });
                 adminState.config = data.config || adminState.config;
                 adminState.garments = normalizeGarments(data.garments);
                 if (Array.isArray(data.contacts)) adminState.contacts = data.contacts;
@@ -5886,17 +5895,22 @@
         // Actualizar indicador de tiempo transcurrido cada 5s
         setInterval(updateLiveSyncIndicator, 5000);
 
-        // Al volver a la pestaña tras revisar el correo, Vinted o WhatsApp, sincronizar de inmediato
+        // Al volver a la pestaña tras revisar el correo, Vinted o WhatsApp, sincronizar sin duplicar llamadas
+        let lastAutoFocusSyncMs = 0;
+        function scheduleAutoFocusSync() {
+            const now = Date.now();
+            if (!adminState.password || (now - lastAutoFocusSyncMs) < 2500) return;
+            lastAutoFocusSyncMs = now;
+            setTimeout(() => {
+                if (!document.hidden && adminState.password && navigator.onLine !== false) {
+                    syncDashboardQuietly(true);
+                }
+            }, 250);
+        }
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && adminState.password) {
-                syncDashboardQuietly(true);
-            }
+            if (!document.hidden) scheduleAutoFocusSync();
         });
-        window.addEventListener('focus', () => {
-            if (adminState.password) {
-                syncDashboardQuietly(true);
-            }
-        });
+        window.addEventListener('focus', scheduleAutoFocusSync);
 
         // ======================== GESTIÓN DE COLAS Y TEMPORIZADORES 24H ========================
         function formatRemainingTime(ms) {
@@ -9531,6 +9545,16 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             setTimeout(() => URL.revokeObjectURL(url), 4000);
 
             toast(`✓ Descargado CSV con ${filtered.length} filas.`);
+            recordAuditLog({
+                level: 'INFO',
+                category: 'FINANZAS',
+                action: 'export_erp_csv',
+                source: 'admin_web',
+                actor: 'admin',
+                statusCode: 200,
+                message: `Exportación contable CSV generada (${filtered.length} filas de ${adminState.activeSubView}).`,
+                payload: { subView: adminState.activeSubView, rowCount: filtered.length }
+            });
         }
 
         // ======================== ENLACE DE EVENTOS DEL MÓDULO DE REGISTRO ========================
@@ -11553,6 +11577,18 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             if (adminState.password) {
                 try {
                     await loadDashboard();
+                    if (!window._vmSessionLogged) {
+                        window._vmSessionLogged = true;
+                        recordAuditLog({
+                            level: 'INFO',
+                            category: 'AUTH',
+                            action: 'session_resumed',
+                            source: 'admin_web',
+                            actor: 'admin',
+                            statusCode: 200,
+                            message: 'Panel VirMarket Studio abierto (sesión recordada).'
+                        });
+                    }
                     return;
                 } catch (e) {
                     console.warn('Fallo inicial al cargar panel con contraseña guardada:', e);
@@ -12133,6 +12169,16 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            recordAuditLog({
+                level: 'INFO',
+                category: 'SISTEMA',
+                action: 'export_logs_csv',
+                source: 'admin_web',
+                actor: 'admin',
+                statusCode: 200,
+                message: `Exportación de auditoría CSV descargada (${filtered.length} registros).`,
+                payload: { rowCount: filtered.length }
+            });
         }
 
         function exportLogsJson() {
@@ -12154,6 +12200,16 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            recordAuditLog({
+                level: 'INFO',
+                category: 'SISTEMA',
+                action: 'export_logs_json',
+                source: 'admin_web',
+                actor: 'admin',
+                statusCode: 200,
+                message: `Exportación técnica JSON de logs descargada (${filtered.length} registros).`,
+                payload: { rowCount: filtered.length }
+            });
         }
 
         window.resetLogsFilters = function() {
