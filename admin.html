@@ -1747,9 +1747,9 @@
                                 <i aria-hidden="true" data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-400"></i>
                                 <span>Marcar Errores Revisados</span>
                             </button>
-                            <button id="purgeLogsModalBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-zinc-500 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Limpiar logs antiguos o resueltos">
-                                <i aria-hidden="true" data-lucide="trash-2" class="w-3.5 h-3.5 text-zinc-400"></i>
-                                <span>Limpiar</span>
+                            <button id="purgeLogsModalBtn" type="button" class="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/40 hover:border-rose-400 text-xs font-mono font-bold text-rose-300 hover:text-rose-200 flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Eliminar registros antiguos o resueltos de la base de datos">
+                                <i aria-hidden="true" data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-400"></i>
+                                <span>Purgar BD</span>
                             </button>
                             <button id="exportLogsCsvBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono font-bold text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0" title="Exportar registros filtrados en formato CSV compatible con Excel">
                                 <i aria-hidden="true" data-lucide="download" class="w-3.5 h-3.5 text-acid"></i>
@@ -1841,8 +1841,8 @@
                                     <option value="THIS_MONTH">Este Mes</option>
                                     <option value="CUSTOM">Rango de Fechas...</option>
                                 </select>
-                                <button type="button" id="logsResetFiltersBtn" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-rose-400 text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors" title="Restablecer todos los filtros">
-                                    Limpiar
+                                <button type="button" id="logsResetFiltersBtn" class="px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs font-mono text-zinc-300 hover:text-acid transition-colors whitespace-nowrap shrink-0" title="Restablecer todos los filtros de búsqueda en pantalla">
+                                    Resetear Filtros
                                 </button>
                             </div>
                         </div>
@@ -4050,14 +4050,17 @@
                 }
                 if (action === 'purge_logs') {
                     if (window._mockLogsData) {
-                        const strat = extraPayload.strategy || 'routine_only';
+                        const strat = extraPayload.strategy || 'older_than_30d';
                         if (strat === 'routine_only') {
                             window._mockLogsData = window._mockLogsData.filter(l => l.level === 'ERROR' || l.level === 'WARN');
+                        } else if (strat === 'routine_older_7d') {
+                            const limit7 = Date.now() - 7 * 86400000;
+                            window._mockLogsData = window._mockLogsData.filter(l => (l.level === 'ERROR' || l.level === 'WARN') || Date.parse(l.createdAt) >= limit7);
                         } else if (strat === 'all_resolved') {
                             window._mockLogsData = window._mockLogsData.filter(l => !l.resolved);
                         } else if (strat === 'older_than_30d') {
-                            const limit = Date.now() - 30 * 86400000;
-                            window._mockLogsData = window._mockLogsData.filter(l => Date.parse(l.createdAt) >= limit || (!l.resolved && l.level === 'ERROR'));
+                            const limit30 = Date.now() - 30 * 86400000;
+                            window._mockLogsData = window._mockLogsData.filter(l => Date.parse(l.createdAt) >= limit30 || (!l.resolved && (l.level === 'ERROR' || l.level === 'WARN')));
                         }
                     }
                     return { ok: true, message: 'Purga completada.' };
@@ -12115,33 +12118,10 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             }
         }
 
-        async function executePurgeLogs() {
-            const sel = document.querySelector('input[name="purgeStrategy"]:checked');
-            const strat = sel ? sel.value : 'routine_only';
-            const btn = document.getElementById('confirmPurgeBtn');
-            if (btn) btn.disabled = true;
-
-            try {
-                await callAdminApi('purge_logs', { strategy: strat });
-                document.getElementById('purgeLogsModal').classList.add('hidden');
-                await loadAndRenderLogs(true);
-            } catch (err) {
-                alert(`Error al purgar logs: ${err.message || 'Error desconocido'}`);
-            } finally {
-                if (btn) btn.disabled = false;
-            }
-        }
-
-        function exportLogsCsv() {
-            const rawLogs = adminState.logsState.logs || [];
-            const filtered = filterLogsDataset(rawLogs);
-            if (filtered.length === 0) {
-                alert('No hay registros coincidentes para exportar.');
-                return;
-            }
-
-            const headers = ['ID', 'Fecha_Hora_ISO', 'Nivel', 'Modulo', 'Accion', 'Actor', 'Origen', 'Referencia', 'Drop', 'Codigo_HTTP', 'Duracion_ms', 'Mensaje', 'Error_Detalle', 'Revisado'];
-            const rows = filtered.map(l => [
+        function downloadLogsCsvFile(rowsList, filenamePrefix = 'virmarket_logs') {
+            if (!Array.isArray(rowsList) || rowsList.length === 0) return false;
+            const headers = ['ID', 'Fecha_Hora_ISO', 'Nivel', 'Modulo', 'Accion', 'Actor', 'Origen', 'Referencia', 'Drop', 'Codigo_HTTP', 'Duracion_ms', 'Mensaje', 'Error_Detalle', 'Revisado', 'Payload_JSON'];
+            const rows = rowsList.map(l => [
                 l.id,
                 `"${l.createdAt || ''}"`,
                 `"${l.level || 'INFO'}"`,
@@ -12155,20 +12135,161 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 l.durationMs || 0,
                 `"${(l.message || '').replace(/"/g, '""')}"`,
                 `"${(l.errorDetail || '').replace(/"/g, '""')}"`,
-                l.resolved ? 'SI' : 'NO'
+                l.resolved ? 'SI' : 'NO',
+                `"${String(l.payloadJson || '{}').replace(/"/g, '""')}"`
             ]);
 
-            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const csvContent = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\r\n');
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            const dateStr = new Date().toISOString().slice(0, 10);
+            const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
             a.href = url;
-            a.download = `virmarket_logs_${dateStr}.csv`;
+            a.download = `${filenamePrefix}_${stamp}.csv`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            setTimeout(() => URL.revokeObjectURL(url), 4000);
+            return true;
+        }
+
+        function getLogsAffectedByPurge(strategy) {
+            const allLogs = adminState.logsState.logs || [];
+            const nowMs = Date.now();
+            const ms30d = 30 * 86400000;
+            const ms7d = 7 * 86400000;
+            return allLogs.filter(l => {
+                const lvl = String(l.level || 'INFO').toUpperCase();
+                const isRoutine = (lvl === 'INFO' || lvl === 'SUCCESS');
+                const isResolved = Boolean(l.resolved);
+                const ts = Date.parse(l.createdAt || '') || nowMs;
+                if (strategy === 'older_than_30d') {
+                    return (isRoutine || isResolved) && ts < (nowMs - ms30d);
+                }
+                if (strategy === 'all_resolved') {
+                    return isResolved;
+                }
+                if (strategy === 'routine_older_7d') {
+                    return isRoutine && ts < (nowMs - ms7d);
+                }
+                if (strategy === 'routine_only') {
+                    return isRoutine;
+                }
+                return false;
+            });
+        }
+
+        function updatePurgeImpactPreview() {
+            const allLogs = adminState.logsState.logs || [];
+            const sel = document.querySelector('input[name="purgeStrategy"]:checked');
+            const strat = sel ? sel.value : 'older_than_30d';
+            const affected = getLogsAffectedByPurge(strat);
+            const kept = Math.max(0, allLogs.length - affected.length);
+
+            const box = document.getElementById('purgeImpactPreviewBox');
+            const kwBox = document.getElementById('purgeConfirmKeywordBox');
+            const kwInput = document.getElementById('purgeConfirmKeywordInput');
+            const btn = document.getElementById('confirmPurgeBtn');
+
+            const needsKeyword = (strat === 'routine_only');
+            if (kwBox) kwBox.classList.toggle('hidden', !needsKeyword);
+
+            if (box) {
+                if (affected.length === 0) {
+                    box.className = 'p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/35 text-xs space-y-1';
+                    box.innerHTML = `
+                        <div class="font-bold text-emerald-300 flex items-center gap-1.5">
+                            <span>✓ 0 registros afectados por esta regla</span>
+                        </div>
+                        <p class="text-[11px] text-zinc-300">Se conservarán intactos los <strong>${allLogs.length}</strong> registros actuales. No hay nada que eliminar.</p>
+                    `;
+                } else {
+                    const dates = affected.map(l => Date.parse(l.createdAt || '')).filter(Boolean).sort((a, b) => a - b);
+                    const minD = dates.length ? new Date(dates[0]).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+                    const maxD = dates.length ? new Date(dates[dates.length - 1]).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+                    const dangerColors = needsKeyword
+                        ? 'bg-rose-500/15 border-rose-500/50 text-rose-200'
+                        : 'bg-amber-500/10 border-amber-500/40 text-amber-200';
+                    const titleColor = needsKeyword ? 'text-rose-300' : 'text-amber-300';
+                    box.className = `p-3.5 rounded-xl border text-xs space-y-1.5 ${dangerColors}`;
+                    box.innerHTML = `
+                        <div class="font-bold ${titleColor}">
+                            ⚠️ Se eliminarán <strong>${affected.length}</strong> de ${allLogs.length} registros (permanecerán ${kept})
+                        </div>
+                        <div class="text-[11px] text-zinc-300 font-mono">
+                            Rango afectado: ${escapeHtml(minD)} → ${escapeHtml(maxD)}
+                        </div>
+                        ${needsKeyword
+                            ? '<p class="text-[11px] text-rose-300 font-semibold">ATENCIÓN: Borrará también los eventos de rutina de hoy y recientes. Conserva únicamente errores y avisos.</p>'
+                            : '<p class="text-[11px] text-zinc-400">Los errores pendientes de revisar y el historial reciente protegido no se tocarán.</p>'
+                        }
+                    `;
+                }
+            }
+
+            if (btn) {
+                const kwOk = !needsKeyword || ((kwInput ? kwInput.value.trim().toUpperCase() : '') === 'LIMPIAR');
+                const canRun = affected.length > 0 && kwOk;
+                btn.disabled = !canRun;
+                btn.classList.toggle('opacity-40', !canRun);
+                btn.classList.toggle('cursor-not-allowed', !canRun);
+            }
+        }
+
+        function openPurgeLogsModal() {
+            const defaultRadio = document.querySelector('input[name="purgeStrategy"][value="older_than_30d"]');
+            if (defaultRadio) defaultRadio.checked = true;
+            const kwInput = document.getElementById('purgeConfirmKeywordInput');
+            if (kwInput) kwInput.value = '';
+            const exportChk = document.getElementById('purgeAutoExportCsvChk');
+            if (exportChk) exportChk.checked = true;
+            updatePurgeImpactPreview();
+            document.getElementById('purgeLogsModal')?.classList.remove('hidden');
+        }
+
+        async function executePurgeLogs() {
+            const sel = document.querySelector('input[name="purgeStrategy"]:checked');
+            const strat = sel ? sel.value : 'older_than_30d';
+            const affected = getLogsAffectedByPurge(strat);
+            if (affected.length === 0) return;
+
+            if (strat === 'routine_only') {
+                const kw = (document.getElementById('purgeConfirmKeywordInput')?.value || '').trim().toUpperCase();
+                if (kw !== 'LIMPIAR') {
+                    toast('Escribe LIMPIAR para confirmar el borrado total de eventos de rutina.', true);
+                    return;
+                }
+            }
+
+            const autoExport = Boolean(document.getElementById('purgeAutoExportCsvChk')?.checked);
+            if (autoExport) {
+                downloadLogsCsvFile(affected, 'virmarket_logs_respaldo_pre_purga');
+                toast(`📥 Copia de seguridad CSV descargada (${affected.length} registros).`);
+            }
+
+            const btn = document.getElementById('confirmPurgeBtn');
+            if (btn) btn.disabled = true;
+
+            try {
+                await callAdminApi('purge_logs', { strategy: strat, backedUpCsv: autoExport, deletedPreviewCount: affected.length });
+                document.getElementById('purgeLogsModal').classList.add('hidden');
+                await loadAndRenderLogs(true);
+            } catch (err) {
+                alert(`Error al purgar logs: ${err.message || 'Error desconocido'}`);
+            } finally {
+                updatePurgeImpactPreview();
+            }
+        }
+
+        function exportLogsCsv() {
+            const rawLogs = adminState.logsState.logs || [];
+            const filtered = filterLogsDataset(rawLogs);
+            if (filtered.length === 0) {
+                alert('No hay registros coincidentes para exportar.');
+                return;
+            }
+
+            downloadLogsCsvFile(filtered, 'virmarket_logs');
             recordAuditLog({
                 level: 'INFO',
                 category: 'SISTEMA',
@@ -12333,9 +12454,16 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
 
             const purgeModalBtn = document.getElementById('purgeLogsModalBtn');
             if (purgeModalBtn) {
-                purgeModalBtn.addEventListener('click', () => {
-                    document.getElementById('purgeLogsModal').classList.remove('hidden');
-                });
+                purgeModalBtn.addEventListener('click', openPurgeLogsModal);
+            }
+
+            document.querySelectorAll('input[name="purgeStrategy"]').forEach(radio => {
+                radio.addEventListener('change', updatePurgeImpactPreview);
+            });
+
+            const purgeKwInput = document.getElementById('purgeConfirmKeywordInput');
+            if (purgeKwInput) {
+                purgeKwInput.addEventListener('input', updatePurgeImpactPreview);
             }
 
             const closePurgeBtn = document.getElementById('closePurgeModalBtn');
@@ -12503,17 +12631,17 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
         </div>
     </div>
 
-    <!-- Modal de Purga / Limpieza Selectiva de Logs -->
+    <!-- Modal de Purga / Limpieza Selectiva Segura de Logs -->
     <div id="purgeLogsModal" role="dialog" aria-modal="true" aria-labelledby="purgeModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
-        <div class="relative w-full max-w-md my-auto rounded-3xl bg-obsidian-card border border-zinc-700 p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+        <div class="relative w-full max-w-lg my-auto rounded-3xl bg-obsidian-card border border-zinc-700 p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0">
-                        <i aria-hidden="true" data-lucide="trash-2" class="w-4 h-4"></i>
+                        <i aria-hidden="true" data-lucide="shield-alert" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h3 id="purgeModalTitle" class="font-display text-base font-bold text-white uppercase">Limpieza de Registros</h3>
-                        <p class="text-[11px] text-zinc-400">Selecciona el criterio de purga segura en Supabase</p>
+                        <h3 id="purgeModalTitle" class="font-display text-base font-bold text-white uppercase">Purgar Registros en Base de Datos</h3>
+                        <p class="text-[11px] text-zinc-400">Revisa exactamente qué se eliminará antes de confirmar</p>
                     </div>
                 </div>
                 <button type="button" id="closePurgeModalBtn" aria-label="Cerrar modal" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
@@ -12522,35 +12650,62 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             </div>
 
             <div class="space-y-2 text-xs">
-                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 flex items-start gap-2.5 cursor-pointer">
-                    <input type="radio" name="purgeStrategy" value="routine_only" checked class="mt-0.5 text-acid focus:ring-0">
+                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-acid flex items-start gap-2.5 cursor-pointer">
+                    <input type="radio" name="purgeStrategy" value="older_than_30d" checked class="mt-0.5 text-acid focus:ring-0">
                     <div>
-                        <span class="font-semibold text-white block">Solo Eventos de Rutina (INFO y SUCCESS)</span>
-                        <span class="text-[11px] text-zinc-400">Conserva todos los errores y advertencias para auditoría continua.</span>
+                        <span class="font-semibold text-white block">Antiguos con más de 30 días <span class="ml-1 px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">Recomendado</span></span>
+                        <span class="text-[11px] text-zinc-400">Elimina solo eventos de rutina y errores ya revisados anteriores al último mes.</span>
                     </div>
                 </label>
-                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 flex items-start gap-2.5 cursor-pointer">
-                    <input type="radio" name="purgeStrategy" value="older_than_30d" class="mt-0.5 text-acid focus:ring-0">
-                    <div>
-                        <span class="font-semibold text-white block">Antiguos con más de 30 días</span>
-                        <span class="text-[11px] text-zinc-400">Elimina eventos de rutina y errores ya resueltos con más de un mes.</span>
-                    </div>
-                </label>
-                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 flex items-start gap-2.5 cursor-pointer">
+                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-600 flex items-start gap-2.5 cursor-pointer">
                     <input type="radio" name="purgeStrategy" value="all_resolved" class="mt-0.5 text-acid focus:ring-0">
                     <div>
-                        <span class="font-semibold text-white block">Todos los Errores Revisados</span>
-                        <span class="text-[11px] text-zinc-400">Limpia cualquier incidencia que ya haya sido marcada como resuelta.</span>
+                        <span class="font-semibold text-white block">Solo Errores y Avisos ya Revisados</span>
+                        <span class="text-[11px] text-zinc-400">Limpia únicamente las incidencias que ya hayas marcado como revisadas.</span>
                     </div>
                 </label>
+                <label class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-600 flex items-start gap-2.5 cursor-pointer">
+                    <input type="radio" name="purgeStrategy" value="routine_older_7d" class="mt-0.5 text-acid focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-white block">Eventos de Rutina anteriores a 7 días</span>
+                        <span class="text-[11px] text-zinc-400">Conserva toda la semana actual (INFO/SUCCESS) y todos los errores intactos.</span>
+                    </div>
+                </label>
+                <label class="p-3 rounded-xl bg-rose-950/25 border border-rose-500/35 hover:border-rose-400 flex items-start gap-2.5 cursor-pointer">
+                    <input type="radio" name="purgeStrategy" value="routine_only" class="mt-0.5 text-rose-500 focus:ring-0">
+                    <div>
+                        <span class="font-semibold text-rose-200 block">Todos los Eventos de Rutina (incluidos los de hoy)</span>
+                        <span class="text-[11px] text-rose-300/80">Vacía por completo todo el historial INFO y SUCCESS, incluidos eventos recientes. Solo conserva errores/avisos.</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Panel dinámico de previsualización de impacto -->
+            <div id="purgeImpactPreviewBox" class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 text-xs"></div>
+
+            <!-- Respaldo CSV automático previo al borrado -->
+            <label class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-2.5 cursor-pointer text-xs">
+                <input type="checkbox" id="purgeAutoExportCsvChk" checked class="mt-0.5 rounded text-emerald-400 focus:ring-0">
+                <div>
+                    <span class="font-semibold text-emerald-200 block">📥 Descargar copia CSV de seguridad antes de eliminar</span>
+                    <span class="text-[11px] text-zinc-400">Guarda localmente los registros afectados justo antes de borrarlos en Supabase.</span>
+                </div>
+            </label>
+
+            <!-- Candado extra obligatorio para borrado total de rutina -->
+            <div id="purgeConfirmKeywordBox" class="hidden p-3 rounded-xl bg-rose-950/40 border border-rose-500/50 space-y-1.5 text-xs">
+                <label for="purgeConfirmKeywordInput" class="block font-semibold text-rose-200">
+                    Confirmación obligatoria: escribe <span class="font-mono px-1.5 py-0.5 rounded bg-rose-500/30 text-white">LIMPIAR</span> para habilitar el borrado total de rutina
+                </label>
+                <input type="text" id="purgeConfirmKeywordInput" autocomplete="off" placeholder="Escribe LIMPIAR aquí..." class="w-full px-3 py-2 rounded-lg bg-obsidian border border-rose-500/50 font-mono text-xs text-white uppercase focus:outline-none focus:border-rose-400">
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800">
                 <button type="button" id="cancelPurgeBtn" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white">
                     Cancelar
                 </button>
-                <button type="button" id="confirmPurgeBtn" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-display font-bold text-xs uppercase tracking-wide shadow-md">
-                    Confirmar Limpieza
+                <button type="button" id="confirmPurgeBtn" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-display font-bold text-xs uppercase tracking-wide shadow-md transition-opacity">
+                    Confirmar Purga
                 </button>
             </div>
         </div>
