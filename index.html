@@ -85,6 +85,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://stats.virmarsolutions.com/script.js" data-website-id="c3ff5fa2-af13-40d1-b7e0-fb0ad8dab1c8"></script>
     <style>
         body {
             background-color: #141915;
@@ -1852,6 +1853,7 @@
                 memberVinted = vintedUser;
                 localStorage.setItem('vm_member_email', email);
                 localStorage.setItem('vm_member_vinted', vintedUser);
+                try { window.umami?.track('vip_reserve_submit', { count: refs.length, drop: state.drop.id || '' }); } catch (_) {}
 
                 state.selectedRefs.clear();
                 document.getElementById('checkoutForm').classList.add('hidden');
@@ -1936,6 +1938,7 @@
                 memberVinted = vintedUser;
                 localStorage.setItem('vm_member_email', email);
                 localStorage.setItem('vm_member_vinted', vintedUser);
+                try { window.umami?.track('vip_waitlist_submit', { ref }); } catch (_) {}
 
                 fb.className = 'p-3.5 rounded-xl text-xs bg-acid-muted border border-acid/50 text-zinc-100';
                 fb.textContent = payload.message || `Estás en la posición #${payload.position} de la cola para ${ref}.`;
@@ -2005,6 +2008,7 @@
 
                 memberEmail = email;
                 localStorage.setItem('vm_member_email', email);
+                try { window.umami?.track('vip_lead_submit', { source: sourceParam, alreadyConfirmed: Boolean(payload.alreadyConfirmed) }); } catch (_) {}
                 leadForm.classList.add('hidden');
                 const titleEl = document.getElementById('leadSuccessTitle');
                 const copyEl = document.getElementById('dynLeadSuccessCopy');
