@@ -1478,12 +1478,19 @@
                         <!-- 3. Sub-vista Clientes CRM 360º -->
                         <div id="subview-clientes" class="hidden space-y-3">
                             <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                <div class="p-4 border-b border-obsidian-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="p-4 border-b border-obsidian-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div>
-                                        <h3 class="font-display text-sm font-bold text-white uppercase">Directorio CRM 360º (Compradores + Leads Tarjeta QR Brevo)</h3>
-                                        <p class="text-[11px] text-zinc-400 mt-0.5">Visión unificada de clientes recurrentes, compradores, leads en espera y notas privadas.</p>
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">Directorio CRM 360º (Compradores + Leads Web &amp; QR Brevo)</h3>
+                                        <p class="text-[11px] text-zinc-400 mt-0.5">Visión unificada de clientes recurrentes, compradores, leads de Revista Web / Club VIP QR y notas privadas.</p>
                                     </div>
-                                    <span id="clientesRowCountLabel" class="font-mono text-xs text-zinc-400 shrink-0">0 clientes</span>
+                                    <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+                                        <select id="clientesOriginFilter" aria-label="Filtrar clientes por canal de captación" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-zinc-200 focus:outline-none focus:border-acid">
+                                            <option value="ALL">Todos los canales</option>
+                                            <option value="WEB">📰 Solo Revista Web (Lista 6)</option>
+                                            <option value="QR">🌱 Solo Club VIP QR (Lista 3)</option>
+                                        </select>
+                                        <span id="clientesRowCountLabel" class="font-mono text-xs text-zinc-400 shrink-0">0 clientes</span>
+                                    </div>
                                 </div>
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
@@ -3079,7 +3086,8 @@
                 channel: 'ALL',
                 brand: 'ALL',
                 size: 'ALL',
-                profit: 'ALL'
+                profit: 'ALL',
+                clientSource: 'ALL'
             },
             activeSubView: 'ventas',
             erpViewModes: {
@@ -8718,7 +8726,11 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     brevoId: c.id,
                     createdAt: c.createdAt || '',
                     numReservas: Number(c.numReservas || 0),
-                    firstName: c.firstName || ''
+                    firstName: c.firstName || '',
+                    origen: String(c.origen || '').trim(),
+                    doiFecha: String(c.doiFecha || '').trim(),
+                    listIds: Array.isArray(c.listIds) ? c.listIds : [],
+                    emailBlacklisted: Boolean(c.emailBlacklisted)
                 });
             });
 
@@ -8781,13 +8793,29 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 }
             });
 
-            const clientsList = [...crmMap.values()];
+            let clientsList = [...crmMap.values()];
+
+            // Filtrar por canal de captación (Revista Web vs Club VIP QR)
+            const srcFilter = adminState.registroFilters.clientSource || 'ALL';
+            if (srcFilter === 'WEB') {
+                clientsList = clientsList.filter(c => {
+                    const lids = Array.isArray(c.listIds) ? c.listIds : [];
+                    const orig = String(c.origen || '').toLowerCase();
+                    return lids.includes(6) || orig.startsWith('revista');
+                });
+            } else if (srcFilter === 'QR') {
+                clientsList = clientsList.filter(c => {
+                    const lids = Array.isArray(c.listIds) ? c.listIds : [];
+                    const orig = String(c.origen || '').toLowerCase();
+                    return lids.includes(3) || (orig && !orig.startsWith('revista')) || (c.purchases.length > 0 && !lids.includes(6));
+                });
+            }
 
             // Filtrar por buscador si procede
             const q = (adminState.registroFilters.search || '').trim().toLowerCase();
             if (!q) return clientsList;
             return clientsList.filter(c => {
-                const hay = [c.email, c.vintedUser, c.firstName].join(' ').toLowerCase();
+                const hay = [c.email, c.vintedUser, c.firstName, c.origen || ''].join(' ').toLowerCase();
                 return hay.includes(q);
             });
         }
@@ -8821,8 +8849,15 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 const reservedPurchases = c.purchases.filter(p => p.status === 'RESERVADA');
                 const ltv = completedPurchases.reduce((acc, p) => acc + p.price, 0);
 
+                const lids = Array.isArray(c.listIds) ? c.listIds : [];
+                const origLower = String(c.origen || '').toLowerCase();
+                const isWebLead = lids.includes(6) || origLower.startsWith('revista');
+                const isVipLead = lids.includes(3) || (origLower && !origLower.startsWith('revista'));
+
                 let tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">🌱 Lead QR</span>';
-                if (completedPurchases.length >= 2) {
+                if (isWebLead && !isVipLead && completedPurchases.length === 0 && reservedPurchases.length === 0 && c.waitlists.length === 0) {
+                    tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30">📰 Lead Revista</span>';
+                } else if (completedPurchases.length >= 2) {
                     tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid text-obsidian shadow-sm">🏆 VIP Recurrente</span>';
                 } else if (completedPurchases.length === 1) {
                     tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🛍️ Comprador</span>';
@@ -8830,7 +8865,16 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40">⏱️ Reserva Activa</span>';
                 } else if (c.waitlists.length > 0) {
                     tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">⏳ En Cola</span>';
+                } else if (isWebLead && isVipLead) {
+                    tagBadge = '<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-acid-muted text-acid border border-acid/40">📰 Web + 🌱 VIP</span>';
                 }
+
+                const originLabel = c.origen
+                    ? `Origen: ${escapeHtml(c.origen)}`
+                    : (isWebLead ? 'Origen: Revista Web' : (isVipLead ? 'Origen: Tarjeta QR' : ''));
+                const couponCell = (isWebLead && !isVipLead)
+                    ? '<span class="text-sky-300/90">Solo Revista</span>'
+                    : (c.numReservas === 0 ? '<span class="text-acid font-bold">Disponible</span>' : '<span class="text-zinc-500">Consumido</span>');
 
                 const clientMeta = configCrm[c.key.toLowerCase()] || {};
                 const privateNote = clientMeta.note || '';
@@ -8850,7 +8894,10 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                             </div>
                         </div>
                     </td>
-                    <td class="py-3 px-3 font-mono text-xs text-zinc-300 whitespace-nowrap">${escapeHtml(c.email || '-')}</td>
+                    <td class="py-3 px-3 font-mono text-xs text-zinc-300 whitespace-nowrap">
+                        <div>${escapeHtml(c.email || '-')}</div>
+                        ${originLabel ? `<div class="text-[10px] text-zinc-400 mt-0.5">${originLabel}${c.emailBlacklisted ? ' • <span class="text-rose-400">Baja</span>' : ''}</div>` : ''}
+                    </td>
                     <td class="py-3 px-3 text-center whitespace-nowrap">${tagBadge}</td>
                     <td class="py-3 px-3 text-center font-mono tabular-nums text-xs whitespace-nowrap">
                         <strong class="text-white">${completedPurchases.length}</strong>
@@ -8858,7 +8905,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     </td>
                     <td class="py-3 px-3 text-right font-mono tabular-nums font-bold text-acid whitespace-nowrap">${fmtEur(ltv)}</td>
                     <td class="py-3 px-3 text-center font-mono text-[10px] whitespace-nowrap">
-                        ${c.numReservas === 0 ? '<span class="text-acid font-bold">Disponible</span>' : '<span class="text-zinc-500">Consumido</span>'}
+                        ${couponCell}
                     </td>
                     <td class="py-3 px-3 max-w-[180px]">
                         <span class="text-[11px] text-zinc-400 truncate block" title="${escapeHtml(privateNote)}">
@@ -9738,6 +9785,11 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             renderActiveSubView();
         });
 
+        document.getElementById('clientesOriginFilter')?.addEventListener('change', (e) => {
+            adminState.registroFilters.clientSource = e.target.value;
+            renderActiveSubView();
+        });
+
         // Reset filtros
         document.getElementById('erpResetFiltersBtn')?.addEventListener('click', () => {
             adminState.registroFilters = {
@@ -9750,8 +9802,11 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 channel: 'ALL',
                 brand: 'ALL',
                 size: 'ALL',
-                profit: 'ALL'
+                profit: 'ALL',
+                clientSource: 'ALL'
             };
+            const origSel = document.getElementById('clientesOriginFilter');
+            if (origSel) origSel.value = 'ALL';
             const sIn = document.getElementById('erpFilterSearch');
             if (sIn) sIn.value = '';
             const pSel = document.getElementById('erpFilterPeriod');
