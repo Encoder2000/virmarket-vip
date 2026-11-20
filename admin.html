@@ -1296,6 +1296,9 @@
                         <button type="button" data-subview="lotes" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
                             📦 5. Registro Lotes <span id="badgeCountLotes" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-800">0</span>
                         </button>
+                        <button type="button" data-subview="analitica" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
+                            📊 6. Tráfico &amp; Clics
+                        </button>
                     </div>
 
                     <!-- Barra Flotante de Acciones en Bloque -->
@@ -1576,6 +1579,76 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Sub-vista Tráfico y Clics Umami Analytics -->
+                        <div id="subview-analitica" class="hidden space-y-4">
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">Analítica en Vivo (Umami sin cookies)</h3>
+                                    <p id="umamiUpdatedLabel" class="text-[11px] text-zinc-400 mt-0.5">Tráfico de Revista Pulso Cotidiano + Club VIP QR y clics hacia Farmasi / Vinted.</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                    <select id="umamiRangeSelect" aria-label="Periodo de analítica Umami" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-zinc-200 focus:outline-none focus:border-acid">
+                                        <option value="24h">Últimas 24h</option>
+                                        <option value="7d" selected>Últimos 7 días</option>
+                                        <option value="30d">Últimos 30 días</option>
+                                    </select>
+                                    <button type="button" id="umamiRefreshBtn" class="px-3 py-1.5 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold hover:bg-acid-hover transition-colors cursor-pointer">
+                                        🔄 Actualizar
+                                    </button>
+                                    <a href="https://stats.virmarsolutions.com" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-zinc-200 hover:border-acid transition-colors">
+                                        Abrir Umami ↗
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div id="umamiStatusBox" role="status" aria-live="polite" class="hidden rounded-xl p-3 text-xs font-mono"></div>
+
+                            <!-- Tarjetas KPI de Umami -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 space-y-1.5">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-mono text-[10px] uppercase tracking-wider text-sky-300">📰 Revista Web</span>
+                                        <span id="umamiRevActive" class="font-mono text-[10px] text-emerald-400">0 activos</span>
+                                    </div>
+                                    <div id="umamiRevVisitors" class="font-display text-2xl font-bold text-white tabular-nums">0 visitantes</div>
+                                    <p id="umamiRevMeta" class="text-[11px] text-zinc-400">0 páginas vistas • 0 leads DOI</p>
+                                </div>
+
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 space-y-1.5">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-mono text-[10px] uppercase tracking-wider text-acid">🌱 Club VIP QR</span>
+                                        <span id="umamiVipActive" class="font-mono text-[10px] text-emerald-400">0 activos</span>
+                                    </div>
+                                    <div id="umamiVipVisitors" class="font-display text-2xl font-bold text-white tabular-nums">0 visitantes</div>
+                                    <p id="umamiVipMeta" class="text-[11px] text-zinc-400">0 páginas vistas • 0 leads DOI</p>
+                                </div>
+
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 space-y-1.5">
+                                    <span class="font-mono text-[10px] uppercase tracking-wider text-amber-300">🎯 Clics &amp; Conversiones</span>
+                                    <div id="umamiOutboundTotal" class="font-display text-2xl font-bold text-white tabular-nums">0 clics salientes</div>
+                                    <p id="umamiOutboundMeta" class="text-[11px] text-zinc-400">Farmasi: 0 • Vinted: 0 • PDF: 0</p>
+                                </div>
+                            </div>
+
+                            <!-- Tablas de Orígenes, Páginas y Eventos -->
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">Orígenes &amp; UTMs (Revista)</div>
+                                    <div id="umamiReferrersList" class="p-3.5 space-y-2 text-xs text-zinc-300">Sin datos todavía.</div>
+                                </div>
+
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">Guías y Páginas Más Vistas</div>
+                                    <div id="umamiPathsList" class="p-3.5 space-y-2 text-xs text-zinc-300">Sin datos todavía.</div>
+                                </div>
+
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">Eventos (Farmasi, Vinted, VIP)</div>
+                                    <div id="umamiEventsList" class="p-3.5 space-y-2 text-xs text-zinc-300">Sin eventos todavía.</div>
                                 </div>
                             </div>
                         </div>
@@ -2957,6 +3030,7 @@
         const WEBHOOK_ADMIN_AUTH_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin-auth';
         const WEBHOOK_ADMIN_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin';
         const WEBHOOK_SOCIAL_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-social';
+        const WEBHOOK_ANALYTICS_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/pulso-admin-analytics';
 
         const urlParams = new URLSearchParams(window.location.search);
         const deepLinkLote = (urlParams.get('lote') || '').trim().toUpperCase();
@@ -9132,7 +9206,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 }
             });
 
-            ['ventas', 'prendas', 'clientes', 'drops', 'lotes'].forEach(v => {
+            ['ventas', 'prendas', 'clientes', 'drops', 'lotes', 'analitica'].forEach(v => {
                 const el = document.getElementById(`subview-${v}`);
                 if (el) el.classList.toggle('hidden', v !== subViewName);
             });
@@ -9175,8 +9249,117 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 renderSubViewDrops(filtered);
             } else if (adminState.activeSubView === 'lotes') {
                 renderSubViewLotes(filtered, computedLots);
+            } else if (adminState.activeSubView === 'analitica') {
+                renderSubViewAnalitica();
             }
         }
+
+        let umamiCache = { key: '', fetchedAt: 0, data: null };
+
+        function renderMetricListHtml(items, emptyText) {
+            if (!Array.isArray(items) || items.length === 0) {
+                return `<p class="text-zinc-500 font-mono text-[11px]">${escapeHtml(emptyText)}</p>`;
+            }
+            return items.map(it => `
+                <div class="flex items-center justify-between gap-2 py-1.5 border-b border-obsidian-border/60 last:border-0">
+                    <span class="font-mono text-[11px] text-zinc-200 truncate" title="${escapeHtml(it.x)}">${escapeHtml(it.x)}</span>
+                    <span class="font-mono text-xs font-bold text-acid shrink-0">${Number(it.y || 0)}</span>
+                </div>
+            `).join('');
+        }
+
+        function paintUmamiData(data) {
+            const rev = data.revista || {};
+            const vip = data.vip || {};
+            const leads = data.leads || {};
+
+            const revStats = rev.stats || {};
+            const vipStats = vip.stats || {};
+
+            const setText = (id, txt) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = txt;
+            };
+
+            setText('umamiRevActive', `${Number(rev.active || 0)} activos`);
+            setText('umamiRevVisitors', `${Number(revStats.visitors || 0)} visitantes`);
+            setText('umamiRevMeta', `${Number(revStats.pageviews || 0)} páginas • +${Number(leads.periodWebConfirmed || 0)} leads (${Number(leads.webConfirmed || 0)} tot.)`);
+
+            setText('umamiVipActive', `${Number(vip.active || 0)} activos`);
+            setText('umamiVipVisitors', `${Number(vipStats.visitors || 0)} visitantes`);
+            setText('umamiVipMeta', `${Number(vipStats.pageviews || 0)} páginas • +${Number(leads.periodQrConfirmed || 0)} leads (${Number(leads.qrConfirmed || 0)} tot.)`);
+
+            const farmasi = Number(rev.farmasiClicks || 0);
+            const vinted = Number(rev.vintedClicks || 0);
+            const pdf = Number(rev.pdfDownloads || 0);
+            const vipRes = Number(vip.reserveSubmits || 0);
+            setText('umamiOutboundTotal', `${farmasi + vinted} clics salientes`);
+            setText('umamiOutboundMeta', `Farmasi: ${farmasi} • Vinted: ${vinted} • PDF: ${pdf} • Res. VIP: ${vipRes}`);
+
+            const refsEl = document.getElementById('umamiReferrersList');
+            const pathsEl = document.getElementById('umamiPathsList');
+            const eventsEl = document.getElementById('umamiEventsList');
+
+            const combinedRefs = [...(rev.referrers || []), ...(rev.queries || []).map(q => ({ x: `UTM: ${q.x}`, y: q.y }))];
+            if (refsEl) refsEl.innerHTML = renderMetricListHtml(combinedRefs, 'Sin referentes externos o UTMs en este periodo.');
+            if (pathsEl) pathsEl.innerHTML = renderMetricListHtml(rev.paths || [], 'Sin páginas vistas en este periodo.');
+
+            const combinedEvents = [
+                ...(rev.events || []).map(e => ({ x: `Revista · ${e.x}`, y: e.y })),
+                ...(vip.events || []).map(e => ({ x: `VIP · ${e.x}`, y: e.y }))
+            ];
+            if (eventsEl) eventsEl.innerHTML = renderMetricListHtml(combinedEvents, 'Sin eventos registrados todavía.');
+
+            const upd = document.getElementById('umamiUpdatedLabel');
+            if (upd && data.generatedAt) {
+                upd.textContent = `Actualizado ${new Date(data.generatedAt).toLocaleTimeString('es-ES')} • Periodo: ${data.range || '7d'}`;
+            }
+        }
+
+        async function loadUmamiAnalytics(force = false) {
+            const rangeSel = document.getElementById('umamiRangeSelect');
+            const range = rangeSel ? rangeSel.value : '7d';
+            const statusBox = document.getElementById('umamiStatusBox');
+            const now = Date.now();
+
+            if (!force && umamiCache.data && umamiCache.key === range && (now - umamiCache.fetchedAt) < 30000) {
+                paintUmamiData(umamiCache.data);
+                return;
+            }
+
+            if (statusBox) {
+                statusBox.className = 'rounded-xl p-3 text-xs font-mono bg-obsidian-elevated border border-zinc-700 text-zinc-300';
+                statusBox.textContent = 'Consultando métricas de Umami Analytics...';
+            }
+
+            try {
+                const pwd = adminState.password || getStoredPassword();
+                const res = await fetch(WEBHOOK_ANALYTICS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pwd, range })
+                });
+                const payload = await res.json().catch(() => ({}));
+                if (!res.ok || !payload.ok) {
+                    throw new Error(payload.message || `Error HTTP ${res.status}`);
+                }
+                umamiCache = { key: range, fetchedAt: Date.now(), data: payload };
+                paintUmamiData(payload);
+                if (statusBox) statusBox.className = 'hidden';
+            } catch (err) {
+                if (statusBox) {
+                    statusBox.className = 'rounded-xl p-3 text-xs font-mono bg-rose-950/50 border border-rose-500/40 text-rose-200';
+                    statusBox.textContent = `No se pudo cargar la analítica: ${err.message}`;
+                }
+            }
+        }
+
+        function renderSubViewAnalitica() {
+            loadUmamiAnalytics(false);
+        }
+
+        document.getElementById('umamiRangeSelect')?.addEventListener('change', () => loadUmamiAnalytics(true));
+        document.getElementById('umamiRefreshBtn')?.addEventListener('click', () => loadUmamiAnalytics(true));
 
         function renderRegistroWorkspace() {
             populateRegistroFilterDropdowns();
