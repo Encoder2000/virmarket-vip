@@ -42,31 +42,31 @@
             });
         }
     </script>
-    <title>Tarjetas de Agradecimiento QR Imprimibles — VirMarket</title>
+    <title>Tarjetas de Agradecimiento QR Imprimibles — Pulso Cotidiano</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* 1. Edición Dark Streetwear (Imprenta Profesional) */
+        /* 1. Edición Bosque Editorial (Imprenta Profesional) */
         :root {
-            --bg-card: #09090B;
-            --fg-card: #FFFFFF;
-            --muted-card: #D4D4D8;
-            --accent-card: #A3E635;
-            --accent-text: #09090B;
-            --border-card: #27272A;
-            --badge-bg: rgba(163, 230, 53, 0.14);
+            --bg-card: #2C352D;
+            --fg-card: #FAF8F5;
+            --muted-card: #D8DFD5;
+            --accent-card: #C5D8BE;
+            --accent-text: #172019;
+            --border-card: #434E44;
+            --badge-bg: rgba(197, 216, 190, 0.14);
         }
 
-        /* 2. Edición Eco Color (Fondo Blanco + Verde Lima para Impresora Color de Casa) */
+        /* 2. Edición Eco Color (Fondo Crema Editorial + Verde Bosque para Impresora Color de Casa) */
         body.theme-eco {
-            --bg-card: #FFFFFF;
-            --fg-card: #09090B;
-            --muted-card: #3F3F46;
-            --accent-card: #09090B;
-            --accent-text: #A3E635;
-            --border-card: #D4D4D8;
-            --badge-bg: #F4F4F5;
+            --bg-card: #FAF8F5;
+            --fg-card: #1E1E1E;
+            --muted-card: #5C5B57;
+            --accent-card: #2C352D;
+            --accent-text: #FAF8F5;
+            --border-card: #D6D0C6;
+            --badge-bg: #F0EAE1;
         }
 
         /* 3. Edición Eco Blanco y Negro (100% Monocromo / Escala de Grises para Impresora B&N de Casa) */
@@ -505,12 +505,12 @@
             <a href="admin.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
                 <span>← VirMarket Studio</span>
             </a>
-            <strong style="font-family:'Space Grotesk',sans-serif;font-size:15px;margin-left:4px;margin-right:6px;">VIRMARKET • TARJETAS QR</strong>
+            <strong style="font-family:'Newsreader',serif;font-size:16px;margin-left:4px;margin-right:6px;">Pulso Cotidiano • TARJETAS QR</strong>
             <button id="btnA6" class="btn active" onclick="setLayout('a6')">Postal Paquete A6 (4 / folio A4)</button>
             <button id="btnBiz" class="btn" onclick="setLayout('business')">Tarjeta Visita 85×55mm (8 / folio A4)</button>
         </div>
         <div class="toolbar-group">
-            <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Dark (Imprenta)</button>
+            <button id="btnDark" class="btn active" onclick="setTheme('dark')">Edición Bosque (Imprenta)</button>
             <button id="btnEco" class="btn" onclick="setTheme('eco')">Edición Eco Color (Casa)</button>
             <button id="btnBw" class="btn" onclick="setTheme('bw')">Edición Eco B&amp;N (Casa)</button>
             <button id="screenThemeBtn" class="btn" onclick="toggleScreenTheme()" title="Cambiar tema de pantalla (Claro / Oscuro)" style="display:inline-flex;align-items:center;gap:4px;">Modo Claro</button>
@@ -528,18 +528,18 @@
         <article class="vip-card">
             <div class="card-main">
                 <div class="brand-row">
-                    <span class="brand-logo">VIR<span class="brand-accent">MARKET</span></span>
+                    <span class="brand-logo" style="font-family:'Newsreader',serif;text-transform:none;font-weight:500;">Pulso <em style="font-style:italic;font-weight:400;">Cotidiano</em></span>
                     <span class="drop-pill">PASE VIP CLIENTES</span>
                 </div>
-                <h1 class="thanks-title">¡Gracias por tu compra!</h1>
-                <div class="offer-highlight">-10% + Drops 24h Antes</div>
+                <h1 class="thanks-title" style="font-family:'Newsreader',serif;text-transform:none;">¡Gracias por tu compra!</h1>
+                <div class="offer-highlight">Guía PDF + -10% y Drops 24h</div>
                 <p class="desc-text">
-                    Escanea el QR para activar tu <strong>10% de descuento*</strong> en tu 1ª reserva y ver nuestras nuevas prendas por email <strong>24h antes</strong> de que salgan en Vinted.
+                    Escanea el QR para descargar nuestra <strong>Guía PDF gratuita</strong>, activar tu <strong>10% de descuento*</strong> en tu 1ª reserva y ver nuevas prendas <strong>24h antes</strong> que en Vinted.
                 </p>
             </div>
             <div class="qr-side">
                 <div class="qr-box">
-                    <svg role="img" aria-label="Código QR de acceso al Club Privado VirMarket" class="qr-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41"><path fill="#fff" d="M0 0h41v41h-41z"/><path class="qrline" stroke="#09090b" d="M2 2.5h7m3 0h1m2 0h2m1 0h2m1 0h2m2 0h1m2 0h1m3 0h7m-37 1h1m5 0h1m1 0h1m1 0h1m3 0h1m1 0h3m3 0h1m2 0h1m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h3m1 0h2m1 0h1m1 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h5m1 0h1m2 0h5m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h1m5 0h1m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m2 0h1m4 0h1m1 0h5m2 0h3m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h1m3 0h1m2 0h2m8 0h4m-28 1h1m1 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1m2 0h2m1 0h2m1 0h1m-36 1h3m2 0h1m2 0h2m1 0h1m3 0h2m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m2 0h3m-35 1h1m2 0h1m1 0h3m1 0h1m1 0h3m6 0h4m1 0h1m1 0h6m3 0h1m-30 1h4m2 0h3m1 0h2m1 0h1m5 0h1m1 0h4m1 0h2m1 0h1m-37 1h3m3 0h2m3 0h1m2 0h2m1 0h2m2 0h1m2 0h1m2 0h2m1 0h2m3 0h1m-35 1h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h4m1 0h1m1 0h3m1 0h2m1 0h1m-35 1h4m2 0h1m3 0h1m1 0h3m4 0h2m3 0h2m1 0h1m1 0h2m1 0h5m-35 1h4m1 0h1m1 0h1m1 0h1m1 0h4m2 0h1m3 0h2m2 0h1m4 0h4m-33 1h1m2 0h1m6 0h3m2 0h2m2 0h4m4 0h2m2 0h2m-36 1h1m1 0h1m1 0h2m1 0h1m2 0h1m7 0h1m1 0h1m4 0h3m1 0h1m1 0h1m1 0h3m-36 1h1m4 0h3m1 0h1m1 0h5m1 0h2m1 0h5m2 0h2m2 0h1m2 0h1m1 0h1m-37 1h2m1 0h1m3 0h2m2 0h10m1 0h1m2 0h1m1 0h1m5 0h1m2 0h1m-34 1h1m1 0h2m1 0h2m1 0h2m4 0h4m6 0h4m1 0h1m2 0h1m-33 1h3m2 0h1m1 0h1m2 0h2m1 0h5m2 0h1m1 0h1m1 0h2m2 0h3m1 0h1m-33 1h1m2 0h1m3 0h1m3 0h1m1 0h1m1 0h1m2 0h3m1 0h3m4 0h1m1 0h1m1 0h1m-36 1h1m5 0h3m8 0h1m1 0h1m2 0h1m3 0h2m1 0h2m1 0h2m-33 1h2m1 0h4m1 0h1m1 0h2m2 0h4m3 0h2m3 0h1m1 0h2m1 0h1m-34 1h1m3 0h1m6 0h1m8 0h4m1 0h5m2 0h1m-33 1h2m1 0h1m1 0h5m7 0h1m8 0h3m1 0h1m1 0h2m1 0h2m-37 1h1m1 0h4m1 0h1m3 0h1m1 0h2m3 0h1m1 0h1m2 0h2m1 0h1m2 0h1m2 0h3m1 0h1m-37 1h1m2 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2m2 0h1m1 0h2m1 0h1m1 0h8m1 0h1m-29 1h4m5 0h1m1 0h2m7 0h1m3 0h4m-36 1h7m2 0h3m1 0h1m1 0h2m1 0h6m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h2m2 0h1m1 0h2m2 0h3m1 0h1m1 0h5m3 0h2m-34 1h1m1 0h3m1 0h1m1 0h6m1 0h1m7 0h1m2 0h7m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h3m-36 1h1m1 0h3m1 0h1m3 0h1m2 0h2m1 0h1m3 0h1m2 0h1m1 0h1m1 0h1m3 0h3m1 0h2m-37 1h1m5 0h1m1 0h2m3 0h1m2 0h1m1 0h2m3 0h1m2 0h2m1 0h1m2 0h1m1 0h3m-37 1h7m2 0h1m1 0h1m1 0h3m1 0h4m2 0h1m4 0h1m1 0h1m2 0h1m2 0h1"/></svg>
+                    <svg role="img" aria-label="Código QR de acceso al Club Privado de Pulso Cotidiano" class="qr-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41"><path fill="#fff" d="M0 0h41v41h-41z"/><path class="qrline" stroke="#09090b" d="M2 2.5h7m3 0h1m2 0h2m1 0h2m1 0h2m2 0h1m2 0h1m3 0h7m-37 1h1m5 0h1m1 0h1m1 0h1m3 0h1m1 0h3m3 0h1m2 0h1m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h3m1 0h2m1 0h1m1 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h5m1 0h1m2 0h5m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m2 0h1m5 0h1m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m2 0h1m4 0h1m1 0h5m2 0h3m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h1m3 0h1m2 0h2m8 0h4m-28 1h1m1 0h4m1 0h4m2 0h4m1 0h2m3 0h1m1 0h1m2 0h2m1 0h2m1 0h1m-36 1h3m2 0h1m2 0h2m1 0h1m3 0h2m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m2 0h3m-35 1h1m2 0h1m1 0h3m1 0h1m1 0h3m6 0h4m1 0h1m1 0h6m3 0h1m-30 1h4m2 0h3m1 0h2m1 0h1m5 0h1m1 0h4m1 0h2m1 0h1m-37 1h3m3 0h2m3 0h1m2 0h2m1 0h2m2 0h1m2 0h1m2 0h2m1 0h2m3 0h1m-35 1h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h4m1 0h1m1 0h3m1 0h2m1 0h1m-35 1h4m2 0h1m3 0h1m1 0h3m4 0h2m3 0h2m1 0h1m1 0h2m1 0h5m-35 1h4m1 0h1m1 0h1m1 0h1m1 0h4m2 0h1m3 0h2m2 0h1m4 0h4m-33 1h1m2 0h1m6 0h3m2 0h2m2 0h4m4 0h2m2 0h2m-36 1h1m1 0h1m1 0h2m1 0h1m2 0h1m7 0h1m1 0h1m4 0h3m1 0h1m1 0h1m1 0h3m-36 1h1m4 0h3m1 0h1m1 0h5m1 0h2m1 0h5m2 0h2m2 0h1m2 0h1m1 0h1m-37 1h2m1 0h1m3 0h2m2 0h10m1 0h1m2 0h1m1 0h1m5 0h1m2 0h1m-34 1h1m1 0h2m1 0h2m1 0h2m4 0h4m6 0h4m1 0h1m2 0h1m-33 1h3m2 0h1m1 0h1m2 0h2m1 0h5m2 0h1m1 0h1m1 0h2m2 0h3m1 0h1m-33 1h1m2 0h1m3 0h1m3 0h1m1 0h1m1 0h1m2 0h3m1 0h3m4 0h1m1 0h1m1 0h1m-36 1h1m5 0h3m8 0h1m1 0h1m2 0h1m3 0h2m1 0h2m1 0h2m-33 1h2m1 0h4m1 0h1m1 0h2m2 0h4m3 0h2m3 0h1m1 0h2m1 0h1m-34 1h1m3 0h1m6 0h1m8 0h4m1 0h5m2 0h1m-33 1h2m1 0h1m1 0h5m7 0h1m8 0h3m1 0h1m1 0h2m1 0h2m-37 1h1m1 0h4m1 0h1m3 0h1m1 0h2m3 0h1m1 0h1m2 0h2m1 0h1m2 0h1m2 0h3m1 0h1m-37 1h1m2 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2m2 0h1m1 0h2m1 0h1m1 0h8m1 0h1m-29 1h4m5 0h1m1 0h2m7 0h1m3 0h4m-36 1h7m2 0h3m1 0h1m1 0h2m1 0h6m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h2m2 0h1m1 0h2m2 0h3m1 0h1m1 0h5m3 0h2m-34 1h1m1 0h3m1 0h1m1 0h6m1 0h1m7 0h1m2 0h7m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h3m-36 1h1m1 0h3m1 0h1m3 0h1m2 0h2m1 0h1m3 0h1m2 0h1m1 0h1m1 0h1m3 0h3m1 0h2m-37 1h1m5 0h1m1 0h2m3 0h1m2 0h1m1 0h2m3 0h1m2 0h2m1 0h1m2 0h1m1 0h3m-37 1h7m2 0h1m1 0h1m1 0h3m1 0h4m2 0h1m4 0h1m1 0h1m2 0h1m2 0h1"/></svg>
                 </div>
                 <div class="footer-note">virmarket.virmarsolutions.com<br><span style="font-size:0.82em;opacity:0.78;">*Condiciones vigentes en la web</span></div>
             </div>

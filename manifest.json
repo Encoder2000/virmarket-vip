@@ -1,12 +1,12 @@
 {
-  "name": "VirMarket VIP - Club de Drops",
-  "short_name": "VirMarket VIP",
-  "description": "Club privado de drops 24h, descuentos de bienvenida y escaparate de streetwear exclusivo.",
+  "name": "Pulso Cotidiano VIP - Club de Drops",
+  "short_name": "Pulso VIP",
+  "description": "Club privado de drops 24h, Guía Práctica gratuita y descuentos de bienvenida.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#09090B",
-  "theme_color": "#09090B",
+  "background_color": "#FAF8F5",
+  "theme_color": "#FAF8F5",
   "icons": [
     {
       "src": "favicon-32x32.png",

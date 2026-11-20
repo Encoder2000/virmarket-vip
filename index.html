@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <meta name="theme-color" id="metaThemeColor" content="#09090B">
+    <meta name="theme-color" id="metaThemeColor" content="#FAF8F5">
     <script>
         (function() {
             try {
@@ -15,7 +15,7 @@
                     localStorage.setItem('vm_theme', 'dark');
                 }
                 const savedTheme = localStorage.getItem('vm_theme');
-                const isLight = savedTheme === 'light';
+                const isLight = savedTheme !== 'dark';
                 if (isLight) {
                     document.documentElement.classList.add('theme-light');
                     document.documentElement.classList.remove('dark');
@@ -25,18 +25,18 @@
                 }
                 const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
                 if (metaTheme) {
-                    metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+                    metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#141915');
                 }
             } catch (e) {}
         })();
     </script>
-    <title>VirMarket | Club Privado de Drops 24h &amp; Escaparate VIP</title>
-    <meta name="description" content="Club privado para clientes de VirMarket. Desbloquea tu descuento de bienvenida en tu primera reserva y accede a nuestros Drops de ropa Streetwear & Vintage 24h antes de salir en Vinted.">
+    <title>Pulso Cotidiano | Club Privado de Drops 24h &amp; Guía Gratuita</title>
+    <meta name="description" content="Club Privado de Pulso Cotidiano. Descarga gratis la Guía de Cuidado Textil y Hogar Eco, activa tu descuento de bienvenida y accede a nuestras prendas seleccionadas 24h antes que en Vinted.">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" id="metaAppleStatus" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="VirMarket VIP">
-    <meta name="application-name" content="VirMarket VIP">
+    <meta name="apple-mobile-web-app-title" content="Pulso Cotidiano VIP">
+    <meta name="application-name" content="Pulso Cotidiano VIP">
 
     <!-- Favicon & PWA Icons -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
@@ -59,19 +59,19 @@
                 extend: {
                     colors: {
                         acid: {
-                            DEFAULT: '#A3E635',
-                            hover: '#BEF264',
-                            muted: 'rgba(163, 230, 53, 0.12)'
+                            DEFAULT: '#C5D8BE',
+                            hover: '#D6E8CD',
+                            muted: 'rgba(197, 216, 190, 0.14)'
                         },
                         obsidian: {
-                            DEFAULT: '#09090B',
-                            card: '#121215',
-                            elevated: '#18181B',
-                            border: '#27272A'
+                            DEFAULT: '#141915',
+                            card: '#1D241E',
+                            elevated: '#263027',
+                            border: '#364237'
                         }
                     },
                     fontFamily: {
-                        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        display: ['Newsreader', 'Georgia', 'serif'],
                         sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace']
                     }
@@ -82,28 +82,26 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
-            background-color: #09090B;
+            background-color: #141915;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.14), transparent 55%),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 36px 36px, 36px 36px;
+                radial-gradient(circle at 50% -10%, rgba(197, 216, 190, 0.12), transparent 55%);
+            background-size: 100% 100%;
         }
         .custom-checkbox:checked {
-            background-color: #A3E635;
-            border-color: #A3E635;
+            background-color: #2C352D;
+            border-color: #2C352D;
         }
         @keyframes pulseRing {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.55); }
-            50% { box-shadow: 0 0 0 6px rgba(163, 230, 53, 0.15); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(197, 216, 190, 0.55); }
+            50% { box-shadow: 0 0 0 6px rgba(197, 216, 190, 0.15); }
         }
         .highlight-garment {
-            border-color: #A3E635 !important;
+            border-color: #C5D8BE !important;
             animation: pulseRing 1.8s ease-in-out 3;
         }
 
@@ -230,90 +228,88 @@
         }
 
         /* ===================================================================== */
-        /* MODO CLARO (STREETWEAR MINIMAL / ECO) */
+        /* MODO CLARO EDITORIAL (PULSO COTIDIANO · #FAF8F5 + #2C352D)            */
         /* ===================================================================== */
         html.theme-light {
             color-scheme: light;
         }
         html.theme-light body {
-            background-color: #F8FAFC !important;
+            background-color: #FAF8F5 !important;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.18), transparent 55%),
-                linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-                linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px) !important;
-            background-size: 100% 100%, 36px 36px, 36px 36px !important;
-            color: #0F172A !important;
+                radial-gradient(circle at 50% -10%, rgba(122, 139, 116, 0.14), transparent 55%) !important;
+            background-size: 100% 100% !important;
+            color: #1E1E1E !important;
         }
         html.theme-light header {
-            background-color: rgba(255, 255, 255, 0.94) !important;
-            border-color: #E2E8F0 !important;
-            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+            background-color: rgba(250, 248, 245, 0.94) !important;
+            border-color: rgba(44, 53, 45, 0.12) !important;
+            box-shadow: 0 1px 3px 0 rgba(44, 53, 45, 0.04);
         }
         html.theme-light footer {
-            background-color: #FFFFFF !important;
-            border-color: #E2E8F0 !important;
+            background-color: #F6F2EA !important;
+            border-color: rgba(44, 53, 45, 0.12) !important;
         }
         html.theme-light .bg-obsidian,
         html.theme-light [class*="bg-obsidian/"] {
-            background-color: #F8FAFC !important;
+            background-color: #FAF8F5 !important;
         }
         html.theme-light .bg-obsidian-card,
         html.theme-light [class*="bg-obsidian-card"] {
             background-color: #FFFFFF !important;
-            border-color: #E2E8F0 !important;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
+            border-color: rgba(44, 53, 45, 0.12) !important;
+            box-shadow: 0 12px 32px -4px rgba(44, 53, 45, 0.06), 0 4px 12px -2px rgba(44, 53, 45, 0.03) !important;
         }
         html.theme-light .bg-obsidian-elevated,
         html.theme-light [class*="bg-obsidian-elevated"] {
-            background-color: #F1F5F9 !important;
-            border-color: #E2E8F0 !important;
+            background-color: #F0EAE1 !important;
+            border-color: rgba(44, 53, 45, 0.14) !important;
         }
         html.theme-light .border-obsidian-border,
         html.theme-light [class*="border-obsidian"],
         html.theme-light [class*="border-zinc-"] {
-            border-color: #E2E8F0 !important;
+            border-color: rgba(44, 53, 45, 0.14) !important;
         }
         html.theme-light [class*="bg-zinc-800"],
         html.theme-light [class*="bg-zinc-900"] {
-            background-color: #F1F5F9 !important;
+            background-color: #F0EAE1 !important;
         }
         /* Tipografía y Textos */
         html.theme-light .text-white:not(.keep-text-white) {
-            color: #0F172A !important;
+            color: #1E1E1E !important;
         }
         html.theme-light .text-zinc-100,
         html.theme-light .text-zinc-200 {
-            color: #0F172A !important;
+            color: #1E1E1E !important;
         }
         html.theme-light .text-zinc-300,
         html.theme-light .text-zinc-400 {
-            color: #475569 !important;
+            color: #5C5B57 !important;
         }
         html.theme-light .text-zinc-500 {
-            color: #475569 !important;
+            color: #5C5B57 !important;
         }
-        /* Botones y Acentos que deben conservar el texto oscuro del diseño */
+        /* Botones Primarios Verde Bosque (#2C352D) con texto crema (#FAF8F5) */
         html.theme-light .bg-acid {
-            background-color: #A3E635 !important;
-            color: #09090B !important;
+            background-color: #2C352D !important;
+            color: #FAF8F5 !important;
         }
         html.theme-light .bg-acid * {
-            color: #09090B !important;
+            color: #FAF8F5 !important;
         }
         html.theme-light .text-obsidian {
-            color: #09090B !important;
+            color: #FAF8F5 !important;
         }
         /* Acentos Verdes en texto */
         html.theme-light .text-acid {
-            color: #3F6212 !important;
+            color: #2C352D !important;
         }
         html.theme-light .bg-acid-muted {
-            background-color: #ECFCCB !important;
-            border-color: #BEF264 !important;
-            color: #365314 !important;
+            background-color: #E5ECE2 !important;
+            border-color: #7A8B74 !important;
+            color: #172019 !important;
         }
         html.theme-light .bg-acid-muted * {
-            color: #365314 !important;
+            color: #172019 !important;
         }
         /* Banner Telegram en Modo Claro */
         html.theme-light .telegram-banner {
@@ -428,12 +424,12 @@
     <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
             <a href="./" class="flex items-center space-x-2.5 group">
-                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg tracking-tighter shadow-md shadow-acid/20">
-                    V
+                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display italic font-semibold text-base tracking-tight shadow-md">
+                    PC
                 </div>
                 <div class="leading-none">
-                    <span class="font-display text-lg sm:text-xl font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span></span>
-                    <span class="block font-mono text-xs uppercase tracking-wider text-zinc-400 mt-0.5">Selected Streetwear &amp; Archive</span>
+                    <span class="font-display text-lg sm:text-xl font-medium tracking-tight text-white">Pulso <em class="italic font-normal">Cotidiano</em></span>
+                    <span class="block font-mono text-[10px] uppercase tracking-wider text-zinc-400 mt-0.5">Club Privado · Moda Circular</span>
                 </div>
             </a>
 
@@ -465,28 +461,28 @@
                     <div class="flex justify-center mb-6">
                         <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
                             <i aria-hidden="true" data-lucide="package-check" class="w-3.5 h-3.5"></i>
-                            <span>Gracias por tu pedido • Acceso VIP Clientes</span>
+                            <span>Gracias por tu pedido • Club Privado Pulso Cotidiano</span>
                         </div>
                     </div>
 
-                    <!-- Titular Principal Dinámico -->
+                    <!-- Titular Principal Dinámico (Gancho Híbrido: Guía PDF + Descuento VIP 24h) -->
                     <div class="text-center">
-                        <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.12] uppercase">
-                            <span id="dynHeroHighlight" class="text-acid">-10% en tu 1ª reserva</span> y acceso 24h antes que en Vinted
+                        <h1 class="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white leading-[1.12]">
+                            Guía gratuita y <span id="dynHeroHighlight" class="text-acid italic">-10% en tu 1ª reserva</span> 24h antes que en Vinted
                         </h1>
                         <p class="mt-4 text-sm sm:text-base text-zinc-300 leading-relaxed max-w-md mx-auto">
-                            Únete a la lista privada de <strong>VirMarket</strong>. Te enviaremos un único correo por cada nuevo <em>Drop</em> de prendas seleccionadas <strong>24 horas antes</strong> de publicarlas en abierto para que reserves 1 prenda o un Lote completo sin competencia.
+                            Únete al Club Privado de <strong>Pulso Cotidiano</strong>. Recibe gratis nuestra <strong>Guía PDF de Cuidado Textil y Hogar Eco</strong> y un aviso privado por cada nuevo <em>Drop</em> de prendas seleccionadas <strong>24 horas antes</strong> de publicarlas en abierto.
                         </p>
                         <p id="dynCapNote" class="mt-2 font-mono text-[11px] text-zinc-400">
-                            *Bienvenida activa: -10% directo en tu 1ª reserva (hasta 15,00 € de ahorro).
+                            *Bienvenida activa: Guía PDF + -10% directo en tu 1ª reserva (hasta 15,00 € de ahorro).
                         </p>
                     </div>
 
                     <!-- Tarjeta Formulario de Mínima Fricción -->
-                    <div id="registro" class="mt-7 rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-7 shadow-2xl">
+                    <div id="registro" class="mt-7 rounded-[20px] bg-obsidian-card border border-obsidian-border p-5 sm:p-7 shadow-2xl">
                         <div class="flex items-center justify-between pb-4 mb-5 border-b border-dashed border-zinc-800 font-mono text-[11px] text-zinc-400 uppercase tracking-wider">
-                            <span>PASE MIEMBRO #VIP-DROP</span>
-                            <span id="dynTicketBadge" class="text-acid font-bold">VENTAJA: -10% + 24H</span>
+                            <span>PASE MIEMBRO #VIP-PULSO</span>
+                            <span id="dynTicketBadge" class="text-acid font-bold">GUÍA + -10% + 24H</span>
                         </div>
 
                         <form id="leadForm" class="space-y-4" novalidate>
@@ -523,15 +519,15 @@
 
                             <!-- Primera Capa Informativa RGPD (Art. 13) -->
                             <p class="text-[11px] text-zinc-400 leading-relaxed px-1">
-                                <strong>Información básica RGPD:</strong> Responsable: VirMarket (Cádiz, España). Finalidad: envío de avisos de Drops 24h y gestión de reservas VIP. Legitimación: consentimiento expreso verificado por Doble Opt-In. Puedes darte de baja en 1 clic o ejercer tus derechos en <a href="privacidad.html" class="text-acid underline">Política de Privacidad</a> y <a href="mailto:contacto@virmarsolutions.com" class="underline hover:text-acid">contacto@virmarsolutions.com</a>.
+                                <strong>Información básica RGPD:</strong> Responsable: Pulso Cotidiano (Virmar Solutions, Cádiz, España). Finalidad: envío de tu Guía PDF gratuita, avisos de Drops 24h y gestión de reservas VIP. Legitimación: consentimiento expreso verificado por Doble Opt-In. Baja en 1 clic o derechos en <a href="privacidad.html" class="text-acid underline">Política de Privacidad</a> y <a href="mailto:contacto@virmarsolutions.com" class="underline hover:text-acid">contacto@virmarsolutions.com</a>.
                             </p>
 
                             <button
                                 type="submit"
                                 id="submitBtn"
-                                class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm sm:text-base uppercase tracking-wide transition-all shadow-lg shadow-acid/20 flex items-center justify-center space-x-2 active:scale-[0.99]"
+                                class="w-full py-4 px-6 rounded-full bg-acid hover:bg-acid-hover text-obsidian font-sans font-semibold text-sm sm:text-base tracking-wide transition-all shadow-lg flex items-center justify-center space-x-2 active:scale-[0.99]"
                             >
-                                <span id="dynSubmitText">Activar mi -10% y Acceso VIP</span>
+                                <span id="dynSubmitText">Recibir Guía PDF + -10% VIP</span>
                                 <i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
                         </form>
@@ -1056,8 +1052,8 @@
     <footer class="border-t border-obsidian-border bg-obsidian py-8 px-4 sm:px-6">
         <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
             <div class="flex items-center space-x-2">
-                <span class="font-display font-bold text-zinc-200 uppercase">VIR<span class="text-acid">MARKET</span></span>
-                <span>• Club Privado de Drops 24h • Cádiz, España</span>
+                <span class="font-display font-medium text-zinc-200">Pulso <em class="italic font-normal">Cotidiano</em></span>
+                <span>• Club Privado Drops 24h • Virmar Solutions (Cádiz)</span>
             </div>
             <div class="flex items-center gap-4 flex-wrap justify-center">
                 <a href="#faqs" class="hover:text-acid transition-colors flex items-center space-x-1.5 text-zinc-300">
@@ -1154,22 +1150,22 @@
 
             if (pct > 0) {
                 document.getElementById('dynHeroHighlight').textContent = `-${pct}% en tu 1ª reserva`;
-                document.getElementById('dynCapNote').textContent = `*Bienvenida activa: -${pct}% directo en tu 1ª reserva o lote${capText}.`;
-                document.getElementById('dynTicketBadge').textContent = `VENTAJA: -${pct}% + 24H`;
-                document.getElementById('dynSubmitText').textContent = `Activar mi -${pct}% y Acceso VIP`;
+                document.getElementById('dynCapNote').textContent = `*Bienvenida activa: Guía PDF gratuita + -${pct}% directo en tu 1ª reserva o lote${capText}.`;
+                document.getElementById('dynTicketBadge').textContent = `GUÍA + -${pct}% + 24H`;
+                document.getElementById('dynSubmitText').textContent = `Recibir Guía PDF + -${pct}% VIP`;
                 document.getElementById('dynPillPct').textContent = `-${pct}%`;
                 document.getElementById('dynLeadSuccessCopy').innerHTML =
-                    `Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu <strong>${pct}% de descuento de bienvenida</strong>${cap > 0 ? ' (máx. ' + fmtEur(cap) + ')' : ''}.`;
+                    `Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta, descargar la <strong>Guía PDF gratuita</strong> y activar tu <strong>${pct}% de descuento de bienvenida</strong>${cap > 0 ? ' (máx. ' + fmtEur(cap) + ')' : ''}.`;
                 document.getElementById('dynFaqDiscount').innerHTML =
                     `En tu primera reserva del Club (tanto si eliges 1 prenda como un Lote de varias prendas a la vez), el Escaparate Web calcula automáticamente tu <strong>${pct}% de descuento</strong>${cap > 0 ? ' (con tope máximo de ' + fmtEur(cap) + ')' : ''} y subimos el anuncio reservado para ti en Vinted con el precio final ya rebajado.`;
             } else {
                 document.getElementById('dynHeroHighlight').textContent = 'Prioridad VIP exclusiva';
-                document.getElementById('dynCapNote').textContent = '*Acceso anticipado 24h a cada nuevo Drop antes de publicarlo en abierto.';
-                document.getElementById('dynTicketBadge').textContent = 'VENTAJA: PRIORIDAD 24H';
-                document.getElementById('dynSubmitText').textContent = 'Activar mi Pase VIP 24h';
+                document.getElementById('dynCapNote').textContent = '*Guía PDF gratuita + acceso anticipado 24h a cada nuevo Drop antes de publicarlo en abierto.';
+                document.getElementById('dynTicketBadge').textContent = 'GUÍA + PRIORIDAD 24H';
+                document.getElementById('dynSubmitText').textContent = 'Recibir Guía PDF y Pase VIP';
                 document.getElementById('dynPillPct').textContent = 'VIP';
                 document.getElementById('dynLeadSuccessCopy').innerHTML =
-                    'Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu <strong>Pase Miembro VIP</strong>.';
+                    'Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta, recibir la <strong>Guía PDF</strong> y activar tu <strong>Pase Miembro VIP</strong>.';
                 document.getElementById('dynFaqDiscount').innerHTML =
                     'Como miembro VIP disfrutas de <strong>acceso prioritario 24h</strong> a cada nuevo Drop para reservar prendas antes de publicarlas en Vinted a público general.';
             }
@@ -2044,11 +2040,11 @@
             if (doi === 'ok') {
                 isOk = true;
                 title = '¡Correo verificado y Acceso VIP activado!';
-                msg = 'Tu consentimiento ha quedado confirmado. Revisa tu bandeja de entrada: te acabamos de enviar tu bienvenida oficial.';
+                msg = 'Tu consentimiento ha quedado confirmado. Revisa tu bandeja de entrada: te acabamos de enviar tu Guía PDF gratuita y tu bienvenida al Club.';
             } else if (doi === 'ya_confirmado') {
                 isOk = true;
                 title = 'Tu correo ya estaba confirmado';
-                msg = 'Ya formas parte del Club Privado VirMarket. Recibirás aviso 24h antes de cada nuevo Drop.';
+                msg = 'Ya formas parte del Club Privado de Pulso Cotidiano. Recibirás aviso 24h antes de cada nuevo Drop.';
             } else if (doi === 'expirado') {
                 title = 'Enlace de confirmación caducado';
                 msg = 'Han pasado más de 48 horas desde tu solicitud. Vuelve a introducir tu correo aquí abajo para recibir un enlace nuevo.';
@@ -2058,7 +2054,7 @@
             } else if (baja === 'ok') {
                 isOk = true;
                 title = 'Baja tramitada correctamente';
-                msg = 'Hemos cancelado tu suscripción en VirMarket. No volverás a recibir alertas comerciales.';
+                msg = 'Hemos cancelado tu suscripción en Pulso Cotidiano. No volverás a recibir alertas comerciales.';
             } else if (baja === 'invalido') {
                 title = 'Enlace de baja no reconocido';
                 msg = 'Si deseas darte de baja manualmente, escríbenos a contacto@virmarsolutions.com y lo tramitamos de inmediato.';
@@ -2101,17 +2097,17 @@
                 if (isLight) {
                     document.documentElement.classList.add('theme-light');
                     document.documentElement.classList.remove('dark');
-                    if (metaTheme) metaTheme.setAttribute('content', '#F8FAFC');
+                    if (metaTheme) metaTheme.setAttribute('content', '#FAF8F5');
                     if (metaStatus) metaStatus.setAttribute('content', 'default');
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo oscuro');
                         btn.setAttribute('aria-label', 'Cambiar a modo oscuro');
-                        btn.innerHTML = '<i aria-hidden="true" data-lucide="moon" class="w-3.5 h-3.5 text-indigo-500"></i><span class="font-mono text-[11px] font-semibold text-zinc-800">Modo Oscuro</span>';
+                        btn.innerHTML = '<i aria-hidden="true" data-lucide="moon" class="w-3.5 h-3.5 text-[#2C352D]"></i><span class="font-mono text-[11px] font-semibold text-[#2C352D]">Modo Oscuro</span>';
                     }
                 } else {
                     document.documentElement.classList.remove('theme-light');
                     document.documentElement.classList.add('dark');
-                    if (metaTheme) metaTheme.setAttribute('content', '#09090B');
+                    if (metaTheme) metaTheme.setAttribute('content', '#141915');
                     if (metaStatus) metaStatus.setAttribute('content', 'black-translucent');
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo claro');

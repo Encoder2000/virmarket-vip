@@ -15,7 +15,7 @@
                     localStorage.setItem('vm_theme', 'dark');
                 }
                 const savedTheme = localStorage.getItem('vm_theme');
-                const isLight = savedTheme === 'light';
+                const isLight = savedTheme !== 'dark';
                 if (isLight) {
                     document.documentElement.classList.add('theme-light');
                     document.documentElement.classList.remove('dark');
@@ -25,13 +25,13 @@
                 }
                 const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
                 if (metaTheme) {
-                    metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+                    metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#141915');
                 }
             } catch (e) {}
         })();
     </script>
-    <title>Política de Privacidad y Protección de Datos | VirMarket</title>
-    <meta name="description" content="Información sobre el tratamiento de datos personales, consentimiento Doble Opt-In, baja inmediata y derechos RGPD en el Club Privado de VirMarket.">
+    <title>Política de Privacidad y Protección de Datos | Pulso Cotidiano</title>
+    <meta name="description" content="Información sobre el tratamiento de datos personales, consentimiento Doble Opt-In, baja inmediata y derechos RGPD en Pulso Cotidiano y su Club Privado.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
@@ -42,19 +42,19 @@
                 extend: {
                     colors: {
                         acid: {
-                            DEFAULT: '#A3E635',
-                            hover: '#BEF264',
-                            muted: 'rgba(163, 230, 53, 0.12)'
+                            DEFAULT: '#C5D8BE',
+                            hover: '#D6E8CD',
+                            muted: 'rgba(197, 216, 190, 0.14)'
                         },
                         obsidian: {
-                            DEFAULT: '#09090B',
-                            card: '#121215',
-                            elevated: '#18181B',
-                            border: '#27272A'
+                            DEFAULT: '#141915',
+                            card: '#1D241E',
+                            elevated: '#263027',
+                            border: '#364237'
                         }
                     },
                     fontFamily: {
-                        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        display: ['Newsreader', 'Georgia', 'serif'],
                         sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace']
                     }
@@ -64,16 +64,14 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
-            background-color: #09090B;
+            background-color: #141915;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.12), transparent 55%),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 36px 36px, 36px 36px;
+                radial-gradient(circle at 50% -10%, rgba(197, 216, 190, 0.12), transparent 55%);
+            background-size: 100% 100%;
         }
         .skip-link {
             position: absolute;
@@ -100,40 +98,39 @@
         }
         html.theme-light { color-scheme: light; }
         html.theme-light body {
-            background-color: #F8FAFC !important;
+            background-color: #FAF8F5 !important;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.16), transparent 55%),
-                linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-                linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px) !important;
-            color: #0F172A !important;
+                radial-gradient(circle at 50% -10%, rgba(122, 139, 116, 0.14), transparent 55%) !important;
+            color: #1E1E1E !important;
         }
         html.theme-light header {
-            background-color: rgba(255, 255, 255, 0.94) !important;
-            border-color: #E2E8F0 !important;
+            background-color: rgba(250, 248, 245, 0.94) !important;
+            border-color: rgba(44, 53, 45, 0.12) !important;
         }
         html.theme-light footer {
-            background-color: #FFFFFF !important;
-            border-color: #E2E8F0 !important;
+            background-color: #F6F2EA !important;
+            border-color: rgba(44, 53, 45, 0.12) !important;
         }
         html.theme-light .bg-obsidian-card {
             background-color: #FFFFFF !important;
-            border-color: #E2E8F0 !important;
+            border-color: rgba(44, 53, 45, 0.12) !important;
         }
         html.theme-light .bg-obsidian-elevated {
-            background-color: #F1F5F9 !important;
-            border-color: #E2E8F0 !important;
+            background-color: #F0EAE1 !important;
+            border-color: rgba(44, 53, 45, 0.14) !important;
         }
-        html.theme-light .text-white { color: #0F172A !important; }
+        html.theme-light .text-white { color: #1E1E1E !important; }
         html.theme-light .text-zinc-100,
-        html.theme-light .text-zinc-200 { color: #0F172A !important; }
+        html.theme-light .text-zinc-200 { color: #1E1E1E !important; }
         html.theme-light .text-zinc-300,
-        html.theme-light .text-zinc-400 { color: #334155 !important; }
-        html.theme-light .text-acid { color: #3F6212 !important; }
-        html.theme-light .bg-acid { background-color: #A3E635 !important; color: #09090B !important; }
+        html.theme-light .text-zinc-400 { color: #5C5B57 !important; }
+        html.theme-light .text-acid { color: #2C352D !important; }
+        html.theme-light .bg-acid { background-color: #2C352D !important; color: #FAF8F5 !important; }
+        html.theme-light .bg-acid * { color: #FAF8F5 !important; }
         html.theme-light .bg-acid-muted {
-            background-color: #ECFCCB !important;
-            border-color: #BEF264 !important;
-            color: #365314 !important;
+            background-color: #E5ECE2 !important;
+            border-color: #7A8B74 !important;
+            color: #172019 !important;
         }
         @media (prefers-reduced-motion: reduce) {
             *, ::before, ::after {
@@ -150,12 +147,12 @@
     <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
             <a href="./" class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display font-bold text-lg tracking-tighter">
-                    V
+                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display italic font-semibold text-base tracking-tight">
+                    PC
                 </div>
                 <div class="leading-none">
-                    <span class="font-display text-lg sm:text-xl font-bold tracking-tight uppercase text-white">VIR<span class="text-acid">MARKET</span></span>
-                    <span class="block font-mono text-xs uppercase tracking-wider text-zinc-300 mt-0.5">Privacidad &amp; RGPD</span>
+                    <span class="font-display text-lg sm:text-xl font-medium tracking-tight text-white">Pulso <em class="italic font-normal">Cotidiano</em></span>
+                    <span class="block font-mono text-[10px] uppercase tracking-wider text-zinc-300 mt-0.5">Privacidad &amp; RGPD</span>
                 </div>
             </a>
 
@@ -182,14 +179,14 @@
                     Política de Privacidad y Condiciones del Club VIP
                 </h1>
                 <p class="mt-3 text-sm text-zinc-300 leading-relaxed">
-                    En VirMarket tratamos tus datos con total transparencia y mínimo almacenamiento necesario, cumpliendo el Reglamento General de Protección de Datos (UE) 2016/679 (RGPD), la Ley Orgánica 3/2018 (LOPDGDD) y la Ley 34/2002 (LSSI-CE).
+                    En <strong>Pulso Cotidiano</strong> (proyecto editado por Virmar Solutions) tratamos tus datos con total transparencia y mínimo almacenamiento necesario, cumpliendo el Reglamento General de Protección de Datos (UE) 2016/679 (RGPD), la Ley Orgánica 3/2018 (LOPDGDD) y la Ley 34/2002 (LSSI-CE).
                 </p>
             </div>
 
             <section class="space-y-2.5">
                 <h2 class="font-display text-lg font-bold text-white uppercase">1. Responsable del Tratamiento</h2>
                 <ul class="text-sm text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-5">
-                    <li><strong>Denominación comercial:</strong> VirMarket (iniciativa particular de venta de prendas de segunda mano a través de Vinted, sin entidad societaria).</li>
+                    <li><strong>Denominación comercial:</strong> Pulso Cotidiano / Virmar Solutions (iniciativa particular de divulgación editorial y venta de prendas de segunda mano a través de Vinted, sin entidad societaria).</li>
                     <li><strong>Ubicación:</strong> Cádiz, España.</li>
                     <li><strong>Correo de contacto y ejercicio de derechos:</strong> <a href="mailto:contacto@virmarsolutions.com" class="text-acid underline font-semibold">contacto@virmarsolutions.com</a></li>
                 </ul>
@@ -252,7 +249,7 @@
 
     <footer class="border-t border-obsidian-border bg-obsidian py-6 px-4 sm:px-6">
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-300">
-            <span>© 2026 VirMarket • Cádiz, España</span>
+            <span>© 2026 Pulso Cotidiano · Virmar Solutions (Cádiz, España)</span>
             <div class="flex items-center gap-4">
                 <a href="./" class="hover:text-acid underline">Inicio</a>
                 <a href="./#faqs" class="hover:text-acid underline">Preguntas frecuentes</a>
