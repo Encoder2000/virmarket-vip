@@ -25,7 +25,7 @@
                 }
                 const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
                 if (metaTheme) {
-                    metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#141915');
+                    metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#0B0C0E');
                 }
             } catch (e) {}
         })();
@@ -42,15 +42,15 @@
                 extend: {
                     colors: {
                         acid: {
-                            DEFAULT: '#C5D8BE',
-                            hover: '#D6E8CD',
-                            muted: 'rgba(197, 216, 190, 0.14)'
+                            DEFAULT: '#E2A878',
+                            hover: '#EBB98F',
+                            muted: 'rgba(226, 168, 120, 0.16)'
                         },
                         obsidian: {
-                            DEFAULT: '#141915',
-                            card: '#1D241E',
-                            elevated: '#263027',
-                            border: '#364237'
+                            DEFAULT: '#0B0C0E',
+                            card: '#15171A',
+                            elevated: '#1E2126',
+                            border: 'rgba(255, 255, 255, 0.10)'
                         }
                     },
                     fontFamily: {
@@ -68,9 +68,10 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
-            background-color: #141915;
+            background-color: #0B0C0E;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(197, 216, 190, 0.12), transparent 55%);
+                radial-gradient(circle at 75% 18%, rgba(226, 168, 120, 0.10), transparent 46%),
+                radial-gradient(circle at 20% 0%, rgba(250, 248, 245, 0.03), transparent 42%);
             background-size: 100% 100%;
         }
         .skip-link {
@@ -132,6 +133,14 @@
             border-color: #7A8B74 !important;
             color: #172019 !important;
         }
+        .vm-logo-badge {
+            background-color: #FAF8F5;
+            color: #0B0C0E;
+        }
+        html.theme-light .vm-logo-badge {
+            background-color: #2C352D;
+            color: #FAF8F5;
+        }
         @media (prefers-reduced-motion: reduce) {
             *, ::before, ::after {
                 animation-duration: 0.01ms !important;
@@ -145,24 +154,24 @@
     <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
 
     <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-            <a href="./" class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display italic font-semibold text-base tracking-tight">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
+            <a href="./" class="flex items-center space-x-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-lg vm-logo-badge flex items-center justify-center font-display italic font-semibold text-base tracking-tight shrink-0 shadow-md">
                     PC
                 </div>
-                <div class="leading-none">
-                    <span class="font-display text-lg sm:text-xl font-medium tracking-tight text-white">Pulso <em class="italic font-normal">Cotidiano</em></span>
-                    <span class="block font-mono text-[10px] uppercase tracking-wider text-zinc-300 mt-0.5">Privacidad &amp; RGPD</span>
+                <div class="leading-none min-w-0">
+                    <span class="font-display text-lg sm:text-xl font-medium tracking-tight text-white whitespace-nowrap">Pulso <em class="italic font-normal">Cotidiano</em></span>
+                    <span class="block font-mono text-[10px] uppercase tracking-wider text-zinc-400 mt-0.5 truncate">Privacidad <span class="hidden sm:inline">&amp; RGPD</span></span>
                 </div>
             </a>
 
-            <div class="flex items-center gap-2">
-                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-acid/60 border border-obsidian-border font-mono text-xs font-semibold text-zinc-200 transition-all cursor-pointer">
-                    <i id="themeToggleIcon" data-lucide="sun" aria-hidden="true" class="w-3.5 h-3.5 text-amber-300"></i>
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-acid/60 border border-obsidian-border font-mono text-[11px] font-semibold text-zinc-200 transition-all cursor-pointer whitespace-nowrap">
+                    <i id="themeToggleIcon" data-lucide="sun" aria-hidden="true" class="w-3.5 h-3.5 text-amber-300 shrink-0"></i>
                     <span id="themeToggleLabel">Modo Claro</span>
                 </button>
-                <a href="./" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-acid text-obsidian font-mono text-xs font-bold uppercase tracking-wider hover:bg-acid-hover transition-colors">
-                    <i data-lucide="arrow-left" aria-hidden="true" class="w-3.5 h-3.5"></i>
+                <a href="./" class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-acid text-obsidian font-mono text-[11px] font-bold uppercase tracking-wider hover:bg-acid-hover transition-colors whitespace-nowrap">
+                    <i data-lucide="arrow-left" aria-hidden="true" class="w-3.5 h-3.5 shrink-0"></i>
                     <span>Volver</span>
                 </a>
             </div>
@@ -268,7 +277,7 @@
             if (themeLabel) themeLabel.textContent = isLight ? 'Modo Oscuro' : 'Modo Claro';
             if (themeIcon) themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
             const metaTheme = document.getElementById('metaThemeColor');
-            if (metaTheme) metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+            if (metaTheme) metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#0B0C0E');
             lucide.createIcons();
         }
         syncThemeBtn();

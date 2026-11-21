@@ -25,7 +25,7 @@
                 }
                 const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
                 if (metaTheme) {
-                    metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#141915');
+                    metaTheme.setAttribute('content', isLight ? '#FAF8F5' : '#0B0C0E');
                 }
             } catch (e) {}
         })();
@@ -59,15 +59,24 @@
                 extend: {
                     colors: {
                         acid: {
-                            DEFAULT: '#C5D8BE',
-                            hover: '#D6E8CD',
-                            muted: 'rgba(197, 216, 190, 0.14)'
+                            DEFAULT: '#FAF8F5',
+                            hover: '#EDE8DF',
+                            muted: 'rgba(226, 168, 120, 0.16)'
+                        },
+                        sand: {
+                            DEFAULT: '#E2A878',
+                            hover: '#EBB98F',
+                            muted: 'rgba(226, 168, 120, 0.16)'
+                        },
+                        sage: {
+                            DEFAULT: '#A8D499',
+                            muted: 'rgba(13, 20, 15, 0.88)'
                         },
                         obsidian: {
-                            DEFAULT: '#141915',
-                            card: '#1D241E',
-                            elevated: '#263027',
-                            border: '#364237'
+                            DEFAULT: '#0B0C0E',
+                            card: '#15171A',
+                            elevated: '#1E2126',
+                            border: 'rgba(255, 255, 255, 0.10)'
                         }
                     },
                     fontFamily: {
@@ -87,31 +96,207 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://stats.virmarsolutions.com/script.js" data-website-id="c3ff5fa2-af13-40d1-b7e0-fb0ad8dab1c8"></script>
     <style>
+        :root {
+            --vm-bg: #0B0C0E;
+            --vm-surface: #15171A;
+            --vm-elevated: #1E2126;
+            --vm-border: rgba(255, 255, 255, 0.10);
+            --vm-border-strong: rgba(255, 255, 255, 0.18);
+            --vm-rim: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            --vm-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.65);
+            --vm-ink: #FAF8F5;
+            --vm-ink-muted: #A1A1AA;
+            --vm-cta-bg: #FAF8F5;
+            --vm-cta-ink: #0B0C0E;
+            --vm-terracotta: #E2A878;
+            --vm-pill-drop-bg: #E2A878;
+            --vm-pill-drop-ink: #0B0C0E;
+            --vm-pill-drop-border: rgba(226, 168, 120, 0.55);
+            --vm-sage: #A8D499;
+            --vm-sage-bg: rgba(13, 20, 15, 0.88);
+            --vm-sage-border: rgba(155, 196, 140, 0.55);
+            --vm-amber: #FCD34D;
+            --vm-amber-bg: rgba(24, 18, 10, 0.88);
+            --vm-amber-border: rgba(251, 191, 36, 0.55);
+            --vm-medal-bg: radial-gradient(circle at 30% 30%, #FAF8F5, #C7B9A5);
+            --vm-medal-ink: #15171A;
+            --vm-book-bg: linear-gradient(145deg, #F7F3EB 0%, #EBE3D5 100%);
+            --vm-book-band: #DED3C1;
+            --vm-book-line: rgba(44, 53, 45, 0.40);
+            --vm-sticky-bg: rgba(16, 18, 22, 0.90);
+        }
+
         body {
-            background-color: #141915;
+            background-color: #0B0C0E;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(197, 216, 190, 0.12), transparent 55%);
+                radial-gradient(circle at 75% 18%, rgba(226, 168, 120, 0.11), transparent 46%),
+                radial-gradient(circle at 20% 0%, rgba(250, 248, 245, 0.03), transparent 42%);
             background-size: 100% 100%;
+            color: #FAF8F5;
         }
         .custom-checkbox:checked {
+            background-color: #E2A878;
+            border-color: #E2A878;
+        }
+        html.theme-light .custom-checkbox:checked {
             background-color: #2C352D;
             border-color: #2C352D;
         }
         @keyframes pulseRing {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(197, 216, 190, 0.55); }
-            50% { box-shadow: 0 0 0 6px rgba(197, 216, 190, 0.15); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(226, 168, 120, 0.55); }
+            50% { box-shadow: 0 0 0 6px rgba(226, 168, 120, 0.15); }
         }
         .highlight-garment {
-            border-color: #C5D8BE !important;
+            border-color: #E2A878 !important;
             animation: pulseRing 1.8s ease-in-out 3;
         }
 
+        /* Clases semánticas bipolares (misma geometría, cambian solo tokens) */
+        .vm-card {
+            background-color: var(--vm-surface);
+            border: 1px solid var(--vm-border);
+            box-shadow: var(--vm-rim), var(--vm-shadow);
+        }
+        .vm-card-selected {
+            border-color: var(--vm-cta-bg) !important;
+            box-shadow: 0 0 0 1px var(--vm-cta-bg), var(--vm-shadow) !important;
+        }
+        .vm-elevated {
+            background-color: var(--vm-elevated);
+            border: 1px solid var(--vm-border);
+        }
+        .vm-text-terracotta {
+            color: var(--vm-terracotta);
+        }
+        .vm-btn-primary {
+            background-color: var(--vm-cta-bg);
+            color: var(--vm-cta-ink);
+            border: 1px solid var(--vm-cta-bg);
+            transition: opacity 0.18s ease, transform 0.15s ease;
+        }
+        .vm-btn-primary:hover {
+            opacity: 0.92;
+        }
+        .vm-btn-secondary {
+            background-color: var(--vm-elevated);
+            color: var(--vm-ink);
+            border: 1px solid var(--vm-border-strong);
+            transition: border-color 0.18s ease, background-color 0.18s ease;
+        }
+        .vm-btn-secondary:hover {
+            border-color: var(--vm-terracotta);
+        }
+        .vm-pill-drop {
+            background-color: var(--vm-pill-drop-bg);
+            color: var(--vm-pill-drop-ink);
+            border: 1px solid var(--vm-pill-drop-border);
+        }
+        .vm-status-avail {
+            background-color: var(--vm-sage-bg);
+            color: var(--vm-sage);
+            border: 1px solid var(--vm-sage-border);
+            backdrop-filter: blur(6px);
+        }
+        .vm-status-res {
+            background-color: var(--vm-amber-bg);
+            color: var(--vm-amber);
+            border: 1px solid var(--vm-amber-border);
+            backdrop-filter: blur(6px);
+        }
+        .vm-medal {
+            background: var(--vm-medal-bg);
+            color: var(--vm-medal-ink);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+        .vm-shield-dot {
+            background-color: var(--vm-sage-bg);
+            color: var(--vm-sage);
+            border: 1px solid var(--vm-sage-border);
+        }
+        .vm-sticky-bar {
+            background-color: var(--vm-sticky-bg);
+            border-top: 1px solid var(--vm-border-strong);
+        }
+
+        /* Composición Tangible Landing: Libreta Guía PDF + Tarjeta VIP */
+        .vm-hero-stage {
+            position: relative;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+        .vm-booklet {
+            position: relative;
+            width: 204px;
+            height: 272px;
+            border-radius: 6px 14px 14px 6px;
+            background: var(--vm-book-bg);
+            color: #1E1E1E;
+            padding: 20px 18px 16px 24px;
+            transform: rotate(4.5deg) translate(-22px, -8px);
+            box-shadow:
+                -6px 0 0 #D8CEBC,
+                -10px 18px 40px -10px rgba(0, 0, 0, 0.42),
+                0 28px 52px -18px rgba(0, 0, 0, 0.34);
+            border: 1px solid rgba(44, 53, 45, 0.14);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .vm-booklet-spine {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 11px;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.09), transparent);
+            border-right: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .vm-booklet-band {
+            position: absolute;
+            inset: 116px 0 0 0;
+            background: var(--vm-book-band);
+            opacity: 0.48;
+            pointer-events: none;
+        }
+        .vm-vip-pass {
+            position: absolute;
+            right: 4px;
+            bottom: 18px;
+            width: 208px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1E2024 0%, #0D0E10 65%);
+            color: #FAF8F5;
+            border: 1px solid rgba(212, 180, 131, 0.55);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            transform: rotate(-5deg);
+            overflow: hidden;
+        }
+        .vm-vip-pass-band {
+            background: linear-gradient(90deg, #C7A373 0%, #E5CA9F 55%, #BD9766 100%);
+            color: #111214;
+        }
+        @media (min-width: 640px) {
+            .vm-hero-stage { min-height: 390px; }
+            .vm-booklet {
+                width: 248px;
+                height: 326px;
+                padding: 24px 22px 18px 28px;
+                transform: rotate(4.5deg) translate(-28px, -8px);
+            }
+            .vm-booklet-band { inset: 130px 0 0 0; }
+            .vm-vip-pass { width: 248px; right: 4px; bottom: 26px; }
+        }
+
         /* ===================================================================== */
-        /* CONTROLES Y SCROLLBARS OBSIDIAN & ACID (CERO BLANCOS NATIVOS)         */
+        /* CONTROLES Y SCROLLBARS OBSIDIAN NEUTRO (CERO BLANCOS NATIVOS)         */
         /* ===================================================================== */
         * {
             scrollbar-width: thin;
-            scrollbar-color: #3f3f46 #121214;
+            scrollbar-color: #3f3f46 #0B0C0E;
         }
 
         ::-webkit-scrollbar {
@@ -120,18 +305,18 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #121214;
+            background: #0B0C0E;
             border-radius: 9999px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: #3f3f46;
             border-radius: 9999px;
-            border: 1px solid #18181b;
+            border: 1px solid #15171A;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #a3e635;
+            background: #E2A878;
         }
 
         ::-webkit-scrollbar-corner {
@@ -158,14 +343,14 @@
         }
 
         select option {
-            background-color: #121214;
-            color: #f4f4f5;
+            background-color: #15171A;
+            color: #FAF8F5;
             padding: 8px 12px;
         }
 
         textarea {
             scrollbar-width: thin;
-            scrollbar-color: #3f3f46 #121214;
+            scrollbar-color: #3f3f46 #0B0C0E;
         }
 
         /* Números tabulares para precios y cuentas atrás */
@@ -205,8 +390,8 @@
             z-index: 100;
             padding: 10px 16px;
             border-radius: 10px;
-            background-color: #A3E635;
-            color: #09090B;
+            background-color: #E2A878;
+            color: #0B0C0E;
             font-weight: 700;
             font-size: 13px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
@@ -229,15 +414,43 @@
         }
 
         /* ===================================================================== */
-        /* MODO CLARO EDITORIAL (PULSO COTIDIANO · #FAF8F5 + #2C352D)            */
+        /* MODO CLARO EDITORIAL (PULSO COTIDIANO · #FAF8F5 + #2C352D + #A35528) */
         /* ===================================================================== */
         html.theme-light {
             color-scheme: light;
+            --vm-bg: #FAF8F5;
+            --vm-surface: #FFFFFF;
+            --vm-elevated: #F0EAE1;
+            --vm-border: rgba(44, 53, 45, 0.12);
+            --vm-border-strong: rgba(44, 53, 45, 0.22);
+            --vm-rim: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            --vm-shadow: 0 16px 36px -12px rgba(44, 53, 45, 0.10), 0 4px 12px -4px rgba(44, 53, 45, 0.04);
+            --vm-ink: #1E1E1E;
+            --vm-ink-muted: #5C5B57;
+            --vm-cta-bg: #2C352D;
+            --vm-cta-ink: #FAF8F5;
+            --vm-terracotta: #A35528;
+            --vm-pill-drop-bg: #F4DFCE;
+            --vm-pill-drop-ink: #8C471E;
+            --vm-pill-drop-border: rgba(163, 85, 40, 0.32);
+            --vm-sage: #172019;
+            --vm-sage-bg: #E5ECE2;
+            --vm-sage-border: #8BA084;
+            --vm-amber: #92400E;
+            --vm-amber-bg: #FEF3C7;
+            --vm-amber-border: #F59E0B;
+            --vm-medal-bg: radial-gradient(circle at 30% 30%, #E7D9C6, #C9B193);
+            --vm-medal-ink: #FAF8F5;
+            --vm-book-bg: linear-gradient(145deg, #F5F0E6 0%, #E7DEC8 100%);
+            --vm-book-band: #DCD0BC;
+            --vm-book-line: rgba(44, 53, 45, 0.36);
+            --vm-sticky-bg: rgba(255, 255, 255, 0.94);
         }
         html.theme-light body {
             background-color: #FAF8F5 !important;
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(122, 139, 116, 0.14), transparent 55%) !important;
+                radial-gradient(circle at 75% 18%, rgba(184, 107, 59, 0.08), transparent 46%),
+                radial-gradient(circle at 20% 0%, rgba(44, 53, 45, 0.04), transparent 42%) !important;
             background-size: 100% 100% !important;
             color: #1E1E1E !important;
         }
@@ -352,7 +565,7 @@
             border-color: #E2E8F0;
         }
         html.theme-light ::-webkit-scrollbar-thumb:hover {
-            background: #65A30D;
+            background: #A35528;
         }
         html.theme-light input::placeholder,
         html.theme-light textarea::placeholder {
@@ -361,14 +574,14 @@
         html.theme-light input:focus,
         html.theme-light textarea:focus,
         html.theme-light select:focus {
-            border-color: #65A30D !important;
-            box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.3) !important;
+            border-color: #2C352D !important;
+            box-shadow: 0 0 0 3px rgba(44, 53, 45, 0.16) !important;
         }
         /* Barra flotante inferior de Lote VIP */
         html.theme-light #stickyLotBar {
-            background-color: rgba(255, 255, 255, 0.96) !important;
-            border-top: 1px solid #E2E8F0 !important;
-            box-shadow: 0 -10px 25px -5px rgba(15, 23, 42, 0.08), 0 -8px 10px -6px rgba(15, 23, 42, 0.04) !important;
+            background-color: rgba(255, 255, 255, 0.94) !important;
+            border-top: 1px solid rgba(44, 53, 45, 0.16) !important;
+            box-shadow: 0 -10px 25px -5px rgba(44, 53, 45, 0.08), 0 -4px 10px -4px rgba(44, 53, 45, 0.04) !important;
         }
         /* Modales */
         html.theme-light #checkoutModal,
@@ -378,9 +591,9 @@
         /* Toasts */
         html.theme-light #toastNotice {
             background-color: #FFFFFF !important;
-            color: #0F172A !important;
-            border-color: #A3E635 !important;
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1) !important;
+            color: #1E1E1E !important;
+            border-color: #A35528 !important;
+            box-shadow: 0 10px 25px -5px rgba(44, 53, 45, 0.12) !important;
         }
         /* Badges de estado en Escaparate */
         html.theme-light .bg-emerald-950\/90 {
@@ -418,29 +631,29 @@
         }
     </style>
 </head>
-<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
+<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-sand selection:text-obsidian">
     <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
 
     <!-- Cabecera Minimalista Mobile-First -->
     <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-            <a href="./" class="flex items-center space-x-2.5 group">
-                <div class="w-8 h-8 rounded-lg bg-acid text-obsidian flex items-center justify-center font-display italic font-semibold text-base tracking-tight shadow-md">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
+            <a href="./" class="flex items-center space-x-2.5 group min-w-0">
+                <div class="w-8 h-8 rounded-lg vm-btn-primary flex items-center justify-center font-display italic font-semibold text-base tracking-tight shadow-md shrink-0">
                     PC
                 </div>
-                <div class="leading-none">
-                    <span class="font-display text-lg sm:text-xl font-medium tracking-tight text-white">Pulso <em class="italic font-normal">Cotidiano</em></span>
-                    <span class="block font-mono text-[10px] uppercase tracking-wider text-zinc-400 mt-0.5">Club Privado · Moda Circular</span>
+                <div class="leading-none min-w-0">
+                    <span class="font-display text-lg sm:text-xl font-medium tracking-tight text-white whitespace-nowrap">Pulso <em class="italic font-normal">Cotidiano</em></span>
+                    <span class="block font-mono text-[10px] uppercase tracking-wider text-zinc-400 mt-0.5 truncate">Club Privado <span class="hidden sm:inline">· Moda Circular</span></span>
                 </div>
             </a>
 
-            <div class="flex items-center gap-2">
-                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-acid/60 border border-obsidian-border font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all shadow-sm cursor-pointer">
-                    <i aria-hidden="true" id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
+            <div class="flex items-center gap-2 shrink-0">
+                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-obsidian-elevated hover:border-sand/60 border border-obsidian-border font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all shadow-sm cursor-pointer whitespace-nowrap">
+                    <i aria-hidden="true" id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300 shrink-0"></i>
                     <span id="themeToggleLabel">Modo Claro</span>
                 </button>
-                <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-obsidian-elevated border border-obsidian-border font-mono text-[10px] uppercase tracking-wider text-acid">
-                    <span class="w-1.5 h-1.5 rounded-full bg-acid animate-pulse"></span>
+                <div class="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full bg-obsidian-elevated border border-obsidian-border font-mono text-[10px] uppercase tracking-wider text-white whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sage animate-pulse"></span>
                     <span>Club Privado</span>
                 </div>
             </div>
@@ -454,169 +667,219 @@
         <!-- =================================================================== -->
         <!-- VISTA 1: MODO CAPTACIÓN QR (Mostrada por defecto al escanear tarjeta) -->
         <!-- =================================================================== -->
-        <div id="captureView">
-            <section class="pt-8 pb-14 sm:pt-14 sm:pb-20 px-4 sm:px-6">
-                <div class="max-w-xl mx-auto">
+        <div id="captureView" class="overflow-x-hidden">
+            <section class="pt-8 pb-12 sm:pt-12 sm:pb-16 px-4 sm:px-6">
+                <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
 
-                    <!-- Etiqueta de agradecimiento post-compra -->
-                    <div class="flex justify-center mb-6">
-                        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
-                            <i aria-hidden="true" data-lucide="package-check" class="w-3.5 h-3.5"></i>
-                            <span>Gracias por tu pedido • Club Privado Pulso Cotidiano</span>
-                        </div>
-                    </div>
-
-                    <!-- Titular Principal Dinámico (Gancho Híbrido: Guía PDF + Descuento VIP 24h) -->
-                    <div class="text-center">
-                        <h1 class="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white leading-[1.12]">
-                            Guía gratuita y <span id="dynHeroHighlight" class="text-acid italic">-10% en tu 1ª reserva</span> 24h antes que en Vinted
+                    <!-- Columna Izquierda: Titular Editorial + Formulario VIP -->
+                    <div class="lg:col-span-6 min-w-0">
+                        <h1 class="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white leading-[1.08]">
+                            Guía gratuita y <span id="dynHeroHighlight" class="vm-text-terracotta italic">-10% en tu 1ª reserva</span> 24h antes que en Vinted
                         </h1>
-                        <p class="mt-4 text-sm sm:text-base text-zinc-300 leading-relaxed max-w-md mx-auto">
-                            Únete al Club Privado de <strong>Pulso Cotidiano</strong>. Recibe gratis nuestra <strong>Guía PDF de Cuidado Textil y Hogar Eco</strong> y un aviso privado por cada nuevo <em>Drop</em> de prendas seleccionadas <strong>24 horas antes</strong> de publicarlas en abierto.
+                        <p class="mt-4 text-sm sm:text-base text-zinc-300 leading-relaxed max-w-lg">
+                            Únete al Club Privado de <strong>Pulso Cotidiano</strong>. Recibe gratis nuestra <strong>Guía PDF de Cuidado Textil y Hogar Eco</strong> y un aviso privado por cada nuevo <em>Drop</em> <strong>24 horas antes</strong> de publicarlo en abierto.
                         </p>
                         <p id="dynCapNote" class="mt-2 font-mono text-[11px] text-zinc-400">
                             *Bienvenida activa: Guía PDF + -10% directo en tu 1ª reserva (hasta 15,00 € de ahorro).
                         </p>
-                    </div>
 
-                    <!-- Tarjeta Formulario de Mínima Fricción -->
-                    <div id="registro" class="mt-7 rounded-[20px] bg-obsidian-card border border-obsidian-border p-5 sm:p-7 shadow-2xl">
-                        <div class="flex items-center justify-between pb-4 mb-5 border-b border-dashed border-zinc-800 font-mono text-[11px] text-zinc-400 uppercase tracking-wider">
-                            <span>PASE MIEMBRO #VIP-PULSO</span>
-                            <span id="dynTicketBadge" class="text-acid font-bold">GUÍA + -10% + 24H</span>
-                        </div>
+                        <!-- Tarjeta Formulario de Mínima Fricción -->
+                        <div id="registro" class="mt-6 rounded-[20px] vm-card bg-obsidian-card p-5 sm:p-6">
+                            <div class="flex items-center justify-between pb-3.5 mb-4 border-b border-dashed border-zinc-700/70 font-mono text-[11px] text-zinc-400 uppercase tracking-wider">
+                                <span>PASE MIEMBRO #VIP-PULSO</span>
+                                <span id="dynTicketBadge" class="vm-text-terracotta font-bold">GUÍA + -10% + 24H</span>
+                            </div>
 
-                        <form id="leadForm" class="space-y-4" novalidate>
-                            <div>
-                                <label for="userEmail" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2">
-                                    Tu correo electrónico
-                                </label>
-                                <div class="relative">
-                                    <i aria-hidden="true" data-lucide="mail" class="w-5 h-5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                            <form id="leadForm" class="space-y-4" novalidate>
+                                <div>
+                                    <label for="userEmail" class="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2">
+                                        Tu correo electrónico
+                                    </label>
+                                    <div class="relative">
+                                        <i aria-hidden="true" data-lucide="mail" class="w-5 h-5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                                        <input
+                                            type="email"
+                                            id="userEmail"
+                                            inputmode="email"
+                                            autocomplete="email"
+                                            required
+                                            placeholder="ejemplo@correo.com"
+                                            class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700/80 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-sand focus:ring-2 focus:ring-sand/25 transition-all"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!-- Casilla de verificación RGPD obligatoria -->
+                                <label for="rgpdConsent" class="flex items-start space-x-3 p-3 rounded-xl bg-obsidian-elevated border border-zinc-800/90 cursor-pointer hover:border-zinc-700 transition-colors">
                                     <input
-                                        type="email"
-                                        id="userEmail"
-                                        inputmode="email"
-                                        autocomplete="email"
+                                        type="checkbox"
+                                        id="rgpdConsent"
                                         required
-                                        placeholder="ejemplo@correo.com"
-                                        class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-obsidian-elevated border border-zinc-700/80 text-white placeholder-zinc-500 text-base sm:text-sm focus:outline-none focus:border-acid focus:ring-2 focus:ring-acid/30 transition-all"
+                                        class="custom-checkbox mt-0.5 w-4 h-4 rounded border-zinc-600 bg-obsidian text-sand focus:ring-sand focus:ring-offset-obsidian shrink-0 accent-[#E2A878]"
                                     >
-                                </div>
-                            </div>
+                                    <span id="rgpdConsentLabelText" class="text-xs text-zinc-300 leading-relaxed select-none">
+                                        Acepto recibir alertas privadas de lanzamientos (Drops) y mi ventaja de bienvenida conforme a la <a href="privacidad.html" class="vm-text-terracotta underline font-semibold" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>. <strong>Verificación por correo y baja inmediata con un clic.</strong>
+                                    </span>
+                                </label>
 
-                            <!-- Casilla de verificación RGPD obligatoria -->
-                            <label for="rgpdConsent" class="flex items-start space-x-3 p-3 rounded-xl bg-obsidian-elevated/60 border border-zinc-800/90 cursor-pointer hover:border-zinc-700 transition-colors">
-                                <input
-                                    type="checkbox"
-                                    id="rgpdConsent"
-                                    required
-                                    class="custom-checkbox mt-0.5 w-4 h-4 rounded border-zinc-600 bg-obsidian text-acid focus:ring-acid focus:ring-offset-obsidian shrink-0 accent-[#A3E635]"
+                                <!-- Primera Capa Informativa RGPD (Art. 13) -->
+                                <p class="text-[11px] text-zinc-400 leading-relaxed px-1">
+                                    <strong>Información básica RGPD:</strong> Responsable: Pulso Cotidiano (Virmar Solutions, Cádiz, España). Finalidad: envío de tu Guía PDF gratuita, avisos de Drops 24h y gestión de reservas VIP. Legitimación: consentimiento expreso verificado por Doble Opt-In. Baja en 1 clic o derechos en <a href="privacidad.html" class="vm-text-terracotta underline">Política de Privacidad</a> y <a href="mailto:contacto@virmarsolutions.com" class="underline hover:text-white">contacto@virmarsolutions.com</a>.
+                                </p>
+
+                                <button
+                                    type="submit"
+                                    id="submitBtn"
+                                    class="w-full py-3.5 px-6 rounded-full vm-btn-primary font-sans font-bold text-sm sm:text-base tracking-wide shadow-lg flex items-center justify-center space-x-2 active:scale-[0.99]"
                                 >
-                                <span id="rgpdConsentLabelText" class="text-xs text-zinc-300 leading-relaxed select-none">
-                                    Acepto recibir alertas privadas de lanzamientos (Drops) y mi ventaja de bienvenida conforme a la <a href="privacidad.html" class="text-acid underline font-semibold hover:text-acid-hover" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>. <strong>Verificación por correo y baja inmediata con un clic.</strong>
+                                    <span id="dynSubmitText">Recibir Guía PDF + -10% VIP</span>
+                                    <i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+
+                            <!-- Confirmación de Éxito / Pendiente Doble Opt-In -->
+                            <div id="formSuccess" role="status" aria-live="polite" class="hidden p-5 rounded-xl bg-acid-muted border border-sand/50 text-left">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-9 h-9 rounded-lg vm-btn-primary flex items-center justify-center shrink-0 mt-0.5">
+                                        <i aria-hidden="true" data-lucide="mail-check" class="w-5 h-5 stroke-[2.5]"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p id="leadSuccessTitle" class="font-display font-bold text-white text-base uppercase">¡Revisa tu correo para confirmar!</p>
+                                        <p id="dynLeadSuccessCopy" class="mt-1 text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                                            Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu ventaja de bienvenida.
+                                        </p>
+                                        <button id="afterLeadShowroomBtn" type="button" class="hidden mt-3.5 w-full py-2.5 px-4 rounded-full vm-btn-primary font-display font-bold text-xs uppercase tracking-wide items-center justify-center gap-1.5">
+                                            <span>⚡ Ver el Drop Privado Activo Ahora</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Alerta de Error -->
+                            <div id="formError" role="alert" aria-live="assertive" class="hidden mt-4 p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-start space-x-2.5 text-left">
+                                <i aria-hidden="true" data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+                                <div>
+                                    <p class="font-bold text-rose-100">Revisa los datos antes de continuar</p>
+                                    <p id="formErrorMessage" class="mt-0.5 text-rose-300">Comprueba tu correo y marca la casilla de aceptación.</p>
+                                </div>
+                            </div>
+
+                            <!-- Sello de confianza Vinted -->
+                            <div class="mt-4 pt-3.5 border-t border-zinc-800/70 flex items-center justify-center space-x-2 text-[11px] text-zinc-400 text-center">
+                                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full vm-shield-dot shrink-0">
+                                    <i aria-hidden="true" data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i>
                                 </span>
-                            </label>
-
-                            <!-- Primera Capa Informativa RGPD (Art. 13) -->
-                            <p class="text-[11px] text-zinc-400 leading-relaxed px-1">
-                                <strong>Información básica RGPD:</strong> Responsable: Pulso Cotidiano (Virmar Solutions, Cádiz, España). Finalidad: envío de tu Guía PDF gratuita, avisos de Drops 24h y gestión de reservas VIP. Legitimación: consentimiento expreso verificado por Doble Opt-In. Baja en 1 clic o derechos en <a href="privacidad.html" class="text-acid underline">Política de Privacidad</a> y <a href="mailto:contacto@virmarsolutions.com" class="underline hover:text-acid">contacto@virmarsolutions.com</a>.
-                            </p>
-
-                            <button
-                                type="submit"
-                                id="submitBtn"
-                                class="w-full py-4 px-6 rounded-full bg-acid hover:bg-acid-hover text-obsidian font-sans font-semibold text-sm sm:text-base tracking-wide transition-all shadow-lg flex items-center justify-center space-x-2 active:scale-[0.99]"
-                            >
-                                <span id="dynSubmitText">Recibir Guía PDF + -10% VIP</span>
-                                <i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
-                        </form>
-
-                        <!-- Confirmación de Éxito / Pendiente Doble Opt-In -->
-                        <div id="formSuccess" role="status" aria-live="polite" class="hidden p-5 rounded-xl bg-acid-muted border border-acid/50 text-left">
-                            <div class="flex items-start space-x-3">
-                                <div class="w-9 h-9 rounded-lg bg-acid text-obsidian flex items-center justify-center shrink-0 mt-0.5">
-                                    <i aria-hidden="true" data-lucide="mail-check" class="w-5 h-5 stroke-[2.5]"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <p id="leadSuccessTitle" class="font-display font-bold text-white text-base uppercase">¡Revisa tu correo para confirmar!</p>
-                                    <p id="dynLeadSuccessCopy" class="mt-1 text-xs sm:text-sm text-zinc-200 leading-relaxed">
-                                        Te hemos enviado un enlace de verificación desde <strong>contacto@virmarsolutions.com</strong>. Pulsa el botón de ese correo para confirmar tu alta y activar tu ventaja de bienvenida.
-                                    </p>
-                                    <button id="afterLeadShowroomBtn" type="button" class="hidden mt-3.5 w-full py-2.5 px-4 rounded-xl bg-acid text-obsidian font-display font-bold text-xs uppercase tracking-wide items-center justify-center gap-1.5">
-                                        <span>⚡ Ver el Drop Privado Activo Ahora</span>
-                                    </button>
-                                </div>
+                                <span>Envío inmediato · Sin spam · Compras 100% seguras en Vinted</span>
                             </div>
-                        </div>
-
-                        <!-- Alerta de Error -->
-                        <div id="formError" role="alert" aria-live="assertive" class="hidden mt-4 p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-start space-x-2.5 text-left">
-                            <i aria-hidden="true" data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
-                            <div>
-                                <p class="font-bold text-rose-100">Revisa los datos antes de continuar</p>
-                                <p id="formErrorMessage" class="mt-0.5 text-rose-300">Comprueba tu correo y marca la casilla de aceptación.</p>
-                            </div>
-                        </div>
-
-                        <!-- Sello de confianza Vinted -->
-                        <div class="mt-5 pt-4 border-t border-zinc-800/80 flex items-center justify-center space-x-2 text-[11px] text-zinc-400 text-center">
-                            <i aria-hidden="true" data-lucide="shield-check" class="w-4 h-4 text-acid shrink-0"></i>
-                            <span>Compras 100% seguras siempre a través de Vinted</span>
                         </div>
                     </div>
 
-                    <!-- Micro-beneficios rápidos (3 pills) -->
-                    <div class="mt-6 grid grid-cols-3 gap-2.5 text-center">
-                        <div class="p-3 rounded-xl bg-obsidian-card/80 border border-obsidian-border">
-                            <div id="dynPillPct" class="font-display text-lg font-bold text-acid">-10%</div>
-                            <div class="text-[11px] text-zinc-400 mt-0.5">1ª Reserva / Lote</div>
+                    <!-- Columna Derecha: Objetos Tangibles de Contraste (Guía PDF + Tarjeta VIP Física) -->
+                    <div class="lg:col-span-6 min-w-0">
+                        <div class="vm-hero-stage mx-auto max-w-md" aria-hidden="true">
+                            <!-- Objeto 1: Libreta / Guía Editorial PDF en papel marfil -->
+                            <div class="vm-booklet">
+                                <div class="vm-booklet-spine"></div>
+                                <div class="vm-booklet-band"></div>
+                                <div class="relative font-display text-[22px] leading-[1.15] font-medium text-[#1E1E1E]">
+                                    Guía Cuidado<br>Textil y Hogar Eco
+                                </div>
+                                <div class="relative w-full h-32 flex items-center justify-center">
+                                    <svg width="126" height="120" viewBox="0 0 130 125" fill="none" stroke="currentColor" style="color: var(--vm-book-line);" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M65 118 C65 88, 62 60, 68 22" />
+                                        <path d="M66 95 C46 86, 36 74, 34 62 C47 64, 58 75, 65 88" />
+                                        <path d="M66 76 C84 68, 96 55, 98 43 C85 45, 74 56, 66 70" />
+                                        <path d="M66 56 C48 48, 40 37, 38 27 C49 29, 58 38, 66 50" />
+                                        <circle cx="68" cy="18" r="6" />
+                                        <circle cx="42" cy="48" r="3.5" />
+                                        <circle cx="88" cy="36" r="4" />
+                                    </svg>
+                                </div>
+                                <div class="relative font-mono text-[9px] tracking-[0.12em] uppercase text-[#1E1E1E]/70">
+                                    Club Privado · PDF
+                                </div>
+                            </div>
+
+                            <!-- Objeto 2: Tarjeta VIP Obsidiana & Oro Champagne -->
+                            <div class="vm-vip-pass">
+                                <div class="px-5 pt-5 pb-4 text-center">
+                                    <div class="font-display text-2xl tracking-[0.08em] text-[#E5CA9F] font-medium">VIP</div>
+                                    <div class="mt-0.5 text-[11px] text-[#FAF8F5]/80 tracking-wide">Pase Miembro · Acceso Anticipado</div>
+                                </div>
+                                <div class="vm-vip-pass-band px-3.5 py-2.5 font-mono text-[11px] font-bold tracking-[0.06em] text-center">
+                                    #VIP-PULSO · -10% + 24H
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-3 rounded-xl bg-obsidian-card/80 border border-obsidian-border">
-                            <div class="font-display text-lg font-bold text-white">24h Antes</div>
-                            <div class="text-[11px] text-zinc-400 mt-0.5">Prioridad total</div>
-                        </div>
-                        <div class="p-3 rounded-xl bg-obsidian-card/80 border border-obsidian-border">
-                            <div class="font-display text-lg font-bold text-white">100%</div>
-                            <div class="text-[11px] text-zinc-400 mt-0.5">Pago en Vinted</div>
+
+                        <!-- Micro-beneficios rápidos (3 pills con contraste triádico) -->
+                        <div class="mt-3 grid grid-cols-3 gap-2.5 text-center max-w-md mx-auto">
+                            <div class="p-3 rounded-2xl vm-card bg-obsidian-card">
+                                <div id="dynPillPct" class="font-display text-xl font-bold vm-text-terracotta">-10%</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">1ª Reserva / Lote</div>
+                            </div>
+                            <div class="p-3 rounded-2xl vm-card bg-obsidian-card">
+                                <div class="font-display text-xl font-bold text-white">24h Antes</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">Prioridad total</div>
+                            </div>
+                            <div class="p-3 rounded-2xl vm-card bg-obsidian-card">
+                                <div class="font-display text-xl font-bold text-white">100%</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">Pago en Vinted</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Cómo Funciona el Sistema de Reserva Privada y Lotes -->
-            <section class="py-14 bg-obsidian-card/60 border-y border-obsidian-border px-4 sm:px-6">
-                <div class="max-w-3xl mx-auto">
-                    <div class="text-center mb-10">
-                        <span class="font-mono text-[11px] font-bold uppercase tracking-widest text-acid">Mecánica del Club</span>
-                        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white uppercase mt-1.5">
-                            Cómo reservas tus prendas o lotes antes que nadie
+            <section class="py-12 border-t border-obsidian-border px-4 sm:px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-9">
+                        <h2 class="font-display text-2xl sm:text-3xl font-medium text-white tracking-tight">
+                            Mecánica del Club
                         </h2>
+                        <p class="mt-1.5 text-xs sm:text-sm text-zinc-400">
+                            Cómo reservas tus prendas o lotes antes que nadie en tres pasos
+                        </p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        <div class="p-5 rounded-2xl bg-obsidian border border-obsidian-border">
-                            <div class="font-mono text-xs font-bold text-acid mb-3 uppercase tracking-wider">Paso 1 • 1 solo correo</div>
-                            <h3 class="font-display text-lg font-bold text-white">Recibe el Drop completo</h3>
+                        <div class="p-5 sm:p-6 rounded-2xl vm-card bg-obsidian-card">
+                            <div class="flex items-center justify-between mb-3.5">
+                                <span class="font-display text-4xl leading-none font-medium vm-text-terracotta">1</span>
+                                <span class="w-9 h-9 rounded-full vm-medal flex items-center justify-center">
+                                    <i aria-hidden="true" data-lucide="book-open" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                            <h3 class="font-sans text-base font-bold text-white">Descarga la Guía</h3>
                             <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                Cuando preparamos nueva remesa, recibes un único correo con el avance de todas las prendas y acceso directo al Escaparate Web VIP durante 24h.
+                                Recibe el PDF gratuito de cuidado textil y activa tu ventaja de bienvenida en tu correo con un solo clic.
                             </p>
                         </div>
 
-                        <div class="p-5 rounded-2xl bg-obsidian border border-obsidian-border">
-                            <div class="font-mono text-xs font-bold text-acid mb-3 uppercase tracking-wider">Paso 2 • 1 prenda o lote</div>
-                            <h3 class="font-display text-lg font-bold text-white">Elige tus favoritas</h3>
+                        <div class="p-5 sm:p-6 rounded-2xl vm-card bg-obsidian-card">
+                            <div class="flex items-center justify-between mb-3.5">
+                                <span class="font-display text-4xl leading-none font-medium vm-text-terracotta">2</span>
+                                <span class="w-9 h-9 rounded-full vm-medal flex items-center justify-center">
+                                    <i aria-hidden="true" data-lucide="clock" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                            <h3 class="font-sans text-base font-bold text-white">Acceso 24h Antes</h3>
                             <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                Revisa hasta 4 fotos por prenda, talla y medidas. Selecciona una o varias prendas en un mismo Lote con cálculo automático de tu descuento.
+                                Cuando preparamos nueva remesa, recibes un único aviso con todas las prendas 24h antes de salir a Vinted.
                             </p>
                         </div>
 
-                        <div class="p-5 rounded-2xl bg-obsidian border border-obsidian-border">
-                            <div class="font-mono text-xs font-bold text-acid mb-3 uppercase tracking-wider">Paso 3 • Compra en Vinted</div>
-                            <h3 class="font-display text-lg font-bold text-white">Reservada a tu @usuario</h3>
+                        <div class="p-5 sm:p-6 rounded-2xl vm-card bg-obsidian-card">
+                            <div class="flex items-center justify-between mb-3.5">
+                                <span class="font-display text-4xl leading-none font-medium vm-text-terracotta">3</span>
+                                <span class="w-9 h-9 rounded-full vm-medal flex items-center justify-center">
+                                    <i aria-hidden="true" data-lucide="tag" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                            <h3 class="font-sans text-base font-bold text-white">Reserva con -10%</h3>
                             <p class="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                Subimos la prenda o el lote a Vinted <strong>reservado a tu usuario</strong> con el precio final exacto para que compres con envío protegido.
+                                Elige 1 prenda o arma un Lote VIP. La subimos a Vinted <strong>reservada a tu @usuario</strong> con tu descuento aplicado.
                             </p>
                         </div>
                     </div>
@@ -627,29 +890,29 @@
         <!-- ========================================================================= -->
         <!-- VISTA 2: ESCAPARATE WEB VIP MULTI-PRENDA (?drop=..., ?escaparate=1, ?reservar=...) -->
         <!-- ========================================================================= -->
-        <div id="showroomView" class="hidden pt-6 sm:pt-10 px-4 sm:px-6">
+        <div id="showroomView" class="hidden pt-6 sm:pt-10 px-4 sm:px-6 overflow-x-hidden">
             <div class="max-w-5xl mx-auto">
 
                 <!-- Cabecera del Drop Activo -->
-                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-7 mb-6 shadow-xl">
+                <div class="rounded-2xl vm-card bg-obsidian-card p-5 sm:p-7 mb-6">
                     <div class="flex flex-wrap items-center justify-between gap-2.5 mb-3">
-                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider">
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full vm-pill-drop font-mono text-[11px] font-bold uppercase tracking-wider">
                             <i aria-hidden="true" data-lucide="flame" class="w-3.5 h-3.5"></i>
                             <span id="dropBadgeId">ESCAPARATE VIP 24H</span>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <div id="dropCountdownPill" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-obsidian-elevated border border-zinc-800 font-mono text-[11px] text-zinc-300">
-                                <i aria-hidden="true" data-lucide="clock" class="w-3.5 h-3.5 text-acid"></i>
+                            <div id="dropCountdownPill" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-obsidian-elevated border border-obsidian-border font-mono text-[11px] text-zinc-300">
+                                <i aria-hidden="true" data-lucide="clock" class="w-3.5 h-3.5 vm-text-terracotta"></i>
                                 <span id="dropCountdownText" class="tabular-nums">Prioridad miembros activa</span>
                             </div>
-                            <button id="refreshCatalogBtn" type="button" aria-label="Actualizar stock en vivo" title="Actualizar stock en vivo" class="p-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-zinc-300 hover:text-acid transition-colors">
+                            <button id="refreshCatalogBtn" type="button" aria-label="Actualizar stock en vivo" title="Actualizar stock en vivo" class="p-1.5 rounded-lg bg-obsidian-elevated border border-obsidian-border hover:border-sand/60 text-zinc-300 hover:text-white transition-colors">
                                 <i aria-hidden="true" data-lucide="refresh-cw" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
 
-                    <h1 id="dropHeaderTitle" class="font-display text-2xl sm:text-4xl font-bold text-white uppercase tracking-tight">
+                    <h1 id="dropHeaderTitle" class="font-display text-2xl sm:text-4xl font-semibold text-white tracking-tight">
                         Cargando Escaparate Privado...
                     </h1>
                     <p class="mt-1.5 text-xs sm:text-sm text-zinc-400">
@@ -657,12 +920,12 @@
                     </p>
 
                     <!-- Estado de elegibilidad de bienvenida -->
-                    <div id="discountStatusBanner" class="mt-4 p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div id="discountStatusBanner" class="mt-4 p-3 rounded-xl bg-obsidian-elevated border border-obsidian-border flex flex-wrap items-center justify-between gap-2 text-xs">
                         <div class="flex items-center space-x-2 text-zinc-200">
-                            <i aria-hidden="true" data-lucide="tag" class="w-4 h-4 text-acid shrink-0"></i>
+                            <i aria-hidden="true" data-lucide="tag" class="w-4 h-4 vm-text-terracotta shrink-0"></i>
                             <span id="discountStatusText">Calculando ventajas de tu cuenta VIP...</span>
                         </div>
-                        <a href="./" class="text-[11px] font-mono text-acid hover:underline">¿Nuevo aquí? Únete al Club →</a>
+                        <a href="./" class="text-[11px] font-mono vm-text-terracotta font-semibold hover:underline">¿Nuevo aquí? Únete al Club →</a>
                     </div>
                 </div>
 
@@ -674,8 +937,8 @@
                 </div>
 
                 <!-- Estado Vacío / Sin Prendas -->
-                <div id="catalogEmpty" class="hidden rounded-2xl bg-obsidian-card border border-obsidian-border p-8 sm:p-12 text-center max-w-lg mx-auto">
-                    <div class="w-12 h-12 rounded-2xl bg-acid-muted border border-acid/40 text-acid flex items-center justify-center mx-auto mb-4">
+                <div id="catalogEmpty" class="hidden rounded-2xl vm-card bg-obsidian-card p-8 sm:p-12 text-center max-w-lg mx-auto">
+                    <div class="w-12 h-12 rounded-2xl vm-pill-drop flex items-center justify-center mx-auto mb-4">
                         <i aria-hidden="true" data-lucide="sparkles" class="w-6 h-6"></i>
                     </div>
                     <h2 class="font-display text-xl font-bold text-white uppercase">Próximo Drop en preparación</h2>
@@ -683,10 +946,10 @@
                         Ahora mismo no hay prendas pendientes en el escaparate privado. Si estás en la lista VIP, recibirás un correo en cuanto se abra el próximo lanzamiento 24h.
                     </p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-5">
-                        <button id="goToCaptureFromEmpty" type="button" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider">
+                        <button id="goToCaptureFromEmpty" type="button" class="w-full sm:w-auto px-5 py-3 rounded-full vm-btn-primary font-sans font-bold text-xs uppercase tracking-wider">
                             Ir al Registro del Club VIP
                         </button>
-                        <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-zinc-950 font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                        <a href="https://t.me/virmarket_club" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-3 rounded-full bg-sky-500 hover:bg-sky-400 text-zinc-950 font-sans font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                             <i aria-hidden="true" data-lucide="send" class="w-4 h-4"></i>
                             <span>Canal Telegram @virmarket_club</span>
                         </a>
@@ -694,15 +957,15 @@
                 </div>
 
                 <!-- Fallback Retrocompatible (si llega ?reservar=REF-XX de un correo antiguo sin fila en Data Table) -->
-                <div id="legacyReserveBox" class="hidden max-w-lg mx-auto rounded-2xl bg-obsidian-card border border-obsidian-border p-6 shadow-2xl">
-                    <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 mb-5">
+                <div id="legacyReserveBox" class="hidden max-w-lg mx-auto rounded-2xl vm-card bg-obsidian-card p-6">
+                    <div class="p-4 rounded-xl bg-obsidian-elevated border border-obsidian-border mb-5">
                         <div class="flex items-center justify-between">
                             <span class="font-mono text-[11px] uppercase text-zinc-400">Referencia Directa</span>
-                            <span id="legacyRefBadge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-acid text-obsidian">REF-001</span>
+                            <span id="legacyRefBadge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full vm-pill-drop">REF-001</span>
                         </div>
                         <p id="legacyGarmentName" class="mt-2 font-display text-lg font-bold text-white">Prenda Drop Privado 24h</p>
                     </div>
-                    <button id="legacyOpenCheckoutBtn" type="button" class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide">
+                    <button id="legacyOpenCheckoutBtn" type="button" class="w-full py-3.5 px-6 rounded-full vm-btn-primary font-sans font-bold text-sm uppercase tracking-wide">
                         Continuar con la Reserva en Vinted →
                     </button>
                 </div>
@@ -738,11 +1001,11 @@
         <section id="faqs" class="py-14 px-4 sm:px-6 scroll-mt-20 border-t border-obsidian-border/60">
             <div class="max-w-2xl mx-auto">
                 <div class="text-center mb-10">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-acid-muted border border-acid/40 text-acid font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full vm-pill-drop font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
                         <i aria-hidden="true" data-lucide="help-circle" class="w-3.5 h-3.5"></i>
                         <span>Centro de Ayuda • Club VIP</span>
                     </div>
-                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">
+                    <h2 class="font-display text-2xl sm:text-3xl font-medium text-white tracking-tight">
                         Preguntas frecuentes
                     </h2>
                     <p class="mt-2 text-xs sm:text-sm text-zinc-400">
@@ -846,21 +1109,21 @@
     <!-- ========================================================================= -->
     <!-- BARRA FLOTANTE INFERIOR DE LOTE VIP / RESERVA -->
     <!-- ========================================================================= -->
-    <div id="stickyLotBar" class="hidden fixed bottom-0 inset-x-0 z-40 bg-obsidian/95 backdrop-blur-lg border-t border-acid/40 shadow-[0_-12px_35px_rgba(0,0,0,0.75)] px-4 py-3.5">
-        <div class="max-w-5xl mx-auto flex items-center justify-between gap-3">
-            <div class="min-w-0">
-                <div class="flex items-center gap-2">
-                    <span id="barCountBadge" class="px-2 py-0.5 rounded bg-acid text-obsidian font-mono text-[11px] font-bold uppercase">1 prenda</span>
-                    <span id="barDiscountTag" class="hidden font-mono text-[11px] text-acid truncate">-10% bienvenida</span>
+    <div id="stickyLotBar" class="hidden fixed bottom-0 inset-x-0 z-40 vm-sticky-bar backdrop-blur-lg shadow-[0_-12px_35px_rgba(0,0,0,0.65)] px-4 py-3 sm:py-3.5">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+            <div class="min-w-0 flex items-center justify-between sm:block gap-3">
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0">
+                    <span id="barCountBadge" class="px-2.5 py-0.5 rounded-full vm-elevated font-mono text-[11px] font-bold uppercase text-white whitespace-nowrap shrink-0">1 prenda</span>
+                    <span id="barDiscountTag" class="hidden font-mono text-[11px] vm-text-terracotta font-semibold whitespace-nowrap">-10% bienvenida</span>
                 </div>
-                <div class="mt-1 flex items-baseline gap-2">
-                    <span class="text-xs text-zinc-400">Total Vinted:</span>
-                    <span id="barFinalTotal" class="font-display text-xl font-bold text-white tabular-nums">0,00 €</span>
-                    <span id="barOriginalSubtotal" class="hidden text-xs text-zinc-500 line-through tabular-nums">0,00 €</span>
+                <div class="sm:mt-1 flex items-baseline gap-1.5 sm:gap-2 shrink-0">
+                    <span class="hidden sm:inline text-xs text-zinc-400">Total Vinted:</span>
+                    <span id="barFinalTotal" class="font-display text-lg sm:text-xl font-bold text-white tabular-nums whitespace-nowrap">0,00 €</span>
+                    <span id="barOriginalSubtotal" class="hidden text-xs text-zinc-500 line-through tabular-nums whitespace-nowrap">0,00 €</span>
                 </div>
             </div>
 
-            <button id="openCheckoutBtn" type="button" class="shrink-0 py-3.5 px-5 sm:px-7 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center gap-2 active:scale-[0.99]">
+            <button id="openCheckoutBtn" type="button" class="w-full sm:w-auto shrink-0 py-2.5 sm:py-3 px-6 sm:px-7 rounded-full vm-btn-primary font-sans font-bold text-xs sm:text-sm tracking-wide shadow-lg flex items-center justify-center gap-2 active:scale-[0.99] whitespace-nowrap">
                 <span>Reservar en Vinted</span>
                 <i aria-hidden="true" data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -871,10 +1134,10 @@
     <!-- MODAL CHECKOUT: CONFIRMAR RESERVA INDIVIDUAL O LOTE VIP -->
     <!-- ========================================================================= -->
     <div id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="w-full max-w-lg bg-obsidian-card border border-obsidian-border rounded-t-2xl sm:rounded-2xl max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl">
-            <div class="flex items-center justify-between pb-3.5 border-b border-zinc-800">
+        <div class="w-full max-w-lg vm-card bg-obsidian-card rounded-t-2xl sm:rounded-2xl max-h-[92vh] overflow-y-auto p-5 sm:p-6">
+            <div class="flex items-center justify-between pb-3.5 border-b border-obsidian-border">
                 <div>
-                    <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Confirmación Prioritaria</span>
+                    <span class="font-mono text-[10px] uppercase tracking-widest vm-text-terracotta font-bold">Confirmación Prioritaria</span>
                     <h3 id="checkoutModalTitle" class="font-display text-lg font-bold text-white uppercase">Tu Reserva para Vinted</h3>
                 </div>
                 <button id="closeCheckoutBtn" type="button" aria-label="Cerrar modal de reserva" class="p-2 rounded-lg bg-obsidian-elevated text-zinc-400 hover:text-white">
@@ -886,18 +1149,18 @@
             <div id="checkoutItemsList" class="mt-4 space-y-2 max-h-48 overflow-y-auto pr-1"></div>
 
             <!-- Resumen matemático al céntimo -->
-            <div id="checkoutMathBox" class="mt-4 p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5 text-xs">
+            <div id="checkoutMathBox" class="mt-4 p-4 rounded-xl bg-obsidian-elevated border border-obsidian-border space-y-1.5 text-xs">
                 <div class="flex justify-between text-zinc-400">
                     <span id="mathSubtotalLabel">Subtotal</span>
                     <span id="mathSubtotalVal" class="font-mono tabular-nums">0,00 €</span>
                 </div>
-                <div id="mathDiscountRow" class="hidden flex justify-between text-acid font-semibold">
+                <div id="mathDiscountRow" class="hidden flex justify-between vm-text-terracotta font-semibold">
                     <span id="mathDiscountLabel">Descuento bienvenida (-10%)</span>
                     <span id="mathDiscountVal" class="font-mono tabular-nums">-0,00 €</span>
                 </div>
-                <div class="pt-2 border-t border-zinc-800 flex justify-between items-baseline">
+                <div class="pt-2 border-t border-obsidian-border flex justify-between items-baseline">
                     <span class="font-semibold text-white text-sm">Precio final en Vinted</span>
-                    <span id="mathFinalVal" class="font-display text-xl font-bold text-acid tabular-nums">0,00 €</span>
+                    <span id="mathFinalVal" class="font-display text-xl font-bold text-white tabular-nums">0,00 €</span>
                 </div>
             </div>
 
@@ -940,7 +1203,7 @@
 
                 <div id="checkoutErrorBox" role="alert" aria-live="assertive" class="hidden p-3 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs"></div>
 
-                <button id="checkoutSubmitBtn" type="submit" class="w-full py-4 px-6 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-sm uppercase tracking-wide shadow-lg shadow-acid/20 flex items-center justify-center gap-2">
+                <button id="checkoutSubmitBtn" type="submit" class="w-full py-3.5 px-6 rounded-full vm-btn-primary font-sans font-bold text-sm tracking-wide shadow-lg flex items-center justify-center gap-2">
                     <span>Confirmar Reserva Exclusiva</span>
                     <i aria-hidden="true" data-lucide="lock" class="w-4 h-4"></i>
                 </button>
@@ -1024,7 +1287,7 @@
 
                 <div id="waitlistFeedback" role="status" aria-live="polite" class="hidden p-3 rounded-xl text-xs"></div>
 
-                <button id="waitlistSubmitBtn" type="submit" class="w-full py-3.5 px-5 rounded-xl bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide">
+                <button id="waitlistSubmitBtn" type="submit" class="w-full py-3.5 px-5 rounded-full bg-amber-400 hover:bg-amber-300 text-[#0B0C0E] font-sans font-bold text-xs sm:text-sm tracking-wide">
                     Guardar mi Turno en la Cola
                 </button>
             </form>
@@ -1339,11 +1602,11 @@
                 const isSelected = state.selectedRefs.has(g.ref);
                 const st = g.status;
 
-                let statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-acid/60 text-acid font-mono text-[10px] font-bold uppercase">Disponible</span>`;
+                let statusBadge = `<span class="px-2.5 py-0.5 rounded-full vm-status-avail font-mono text-[10px] font-bold uppercase">Disponible</span>`;
                 if (st === 'EN_CAMINO') {
                     statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-sky-950/90 border border-sky-400/60 text-sky-300 font-mono text-[10px] font-bold uppercase">En camino</span>`;
                 } else if (st === 'RESERVADA') {
-                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-amber-950/90 border border-amber-400/60 text-amber-300 font-mono text-[10px] font-bold uppercase">Reservada${g.waitlistCount > 0 ? ' • Cola: ' + g.waitlistCount : ''}</span>`;
+                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full vm-status-res font-mono text-[10px] font-bold uppercase">Reservada${g.waitlistCount > 0 ? ' • Cola: ' + g.waitlistCount : ''}</span>`;
                 } else if (st === 'VENDIDA') {
                     statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-zinc-900/90 border border-zinc-700 text-zinc-400 font-mono text-[10px] font-bold uppercase">Vendida</span>`;
                 }
@@ -1354,35 +1617,35 @@
                     const rawD = round2(g.priceEur * (pct / 100));
                     const dto = (cap > 0 && rawD > cap) ? round2(cap) : rawD;
                     const estFinal = round2(Math.max(0, g.priceEur - dto));
-                    welcomeHint = `<span class="block font-mono text-[11px] text-acid tabular-nums">1ª reserva: ${fmtEur(estFinal)}</span>`;
+                    welcomeHint = `<span class="block font-mono text-[11px] vm-text-terracotta font-semibold tabular-nums">1ª reserva: ${fmtEur(estFinal)}</span>`;
                 }
 
                 let actionBtnHtml = '';
                 if (st === 'DISPONIBLE') {
                     actionBtnHtml = isSelected
-                        ? `<button type="button" data-toggle-ref="${escapeHtml(g.ref)}" class="w-full py-3 px-4 rounded-xl bg-acid text-obsidian font-display font-bold text-xs sm:text-sm uppercase tracking-wide flex items-center justify-center gap-1.5 shadow-md shadow-acid/20">
+                        ? `<button type="button" data-toggle-ref="${escapeHtml(g.ref)}" class="w-full py-2.5 px-4 rounded-full vm-btn-primary font-sans font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 shadow-md">
                                <span>✓ Seleccionada en tu reserva</span>
                            </button>`
-                        : `<button type="button" data-toggle-ref="${escapeHtml(g.ref)}" class="w-full py-3 px-4 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-acid/50 hover:border-acid text-white font-display font-bold text-xs sm:text-sm uppercase tracking-wide flex items-center justify-center gap-1.5 transition-colors">
+                        : `<button type="button" data-toggle-ref="${escapeHtml(g.ref)}" class="w-full py-2.5 px-4 rounded-full vm-btn-secondary font-sans font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5">
                                <span>+ Añadir a mi reserva</span>
                            </button>`;
                 } else if (st === 'EN_CAMINO') {
-                    actionBtnHtml = `<button type="button" disabled class="w-full py-3 px-4 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300 font-display font-bold text-xs uppercase cursor-not-allowed">
+                    actionBtnHtml = `<button type="button" disabled class="w-full py-2.5 px-4 rounded-full bg-sky-950/40 border border-sky-500/30 text-sky-300 font-sans font-bold text-xs cursor-not-allowed">
                         🚚 En camino por Vinted
                     </button>`;
                 } else if (st === 'RESERVADA') {
-                    actionBtnHtml = `<button type="button" data-waitlist-ref="${escapeHtml(g.ref)}" data-waitlist-title="${escapeHtml(g.title)}" class="w-full py-3 px-4 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/50 text-amber-300 font-display font-bold text-xs uppercase tracking-wide flex items-center justify-center gap-1.5 transition-colors">
-                        <span>⏳ Apuntarme en cola (por si queda libre)</span>
+                    actionBtnHtml = `<button type="button" data-waitlist-ref="${escapeHtml(g.ref)}" data-waitlist-title="${escapeHtml(g.title)}" class="w-full py-2.5 px-4 rounded-full vm-status-res font-sans font-bold text-xs tracking-wide flex items-center justify-center gap-1.5 transition-opacity hover:opacity-90">
+                        <span>⏳ Apuntarme en cola</span>
                     </button>`;
                 } else {
-                    actionBtnHtml = `<button type="button" disabled class="w-full py-3 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-500 font-display font-bold text-xs uppercase cursor-not-allowed">
+                    actionBtnHtml = `<button type="button" disabled class="w-full py-2.5 px-4 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-500 font-sans font-bold text-xs cursor-not-allowed">
                         Vendida en Vinted
                     </button>`;
                 }
 
                 const dotsHtml = photos.length > 1
                     ? `<div class="absolute bottom-2.5 inset-x-0 flex justify-center gap-1.5 pointer-events-none">
-                        ${photos.map((_, i) => `<span class="w-1.5 h-1.5 rounded-full ${i === idx ? 'bg-acid scale-125' : 'bg-white/50'}"></span>`).join('')}
+                        ${photos.map((_, i) => `<span class="w-1.5 h-1.5 rounded-full ${i === idx ? 'bg-sand scale-125' : 'bg-white/50'}"></span>`).join('')}
                        </div>`
                     : '';
 
@@ -1392,15 +1655,15 @@
                     : '';
 
                 return `
-                <article id="card-${escapeHtml(g.ref)}" class="rounded-2xl bg-obsidian-card border ${isSelected ? 'border-acid ring-1 ring-acid/40' : 'border-obsidian-border'} overflow-hidden flex flex-col justify-between transition-colors shadow-lg">
+                <article id="card-${escapeHtml(g.ref)}" class="rounded-2xl vm-card bg-obsidian-card ${isSelected ? 'vm-card-selected' : ''} overflow-hidden flex flex-col justify-between transition-colors">
                     <div>
                         <div class="relative aspect-[4/5] bg-obsidian-elevated overflow-hidden select-none" data-swipe-ref="${escapeHtml(g.ref)}">
                             ${currentPhoto
-                                ? `<button type="button" data-lightbox-ref="${escapeHtml(g.ref)}" aria-label="Ampliar foto de ${escapeHtml(g.title)}" class="block w-full h-full p-0 border-0 bg-transparent cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-inset focus:ring-acid"><img src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(g.title)}" loading="lazy" class="w-full h-full object-cover ${st !== 'DISPONIBLE' ? 'opacity-75' : ''}"></button>`
-                                : `<div class="w-full h-full flex flex-col items-center justify-center text-zinc-400 font-mono text-xs"><span>VIRMARKET</span><span>${escapeHtml(g.ref)}</span></div>`
+                                ? `<button type="button" data-lightbox-ref="${escapeHtml(g.ref)}" aria-label="Ampliar foto de ${escapeHtml(g.title)}" class="block w-full h-full p-0 border-0 bg-transparent cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sand"><img src="${escapeHtml(currentPhoto)}" alt="${escapeHtml(g.title)}" loading="lazy" class="w-full h-full object-cover ${st !== 'DISPONIBLE' ? 'opacity-75' : ''}"></button>`
+                                : `<div class="w-full h-full flex flex-col items-center justify-center text-zinc-400 font-mono text-xs"><span>PULSO COTIDIANO</span><span>${escapeHtml(g.ref)}</span></div>`
                             }
                             <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 pointer-events-none">
-                                <span class="px-2 py-0.5 rounded bg-obsidian/90 border border-zinc-700 font-mono text-[11px] font-bold text-acid">${escapeHtml(g.ref)}</span>
+                                <span class="keep-text-white px-2.5 py-0.5 rounded-full bg-[#0B0C0E]/90 border border-white/15 font-mono text-[10.5px] font-bold text-[#FAF8F5]">${escapeHtml(g.ref)}</span>
                                 ${statusBadge}
                             </div>
                             ${arrowsHtml}
@@ -1408,19 +1671,19 @@
                         </div>
 
                         <div class="p-4 sm:p-5">
-                            <div class="flex items-center justify-between gap-2 mb-2 text-xs font-mono">
-                                <div class="flex items-center gap-1.5 text-zinc-400 truncate">
+                            <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2 text-xs font-mono">
+                                <div class="flex items-center gap-1.5 text-zinc-400 min-w-0">
                                     ${g.brand ? `<span class="text-zinc-200 font-semibold uppercase">${escapeHtml(g.brand)}</span>` : ''}
-                                    ${g.brand && g.vintedCondition ? `<span class="text-zinc-600">•</span>` : ''}
+                                    ${g.brand && g.vintedCondition ? `<span class="text-zinc-500">•</span>` : ''}
                                     ${g.vintedCondition ? `<span>${escapeHtml(g.vintedCondition)}</span>` : ''}
                                 </div>
-                                ${g.size ? `<span class="px-2 py-0.5 rounded bg-acid-muted text-acid font-bold text-[11px] shrink-0">Talla ${escapeHtml(g.size)}</span>` : ''}
+                                ${g.size ? `<span class="px-2.5 py-0.5 rounded-full vm-elevated text-white font-semibold text-[11px] shrink-0">Talla ${escapeHtml(g.size)}</span>` : ''}
                             </div>
 
                             <div class="flex items-start justify-between gap-3">
-                                <h2 class="font-display text-lg font-bold text-white leading-snug">${escapeHtml(g.title)}</h2>
+                                <h2 class="font-display text-lg font-semibold text-white leading-snug">${escapeHtml(g.title)}</h2>
                                 <div class="text-right shrink-0">
-                                    <span class="font-display text-xl font-bold text-white tabular-nums">${fmtEur(g.priceEur)}</span>
+                                    <span class="font-sans text-lg font-extrabold text-white tabular-nums">${fmtEur(g.priceEur)}</span>
                                     ${welcomeHint}
                                 </div>
                             </div>
@@ -1428,7 +1691,7 @@
                             ${g.description ? `
                                 <div class="mt-2.5">
                                     <p id="desc-${escapeHtml(g.ref)}" class="text-xs text-zinc-400 leading-relaxed whitespace-pre-line line-clamp-3">${escapeHtml(g.description)}</p>
-                                    ${g.description.length > 90 ? `<button type="button" data-expand-desc="${escapeHtml(g.ref)}" class="mt-1 text-[11px] font-mono text-acid hover:underline">Ver más</button>` : ''}
+                                    ${g.description.length > 90 ? `<button type="button" data-expand-desc="${escapeHtml(g.ref)}" class="mt-1 text-[11px] font-mono vm-text-terracotta hover:underline">Ver más</button>` : ''}
                                 </div>
                             ` : ''}
                         </div>
@@ -2111,7 +2374,7 @@
                 } else {
                     document.documentElement.classList.remove('theme-light');
                     document.documentElement.classList.add('dark');
-                    if (metaTheme) metaTheme.setAttribute('content', '#141915');
+                    if (metaTheme) metaTheme.setAttribute('content', '#0B0C0E');
                     if (metaStatus) metaStatus.setAttribute('content', 'black-translucent');
                     if (btn) {
                         btn.setAttribute('title', 'Cambiar a modo claro');
