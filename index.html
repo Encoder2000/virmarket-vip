@@ -2277,7 +2277,7 @@
                 const copyEl = document.getElementById('dynLeadSuccessCopy');
                 if (payload.alreadyConfirmed) {
                     if (titleEl) titleEl.textContent = '¡Ya eres miembro confirmado del Club!';
-                    if (copyEl) copyEl.innerHTML = `Tu correo <strong>${escapeHtml(email)}</strong> ya estaba verificado en el Club Privado. Recibirás acceso 24h antes de cada nuevo Drop.`;
+                    if (copyEl) copyEl.innerHTML = `Tu correo <strong>${escapeHtml(email)}</strong> ya estaba verificado en el Club Privado. Te hemos reenviado el enlace del manual PDF actualizado a tu bandeja y seguirás recibiendo acceso 24h antes de cada nuevo Drop.`;
                 } else {
                     if (titleEl) titleEl.textContent = '¡Revisa tu correo para confirmar!';
                     applyDynamicConfigCopy();
