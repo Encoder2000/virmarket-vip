@@ -543,25 +543,29 @@
 
             <div class="flex items-center gap-1 sm:gap-2 shrink-0">
                 <!-- Accesos directos al ecosistema (restringidos: solo visibles tras autenticación) -->
-                <div id="headerNavLinks" class="hidden items-center gap-1.5 sm:gap-2">
-                    <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Landing Page de Captación QR">
+                <div id="headerNavLinks" class="hidden items-center gap-1 sm:gap-1.5">
+                    <a href="./?landing=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group shrink-0" title="Ver Landing Page de Captación QR">
                         <i aria-hidden="true" data-lucide="globe" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
-                        <span class="hidden md:inline">Landing Page</span>
+                        <span class="hidden lg:inline">Landing Page</span>
                     </a>
-                    <a href="tarjeta_qr.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver e imprimir Tarjetas de Agradecimiento QR">
+                    <a href="tarjeta_qr.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group shrink-0" title="Ver e imprimir Tarjetas de Agradecimiento QR">
                         <i aria-hidden="true" data-lucide="qr-code" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
-                        <span class="hidden md:inline">Tarjetas QR</span>
+                        <span class="hidden lg:inline">Tarjetas QR</span>
                     </a>
-                    <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group" title="Ver Escaparate VIP Activo">
+                    <a id="liveShowroomLink" href="./?escaparate=1" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 text-xs text-zinc-200 transition-colors group shrink-0" title="Ver Escaparate VIP Activo">
                         <i aria-hidden="true" data-lucide="shopping-bag" class="w-3.5 h-3.5 text-acid group-hover:scale-110 transition-transform"></i>
-                        <span class="hidden sm:inline">Escaparate</span>
+                        <span class="hidden lg:inline">Escaparate</span>
                     </a>
+                    <button id="headerVersionBadgeBtn" type="button" class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 font-mono text-[11px] font-bold text-acid transition-colors cursor-pointer whitespace-nowrap shrink-0" title="Ver Control de Versiones y Changelog">
+                        <i aria-hidden="true" data-lucide="git-branch" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span id="headerVersionBadgeLabel">v...</span>
+                    </button>
                 </div>
-                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all cursor-pointer">
+                <button id="themeToggleBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema (Claro / Oscuro)" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 font-mono text-[11px] font-semibold text-zinc-200 hover:text-white transition-all cursor-pointer shrink-0">
                     <i aria-hidden="true" id="themeToggleIcon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
-                    <span id="themeToggleLabel" class="hidden sm:inline">Modo Claro</span>
+                    <span id="themeToggleLabel" class="hidden lg:inline">Modo Claro</span>
                 </button>
-                <button id="logoutBtn" type="button" class="hidden items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-rose-500/60 text-xs text-zinc-400 hover:text-rose-300 transition-colors" title="Cerrar sesión">
+                <button id="logoutBtn" type="button" class="hidden items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-800 hover:border-rose-500/60 text-xs text-zinc-400 hover:text-rose-300 transition-colors shrink-0" title="Cerrar sesión">
                     <i aria-hidden="true" data-lucide="log-out" class="w-3.5 h-3.5"></i>
                     <span class="hidden sm:inline">Salir</span>
                 </button>
@@ -1727,7 +1731,7 @@
                                 <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Ecosistema VirMarket</span>
                                 <h3 class="font-display text-lg font-bold text-white uppercase mt-0.5">Páginas Públicas, Material &amp; Analítica</h3>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[11px] font-bold">5 Accesos Directos</span>
+                            <span class="px-2.5 py-1 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[11px] font-bold">6 Accesos Directos</span>
                         </div>
 
                         <div class="space-y-3">
@@ -1854,14 +1858,55 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <!-- 6. Guía de Usuario 360º -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-acid/10 border border-acid/20 text-acid flex items-center justify-center shrink-0 mt-0.5">
+                                        <i aria-hidden="true" data-lucide="book-open" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-sm text-white uppercase flex items-center gap-2 flex-wrap">
+                                            Guía de Usuario 360º · Manual Operativo
+                                            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-normal">Privado Admin</span>
+                                        </h4>
+                                        <p class="text-xs text-zinc-400 mt-0.5">
+                                            Centro de ayuda interactivo con buscador, diagramas de flujos de correo, automatizaciones n8n/Supabase, operativa del panel y resolución de incidencias.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                                    <a href="guia.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-acid text-obsidian hover:bg-acid-hover text-xs font-display font-bold uppercase transition-colors">
+                                        <i aria-hidden="true" data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                                        <span>Abrir Guía</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- =============================================================== -->
-                <!-- PESTAÑA 5: REGISTRO DE LOGS, AUDITORÍA 360º Y CONTROL DE ERRORES -->
+                <!-- PESTAÑA 5: REGISTRO DE LOGS, AUDITORÍA 360º Y CONTROL DE VERSIONES -->
                 <!-- =============================================================== -->
                 <div id="tab-logs" class="hidden space-y-5 sm:space-y-6">
+
+                    <!-- Conmutador de Sub-vistas de Pestaña 5 -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 p-1.5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <div class="flex items-center gap-1.5 w-full sm:w-auto">
+                            <button type="button" id="logsSubTabAuditBtn" data-logs-subtab="audit" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl font-display font-bold text-xs uppercase tracking-wide transition-all bg-acid text-obsidian shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+                                <span>📋 Auditoría y Errores</span>
+                            </button>
+                            <button type="button" id="logsSubTabVersionsBtn" data-logs-subtab="versions" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl font-display font-bold text-xs uppercase tracking-wide transition-all text-zinc-300 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer">
+                                <span>🏷️ Control de Versiones</span>
+                                <span id="logsSubTabVersionPill" class="px-1.5 py-0.2 rounded bg-zinc-800 text-acid font-mono text-[10px]">v...</span>
+                            </button>
+                        </div>
+                        <span class="hidden md:inline font-mono text-[10px] text-zinc-400 px-2">Auditoría Supabase · Changelog GitHub SemVer</span>
+                    </div>
+
+                    <!-- SUB-VISTA 1: AUDITORÍA Y ERRORES -->
+                    <div id="logsSubViewAudit" class="space-y-5 sm:space-y-6">
 
                     <!-- Cabecera de la Pestaña Logs (Responsive Móvil / Desktop) -->
                     <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
@@ -2067,6 +2112,99 @@
                             </table>
                         </div>
                     </div>
+                    </div><!-- Fin #logsSubViewAudit -->
+
+                    <!-- SUB-VISTA 2: CONTROL DE VERSIONES Y CHANGELOG 360º -->
+                    <div id="logsSubViewVersions" class="hidden space-y-5 sm:space-y-6">
+                        <!-- Cabecera Control de Versiones -->
+                        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                            <div class="space-y-1 w-full xl:w-auto">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="px-2.5 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0">SemVer · GitHub + Supabase</span>
+                                    <span id="versionsActiveTagBadge" class="px-2 py-0.5 rounded bg-zinc-800 text-acid font-mono text-[10px] font-bold whitespace-nowrap shrink-0">v...</span>
+                                </div>
+                                <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-0.5">Control de Versiones &amp; Historial de Mejoras</h2>
+                                <p class="text-xs text-zinc-400 mt-0.5">Evolución completa heredada desde GitHub y sincronizada en cada publicación, con detalle técnico y notas editables.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 shrink-0 w-full xl:w-auto pt-2.5 xl:pt-0 border-t xl:border-t-0 border-zinc-800/60">
+                                <button id="openNewVersionNoteBtn" type="button" class="px-3.5 py-2 rounded-xl bg-acid hover:bg-acid/90 text-obsidian text-xs font-display font-bold uppercase tracking-wide flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer" title="Registrar una release o nota manual">
+                                    <i aria-hidden="true" data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                                    <span>Nueva Nota / Release</span>
+                                </button>
+                                <button id="refreshVersionsBtn" type="button" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 cursor-pointer" title="Recargar versiones desde Supabase">
+                                    <i aria-hidden="true" data-lucide="refresh-cw" class="w-3.5 h-3.5 text-acid"></i>
+                                    <span>Actualizar</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- KPIs de Versiones -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                            <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-acid/40 flex flex-col justify-between">
+                                <span class="font-mono text-[10px] uppercase text-acid font-bold">Versión Actual</span>
+                                <div id="kpiVersionLatest" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">-</div>
+                                <span id="kpiVersionSwCache" class="text-[10px] text-zinc-400 font-mono mt-0.5 truncate">Caché PWA: -</span>
+                            </div>
+                            <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                                <span class="font-mono text-[10px] uppercase text-zinc-400">Releases Publicadas</span>
+                                <div id="kpiVersionTotalReleases" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">0</div>
+                                <span class="text-[10px] text-zinc-500 font-mono mt-0.5 truncate">Tags SemVer verificados</span>
+                            </div>
+                            <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-emerald-500/30 flex flex-col justify-between">
+                                <span class="font-mono text-[10px] uppercase text-emerald-400 font-bold">Commits Trazados</span>
+                                <div id="kpiVersionTotalCommits" class="mt-1 font-display text-xl sm:text-2xl font-bold text-emerald-300 tabular-nums">0</div>
+                                <span class="text-[10px] text-zinc-400 font-mono mt-0.5 truncate">Histórico GitHub integrado</span>
+                            </div>
+                            <div class="p-3.5 sm:p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
+                                <span class="font-mono text-[10px] uppercase text-zinc-400">Última Actualización</span>
+                                <div id="kpiVersionLastDate" class="mt-1 font-display text-base sm:text-lg font-bold text-zinc-200 truncate">-</div>
+                                <span id="kpiVersionLastSource" class="text-[10px] text-zinc-500 font-mono mt-0.5 truncate">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Filtros de Control de Versiones -->
+                        <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-3.5 sm:p-4">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5">
+                                <div class="relative md:col-span-5">
+                                    <i aria-hidden="true" data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+                                    <input type="search" id="versionsFilterSearch" aria-label="Buscar en control de versiones" placeholder="Buscar por versión (v2.5.0), mejora, commit o nota..." class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                                </div>
+                                <div class="md:col-span-3">
+                                    <select id="versionsFilterType" aria-label="Filtrar versiones por tipo de cambio" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                        <option value="ALL">Todos los Tipos</option>
+                                        <option value="feat">✨ Novedades (feat)</option>
+                                        <option value="fix">🛠️ Correcciones (fix)</option>
+                                        <option value="sec">🛡️ Seguridad / RGPD (sec)</option>
+                                        <option value="ui">🎨 Diseño / UI (ui)</option>
+                                        <option value="infra">⚙️ Infra / Docs (infra)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-3">
+                                    <select id="versionsFilterModule" aria-label="Filtrar versiones por módulo" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                        <option value="ALL">Todos los Módulos</option>
+                                        <option value="Admin">💻 Admin Studio</option>
+                                        <option value="Escaparate VIP">🛍️ Escaparate VIP</option>
+                                        <option value="Revista">📰 Revista Pulso</option>
+                                        <option value="n8n/Supabase">⚙️ n8n / Supabase</option>
+                                        <option value="PWA">📱 PWA / Caché</option>
+                                        <option value="Seguridad">🔐 Seguridad / RGPD</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-1 flex">
+                                    <button type="button" id="versionsResetFiltersBtn" class="w-full px-3 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 hover:border-acid text-xs font-mono text-zinc-300 hover:text-acid transition-colors whitespace-nowrap cursor-pointer" title="Restablecer filtros">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline de Versiones -->
+                        <div id="versionsTimelineList" class="space-y-4">
+                            <div class="p-8 rounded-2xl bg-obsidian-card border border-obsidian-border text-center text-zinc-400 font-mono text-xs">
+                                Cargando historial de versiones...
+                            </div>
+                        </div>
+                    </div><!-- Fin #logsSubViewVersions -->
                 </div>
             </section>
         </div>
@@ -3234,6 +3372,7 @@
             g360ViewerIndex: 0,
             g360FilteredRefs: [],
             logsState: {
+                activeSubTab: 'audit',
                 logs: [],
                 isLoading: false,
                 lastFetchedAt: null,
@@ -3249,6 +3388,17 @@
                     category: 'ALL',
                     source: 'ALL',
                     resolved: 'ALL'
+                }
+            },
+            versionsState: {
+                versions: [],
+                latestVersion: '',
+                totalCommits: 0,
+                isLoading: false,
+                filters: {
+                    search: '',
+                    type: 'ALL',
+                    module: 'ALL'
                 }
             },
             selectedRefs: new Set(),
@@ -4330,7 +4480,66 @@
                         }
                     };
                 }
-                if (action !== 'get_dashboard' && action !== 'get_logs' && action !== 'create_log') {
+                if (action === 'get_versions') {
+                    if (!window._mockVersionsData) {
+                        window._mockVersionsData = [
+                            {
+                                id: 1,
+                                version: 'v2.5.0',
+                                releaseDate: '2026-11-22T18:00:00+01:00',
+                                title: 'Rediseño Bipolar de Alto Contraste y Manual PDF 14 Páginas',
+                                summary: 'Rediseño visual bipolar en Landing y Escaparate VIP, acceso directo a Revista en Ajustes y manual PDF de 14 páginas.',
+                                changeTypes: ['feat', 'ui', 'fix'],
+                                modules: ['Escaparate VIP', 'Revista', 'Admin'],
+                                commits: [
+                                    { hash: 'c85c143', date: '2026-11-22', type: 'infra', message: 'chore(pulso): unificar textos del nuevo manual PDF de 14 paginas' },
+                                    { hash: 'e0f15d7', date: '2026-11-21', type: 'ui', message: 'feat(ui): rediseño bipolar de alto contraste en Landing y Escaparate VIP' }
+                                ],
+                                commitCount: 7,
+                                gitTag: 'v2.5.0',
+                                swCacheVersion: 'v28',
+                                adminNotes: '',
+                                source: 'git_sync'
+                            }
+                        ];
+                    }
+                    const totalCommits = window._mockVersionsData.reduce((acc, v) => acc + Number(v.commitCount || 0), 0);
+                    return {
+                        ok: true,
+                        versions: window._mockVersionsData,
+                        latestVersion: window._mockVersionsData[0]?.version || 'v0.0.0',
+                        totalVersions: window._mockVersionsData.length,
+                        totalCommits
+                    };
+                }
+                if (action === 'save_version_note') {
+                    const entry = extraPayload.versionEntry || extraPayload || {};
+                    if (!window._mockVersionsData) window._mockVersionsData = [];
+                    const idx = window._mockVersionsData.findIndex(v => v.version === entry.version);
+                    if (idx >= 0) {
+                        if (entry.adminNotes !== undefined) window._mockVersionsData[idx].adminNotes = entry.adminNotes;
+                        if (entry.title) window._mockVersionsData[idx].title = entry.title;
+                        if (entry.summary) window._mockVersionsData[idx].summary = entry.summary;
+                    } else {
+                        window._mockVersionsData.unshift({
+                            id: Date.now(),
+                            version: entry.version,
+                            releaseDate: entry.releaseDate || new Date().toISOString(),
+                            title: entry.title || 'Nota manual',
+                            summary: entry.summary || '',
+                            changeTypes: entry.changeTypes || ['feat'],
+                            modules: entry.modules || ['Admin'],
+                            commits: [],
+                            commitCount: 0,
+                            gitTag: '',
+                            swCacheVersion: '',
+                            adminNotes: entry.adminNotes || '',
+                            source: 'manual_admin'
+                        });
+                    }
+                    return { ok: true, message: 'Versión guardada correctamente.' };
+                }
+                if (action !== 'get_dashboard' && action !== 'get_logs' && action !== 'create_log' && action !== 'get_versions') {
                     const mockEntry = buildAuditEntryForOperation(action, extraPayload, { ok: true }, 42, null);
                     if (mockEntry) recordAuditLog(mockEntry);
                 }
@@ -4405,7 +4614,7 @@
 
         // Construye una entrada estructurada de auditoría para cualquier acción del panel
         function buildAuditEntryForOperation(action, extraPayload = {}, resData = {}, durationMs = 0, errObj = null) {
-            const silentSuccessActions = new Set(['get_dashboard', 'get_logs', 'create_log']);
+            const silentSuccessActions = new Set(['get_dashboard', 'get_logs', 'create_log', 'get_versions']);
             if (!errObj && silentSuccessActions.has(action)) return null;
 
             const p = extraPayload || {};
@@ -4513,6 +4722,12 @@
                 message = p.resolveAll
                     ? 'Todos los errores pendientes marcados como revisados.'
                     : `Incidencia(s) marcada(s) como revisada(s) (${entityRef || 'log'}).`;
+            } else if (action === 'save_version_note') {
+                category = 'SISTEMA';
+                level = 'INFO';
+                const ve = (p.versionEntry && typeof p.versionEntry === 'object') ? p.versionEntry : p;
+                entityRef = ve.version || '';
+                message = `Nota o release actualizada en Control de Versiones (${entityRef || 'v?'}).`;
             } else if (action.startsWith('social_') || action === 'send_telegram_test' || action === 'publish_social_drop') {
                 category = 'TELEGRAM';
                 dropId = p.dropId || '';
@@ -4843,6 +5058,11 @@
                 renderRegistroWorkspace();
             } else if (tabName === 'logs') {
                 loadAndRenderLogs();
+                if (adminState.logsState.activeSubTab === 'versions' && typeof loadAndRenderVersions === 'function') {
+                    loadAndRenderVersions();
+                } else if (typeof refreshLatestVersionQuietly === 'function') {
+                    refreshLatestVersionQuietly();
+                }
             }
             lucide.createIcons();
         }
@@ -5088,6 +5308,9 @@
             if (navLinks) {
                 navLinks.classList.remove('hidden');
                 navLinks.classList.add('inline-flex');
+            }
+            if (typeof refreshLatestVersionQuietly === 'function') {
+                refreshLatestVersionQuietly();
             }
 
             // Poblar cabecera de métricas
@@ -12828,7 +13051,414 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
 
             setTimeout(() => {
                 refreshLogsBadgeQuietly();
+                if (typeof refreshLatestVersionQuietly === 'function') {
+                    refreshLatestVersionQuietly();
+                }
             }, 800);
+        });
+
+        // ===============================================================
+        // MÓDULO DE CONTROL DE VERSIONES Y CHANGELOG 360º (PESTAÑA 5)
+        // ===============================================================
+        function updateHeaderVersionBadges(latestVer) {
+            const ver = String(latestVer || '').trim();
+            if (!ver) return;
+            adminState.versionsState.latestVersion = ver;
+            const headerLabel = document.getElementById('headerVersionBadgeLabel');
+            const subTabPill = document.getElementById('logsSubTabVersionPill');
+            const activeBadge = document.getElementById('versionsActiveTagBadge');
+            if (headerLabel) headerLabel.textContent = ver;
+            if (subTabPill) subTabPill.textContent = ver;
+            if (activeBadge) activeBadge.textContent = ver;
+        }
+
+        function switchLogsSubTab(subTab) {
+            const target = subTab === 'versions' ? 'versions' : 'audit';
+            adminState.logsState.activeSubTab = target;
+            const auditView = document.getElementById('logsSubViewAudit');
+            const versionsView = document.getElementById('logsSubViewVersions');
+            const auditBtn = document.getElementById('logsSubTabAuditBtn');
+            const versionsBtn = document.getElementById('logsSubTabVersionsBtn');
+
+            if (auditView) auditView.classList.toggle('hidden', target !== 'audit');
+            if (versionsView) versionsView.classList.toggle('hidden', target !== 'versions');
+
+            const activeCls = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl font-display font-bold text-xs uppercase tracking-wide transition-all bg-acid text-obsidian shadow-sm flex items-center justify-center gap-1.5 cursor-pointer';
+            const inactiveCls = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl font-display font-bold text-xs uppercase tracking-wide transition-all text-zinc-300 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer';
+            if (auditBtn) auditBtn.className = target === 'audit' ? activeCls : inactiveCls;
+            if (versionsBtn) versionsBtn.className = target === 'versions' ? activeCls : inactiveCls;
+
+            if (target === 'versions') {
+                if (adminState.versionsState.versions.length === 0) {
+                    loadAndRenderVersions(true);
+                } else {
+                    renderVersionsView();
+                }
+            } else {
+                loadAndRenderLogs(false);
+            }
+            lucide.createIcons();
+        }
+        window.switchLogsSubTab = switchLogsSubTab;
+
+        async function refreshLatestVersionQuietly() {
+            if (!adminState.password && urlParams.get('mock') !== '1') return;
+            try {
+                const res = await callAdminApi('get_versions', { limit: 100 });
+                if (res && res.ok && Array.isArray(res.versions)) {
+                    adminState.versionsState.versions = res.versions;
+                    adminState.versionsState.totalCommits = Number(res.totalCommits || 0);
+                    updateHeaderVersionBadges(res.latestVersion || res.versions[0]?.version || 'v0.0.0');
+                }
+            } catch (e) {}
+        }
+
+        async function loadAndRenderVersions(showSpinner = false) {
+            if (!adminState.password && urlParams.get('mock') !== '1') return;
+            const container = document.getElementById('versionsTimelineList');
+            if (showSpinner && container) {
+                container.innerHTML = '<div class="p-8 rounded-2xl bg-obsidian-card border border-obsidian-border text-center text-zinc-400 font-mono text-xs">Consultando historial de versiones en Supabase...</div>';
+            }
+            adminState.versionsState.isLoading = true;
+            try {
+                const res = await callAdminApi('get_versions', { limit: 200 });
+                if (res && res.ok && Array.isArray(res.versions)) {
+                    adminState.versionsState.versions = res.versions;
+                    adminState.versionsState.totalCommits = Number(res.totalCommits || 0);
+                    updateHeaderVersionBadges(res.latestVersion || res.versions[0]?.version || 'v0.0.0');
+                    renderVersionsView();
+                }
+            } catch (err) {
+                if (container) {
+                    container.innerHTML = `<div class="p-6 rounded-2xl bg-rose-950/30 border border-rose-500/40 text-center text-rose-300 font-mono text-xs">Error cargando versiones: ${escapeHtml(err.message || 'desconocido')}</div>`;
+                }
+            } finally {
+                adminState.versionsState.isLoading = false;
+            }
+        }
+
+        function getChangeTypeBadgeHtml(type) {
+            const t = String(type || 'feat').toLowerCase();
+            const map = {
+                feat: { label: '✨ Novedad', cls: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' },
+                fix: { label: '🛠️ Corrección', cls: 'bg-sky-500/15 text-sky-300 border-sky-500/30' },
+                sec: { label: '🛡️ Seguridad', cls: 'bg-rose-500/15 text-rose-300 border-rose-500/30' },
+                ui: { label: '🎨 Diseño UI', cls: 'bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30' },
+                infra: { label: '⚙️ Infra / Docs', cls: 'bg-amber-500/15 text-amber-300 border-amber-500/30' }
+            };
+            const item = map[t] || { label: t.toUpperCase(), cls: 'bg-zinc-800 text-zinc-300 border-zinc-700' };
+            return `<span class="inline-flex items-center px-2 py-0.5 rounded-full border font-mono text-[10px] font-bold ${item.cls}">${escapeHtml(item.label)}</span>`;
+        }
+
+        function renderVersionsView() {
+            const st = adminState.versionsState;
+            const allVersions = Array.isArray(st.versions) ? st.versions : [];
+            const latestObj = allVersions[0] || null;
+
+            const kpiLatest = document.getElementById('kpiVersionLatest');
+            const kpiSw = document.getElementById('kpiVersionSwCache');
+            const kpiTotal = document.getElementById('kpiVersionTotalReleases');
+            const kpiCommits = document.getElementById('kpiVersionTotalCommits');
+            const kpiLastDate = document.getElementById('kpiVersionLastDate');
+            const kpiLastSrc = document.getElementById('kpiVersionLastSource');
+
+            if (kpiLatest) kpiLatest.textContent = latestObj ? latestObj.version : '-';
+            if (kpiSw) kpiSw.textContent = `Caché PWA: ${latestObj?.swCacheVersion || '-'}`;
+            if (kpiTotal) kpiTotal.textContent = String(allVersions.length);
+            const totalCommits = allVersions.reduce((acc, v) => acc + Number(v.commitCount || (Array.isArray(v.commits) ? v.commits.length : 0) || 0), 0);
+            if (kpiCommits) kpiCommits.textContent = String(totalCommits);
+            if (kpiLastDate) kpiLastDate.textContent = latestObj ? formatLogDateTime(latestObj.releaseDate).split(',')[0] : '-';
+            if (kpiLastSrc) kpiLastSrc.textContent = latestObj ? (latestObj.source === 'manual_admin' ? 'Nota manual Admin' : `Tag Git: ${latestObj.gitTag || latestObj.version}`) : '-';
+
+            const fSearch = (st.filters.search || '').trim().toLowerCase();
+            const fType = st.filters.type || 'ALL';
+            const fMod = st.filters.module || 'ALL';
+
+            const filtered = allVersions.filter(v => {
+                const types = Array.isArray(v.changeTypes) ? v.changeTypes.map(x => String(x).toLowerCase()) : [];
+                const mods = Array.isArray(v.modules) ? v.modules : [];
+                const commits = Array.isArray(v.commits) ? v.commits : [];
+
+                if (fType !== 'ALL' && !types.includes(fType.toLowerCase())) return false;
+                if (fMod !== 'ALL' && !mods.includes(fMod)) return false;
+                if (fSearch) {
+                    const commitText = commits.map(c => `${c.hash || ''} ${c.message || ''}`).join(' ').toLowerCase();
+                    const hay = `${v.version || ''} ${v.title || ''} ${v.summary || ''} ${v.adminNotes || ''} ${mods.join(' ')} ${commitText}`.toLowerCase();
+                    if (!hay.includes(fSearch)) return false;
+                }
+                return true;
+            });
+
+            const container = document.getElementById('versionsTimelineList');
+            if (!container) return;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-8 rounded-2xl bg-obsidian-card border border-obsidian-border text-center text-zinc-400 font-mono text-xs">No hay versiones que coincidan con los filtros seleccionados.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((v, idx) => {
+                const isLatest = latestObj && v.version === latestObj.version;
+                const types = Array.isArray(v.changeTypes) ? v.changeTypes : [];
+                const mods = Array.isArray(v.modules) ? v.modules : [];
+                const commits = Array.isArray(v.commits) ? v.commits : [];
+                const dateFmt = formatLogDateTime(v.releaseDate);
+                const hasNotes = Boolean(String(v.adminNotes || '').trim());
+
+                const typesHtml = types.map(getChangeTypeBadgeHtml).join('');
+                const modsHtml = mods.map(m => `<span class="px-2 py-0.5 rounded bg-obsidian-elevated border border-zinc-700 font-mono text-[10px] text-zinc-300">${escapeHtml(m)}</span>`).join('');
+
+                const commitsHtml = commits.length > 0
+                    ? `<details class="mt-3 pt-3 border-t border-zinc-800/80 group">
+                        <summary class="cursor-pointer select-none font-mono text-[11px] text-zinc-400 hover:text-acid flex items-center justify-between list-none">
+                            <span class="inline-flex items-center gap-1.5">
+                                <i aria-hidden="true" data-lucide="git-commit" class="w-3.5 h-3.5 text-acid"></i>
+                                <span>Ver ${commits.length} commit${commits.length === 1 ? '' : 's'} técnico${commits.length === 1 ? '' : 's'} de GitHub</span>
+                            </span>
+                            <span class="text-[10px] text-zinc-500 group-open:hidden">Desplegar ▾</span>
+                            <span class="text-[10px] text-acid hidden group-open:inline">Ocultar ▴</span>
+                        </summary>
+                        <div class="mt-2.5 space-y-1.5 max-h-64 overflow-y-auto pr-1">
+                            ${commits.map(c => `
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 px-3 py-2 rounded-xl bg-obsidian-elevated/70 border border-zinc-800 text-xs">
+                                    <div class="flex items-start sm:items-center gap-2 min-w-0">
+                                        <code class="px-1.5 py-0.5 rounded bg-zinc-900 text-acid font-mono text-[10px] shrink-0">${escapeHtml(c.hash || '')}</code>
+                                        <span class="text-zinc-200 break-words leading-snug">${escapeHtml(c.message || '')}</span>
+                                    </div>
+                                    <span class="font-mono text-[10px] text-zinc-500 shrink-0">${escapeHtml(c.date || '')}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </details>`
+                    : '';
+
+                return `
+                    <article class="rounded-2xl bg-obsidian-card border ${isLatest ? 'border-acid/60 shadow-lg shadow-acid/5' : 'border-obsidian-border'} p-4 sm:p-5 space-y-3 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div class="space-y-1.5 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="px-2.5 py-0.5 rounded-lg font-mono text-xs font-bold ${isLatest ? 'bg-acid text-obsidian' : 'bg-zinc-800 text-acid border border-acid/30'}">${escapeHtml(v.version)}</span>
+                                    ${isLatest ? '<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[10px] font-bold uppercase">Activa</span>' : ''}
+                                    ${v.source === 'manual_admin' ? '<span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px]">Manual Admin</span>' : ''}
+                                    ${v.swCacheVersion ? `<span class="px-2 py-0.5 rounded bg-obsidian-elevated border border-zinc-700 font-mono text-[10px] text-zinc-400">PWA ${escapeHtml(v.swCacheVersion)}</span>` : ''}
+                                    <span class="font-mono text-[11px] text-zinc-400">${escapeHtml(dateFmt)}</span>
+                                </div>
+                                <h3 class="font-display text-base sm:text-lg font-bold text-white leading-snug">${escapeHtml(v.title || 'Actualización del sistema')}</h3>
+                            </div>
+                            <button type="button" data-edit-version="${escapeHtml(v.version)}" class="edit-version-note-btn shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-[11px] font-mono text-zinc-300 hover:text-acid flex items-center gap-1.5 transition-colors cursor-pointer self-start">
+                                <i aria-hidden="true" data-lucide="pencil" class="w-3 h-3"></i>
+                                <span>${hasNotes ? 'Editar nota' : 'Añadir nota'}</span>
+                            </button>
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">${escapeHtml(v.summary || 'Sin descripción adicional.')}</p>
+
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            ${typesHtml}
+                            ${modsHtml}
+                        </div>
+
+                        ${hasNotes ? `
+                            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1">
+                                <span class="font-mono text-[10px] uppercase font-bold text-amber-300 flex items-center gap-1">
+                                    <i aria-hidden="true" data-lucide="sticky-note" class="w-3 h-3"></i>
+                                    <span>Notas del Administrador</span>
+                                </span>
+                                <p class="text-amber-100/90 whitespace-pre-wrap leading-relaxed">${escapeHtml(v.adminNotes)}</p>
+                            </div>
+                        ` : ''}
+
+                        ${commitsHtml}
+                    </article>
+                `;
+            }).join('');
+
+            container.querySelectorAll('.edit-version-note-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ver = btn.getAttribute('data-edit-version');
+                    openVersionNoteModal(ver);
+                });
+            });
+
+            lucide.createIcons();
+        }
+
+        function openVersionNoteModal(versionStr = '') {
+            const modal = document.getElementById('versionNoteModal');
+            if (!modal) return;
+            const isEdit = Boolean(versionStr);
+            const existing = isEdit
+                ? (adminState.versionsState.versions || []).find(v => v.version === versionStr)
+                : null;
+
+            const titleEl = document.getElementById('versionNoteModalTitle');
+            const verInput = document.getElementById('verNoteVersionInput');
+            const titleInput = document.getElementById('verNoteTitleInput');
+            const summaryInput = document.getElementById('verNoteSummaryInput');
+            const notesInput = document.getElementById('verNoteAdminNotesInput');
+            const typeInput = document.getElementById('verNoteTypeSelect');
+            const moduleInput = document.getElementById('verNoteModuleSelect');
+            const metaWrap = document.getElementById('verNoteNewMetaWrap');
+            const modeInput = document.getElementById('verNoteModeInput');
+
+            if (existing) {
+                if (titleEl) titleEl.textContent = `Editar Notas — ${existing.version}`;
+                if (modeInput) modeInput.value = 'edit';
+                if (verInput) {
+                    verInput.value = existing.version;
+                    verInput.readOnly = true;
+                }
+                if (titleInput) titleInput.value = existing.title || '';
+                if (summaryInput) summaryInput.value = existing.summary || '';
+                if (notesInput) notesInput.value = existing.adminNotes || '';
+                if (metaWrap) metaWrap.classList.add('hidden');
+            } else {
+                if (titleEl) titleEl.textContent = 'Nueva Nota / Release Manual';
+                if (modeInput) modeInput.value = 'create';
+                if (verInput) {
+                    verInput.value = '';
+                    verInput.readOnly = false;
+                }
+                if (titleInput) titleInput.value = '';
+                if (summaryInput) summaryInput.value = '';
+                if (notesInput) notesInput.value = '';
+                if (typeInput) typeInput.value = 'feat';
+                if (moduleInput) moduleInput.value = 'Admin';
+                if (metaWrap) metaWrap.classList.remove('hidden');
+            }
+
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        async function saveVersionNoteFromModal() {
+            const mode = document.getElementById('verNoteModeInput')?.value || 'edit';
+            const version = (document.getElementById('verNoteVersionInput')?.value || '').trim();
+            const title = (document.getElementById('verNoteTitleInput')?.value || '').trim();
+            const summary = (document.getElementById('verNoteSummaryInput')?.value || '').trim();
+            const adminNotes = (document.getElementById('verNoteAdminNotesInput')?.value || '').trim();
+            const typeVal = document.getElementById('verNoteTypeSelect')?.value || 'feat';
+            const modVal = document.getElementById('verNoteModuleSelect')?.value || 'Admin';
+
+            if (!version) {
+                toast('Indica un identificador de versión (ej. v2.6.0).', true);
+                return;
+            }
+            if (mode === 'create' && !title) {
+                toast('Indica un título descriptivo para la entrada.', true);
+                return;
+            }
+
+            const btn = document.getElementById('saveVersionNoteBtn');
+            const prevHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>Guardando...</span>';
+            }
+
+            try {
+                const versionEntry = mode === 'edit'
+                    ? {
+                        version,
+                        isEditOnly: true,
+                        overwriteNotes: true,
+                        title,
+                        summary,
+                        adminNotes
+                    }
+                    : {
+                        version,
+                        isEditOnly: false,
+                        overwriteNotes: true,
+                        source: 'manual_admin',
+                        releaseDate: new Date().toISOString(),
+                        title,
+                        summary,
+                        adminNotes,
+                        changeTypes: [typeVal],
+                        modules: [modVal],
+                        commits: []
+                    };
+
+                const res = await callAdminApi('save_version_note', { versionEntry });
+                if (res && res.ok) {
+                    document.getElementById('versionNoteModal')?.classList.add('hidden');
+                    toast(`✓ Versión ${version} actualizada.`);
+                    await loadAndRenderVersions(false);
+                }
+            } catch (err) {
+                toast(err.message || 'No se pudo guardar la nota de versión.', true);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = prevHtml;
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const headerVerBtn = document.getElementById('headerVersionBadgeBtn');
+            if (headerVerBtn) {
+                headerVerBtn.addEventListener('click', () => {
+                    adminState.logsState.activeSubTab = 'versions';
+                    setActiveTab('logs');
+                    switchLogsSubTab('versions');
+                });
+            }
+
+            const auditSubBtn = document.getElementById('logsSubTabAuditBtn');
+            const versionsSubBtn = document.getElementById('logsSubTabVersionsBtn');
+            if (auditSubBtn) auditSubBtn.addEventListener('click', () => switchLogsSubTab('audit'));
+            if (versionsSubBtn) versionsSubBtn.addEventListener('click', () => switchLogsSubTab('versions'));
+
+            const refreshVerBtn = document.getElementById('refreshVersionsBtn');
+            if (refreshVerBtn) refreshVerBtn.addEventListener('click', () => loadAndRenderVersions(true));
+
+            const newVerNoteBtn = document.getElementById('openNewVersionNoteBtn');
+            if (newVerNoteBtn) newVerNoteBtn.addEventListener('click', () => openVersionNoteModal(''));
+
+            const verSearchInput = document.getElementById('versionsFilterSearch');
+            if (verSearchInput) {
+                verSearchInput.addEventListener('input', (e) => {
+                    adminState.versionsState.filters.search = e.target.value;
+                    renderVersionsView();
+                });
+            }
+
+            const verTypeSel = document.getElementById('versionsFilterType');
+            if (verTypeSel) {
+                verTypeSel.addEventListener('change', (e) => {
+                    adminState.versionsState.filters.type = e.target.value;
+                    renderVersionsView();
+                });
+            }
+
+            const verModSel = document.getElementById('versionsFilterModule');
+            if (verModSel) {
+                verModSel.addEventListener('change', (e) => {
+                    adminState.versionsState.filters.module = e.target.value;
+                    renderVersionsView();
+                });
+            }
+
+            const verResetBtn = document.getElementById('versionsResetFiltersBtn');
+            if (verResetBtn) {
+                verResetBtn.addEventListener('click', () => {
+                    adminState.versionsState.filters = { search: '', type: 'ALL', module: 'ALL' };
+                    if (verSearchInput) verSearchInput.value = '';
+                    if (verTypeSel) verTypeSel.value = 'ALL';
+                    if (verModSel) verModSel.value = 'ALL';
+                    renderVersionsView();
+                });
+            }
+
+            const closeVerModalBtn = document.getElementById('closeVersionNoteModalBtn');
+            const cancelVerModalBtn = document.getElementById('cancelVersionNoteBtn');
+            const saveVerModalBtn = document.getElementById('saveVersionNoteBtn');
+            if (closeVerModalBtn) closeVerModalBtn.addEventListener('click', () => document.getElementById('versionNoteModal')?.classList.add('hidden'));
+            if (cancelVerModalBtn) cancelVerModalBtn.addEventListener('click', () => document.getElementById('versionNoteModal')?.classList.add('hidden'));
+            if (saveVerModalBtn) saveVerModalBtn.addEventListener('click', saveVersionNoteFromModal);
         });
     
     </script>
@@ -12996,6 +13626,80 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 </button>
                 <button type="button" id="confirmPurgeBtn" class="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-display font-bold text-xs uppercase tracking-wide shadow-md transition-opacity">
                     Confirmar Purga
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Nota / Release Manual en Control de Versiones -->
+    <div id="versionNoteModal" role="dialog" aria-modal="true" aria-labelledby="versionNoteModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-lg my-auto rounded-3xl bg-obsidian-card border border-zinc-700 p-5 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-acid/15 border border-acid/30 text-acid flex items-center justify-center shrink-0">
+                        <i aria-hidden="true" data-lucide="git-branch" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 id="versionNoteModalTitle" class="font-display text-base font-bold text-white uppercase">Editar Notas de Versión</h3>
+                        <p class="text-[11px] text-zinc-400">Se guarda en Supabase y se preserva en futuros syncs de Git</p>
+                    </div>
+                </div>
+                <button type="button" id="closeVersionNoteModalBtn" aria-label="Cerrar modal de versión" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer">
+                    <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="verNoteModeInput" value="edit">
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label for="verNoteVersionInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Versión SemVer</label>
+                    <input type="text" id="verNoteVersionInput" placeholder="ej. v2.6.1" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div>
+                    <label for="verNoteTitleInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Título de la Release</label>
+                    <input type="text" id="verNoteTitleInput" placeholder="Resumen breve de la actualización" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div>
+                    <label for="verNoteSummaryInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Descripción de Mejoras y Cambios</label>
+                    <textarea id="verNoteSummaryInput" rows="3" placeholder="Detalle funcional de las mejoras realizadas..." class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid resize-y"></textarea>
+                </div>
+                <div id="verNoteNewMetaWrap" class="hidden grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label for="verNoteTypeSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Tipo Principal</label>
+                        <select id="verNoteTypeSelect" class="w-full px-2.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                            <option value="feat">Novedad (feat)</option>
+                            <option value="fix">Corrección (fix)</option>
+                            <option value="sec">Seguridad (sec)</option>
+                            <option value="ui">Diseño UI (ui)</option>
+                            <option value="infra">Infraestructura (infra)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="verNoteModuleSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Módulo Principal</label>
+                        <select id="verNoteModuleSelect" class="w-full px-2.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                            <option value="Admin">Admin Studio</option>
+                            <option value="Escaparate VIP">Escaparate VIP</option>
+                            <option value="Revista">Revista Pulso</option>
+                            <option value="n8n/Supabase">n8n / Supabase</option>
+                            <option value="PWA">PWA / Caché</option>
+                            <option value="Seguridad">Seguridad</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="verNoteAdminNotesInput" class="block text-[10px] font-mono uppercase text-amber-300 mb-1">Notas del Administrador (Observaciones / Despliegue)</label>
+                    <textarea id="verNoteAdminNotesInput" rows="3" placeholder="Añade notas operativas, recordatorios o incidencias resueltas..." class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-amber-500/40 text-xs text-white focus:outline-none focus:border-amber-400 resize-y"></textarea>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800">
+                <button type="button" id="cancelVersionNoteBtn" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white cursor-pointer">
+                    Cancelar
+                </button>
+                <button type="button" id="saveVersionNoteBtn" class="px-4 py-2 rounded-xl bg-acid hover:bg-acid/90 text-obsidian font-display font-bold text-xs uppercase tracking-wide flex items-center gap-1.5 cursor-pointer">
+                    <i aria-hidden="true" data-lucide="save" class="w-3.5 h-3.5"></i>
+                    <span>Guardar</span>
                 </button>
             </div>
         </div>

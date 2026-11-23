@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" id="metaThemeColor" content="#09090B">
+    <meta name="robots" content="noindex, nofollow">
+    <script>
+        (function() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const paramTheme = urlParams.get('theme') || urlParams.get('modo');
+                if (paramTheme === 'light' || paramTheme === 'claro') {
+                    localStorage.setItem('vm_theme', 'light');
+                } else if (paramTheme === 'dark' || paramTheme === 'oscuro') {
+                    localStorage.setItem('vm_theme', 'dark');
+                }
+                const savedTheme = localStorage.getItem('vm_theme');
+                const isLight = savedTheme === 'light';
+                if (isLight) {
+                    document.documentElement.classList.add('theme-light');
+                    document.documentElement.classList.remove('dark');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('theme-light');
+                }
+                const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
+                if (metaTheme) {
+                    metaTheme.setAttribute('content', isLight ? '#F8FAFC' : '#09090B');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <title>Guía de Usuario 360º | VirMarket Studio</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        acid: {
+                            DEFAULT: '#A3E635',
+                            hover: '#BEF264',
+                            muted: 'rgba(163, 230, 53, 0.12)'
+                        },
+                        obsidian: {
+                            DEFAULT: '#09090B',
+                            card: '#121215',
+                            elevated: '#18181B',
+                            border: '#27272A'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #09090B;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.12), transparent 50%),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+        }
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 #121214;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #121214; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 9999px; border: 1px solid #18181b; }
+        ::-webkit-scrollbar-thumb:hover { background: #a3e635; }
+        ::-webkit-scrollbar-button { display: none !important; width: 0 !important; height: 0 !important; }
+
+        /* Acordeones nativos suaves */
+        details.guide-accordion > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details.guide-accordion > summary::-webkit-details-marker {
+            display: none;
+        }
+        details.guide-accordion[open] > summary .acc-chevron {
+            transform: rotate(180deg);
+        }
+        details.tech-details > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details.tech-details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details.tech-details[open] > summary .tech-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Enlace activo del índice */
+        .toc-link.is-active {
+            background-color: rgba(163, 230, 53, 0.14);
+            border-color: rgba(163, 230, 53, 0.5);
+            color: #A3E635;
+        }
+
+        /* Resaltado de búsqueda */
+        mark.guide-hl {
+            background-color: rgba(163, 230, 53, 0.35);
+            color: #FFFFFF;
+            padding: 0 3px;
+            border-radius: 4px;
+        }
+
+        /* ===================================================================== */
+        /* MODO CLARO (STREETWEAR MINIMAL / ECO) - VIRMARKET STUDIO              */
+        /* ===================================================================== */
+        html.theme-light { color-scheme: light; }
+        html.theme-light body {
+            background-color: #F8FAFC !important;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(163, 230, 53, 0.18), transparent 50%),
+                linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+                linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px) !important;
+            background-size: 100% 100%, 36px 36px, 36px 36px !important;
+            color: #0F172A !important;
+        }
+        html.theme-light header {
+            background-color: rgba(255, 255, 255, 0.94) !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+        }
+        html.theme-light .bg-obsidian,
+        html.theme-light [class*="bg-obsidian/"] {
+            background-color: #F8FAFC !important;
+        }
+        html.theme-light .bg-obsidian-card {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
+        }
+        html.theme-light .bg-obsidian-elevated {
+            background-color: #F1F5F9 !important;
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .border-obsidian-border,
+        html.theme-light [class*="border-zinc-"] {
+            border-color: #E2E8F0 !important;
+        }
+        html.theme-light .text-white,
+        html.theme-light .text-zinc-100,
+        html.theme-light .text-zinc-200 {
+            color: #0F172A !important;
+        }
+        html.theme-light .text-zinc-300,
+        html.theme-light .text-zinc-400 {
+            color: #475569 !important;
+        }
+        html.theme-light .text-zinc-500 {
+            color: #64748B !important;
+        }
+        html.theme-light .bg-acid {
+            background-color: #A3E635 !important;
+            color: #09090B !important;
+        }
+        html.theme-light .bg-acid * {
+            color: #09090B !important;
+        }
+        html.theme-light .text-acid {
+            color: #3F6212 !important;
+        }
+        html.theme-light .bg-acid-muted,
+        html.theme-light .bg-acid\/10,
+        html.theme-light .bg-acid\/15 {
+            background-color: #ECFCCB !important;
+            border-color: #BEF264 !important;
+            color: #365314 !important;
+        }
+        html.theme-light .bg-zinc-800,
+        html.theme-light .bg-zinc-900 {
+            background-color: #F1F5F9 !important;
+            color: #0F172A !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light .toc-link.is-active {
+            background-color: #ECFCCB !important;
+            border-color: #84CC16 !important;
+            color: #365314 !important;
+        }
+        html.theme-light input {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+            border-color: #CBD5E1 !important;
+        }
+        html.theme-light input::placeholder {
+            color: #94A3B8 !important;
+        }
+        html.theme-light .text-sky-300,
+        html.theme-light .text-sky-400 { color: #0369A1 !important; }
+        html.theme-light .bg-sky-950\/40,
+        html.theme-light .bg-sky-500\/10 {
+            background-color: #F0F9FF !important;
+            border-color: #BAE6FD !important;
+        }
+        html.theme-light .text-emerald-300,
+        html.theme-light .text-emerald-400 { color: #15803D !important; }
+        html.theme-light .bg-emerald-500\/10,
+        html.theme-light .bg-emerald-950\/30 {
+            background-color: #DCFCE7 !important;
+            border-color: #86EFAC !important;
+        }
+        html.theme-light .text-amber-300,
+        html.theme-light .text-amber-400 { color: #B45309 !important; }
+        html.theme-light .bg-amber-500\/10,
+        html.theme-light .bg-amber-950\/30 {
+            background-color: #FEF3C7 !important;
+            border-color: #FCD34D !important;
+        }
+        html.theme-light .text-rose-300,
+        html.theme-light .text-rose-400 { color: #BE123C !important; }
+        html.theme-light .bg-rose-500\/10,
+        html.theme-light .bg-rose-950\/40 {
+            background-color: #FFE4E6 !important;
+            border-color: #FDA4AF !important;
+        }
+        html.theme-light .text-indigo-300 { color: #4338CA !important; }
+        html.theme-light .bg-indigo-500\/10 {
+            background-color: #EEF2FF !important;
+            border-color: #C7D2FE !important;
+        }
+        html.theme-light .text-fuchsia-300 { color: #A21CAF !important; }
+        html.theme-light .bg-fuchsia-500\/10 {
+            background-color: #FAE8FF !important;
+            border-color: #F0ABFC !important;
+        }
+        html.theme-light mark.guide-hl {
+            background-color: #D9F99D !important;
+            color: #0F172A !important;
+        }
+        html.theme-light * {
+            scrollbar-color: #94A3B8 #F1F5F9;
+        }
+        html.theme-light ::-webkit-scrollbar-track { background: #F1F5F9; }
+        html.theme-light ::-webkit-scrollbar-thumb { background: #94A3B8; border-color: #E2E8F0; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col">
+
+    <a href="#contenido-principal" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-acid focus:text-obsidian focus:font-bold focus:text-xs">
+        Saltar al contenido principal
+    </a>
+
+    <!-- Cabecera Sticky -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-obsidian/90 border-b border-obsidian-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-acid text-obsidian font-display font-bold text-sm flex items-center justify-center shadow-lg shadow-acid/20 shrink-0">
+                    VM
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="font-display font-bold text-sm sm:text-base tracking-tight uppercase text-white truncate">
+                            Guía de Usuario 360º
+                        </span>
+                        <span id="guideLastUpdated" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[10px] font-bold">
+                            Actualizada: 2026-11-23
+                        </span>
+                    </div>
+                    <p class="font-mono text-[10px] text-zinc-400 truncate">
+                        VirMarket Studio · Operativa, Correos, Automatizaciones &amp; Troubleshooting
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="button" id="themeToggleBtn" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 hover:border-acid/60 text-xs transition-colors cursor-pointer" title="Cambiar tema">
+                    <i aria-hidden="true" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
+                    <span class="font-mono text-[11px] font-semibold text-zinc-200 hidden sm:inline">Modo Claro</span>
+                </button>
+                <a href="admin.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-acid text-obsidian hover:bg-acid-hover text-xs font-display font-bold uppercase transition-colors">
+                    <i aria-hidden="true" data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Volver a Studio</span>
+                    <span class="sm:hidden">Studio</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- =============================================================== -->
+    <!-- PANTALLA DE VERIFICACIÓN / BLOQUEO DE SESIÓN PRIVADA            -->
+    <!-- =============================================================== -->
+    <main id="contenido-principal" class="flex-1 w-full">
+        <section id="authCheckingSection" class="max-w-md mx-auto px-4 py-20 text-center">
+            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-8 space-y-4 shadow-2xl">
+                <div class="w-12 h-12 rounded-2xl bg-acid/10 border border-acid/30 text-acid flex items-center justify-center mx-auto animate-pulse">
+                    <i aria-hidden="true" data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <h1 class="font-display text-lg font-bold uppercase text-white">Verificando sesión privada</h1>
+                <p id="authCheckingText" class="text-xs text-zinc-400 font-mono">Comprobando credenciales de VirMarket Studio...</p>
+                <div id="authRetryWrap" class="hidden pt-2 space-y-3">
+                    <button type="button" id="retryAuthBtn" class="px-4 py-2 rounded-xl bg-acid text-obsidian font-display font-bold text-xs uppercase hover:bg-acid-hover cursor-pointer">
+                        Reintentar Verificación
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="authGateSection" class="hidden max-w-md mx-auto px-4 py-12 sm:py-16">
+            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-6 sm:p-8 space-y-5 shadow-2xl">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
+                        <i aria-hidden="true" data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="font-mono text-[10px] uppercase tracking-widest text-acid">Documentación Privada</span>
+                        <h1 class="font-display text-xl font-bold text-white uppercase mt-0.5">Acceso Restringido</h1>
+                        <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                            Esta guía contiene el manual operativo completo de VirMarket Studio. Inicia sesión en el panel de administración o introduce tu contraseña para consultarla.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="admin.html" class="w-full py-3 px-4 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shadow-lg shadow-acid/15">
+                    <i aria-hidden="true" data-lucide="log-in" class="w-4 h-4"></i>
+                    <span>Ir a VirMarket Studio (Login)</span>
+                </a>
+
+                <div class="border-t border-obsidian-border pt-4">
+                    <form id="guideLoginForm" class="space-y-3">
+                        <label for="guidePasswordInput" class="block font-mono text-[11px] uppercase text-zinc-400">
+                            O desbloquear directamente aquí
+                        </label>
+                        <input id="guidePasswordInput" type="password" autocomplete="current-password" placeholder="Contraseña de administrador..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                        <button type="submit" id="guideLoginBtn" class="w-full py-2.5 px-4 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-display font-bold uppercase text-white transition-colors cursor-pointer">
+                            Verificar y Abrir Guía
+                        </button>
+                    </form>
+                    <div id="guideAuthFeedback" role="alert" aria-live="assertive" class="hidden mt-3 p-3 rounded-xl text-xs"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- CONTENIDO PRINCIPAL DE LA GUÍA INTERACTIVA 360º                 -->
+        <!-- =============================================================== -->
+        <div id="guideApp" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+            <!-- Hero + Buscador Instantáneo + Acciones Rápidas -->
+            <section class="rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-7 space-y-5">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2.5 py-0.5 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[10px] font-bold uppercase tracking-wider">
+                                Manual Vivo 360º
+                            </span>
+                            <span class="font-mono text-[11px] text-zinc-400 sm:hidden">Actualizada: 2026-11-23</span>
+                        </div>
+                        <h1 class="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight uppercase">
+                            Cómo funciona VirMarket de principio a fin
+                        </h1>
+                        <p class="text-xs sm:text-sm text-zinc-400 max-w-3xl leading-relaxed">
+                            Todo lo que necesitas para operar los Drops VIP 24h, gestionar reservas y lotes, conciliar ventas de Vinted en el ERP, entender qué correo envía cada proveedor y resolver incidentes sin depender de nadie.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                        <button type="button" id="expandAllBtn" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-zinc-200 transition-colors cursor-pointer">
+                            Expandir todo
+                        </button>
+                        <button type="button" id="collapseAllBtn" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-zinc-200 transition-colors cursor-pointer">
+                            Contraer todo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Barra de Búsqueda -->
+                <div class="relative">
+                    <label for="guideSearchInput" class="sr-only">Buscar en la guía de usuario</label>
+                    <i aria-hidden="true" data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    <input id="guideSearchInput" type="search" placeholder="Buscar cualquier tema (ej: suplente, Brevo, Vinted, lote, Telegram, backup, RGPD, paca, 404...)" class="w-full pl-10 pr-28 py-3 rounded-xl bg-obsidian-elevated border border-zinc-700 text-sm text-white focus:outline-none focus:border-acid">
+                    <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                        <span id="searchCountBadge" class="hidden font-mono text-[11px] px-2 py-0.5 rounded bg-acid/15 text-acid border border-acid/30 font-bold"></span>
+                        <button type="button" id="clearSearchBtn" class="hidden px-2 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-mono cursor-pointer" title="Limpiar búsqueda">
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chips rápidos de navegación móvil -->
+                <div class="flex lg:hidden items-center gap-2 overflow-x-auto pb-1">
+                    <a href="#sec-ciclo" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">1. Ciclo Drop</a>
+                    <a href="#sec-panel" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">2. Panel Studio</a>
+                    <a href="#sec-correos" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">3. Correos</a>
+                    <a href="#sec-automatizaciones" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">4. Automatizaciones</a>
+                    <a href="#sec-ecosistema" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">5. Ecosistema</a>
+                    <a href="#sec-seguridad" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">6. Backups &amp; RGPD</a>
+                    <a href="#sec-troubleshooting" class="shrink-0 px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">7. ¿Qué hago si...?</a>
+                </div>
+            </section>
+
+            <!-- Mensaje sin resultados -->
+            <div id="noResultsBanner" class="hidden rounded-2xl bg-obsidian-card border border-amber-500/40 p-8 text-center space-y-3">
+                <p class="font-display text-base font-bold text-amber-300 uppercase">No hay coincidencias para tu búsqueda</p>
+                <p class="text-xs text-zinc-400">Prueba con palabras más cortas como <code class="font-mono text-acid">Vinted</code>, <code class="font-mono text-acid">Brevo</code>, <code class="font-mono text-acid">lote</code>, <code class="font-mono text-acid">Telegram</code> o <code class="font-mono text-acid">backup</code>.</p>
+                <button type="button" id="resetNoResultsBtn" class="px-4 py-2 rounded-xl bg-acid text-obsidian font-display font-bold text-xs uppercase cursor-pointer">Ver toda la guía</button>
+            </div>
+
+            <!-- Grid Principal: Índice Lateral (3 cols) + Contenido (9 cols) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- Índice Lateral Sticky (Desktop) -->
+                <aside class="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
+                    <nav aria-label="Índice de la guía" class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 space-y-1.5">
+                        <div class="px-2 pb-2 mb-1 border-b border-obsidian-border flex items-center justify-between">
+                            <span class="font-mono text-[10px] uppercase tracking-widest text-acid font-bold">Índice Rápido</span>
+                            <span class="font-mono text-[10px] text-zinc-400">7 bloques</span>
+                        </div>
+                        <a href="#sec-ciclo" data-toc="sec-ciclo" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">01</span>
+                            <span>Ciclo de Vida de un Drop</span>
+                        </a>
+                        <a href="#sec-panel" data-toc="sec-panel" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">02</span>
+                            <span>Panel Studio (5 Pestañas)</span>
+                        </a>
+                        <a href="#sec-correos" data-toc="sec-correos" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">03</span>
+                            <span>Flujos de Correo</span>
+                        </a>
+                        <a href="#sec-automatizaciones" data-toc="sec-automatizaciones" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">04</span>
+                            <span>Automatizaciones &amp; Bots</span>
+                        </a>
+                        <a href="#sec-ecosistema" data-toc="sec-ecosistema" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">05</span>
+                            <span>Ecosistema Público</span>
+                        </a>
+                        <a href="#sec-seguridad" data-toc="sec-seguridad" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">06</span>
+                            <span>Seguridad, RGPD &amp; Backups</span>
+                        </a>
+                        <a href="#sec-troubleshooting" data-toc="sec-troubleshooting" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
+                            <span class="font-mono text-[10px] text-acid">07</span>
+                            <span>¿Qué hago si...?</span>
+                        </a>
+                    </nav>
+
+                    <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 space-y-2">
+                        <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400">Regla de Oro Vinted-First</span>
+                        <p class="text-xs text-zinc-300 leading-relaxed">
+                            1) Sube a Vinted → 2) Importa la URL → 3) Oculta en Vinted. <strong class="text-white">Nunca ocultes antes de importar</strong> o Vinted devolverá 404.
+                        </p>
+                    </div>
+                </aside>
+
+                <!-- Columna de Contenido -->
+                <div class="lg:col-span-9 space-y-8">
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 1: CICLO DE VIDA DE UN DROP                  -->
+                    <!-- =================================================== -->
+                    <section id="sec-ciclo" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold">01</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">Mapa General y Ciclo de Vida de un Drop</h2>
+                                <p class="text-xs text-zinc-400">El flujo completo «Vinted-First» desde que subes una prenda hasta el cierre contable.</p>
+                            </div>
+                        </div>
+
+                        <!-- Diagrama Visual del Ciclo de un Drop -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6 space-y-4" data-search="ciclo drop vinted-first telegram brevo 24h exclusividad ocultar sobrantes conciliacion erp">
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
+                                <h3 class="font-display text-base font-bold text-white uppercase flex items-center gap-2">
+                                    <i aria-hidden="true" data-lucide="git-branch" class="w-4 h-4 text-acid"></i>
+                                    Diagrama del Ciclo Completo (7 Pasos)
+                                </h3>
+                                <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-acid/10 border border-acid/30 text-acid font-bold">Coste IA/Scraping: 0,00 €/mes</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-acid/15 text-acid">PASO 1 · VINTED</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Subir prenda a Vinted</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">Publicas el artículo en Vinted con su precio base (sin descuento) y sus fotos reales.</p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30">PASO 2 · INGESTA</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Importar URL (Bot o Web)</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">Compartes la URL al bot privado de Telegram o la pegas en <strong>1. Drops</strong>. Se clonan 4 fotos HD y la ficha.</p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">PASO 3 · MODO OCULTO</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Ocultar en Vinted</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">Cuando el bot o Studio confirman <strong>✅ Listo</strong>, pasas el anuncio a <strong>Modo Oculto</strong> en Vinted para protegerlo 24h.</p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-acid/15 text-acid">PASO 4 · LANZAMIENTO</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Activar Drop + Email VIP</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">En <strong>1. Drops</strong> lanzas el Drop. Brevo envía 1 único correo visual con todas las prendas a la lista VIP.</p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">PASO 5 · 24H VIP</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Reservas, Lotes y Colas</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">Los clientes reservan en el Escaparate VIP (1 prenda o Lote). En <strong>2. Reservas</strong> preparas Vinted y mandas su link de pago.</p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30">PASO 6 · FIN 24H</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Desocultar + @virmarket_club</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">Tras 24h, el vigilante avisa. Desocultas las sobrantes desde VirMarket y las publicas en el canal Telegram.</p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5 sm:col-span-2">
+                                    <span class="inline-block font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">PASO 7 · CONTABILIDAD ERP</span>
+                                    <h4 class="font-display font-bold text-xs text-white uppercase">Conciliación Automática Vinted → Beneficio Neto</h4>
+                                    <p class="text-xs text-zinc-400 leading-relaxed">En <strong>3. Registro</strong> escaneas los correos de Vinted (ventas, envíos, cobros y cancelaciones) para verificar ingresos reales frente a costes de pacas y gastos.</p>
+                                </div>
+                            </div>
+
+                            <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3.5">
+                                <summary class="flex items-center justify-between gap-2 text-xs font-mono font-bold text-zinc-300">
+                                    <span>⚙️ Detalle técnico (por qué Vinted-First y cómo se protegen los datos)</span>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 tech-chevron transition-transform"></i>
+                                </summary>
+                                <div class="mt-3 pt-3 border-t border-zinc-800 text-xs text-zinc-400 space-y-1.5 leading-relaxed">
+                                    <p>• <strong>Extracción sin LLM:</strong> Vinted bloquea IPs de servidores directamente, por lo que n8n lee el HTML vía <code class="font-mono text-zinc-200">r.jina.ai</code> y extrae el JSON interno de Next.js (<code class="font-mono text-zinc-200">self.__next_f.push</code>). Si ocultas el anuncio antes de importar, Vinted devuelve <code class="font-mono text-zinc-200">404</code>.</p>
+                                    <p>• <strong>Privacidad de URLs:</strong> <code class="font-mono text-zinc-200">vintedUrl</code> se guarda dentro de <code class="font-mono text-zinc-200">photos_object.__vintedMeta</code> (y columna nativa) en Supabase y <strong>jamás</strong> se devuelve en el endpoint público del catálogo.</p>
+                                    <p>• <strong>CDN de Fotos:</strong> Hasta 4 fotos optimizadas a JPEG 1080px en <code class="font-mono text-zinc-200">Encoder2000/virmarket-vip/drops/{dropId}/</code> para que carguen rápido tanto en Gmail como en la web.</p>
+                                </div>
+                            </details>
+                        </article>
+                    </section>
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 2: PANEL VIRMARKET STUDIO (5 PESTAÑAS)       -->
+                    <!-- =================================================== -->
+                    <section id="sec-panel" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold">02</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">Panel VirMarket Studio (admin.html)</h2>
+                                <p class="text-xs text-zinc-400">Qué hace cada pestaña y cómo usar sus botones y flujos sin cometer errores.</p>
+                            </div>
+                        </div>
+
+                        <!-- Pestaña 1: Drops -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 1 drops crear drop importar url telegram brevo borrador publicar recordar ultimas horas sobrantes cerrar drop">
+                            <details class="guide-accordion" open>
+                                <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl">🚀</span>
+                                        <div>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 1 · Drops (Crear, Importar y Lanzar Campaña)</h3>
+                                            <p class="text-xs text-zinc-400">Prepara remesas correlativas <code class="font-mono">DROP-YYYYMMDD-XX</code> y lanza el correo único VIP.</p>
+                                        </div>
+                                    </div>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
+                                    <ul class="space-y-2">
+                                        <li>• <strong>Identificador de Drop automático:</strong> Si el último Drop ya venció, Studio sugiere limpio el de hoy (<code class="font-mono text-acid">DROP-YYYYMMDD-01</code>) para no reactivar remesas pasadas por accidente.</li>
+                                        <li>• <strong>Caja de importación dual Vinted:</strong> Si pegas <strong>1 URL</strong>, rellena el formulario para editarlo antes de guardar. Si pegas <strong>varias URLs (una por línea)</strong>, importa todo el lote en cadena con referencias correlativas <code class="font-mono">REF-XXX</code>.</li>
+                                        <li>• <strong>Modos de lanzamiento:</strong> <em>«Publicar Drop + Enviar Correo VIP Ahora»</em> (activa el escaparate 24h y envía la campaña de Brevo al instante) o <em>«Publicar Drop + Crear Borrador en Brevo»</em> (activa el Drop y deja el correo en Brevo listo para revisar).</li>
+                                        <li>• <strong>Recordatorio de últimas horas:</strong> Envía un correo Brevo solo con las prendas que siguen <code class="font-mono">DISPONIBLE</code> en el Drop activo.</li>
+                                        <li>• <strong>Cierre manual y Sobrantes:</strong> Puedes cerrar la ventana 24h antes de tiempo o pulsar <em>«Publicar Sobrantes en @virmarket_club»</em> cuando concluya el plazo VIP.</li>
+                                    </ul>
+                                    <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
+                                        <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                            <span>⚙️ Detalle técnico</span>
+                                            <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
+                                        </summary>
+                                        <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
+                                            Webhook <code class="font-mono text-zinc-200">POST /webhook/virmarket-admin</code> (workflow <code class="font-mono text-zinc-200">AjGd1oCMKMwcrIJf</code>). Acciones: <code class="font-mono text-zinc-200">extract_vinted_url</code>, <code class="font-mono text-zinc-200">upload_photo</code>, <code class="font-mono text-zinc-200">save_garment</code>, <code class="font-mono text-zinc-200">publish_drop</code>, <code class="font-mono text-zinc-200">remind_drop_brevo</code>, <code class="font-mono text-zinc-200">close_drop</code>. Logs en categorías <code class="font-mono text-zinc-200">DROP</code> y <code class="font-mono text-zinc-200">PRENDA</code>.
+                                        </p>
+                                    </details>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- Pestaña 2: Reservas -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 2 reservas lote collage zip checklist anuncios fantasma suplentes lista espera monitor 24h prorrogar desocultar">
+                            <details class="guide-accordion">
+                                <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl">📋</span>
+                                        <div>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 2 · Reservas, Lotes VIP y Lista de Espera</h3>
+                                            <p class="text-xs text-zinc-400">Cómo gestionar reservas de 1 prenda, Lotes (2+ prendas), plazos 24h y traspaso a suplentes.</p>
+                                        </div>
+                                    </div>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                            <h4 class="font-display font-bold text-white uppercase">Reserva de 1 Prenda</h4>
+                                            <p class="text-zinc-400">1. Pulsa <strong>Abrir en Vinted</strong>, edita al precio VIP y resérvala a su <code class="font-mono">@usuario</code>.<br>2. Pulsa <strong>📩 Enviar link de pago al cliente</strong> para enviarle su correo con enlace directo.</p>
+                                        </div>
+                                        <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                            <h4 class="font-display font-bold text-white uppercase">Reserva de Lote (2+ prendas) · 3 Pasos</h4>
+                                            <p class="text-zinc-400">1. Descarga el <strong>Collage HD + ZIP (≤20 fotos)</strong> y sube el anuncio unificado en Vinted.<br>2. Pega la URL del lote y pulsa <strong>Enviar link de pago</strong>.<br>3. Al cobrar, usa <strong>Limpiar Vinted y Cerrar</strong>: el checklist bloqueante te asegura borrar los anuncios individuales ocultos.</p>
+                                        </div>
+                                    </div>
+                                    <ul class="space-y-1.5">
+                                        <li>• <strong>Semáforo 24h y Monitor Superior:</strong> Verde (<code class="font-mono">&gt;4h</code>), Ámbar (<code class="font-mono">&lt;4h</code>) y Rojo pulsante (<code class="font-mono">Vencido</code>). Puedes prorrogar <code class="font-mono">⏱️ +24h</code> en 1 clic.</li>
+                                        <li>• <strong>Traspaso guiado a suplente:</strong> Pulsa <code class="font-mono">Pasar al 1º →</code> (o <code class="font-mono">↑</code> en cualquier suplente). El asistente te guía para actualizar la reserva en Vinted, elegir plazo (12h/24h/48h) y decidir si restauras el cupón de bienvenida al cliente saliente.</li>
+                                        <li>• <strong>Alerta anti-anuncios fantasma:</strong> Si cerraste un lote y quedó alguna prenda sin marcar como borrada de Vinted, verás un aviso rojo fijo para limpiar antes de desocultar sobrantes.</li>
+                                        <li>• <strong>Desocultar tras las 24h:</strong> Hazlo siempre desde el botón <strong>«👁️ Abrir en Vinted para Desocultar»</strong> de las prendas <code class="font-mono">DISPONIBLE</code> de esta pestaña, nunca a ciegas en Vinted.</li>
+                                    </ul>
+                                    <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
+                                        <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                            <span>⚙️ Detalle técnico</span>
+                                            <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
+                                        </summary>
+                                        <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
+                                            Usa <code class="font-mono text-zinc-200">notify_vinted_ready</code>, <code class="font-mono text-zinc-200">promote_waitlist</code> y <code class="font-mono text-zinc-200">update_status</code> en <code class="font-mono text-zinc-200">AjGd1oCMKMwcrIJf</code>. El progreso de limpieza de anuncios del lote se persiste en <code class="font-mono text-zinc-200">__vintedMeta.vintedCleanedAt</code>. Auto-polling cada 15s mientras la pestaña está visible.
+                                        </p>
+                                    </details>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- Pestaña 3: Registro ERP -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 3 registro erp ventas prendas clientes drops lotes analitica escaparate ficha 360 paca gasto conciliacion vinted cancelaciones csv">
+                            <details class="guide-accordion">
+                                <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl">📊</span>
+                                        <div>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 3 · Registro / ERP y Conciliación Vinted</h3>
+                                            <p class="text-xs text-zinc-400">Control financiero, pacas/gastos, CRM de clientes, Ficha 360º y lectura de correos de Vinted.</p>
+                                        </div>
+                                    </div>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
+                                    <p>Incluye <strong>6 sub-vistas</strong> filtrables por periodo, drop, canal o texto, con exportación a <strong>CSV</strong> compatible con Excel:</p>
+                                    <ul class="space-y-1.5">
+                                        <li>• <strong>Ventas &amp; Pedidos / Inventario Maestro:</strong> Alterna entre vista <em>Tabla</em> y vista <em>Escaparate</em> (25/50/100/Todo). Distingue <code class="font-mono text-emerald-300">📧 Cobro Verificado por Correo</code> frente a <code class="font-mono text-amber-300">✋ Venta Manual</code>.</li>
+                                        <li>• <strong>Ficha de Producto 360º Editable:</strong> Haz clic en cualquier tarjeta o icono de edición para cambiar fotos (hasta 4, portada y orden), precio, coste unitario, gasto extra, comprador o etapa logística, con navegación <code class="font-mono">‹ Anterior / Siguiente ›</code>.</li>
+                                        <li>• <strong>Pacas y Gastos Globales:</strong> Registra compras de pacas, envíos o sobres en <em>«💸 Apuntar Paca / Gasto»</em> (se restan del beneficio neto del periodo) o reparte el coste de una paca entre varias prendas seleccionadas.</li>
+                                        <li>• <strong>Clientes (CRM 360º):</strong> Cruza suscriptores de Brevo con compradores y colas de espera, muestra badge <code class="font-mono">⭐ Recurrente</code> (2+ pedidos) y permite guardar notas privadas.</li>
+                                        <li>• <strong>Conciliación Híbrida Vinted (Gmail):</strong> Escanea correos de venta, envío, entrega y cancelación/reembolso (<code class="font-mono text-rose-300">🚨 PEDIDO CANCELADO</code>). Permite asociar lotes, importar ventas directas a <code class="font-mono">VINTED-DIRECT</code> y definir fecha de corte (<code class="font-mono">syncFromDate</code>).</li>
+                                        <li>• <strong>Candado anti-borrado:</strong> Solo puedes eliminar prendas en estado <code class="font-mono">DISPONIBLE</code> u <code class="font-mono">OCULTA</code> sin ventas, reservas ni colas.</li>
+                                    </ul>
+                                    <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
+                                        <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                            <span>⚙️ Detalle técnico</span>
+                                            <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
+                                        </summary>
+                                        <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
+                                            Acciones <code class="font-mono text-zinc-200">scan_vinted_emails</code> (Gmail OAuth2), <code class="font-mono text-zinc-200">bulk_update_garments</code>, <code class="font-mono text-zinc-200">save_client_note</code> y <code class="font-mono text-zinc-200">delete_garment</code> (con guard <code class="font-mono text-zinc-200">status=in.(DISPONIBLE,OCULTA)</code>). Metadatos financieros en <code class="font-mono text-zinc-200">__vintedMeta</code> y <code class="font-mono text-zinc-200">virmarket_config.crmClientsMeta</code>.
+                                        </p>
+                                    </details>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- Pestaña 4: Ajustes -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 4 ajustes regla bienvenida descuento tope plantilla pie vinted contrasena otp ecosistema accesos directos">
+                            <details class="guide-accordion">
+                                <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl">⚙️</span>
+                                        <div>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 4 · Ajustes y Ecosistema VirMarket</h3>
+                                            <p class="text-xs text-zinc-400">Reglas dinámicas del descuento VIP, plantilla de pie en Vinted, clave admin y accesos directos.</p>
+                                        </div>
+                                    </div>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
+                                    <ul class="space-y-1.5">
+                                        <li>• <strong>Regla de Bienvenida dinámica:</strong> Cambia el <code class="font-mono">%</code> de descuento, el tope máximo en <code class="font-mono">€</code> y el máximo de prendas por lote. Se actualiza al instante en la Landing QR, el Escaparate VIP y los nuevos correos.</li>
+                                        <li>• <strong>Plantilla de pie de Vinted:</strong> El texto que configures aquí se recorta automáticamente al importar anuncios desde Vinted para que no ensucie la descripción del escaparate.</li>
+                                        <li>• <strong>Seguridad (Contraseña + OTP):</strong> Para cambiar la contraseña de acceso solicitas un código de 6 dígitos que llega exclusivamente a <code class="font-mono">virmarket.oficial@gmail.com</code>.</li>
+                                        <li>• <strong>Ecosistema VirMarket (6 Accesos Directos):</strong> Enlaces rápidos a Landing QR, Tarjetas QR imprimibles, Escaparate VIP, Revista Pulso Cotidiano (+ Contacto), Analítica Umami y esta Guía 360º.</li>
+                                    </ul>
+                                    <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
+                                        <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                            <span>⚙️ Detalle técnico</span>
+                                            <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
+                                        </summary>
+                                        <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
+                                            Configuración guardada en <code class="font-mono text-zinc-200">public.virmarket_config (configKey='global')</code>. Autenticación gestionada por <code class="font-mono text-zinc-200">Autenticar Admin VirMarket (rXZjFi4KPhST5KMB)</code> con hash SHA-256 + sal criptográfica.
+                                        </p>
+                                    </details>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- Pestaña 5: Logs y Versiones -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 5 logs auditoria errores revisar purga control versiones semver changelog">
+                            <details class="guide-accordion">
+                                <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl">📜</span>
+                                        <div>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 5 · Logs, Auditoría 360º y Control de Versiones</h3>
+                                            <p class="text-xs text-zinc-400">Historial de todo lo que ocurre en web, bots y n8n + changelog de versiones SemVer.</p>
+                                        </div>
+                                    </div>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
+                                    <ul class="space-y-1.5">
+                                        <li>• <strong>Sub-vista Auditoría y Errores:</strong> Muestra cada evento con nivel (<code class="font-mono">INFO</code>, <code class="font-mono">SUCCESS</code>, <code class="font-mono">WARN</code>, <code class="font-mono">ERROR</code>), categoría (<code class="font-mono">AUTH</code>, <code class="font-mono">DROP</code>, <code class="font-mono">RESERVA_VIP</code>, <code class="font-mono">VINTED_SYNC</code>, <code class="font-mono">TELEGRAM</code>, <code class="font-mono">LEAD_QR</code>, <code class="font-mono">SISTEMA</code>) y detalle técnico desplegable.</li>
+                                        <li>• <strong>Badge rojo en la pestaña:</strong> Indica cuántos <code class="font-mono">ERROR</code> hay pendientes de revisar. Cuando resuelvas uno, márcalo como <strong>Revisado</strong> para apagar la alerta sin borrar el rastro.</li>
+                                        <li>• <strong>Rotación automática:</strong> Los eventos rutinarios (<code class="font-mono">INFO</code>/<code class="font-mono">SUCCESS</code>) se rotan a los 90 días o al superar 5.000 filas; también puedes purgar rutina manualmente.</li>
+                                        <li>• <strong>Sub-vista Control de Versiones:</strong> Lista cada release (<code class="font-mono">vX.Y.Z</code>) con fecha, resumen funcional, commits agrupados y un campo para tus propias notas de administrador.</li>
+                                    </ul>
+                                    <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
+                                        <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                            <span>⚙️ Detalle técnico</span>
+                                            <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
+                                        </summary>
+                                        <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
+                                            Tablas <code class="font-mono text-zinc-200">public.virmarket_logs</code> y <code class="font-mono text-zinc-200">public.virmarket_versions</code> en Supabase (RLS activo). Acciones <code class="font-mono text-zinc-200">get_logs</code>, <code class="font-mono text-zinc-200">resolve_logs</code>, <code class="font-mono text-zinc-200">purge_logs</code>, <code class="font-mono text-zinc-200">get_versions</code> y <code class="font-mono text-zinc-200">save_version_note</code>.
+                                        </p>
+                                    </details>
+                                </div>
+                            </details>
+                        </article>
+                    </section>
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 3: FLUJOS DE CORREO Y PROVEEDORES            -->
+                    <!-- =================================================== -->
+                    <section id="sec-correos" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold">03</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">Flujos de Correo y Proveedores</h2>
+                                <p class="text-xs text-zinc-400">Qué servicio envía cada email, cómo entran los correos de Vinted y por qué están separados.</p>
+                            </div>
+                        </div>
+
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6 space-y-5" data-search="correos email brevo resend improvmx gmail doble opt-in doi bienvenida drop link pago suplente baja 1 clic alertas">
+                            <!-- Diagrama 3 Pilares de Email -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1.5">
+                                    <span class="font-mono text-[10px] font-bold uppercase text-emerald-300">1. Transaccional (1 a 1)</span>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">Resend SMTP / API</h3>
+                                    <p class="text-xs text-zinc-300 leading-relaxed">Envía los correos críticos e inmediatos al cliente o a ti: Doble Opt-In, bienvenida, reservas, links de pago, traspasos, OTP y alertas técnicas.</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-sky-500/10 border border-sky-500/30 space-y-1.5">
+                                    <span class="font-mono text-[10px] font-bold uppercase text-sky-300">2. Campañas &amp; CRM</span>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">Brevo (Lista VIP + Revista)</h3>
+                                    <p class="text-xs text-zinc-300 leading-relaxed">Almacena contactos confirmados, controla el cupón de bienvenida (<code class="font-mono">NUM_RESERVAS</code>) y envía los emails masivos de cada Drop o últimas horas.</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 space-y-1.5">
+                                    <span class="font-mono text-[10px] font-bold uppercase text-indigo-300">3. Inbound / Lectura</span>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase">ImprovMX + Gmail OAuth2</h3>
+                                    <p class="text-xs text-zinc-300 leading-relaxed"><code class="font-mono">*@virmarsolutions.com</code> redirige a <code class="font-mono">virmarket.oficial@gmail.com</code>. Desde allí n8n lee ventas, envíos y cancelaciones de Vinted.</p>
+                                </div>
+                            </div>
+
+                            <!-- Tabla completa de flujos -->
+                            <div class="overflow-x-auto rounded-xl border border-zinc-800">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-obsidian-elevated font-mono text-[10px] uppercase text-zinc-400">
+                                        <tr>
+                                            <th class="py-2.5 px-3">Correo / Evento</th>
+                                            <th class="py-2.5 px-3">Proveedor</th>
+                                            <th class="py-2.5 px-3">Cuándo se dispara</th>
+                                            <th class="py-2.5 px-3">Efecto clave</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-zinc-800 text-zinc-300">
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">1. Confirmación Doble Opt-In</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend</td>
+                                            <td class="py-2.5 px-3">Al enviar email en Landing QR o Revista</td>
+                                            <td class="py-2.5 px-3">Crea fila <code class="font-mono">PENDING</code> (caduca en 48h). No entra en Brevo hasta confirmar.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">2. Bienvenida + Guía PDF + -10%</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend</td>
+                                            <td class="py-2.5 px-3">Al pulsar el enlace de verificación DOI</td>
+                                            <td class="py-2.5 px-3">Pasa a <code class="font-mono">CONFIRMED</code>, da alta en Brevo y entrega Guía PDF + enlace baja 1 clic.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">3. Lanzamiento de Drop Multi-Prenda</td>
+                                            <td class="py-2.5 px-3 font-mono text-sky-300">Brevo</td>
+                                            <td class="py-2.5 px-3">Desde Pestaña 1 (<em>Publicar + Enviar</em>)</td>
+                                            <td class="py-2.5 px-3">1 único correo HTML con las prendas del Drop hacia la Lista VIP (ID: 3).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">4. Recordatorio Últimas Horas</td>
+                                            <td class="py-2.5 px-3 font-mono text-sky-300">Brevo</td>
+                                            <td class="py-2.5 px-3">Botón <em>⏳ Recordatorio</em> en Pestaña 1</td>
+                                            <td class="py-2.5 px-3">Filtra y muestra solo prendas que siguen <code class="font-mono">DISPONIBLE</code>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">5. Confirmación Reserva / Lote + Aviso Admin</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend</td>
+                                            <td class="py-2.5 px-3">Al reservar en el Escaparate VIP</td>
+                                            <td class="py-2.5 px-3">Confirma resumen al cliente y te envía enlace directo a tu panel.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">6. Link Directo de Pago Vinted</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend</td>
+                                            <td class="py-2.5 px-3">Botón <em>📩 Enviar link de pago</em> en Pestaña 2</td>
+                                            <td class="py-2.5 px-3">Envía al comprador el enlace exacto del anuncio o lote listo en Vinted.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">7. Traspaso a Suplente</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend</td>
+                                            <td class="py-2.5 px-3">Al promover cola desde Pestaña 2</td>
+                                            <td class="py-2.5 px-3">Avisa al suplente con hora límite (<code class="font-mono">Europe/Madrid</code>) y botón directo a Vinted.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">8. Vigilante 24h &amp; Alertas Error</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend</td>
+                                            <td class="py-2.5 px-3">Cron cada 15m o fallo en n8n/scripts</td>
+                                            <td class="py-2.5 px-3">Te avisa a ti (email + Telegram) cuando vence un Drop o falla un flujo.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 px-3 font-semibold text-white">9. Confirmación de Baja RGPD</td>
+                                            <td class="py-2.5 px-3 font-mono text-emerald-300">Resend / Web</td>
+                                            <td class="py-2.5 px-3">Al pulsar el pie de baja en 1 clic</td>
+                                            <td class="py-2.5 px-3">Marca <code class="font-mono">REVOKED</code> en Supabase y bloquea (<code class="font-mono">emailBlacklisted</code>) en Brevo.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3.5">
+                                <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                    <span>⚙️ Detalle técnico (subflujo de envío, marca blanca y remitente)</span>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 tech-chevron transition-transform"></i>
+                                </summary>
+                                <div class="mt-2.5 pt-2.5 border-t border-zinc-800 text-xs text-zinc-400 space-y-1.5">
+                                    <p>• <strong>Subflujo maestro Resend:</strong> <code class="font-mono text-zinc-200">Enviar Email con Resend (eyhzmUxLUecH8W8o)</code> enviando como <code class="font-mono text-zinc-200">VirMarket &lt;contacto@virmarsolutions.com&gt;</code> con <code class="font-mono text-zinc-200">appendAttribution: false</code> (100% marca blanca, sin pie de n8n).</p>
+                                    <p>• <strong>Doble Opt-In y Baja:</strong> Gestionados por <code class="font-mono text-zinc-200">confirmar_doi_y_baja_rgpd_virmarket (Zo3msiFAgp00hJVh)</code>.</p>
+                                    <p>• <strong>Segmentación en Brevo:</strong> Lista 3 (<code class="font-mono text-zinc-200">VirMarket - Club VIP Drops</code>) para QR/escaparate y lista separada <code class="font-mono text-zinc-200">Pulso Cotidiano - Revista</code> para lectores editoriales.</p>
+                                </div>
+                            </details>
+                        </article>
+                    </section>
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 4: AUTOMATIZACIONES, BOTS Y BASE DE DATOS    -->
+                    <!-- =================================================== -->
+                    <section id="sec-automatizaciones" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold">04</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">Automatizaciones, Bots de Telegram y Base de Datos</h2>
+                                <p class="text-xs text-zinc-400">Cómo trabajan juntos n8n, Supabase, GitHub CDN y tus 3 bots de Telegram.</p>
+                            </div>
+                        </div>
+
+                        <!-- Bots de Telegram -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6 space-y-4" data-search="telegram bots ingesta privada canal @virmarket_club alertas @virmarsolutions_bot /drop /estado deshacer">
+                            <h3 class="font-display text-base font-bold text-white uppercase flex items-center gap-2">
+                                <i aria-hidden="true" data-lucide="send" class="w-4 h-4 text-sky-300"></i>
+                                Tus 3 Bots de Telegram (Aislamiento Estricto)
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30 font-bold">1. PRIVADO · INGESTA</span>
+                                    <h4 class="font-display font-bold text-white uppercase">Bot Importador Móvil</h4>
+                                    <p class="text-zinc-400 leading-relaxed">Solo responde a tu <code class="font-mono">TELEGRAM_ADMIN_CHAT_ID</code>. Compartes una URL desde la app de Vinted y en segundos clona fotos y guarda la prenda.</p>
+                                    <p class="text-zinc-300 font-mono text-[11px]">Comandos: <code class="text-acid">/drop</code>, <code class="text-acid">/estado</code>, <code class="text-acid">/ayuda</code> y botón <code class="text-rose-300">🗑️ Deshacer</code>.</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-bold">2. PÚBLICO · COMERCIAL</span>
+                                    <h4 class="font-display font-bold text-white uppercase">@virmarket_club_bot</h4>
+                                    <p class="text-zinc-400 leading-relaxed">Publica las prendas sobrantes tras las 24h en el canal <code class="font-mono">@virmarket_club</code> con foto HD, texto editable (generado por Gemini Flash o plantilla offline) y botón directo a Vinted.</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/30 font-bold">3. PRIVADO · DEVOPS</span>
+                                    <h4 class="font-display font-bold text-white uppercase">@virmarsolutions_bot</h4>
+                                    <p class="text-zinc-400 leading-relaxed">Canal exclusivo de alertas técnicas en tiempo real: te avisa al instante si falla cualquier workflow de n8n, un script local de publicación o el monitor de disponibilidad.</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Mapa de Workflows n8n y Supabase -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6 space-y-4" data-search="n8n workflows supabase tablas rpc bloqueo concurrencia race condition vigilante fin drop alertas">
+                            <h3 class="font-display text-base font-bold text-white uppercase flex items-center gap-2">
+                                <i aria-hidden="true" data-lucide="cpu" class="w-4 h-4 text-acid"></i>
+                                Mapa de Automatizaciones en n8n y Concurrencia en Supabase
+                            </h3>
+                            <p class="text-xs text-zinc-300 leading-relaxed">
+                                Ninguna página web se conecta directamente a la base de datos: todas hablan con webhooks de <strong>n8n</strong> (en Easypanel), que aplican reglas de negocio, bloqueos de seguridad y llaman a <strong>Supabase</strong>. Si dos personas pulsan <em>Reservar</em> a la vez sobre la misma prenda, PostgreSQL bloquea la fila (<code class="font-mono text-acid">FOR UPDATE</code>): la primera reserva y la segunda recibe aviso de que acaba de ocuparse.
+                            </p>
+
+                            <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3.5" open>
+                                <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                    <span>⚙️ Detalle técnico (Inventario oficial de workflows n8n y tablas Supabase)</span>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 tech-chevron transition-transform"></i>
+                                </summary>
+                                <div class="mt-3 pt-3 border-t border-zinc-800 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-zinc-400">
+                                    <div class="space-y-1">
+                                        <p class="font-bold text-zinc-200 uppercase font-mono text-[11px]">Workflows Operativos n8n:</p>
+                                        <p>• <code class="font-mono text-zinc-200">Captar Lead QR Club VirMarket</code> (<code class="font-mono">DMMbOtjyfFe8lAvo</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Catalogo Publico Drop VirMarket</code> (<code class="font-mono">NF49VxA9FVYH1duJ</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Procesar Reserva Drop VirMarket</code> (<code class="font-mono">1WVVnCg2Axj2kS0l</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Autenticar Admin VirMarket</code> (<code class="font-mono">rXZjFi4KPhST5KMB</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Gestionar Drops Admin VirMarket</code> (<code class="font-mono">AjGd1oCMKMwcrIJf</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Difusion Social y Telegram</code> (<code class="font-mono">5KBbJIESCn6KrS44</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Importacion Movil Telegram</code> (<code class="font-mono">QnAN498lejhnBCyH</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Confirmar DOI y Baja RGPD</code> (<code class="font-mono">Zo3msiFAgp00hJVh</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Vigilante Fin de Drop 24h</code> (<code class="font-mono">7vzoUVj8Ar3mFD6y</code>, cada 15 min, máx 2 avisos)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Notificador Central de Errores</code> (<code class="font-mono">uLMdWFNCxneNHpih</code>)</p>
+                                        <p>• <code class="font-mono text-zinc-200">Enviar Email con Resend</code> (<code class="font-mono">eyhzmUxLUecH8W8o</code>)</p>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <p class="font-bold text-zinc-200 uppercase font-mono text-[11px]">Tablas y RPCs en Supabase:</p>
+                                        <p>• <code class="font-mono text-zinc-200">virmarket_config</code>: reglas descuento, Drop activo, hash admin, metadata CRM y sync.</p>
+                                        <p>• <code class="font-mono text-zinc-200">virmarket_prendas</code>: inventario, estados, fotos, colas y datos financieros.</p>
+                                        <p>• <code class="font-mono text-zinc-200">virmarket_consents</code>: registro probatorio RGPD inmutable.</p>
+                                        <p>• <code class="font-mono text-zinc-200">virmarket_logs</code> y <code class="font-mono text-zinc-200">virmarket_versions</code>: auditoría y releases.</p>
+                                        <p>• RPCs atómicas: <code class="font-mono text-zinc-200">virmarket_lock_reservation</code>, <code class="font-mono text-zinc-200">virmarket_append_waitlist</code>, <code class="font-mono text-zinc-200">virmarket_allocate_import_slot</code>, <code class="font-mono text-zinc-200">virmarket_upsert_version</code>.</p>
+                                    </div>
+                                </div>
+                            </details>
+                        </article>
+                    </section>
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 5: ECOSISTEMA PÚBLICO Y EDITORIAL            -->
+                    <!-- =================================================== -->
+                    <section id="sec-ecosistema" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold">05</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">Ecosistema Público y Editorial</h2>
+                                <p class="text-xs text-zinc-400">Cómo interactúan la Landing QR, las Tarjetas impresas, el Escaparate VIP y la Revista Pulso Cotidiano.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-2.5" data-search="index landing qr escaparate vip aislamiento faqs">
+                                <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                    <i aria-hidden="true" data-lucide="globe" class="w-4 h-4 text-acid"></i>
+                                    Landing QR y Escaparate VIP (index.html)
+                                </h3>
+                                <p class="text-xs text-zinc-300 leading-relaxed">
+                                    Un único archivo con dos modos aislados: en la <strong>Landing QR</strong> (por defecto o <code class="font-mono">?landing=1</code>) el visitante solo ve el formulario de alta (email + RGPD) con el combo Guía PDF + descuento dinámico, sin enlaces al Drop ni a <code class="font-mono">admin.html</code>. Solo con <code class="font-mono">?drop=...</code> o <code class="font-mono">?escaparate=1</code> accede al catálogo 24h y la barra flotante de Lote VIP. Ambos modos comparten el bloque <code class="font-mono">#faqs</code>.
+                                </p>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-2.5" data-search="tarjeta qr imprimir a6 tarjeta visita eco blanco negro">
+                                <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                    <i aria-hidden="true" data-lucide="qr-code" class="w-4 h-4 text-acid"></i>
+                                    Tarjetas QR Imprimibles (tarjeta_qr.html)
+                                </h3>
+                                <p class="text-xs text-zinc-300 leading-relaxed">
+                                    Genera folios A4 listos para imprimir con el QR hacia la Landing: formato <strong>Postal A6 (4 por hoja)</strong> o <strong>Tarjeta de Visita (8 por hoja)</strong> en 3 estilos: <em>Dark Streetwear</em> (imprenta), <em>Eco Color</em> y <em>Eco Blanco y Negro</em> (escala de grises para impresora doméstica). Incluye micro-nota de condiciones dinámicas para que nunca caduquen.
+                                </p>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-2.5" data-search="revista pulso cotidiano hostinger armario tocador hogar bienestar farmasi vinted">
+                                <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                    <i aria-hidden="true" data-lucide="newspaper" class="w-4 h-4 text-acid"></i>
+                                    Revista Pulso Cotidiano (Hostinger)
+                                </h3>
+                                <p class="text-xs text-zinc-300 leading-relaxed">
+                                    Portal editorial público en <code class="font-mono">pulsocotidiano.virmarsolutions.com</code> con 4 pilares (<em>Armario Inteligente</em>, <em>Tocador Esencial</em>, <em>Hogar Práctico</em>, <em>Bienestar Diario</em>). Muestra solo prendas sobrantes de drops ya cerrados (vía endpoint público aislado) y fichas curadas de Farmasi España. <strong>Nunca enlaza al Escaparate VIP 24h ni a admin.html.</strong>
+                                </p>
+                                <details class="tech-details rounded-lg bg-obsidian-elevated border border-zinc-800 p-2.5 text-xs text-zinc-400">
+                                    <summary class="font-mono font-bold text-zinc-300">⚙️ Detalle técnico</summary>
+                                    <p class="mt-1.5">Compilada por <code class="font-mono text-zinc-200">scripts/generar_revista_pulso.py</code> y subida a Hostinger con <code class="font-mono text-zinc-200">scripts/publicar_revista_hostinger.py</code>. Feed Vinted: <code class="font-mono text-zinc-200">GET /webhook/pulso-escaparate-publico</code>.</p>
+                                </details>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-2.5" data-search="umami analitica privacidad sin cookies privacidad.html">
+                                <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                    <i aria-hidden="true" data-lucide="activity" class="w-4 h-4 text-acid"></i>
+                                    Analítica Umami &amp; Privacidad
+                                </h3>
+                                <p class="text-xs text-zinc-300 leading-relaxed">
+                                    <strong>Umami</strong> (<code class="font-mono">stats.virmarsolutions.com</code>) mide visitas, orígenes UTM (ej. escaneos de tarjetas QR) y clics salientes sin usar cookies invasivas ni banners molestos. La información legal y ejercicio de derechos (<code class="font-mono">contacto@virmarsolutions.com</code>) vive en <code class="font-mono">privacidad.html</code>.
+                                </p>
+                            </article>
+                        </div>
+                    </section>
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 6: SEGURIDAD, RGPD, BACKUPS Y VERSIONES      -->
+                    <!-- =================================================== -->
+                    <section id="sec-seguridad" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-acid text-obsidian font-mono text-xs font-bold">06</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">Seguridad, RGPD, Backups 3-2-1 y Publicación</h2>
+                                <p class="text-xs text-zinc-400">Cómo están blindados los datos, cómo se hacen las copias de seguridad y cómo se despliegan cambios.</p>
+                            </div>
+                        </div>
+
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 sm:p-6 space-y-4" data-search="seguridad rls supabase rgpd doble opt-in inmutable baja 1 clic backups 3-2-1 google drive restaurar publicar_web version_sync guarda temas">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-zinc-300 leading-relaxed">
+                                <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                    <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                        <i aria-hidden="true" data-lucide="shield-check" class="w-4 h-4 text-emerald-300"></i>
+                                        Blindaje Supabase &amp; RGPD Inmutable
+                                    </h3>
+                                    <p>• <strong>RLS activo en todas las tablas:</strong> El rol anónimo (<code class="font-mono">anon</code>) tiene acceso bloqueado; solo n8n opera con <code class="font-mono">service_role</code>.</p>
+                                    <p>• <strong>Registro probatorio (<code class="font-mono">virmarket_consents</code>):</strong> Guarda IP, hora UTC, versión de política y texto aceptado en estados <code class="font-mono">PENDING → CONFIRMED → REVOKED</code>. Un trigger en PostgreSQL impide borrar o alterar pruebas históricas.</p>
+                                    <p>• <strong>Baja en 1 clic:</strong> Todos los correos incluyen enlace directo que revoca el consentimiento y pone en lista negra en Brevo al instante.</p>
+                                </div>
+
+                                <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                    <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                        <i aria-hidden="true" data-lucide="hard-drive" class="w-4 h-4 text-amber-300"></i>
+                                        Copias de Seguridad (Regla 3-2-1)
+                                    </h3>
+                                    <p>El script <code class="font-mono text-acid">scripts/backup_ecosistema_total.py</code> genera 3 copias en 2 soportes (Local + Git Privado + Google Drive <code class="font-mono">Backups_VirMarket/</code>):</p>
+                                    <p>• <strong>Workflows n8n:</strong> Se sanitizan automáticamente (quitando tokens y claves) para poder guardarse seguros en Git.</p>
+                                    <p>• <strong>Datos Supabase, Consentimientos y Contactos Brevo:</strong> Se guardan en Local + Google Drive, pero quedan <strong>excluidos de Git</strong> (<code class="font-mono">.gitignore</code>) por RGPD.</p>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2 text-xs text-zinc-300 leading-relaxed">
+                                <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
+                                    <i aria-hidden="true" data-lucide="rocket" class="w-4 h-4 text-acid"></i>
+                                    Despliegue Web, Caché PWA y Temas Claro / Oscuro
+                                </h3>
+                                <p>• <strong>Publicación segura (<code class="font-mono">scripts/publicar_web.py</code>):</strong> Antes de subir los archivos públicos al repo de GitHub Pages (<code class="font-mono">Encoder2000/virmarket-vip</code>), escanea que no haya API keys ni secretos, conserva intacta la carpeta <code class="font-mono">drops/</code> de fotos y recuerda si hay commits sin etiquetar con <code class="font-mono">version_sync.py</code>.</p>
+                                <p>• <strong>Tema sincronizado:</strong> Todas las pantallas privadas y VIP (<code class="font-mono">index</code>, <code class="font-mono">admin</code>, <code class="font-mono">tarjeta_qr</code>, <code class="font-mono">guia</code>) comparten la preferencia en <code class="font-mono">localStorage.getItem('vm_theme')</code>.</p>
+                            </div>
+                        </article>
+                    </section>
+
+                    <!-- =================================================== -->
+                    <!-- BLOQUE 7: ¿QUÉ HAGO SI...? (TROUBLESHOOTING)        -->
+                    <!-- =================================================== -->
+                    <section id="sec-troubleshooting" class="guide-section scroll-mt-20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono text-xs font-bold">07</span>
+                            <div>
+                                <h2 class="font-display text-xl font-bold text-white uppercase">¿Qué hago si...? (Resolución Rápida de Problemas)</h2>
+                                <p class="text-xs text-zinc-400">Soluciones directas paso a paso para los incidentes cotidianos más probables.</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="problema contrasena sesion caducada otp gmail login no entro">
+                                <details class="guide-accordion">
+                                    <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40">
+                                        <span class="font-display text-sm font-bold text-white">🔐 No recuerdo la contraseña o me pide volver a entrar</span>
+                                        <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                    </summary>
+                                    <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                                        <p>1. En la pantalla de login de <code class="font-mono">admin.html</code>, pulsa cambiar/restablecer contraseña con código OTP.</p>
+                                        <p>2. Recibirás un código de 6 dígitos (válido 10 min) únicamente en <code class="font-mono text-acid">virmarket.oficial@gmail.com</code>.</p>
+                                        <p>3. Introduce el código y define tu nueva clave (mín. 6 caracteres). Si el fallo fue temporal de red, usa el botón <em>«Reintentar Conexión»</em> sin borrar tu sesión.</p>
+                                    </div>
+                                </details>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="problema correo no llega email spam doble opt-in brevo resend blacklist">
+                                <details class="guide-accordion">
+                                    <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40">
+                                        <span class="font-display text-sm font-bold text-white">📧 Un cliente dice que no le llega el correo de bienvenida, Drop o link de pago</span>
+                                        <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                    </summary>
+                                    <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                                        <p>1. Pídele revisar <strong>Spam / Promociones</strong> buscando <code class="font-mono">contacto@virmarsolutions.com</code>.</p>
+                                        <p>2. Si se apuntó en la Landing QR pero no pulsó el botón del primer correo de <strong>Doble Opt-In</strong> (caduca a las 48h), todavía no está dado de alta en Brevo: basta con que vuelva a enviar su email en la Landing y confirme el correo.</p>
+                                        <p>3. Entra en <strong>5. Logs</strong> y filtra por <code class="font-mono">LEAD_QR</code> o <code class="font-mono">RESERVA_VIP</code> para comprobar si hubo algún error de envío o si el usuario se dio de baja previamente (<code class="font-mono">REVOKED</code>).</p>
+                                    </div>
+                                </details>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="problema bot telegram falla importar url 404 vinted ocultar">
+                                <details class="guide-accordion">
+                                    <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40">
+                                        <span class="font-display text-sm font-bold text-white">🤖 El bot de Telegram da error al importar una prenda de Vinted</span>
+                                        <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                    </summary>
+                                    <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                                        <p>1. <strong>REGLA CRÍTICA:</strong> Si ves <code class="font-mono text-rose-300">❌ Error. NO ocultes todavía en Vinted</code>, déjala visible en Vinted.</p>
+                                        <p>2. Comprueba que la prenda sigue pública (no oculta) y vuelve a compartir el enlace; si dice que ya está importada como <code class="font-mono">REF-XXX</code>, usa el botón del propio mensaje para abrirla y ocultarla.</p>
+                                        <p>3. Como plan B inmediato, pega la URL en la caja de <strong>1. Drops</strong> en <code class="font-mono">admin.html</code> o súbela manualmente con sus fotos.</p>
+                                    </div>
+                                </details>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="problema venta vinted no concilia cancelacion reembolso anuncio fantasma">
+                                <details class="guide-accordion">
+                                    <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40">
+                                        <span class="font-display text-sm font-bold text-white">🛍️ Una venta de Vinted no aparece en el ERP o sale como «Pedido Cancelado»</span>
+                                        <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                    </summary>
+                                    <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                                        <p>1. Abre <strong>3. Registro → Conciliar Vinted</strong> y revisa que la fecha de corte (<code class="font-mono">syncFromDate</code>) no sea posterior al correo de venta.</p>
+                                        <p>2. Asegúrate de que el correo de Vinted llegó a <code class="font-mono">virmarket.oficial@gmail.com</code> (directo o reenviado vía <code class="font-mono">contacto@virmarsolutions.com</code>).</p>
+                                        <p>3. Si aparece marcada como <code class="font-mono text-rose-300">🚨 PEDIDO CANCELADO / REEMBOLSO</code>, elige <em>«Anular y Ocultar»</em> (si ya no la vendes) o <em>«Pasar a Disponible»</em> (si vuelve al stock) para que el sistema limpie el cobro y silencie ese evento.</p>
+                                    </div>
+                                </details>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="problema alerta error telegram n8n email logs revisado">
+                                <details class="guide-accordion">
+                                    <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40">
+                                        <span class="font-display text-sm font-bold text-white">🚨 Recibo una alerta roja de error por Telegram (@virmarsolutions_bot) o email</span>
+                                        <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                    </summary>
+                                    <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                                        <p>1. Abre <strong>5. Logs → Auditoría y Errores</strong> y filtra por <code class="font-mono text-rose-300">❌ ERROR</code>.</p>
+                                        <p>2. Despliega el evento para ver el mensaje y el <em>payload</em> (ya viene sanitizado sin contraseñas).</p>
+                                        <p>3. Pulsa el enlace directo a la ejecución de n8n que venía en la alerta de Telegram/Email para ver el nodo rojo exacto. Cuando lo corrijas, pulsa <strong>Marcar revisado</strong> en Logs para limpiar el contador rojo.</p>
+                                    </div>
+                                </details>
+                            </article>
+
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="problema web no actualiza cache service worker sw publicar_web">
+                                <details class="guide-accordion">
+                                    <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40">
+                                        <span class="font-display text-sm font-bold text-white">🔄 Hemos hecho un cambio en la web pero en el móvil sigo viendo la versión vieja</span>
+                                        <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                    </summary>
+                                    <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                                        <p>1. Confirma que se ejecutó <code class="font-mono">scripts/publicar_web.py</code> (para actualizar el repo público <code class="font-mono">virmarket-vip</code> en GitHub Pages) y que subió el número de <code class="font-mono">CACHE_NAME</code> en <code class="font-mono">sw.js</code>.</p>
+                                        <p>2. GitHub Pages tarda ~1-2 minutos en propagar. Cierra y reabre la PWA (o recarga con <code class="font-mono">Ctrl+F5</code> en PC) para que el Service Worker sirva la nueva versión.</p>
+                                    </div>
+                                </details>
+                            </article>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <!-- Pie de página de la Guía -->
+            <footer class="pt-6 border-t border-obsidian-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-400 font-mono">
+                <span>VirMarket Studio · Guía Viva sincronizada con <code class="text-acid">directivas/directiva_guia_usuario.md</code></span>
+                <a href="admin.html" class="text-acid hover:underline">← Volver al Panel de Administración</a>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const WEBHOOK_ADMIN_AUTH_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin-auth';
+        const urlParams = new URLSearchParams(window.location.search);
+
+        function getStoredPassword() {
+            try {
+                return localStorage.getItem('vm_admin_session_pwd') || sessionStorage.getItem('vm_admin_session_pwd') || '';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function setStoredPassword(pwd) {
+            try { localStorage.setItem('vm_admin_session_pwd', pwd); } catch (e) {}
+            try { sessionStorage.setItem('vm_admin_session_pwd', pwd); } catch (e) {}
+        }
+
+        function clearStoredPassword() {
+            try { localStorage.removeItem('vm_admin_session_pwd'); } catch (e) {}
+            try { sessionStorage.removeItem('vm_admin_session_pwd'); } catch (e) {}
+        }
+
+        function initThemeEngine() {
+            const btn = document.getElementById('themeToggleBtn');
+            const metaTheme = document.getElementById('metaThemeColor') || document.querySelector('meta[name="theme-color"]');
+
+            function applyTheme(mode) {
+                if (mode === 'light') {
+                    document.documentElement.classList.add('theme-light');
+                    document.documentElement.classList.remove('dark');
+                    if (metaTheme) metaTheme.setAttribute('content', '#F8FAFC');
+                    if (btn) {
+                        btn.setAttribute('title', 'Cambiar a modo oscuro');
+                        btn.setAttribute('aria-label', 'Cambiar a modo oscuro');
+                        btn.innerHTML = '<i aria-hidden="true" data-lucide="moon" class="w-3.5 h-3.5 text-slate-700"></i><span class="font-mono text-[11px] font-semibold text-slate-800 hidden sm:inline">Modo Oscuro</span>';
+                    }
+                } else {
+                    document.documentElement.classList.remove('theme-light');
+                    document.documentElement.classList.add('dark');
+                    if (metaTheme) metaTheme.setAttribute('content', '#09090B');
+                    if (btn) {
+                        btn.setAttribute('title', 'Cambiar a modo claro');
+                        btn.setAttribute('aria-label', 'Cambiar a modo claro');
+                        btn.innerHTML = '<i aria-hidden="true" data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i><span class="font-mono text-[11px] font-semibold text-zinc-200 hidden sm:inline">Modo Claro</span>';
+                    }
+                }
+                if (window.lucide) lucide.createIcons();
+            }
+
+            const current = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
+            applyTheme(current);
+
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const next = document.documentElement.classList.contains('theme-light') ? 'dark' : 'light';
+                    try { localStorage.setItem('vm_theme', next); } catch (e) {}
+                    applyTheme(next);
+                });
+            }
+        }
+
+        function setGuideAuthFeedback(msg, isError = true) {
+            const el = document.getElementById('guideAuthFeedback');
+            if (!el) return;
+            el.textContent = msg;
+            el.className = `mt-3 p-3 rounded-xl text-xs ${
+                isError
+                    ? 'bg-rose-950/60 border border-rose-500/50 text-rose-200'
+                    : 'bg-acid/15 border border-acid/40 text-acid'
+            }`;
+            el.classList.remove('hidden');
+        }
+
+        function showGuideApp() {
+            document.getElementById('authCheckingSection')?.classList.add('hidden');
+            document.getElementById('authGateSection')?.classList.add('hidden');
+            document.getElementById('guideApp')?.classList.remove('hidden');
+            if (window.lucide) lucide.createIcons();
+            initGuideInteractions();
+        }
+
+        function showAuthGate(message = '') {
+            document.getElementById('authCheckingSection')?.classList.add('hidden');
+            document.getElementById('guideApp')?.classList.add('hidden');
+            document.getElementById('authGateSection')?.classList.remove('hidden');
+            if (message) setGuideAuthFeedback(message, true);
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function verifySessionPassword(pwd) {
+            const res = await fetch(WEBHOOK_ADMIN_AUTH_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'verify_login', password: pwd })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 401 || data.ok === false) {
+                const err = new Error(data.message || 'Sesión caducada o contraseña incorrecta.');
+                err.status = 401;
+                throw err;
+            }
+            if (!res.ok || !data.authenticated) {
+                const err = new Error(data.message || 'No se pudo verificar la sesión.');
+                err.status = res.status || 500;
+                throw err;
+            }
+            return true;
+        }
+
+        async function bootstrapAuth() {
+            if (urlParams.get('mock') === '1') {
+                showGuideApp();
+                return;
+            }
+            const savedPwd = getStoredPassword();
+            if (!savedPwd) {
+                showAuthGate();
+                return;
+            }
+            try {
+                await verifySessionPassword(savedPwd);
+                showGuideApp();
+            } catch (err) {
+                if (err.status === 401) {
+                    clearStoredPassword();
+                    showAuthGate('Tu sesión ha caducado o la contraseña cambió. Inicia sesión de nuevo.');
+                } else {
+                    const txt = document.getElementById('authCheckingText');
+                    const retry = document.getElementById('authRetryWrap');
+                    if (txt) txt.textContent = 'No se pudo conectar con el servidor para verificar tu sesión.';
+                    if (retry) retry.classList.remove('hidden');
+                }
+            }
+        }
+
+        document.getElementById('retryAuthBtn')?.addEventListener('click', () => {
+            const txt = document.getElementById('authCheckingText');
+            const retry = document.getElementById('authRetryWrap');
+            if (txt) txt.textContent = 'Reintentando verificación de sesión...';
+            if (retry) retry.classList.add('hidden');
+            bootstrapAuth();
+        });
+
+        document.getElementById('guideLoginForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('guidePasswordInput');
+            const btn = document.getElementById('guideLoginBtn');
+            const pwd = input ? input.value : '';
+            if (!pwd) {
+                setGuideAuthFeedback('Introduce tu contraseña de administrador.', true);
+                return;
+            }
+            btn.disabled = true;
+            btn.textContent = 'Verificando...';
+            try {
+                await verifySessionPassword(pwd);
+                setStoredPassword(pwd);
+                showGuideApp();
+            } catch (err) {
+                setGuideAuthFeedback(err.message || 'Contraseña incorrecta.', true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Verificar y Abrir Guía';
+            }
+        });
+
+        let guideInitialized = false;
+        function initGuideInteractions() {
+            if (guideInitialized) return;
+            guideInitialized = true;
+
+            const searchInput = document.getElementById('guideSearchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const countBadge = document.getElementById('searchCountBadge');
+            const noResults = document.getElementById('noResultsBanner');
+            const cards = Array.from(document.querySelectorAll('.guide-card'));
+            const sections = Array.from(document.querySelectorAll('.guide-section'));
+            const accordions = Array.from(document.querySelectorAll('details.guide-accordion'));
+            const techDetails = Array.from(document.querySelectorAll('details.tech-details'));
+
+            function normalizeText(str) {
+                return String(str || '')
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '');
+            }
+
+            function runSearch(rawQuery) {
+                const query = normalizeText(rawQuery.trim());
+                if (!query) {
+                    cards.forEach(c => c.classList.remove('hidden'));
+                    sections.forEach(s => s.classList.remove('hidden'));
+                    noResults?.classList.add('hidden');
+                    clearBtn?.classList.add('hidden');
+                    countBadge?.classList.add('hidden');
+                    return;
+                }
+
+                const tokens = query.split(/\s+/).filter(Boolean);
+                let visibleCards = 0;
+
+                cards.forEach(card => {
+                    const haystack = normalizeText((card.dataset.search || '') + ' ' + card.textContent);
+                    const matches = tokens.every(t => haystack.includes(t));
+                    if (matches) {
+                        card.classList.remove('hidden');
+                        visibleCards++;
+                        const acc = card.querySelector('details.guide-accordion');
+                        if (acc) acc.open = true;
+                        const innerTech = card.querySelector('details.tech-details');
+                        if (innerTech && tokens.some(t => normalizeText(innerTech.textContent).includes(t))) {
+                            innerTech.open = true;
+                        }
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                sections.forEach(sec => {
+                    const hasVisible = sec.querySelector('.guide-card:not(.hidden)');
+                    sec.classList.toggle('hidden', !hasVisible);
+                });
+
+                clearBtn?.classList.remove('hidden');
+                if (countBadge) {
+                    countBadge.textContent = `${visibleCards} ${visibleCards === 1 ? 'resultado' : 'resultados'}`;
+                    countBadge.classList.remove('hidden');
+                }
+                noResults?.classList.toggle('hidden', visibleCards > 0);
+            }
+
+            searchInput?.addEventListener('input', (e) => runSearch(e.target.value));
+            clearBtn?.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                runSearch('');
+                searchInput?.focus();
+            });
+            document.getElementById('resetNoResultsBtn')?.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                runSearch('');
+                searchInput?.focus();
+            });
+
+            // Atajo teclado '/' para buscar rápido
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement !== searchInput && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+                    e.preventDefault();
+                    searchInput?.focus();
+                }
+            });
+
+            document.getElementById('expandAllBtn')?.addEventListener('click', () => {
+                accordions.forEach(d => { d.open = true; });
+                techDetails.forEach(d => { d.open = true; });
+            });
+            document.getElementById('collapseAllBtn')?.addEventListener('click', () => {
+                accordions.forEach(d => { d.open = false; });
+                techDetails.forEach(d => { d.open = false; });
+            });
+
+            // Seguimiento de sección activa en índice lateral
+            const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
+            if ('IntersectionObserver' in window && tocLinks.length > 0) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.id;
+                            tocLinks.forEach(link => {
+                                link.classList.toggle('is-active', link.dataset.toc === id);
+                            });
+                        }
+                    });
+                }, { rootMargin: '-20% 0px -65% 0px' });
+                sections.forEach(sec => observer.observe(sec));
+            }
+        }
+
+        initThemeEngine();
+        bootstrapAuth();
+    </script>
+</body>
+</html>
