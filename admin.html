@@ -10903,7 +10903,10 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     vintedSaleStage: ev.stage || (targetStatus === 'VENDIDA' ? 'COMPLETED' : 'IN_TRANSIT'),
                     syncSource: 'VINTED_EMAIL_SYNC'
                 };
-                if (soldPrice > 0) upd.soldPriceEur = soldPrice;
+                if (soldPrice > 0) {
+                    upd.soldPriceEur = soldPrice;
+                    if (!(Number(g.priceEur) > 0)) upd.priceEur = soldPrice;
+                }
                 if (ev.buyerVinted) upd.soldToVinted = ev.buyerVinted;
                 if (g.reservedByEmail && !g.soldToEmail) upd.soldToEmail = g.reservedByEmail;
                 if (ev.soldAt && !g.soldAt) upd.soldAt = ev.soldAt;
@@ -10936,7 +10939,36 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
 
         function buildUpdatesForImportedEvents(eventsList) {
             const usedRefs = new Set((adminState.garments || []).map(g => String(g.ref || '').toUpperCase()));
-            return eventsList.map(ev => {
+            const normSyncTitle = (t) => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+            const stagePriority = { COMPLETED: 3, PAID_PENDING_SHIPMENT: 2, IN_TRANSIT: 1 };
+            const prioritized = [...(eventsList || [])].sort((a, b) => {
+                const pa = (Number(a.priceEur || 0) > 0 ? 10 : 0) + (stagePriority[a.stage] || 0);
+                const pb = (Number(b.priceEur || 0) > 0 ? 10 : 0) + (stagePriority[b.stage] || 0);
+                return pb - pa;
+            });
+
+            const seenTxIds = new Set();
+            const seenInboxBases = new Set();
+            const seenTitlesWithPrice = new Set();
+            const dedupedEvents = [];
+
+            for (const ev of prioritized) {
+                const txId = String(ev.txId || '').trim();
+                const inboxBase = String(ev.inboxUrl || '').trim().split('?')[0];
+                const titleNorm = normSyncTitle(ev.title);
+                const hasPrice = Number(ev.priceEur || 0) > 0;
+
+                if (txId && seenTxIds.has(txId)) continue;
+                if (inboxBase && seenInboxBases.has(inboxBase)) continue;
+                if (!hasPrice && ev.stage === 'IN_TRANSIT' && titleNorm && seenTitlesWithPrice.has(titleNorm)) continue;
+
+                if (txId) seenTxIds.add(txId);
+                if (inboxBase) seenInboxBases.add(inboxBase);
+                if (hasPrice && titleNorm) seenTitlesWithPrice.add(titleNorm);
+                dedupedEvents.push(ev);
+            }
+
+            return dedupedEvents.map(ev => {
                 const ref = buildDeterministicVintedRef(ev, usedRefs);
                 const title = ev.isNativeLot
                     ? `${ev.title}${ev.txTitle ? ' — ' + ev.txTitle : ''}`
