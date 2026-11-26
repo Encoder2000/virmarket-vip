@@ -758,6 +758,9 @@
                         <span class="inline-flex items-center gap-1">📜 5. Logs</span>
                         <span id="logsNavErrorBadge" class="hidden ml-1 px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-rose-500 text-white animate-pulse">0</span>
                     </button>
+                    <button type="button" data-tab="web" class="tab-btn flex-1 min-w-[85px] sm:min-w-[95px] py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl font-display font-bold text-xs sm:text-sm uppercase tracking-wide transition-colors text-zinc-300 hover:text-white">
+                        🌐 6. Web
+                    </button>
                 </div>
 
                 <!-- =============================================================== -->
@@ -2230,6 +2233,178 @@
                         </div>
                     </div><!-- Fin #logsSubViewVersions -->
                 </div>
+
+                <!-- =============================================================== -->
+                <!-- PESTAÑA 6: GESTOR WEB DE PULSO COTIDIANO (ESCAPARATES + FARMASI) -->
+                <!-- =============================================================== -->
+                <div id="tab-web" class="hidden space-y-6">
+
+                    <!-- Cabecera y Sub-pestañas de Gestor Web -->
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-acid/15 text-acid border border-acid/30 font-bold">En vivo · Supabase</span>
+                                <a href="https://pulsocotidiano.virmarsolutions.com" target="_blank" rel="noopener noreferrer" class="font-mono text-[11px] text-sky-400 hover:text-sky-300 underline inline-flex items-center gap-1">
+                                    pulsocotidiano.virmarsolutions.com <i aria-hidden="true" data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
+                            </div>
+                            <h2 class="font-display text-lg sm:text-xl font-bold text-white uppercase mt-1">Gestor Web · Pulso Cotidiano</h2>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <div class="flex items-center gap-1 p-1 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                                <button type="button" data-web-subtab="showcases" class="web-subtab-btn px-3 py-1.5 rounded-lg font-display font-bold text-xs uppercase tracking-wide bg-acid text-obsidian cursor-pointer">
+                                    🎯 Escaparates
+                                </button>
+                                <button type="button" data-web-subtab="farmasi" class="web-subtab-btn px-3 py-1.5 rounded-lg font-display font-bold text-xs uppercase tracking-wide text-zinc-300 hover:text-white cursor-pointer">
+                                    🧴 Catálogo Farmasi
+                                </button>
+                                <button type="button" data-web-subtab="guides" class="web-subtab-btn px-3 py-1.5 rounded-lg font-display font-bold text-xs uppercase tracking-wide text-zinc-300 hover:text-white cursor-pointer">
+                                    📖 Guías (Fase 2)
+                                </button>
+                            </div>
+                            <button type="button" id="webReloadBtn" class="px-3 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono text-zinc-200 flex items-center gap-1.5 transition-colors cursor-pointer">
+                                <i aria-hidden="true" data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                <span>Recargar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estado de carga o error -->
+                    <div id="webStatusBanner" class="hidden rounded-xl p-3 text-xs font-mono bg-obsidian-elevated border border-zinc-700 text-zinc-300"></div>
+
+                    <!-- SUB-VISTA 1: ESCAPARATES (4 CUADROS) -->
+                    <div id="webSubViewShowcases" class="space-y-5">
+                        <!-- Selector de Bloque -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                            <button type="button" data-web-slot="portada" class="web-slot-btn p-3 rounded-2xl border text-left transition-all cursor-pointer bg-acid/10 border-acid text-white">
+                                <div class="font-mono text-[10px] uppercase tracking-wider text-acid">Portada (/)</div>
+                                <div class="font-display font-bold text-sm mt-0.5">Favoritos de la Semana</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">3 productos Farmasi</div>
+                            </button>
+                            <button type="button" data-web-slot="armario" class="web-slot-btn p-3 rounded-2xl border text-left transition-all cursor-pointer bg-obsidian-card border-obsidian-border text-zinc-300 hover:border-zinc-600">
+                                <div class="font-mono text-[10px] uppercase tracking-wider text-emerald-400">Armario (/armario)</div>
+                                <div class="font-display font-bold text-sm mt-0.5">Selección en Vinted</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">Cola curada + banquillo</div>
+                            </button>
+                            <button type="button" data-web-slot="tocador" class="web-slot-btn p-3 rounded-2xl border text-left transition-all cursor-pointer bg-obsidian-card border-obsidian-border text-zinc-300 hover:border-zinc-600">
+                                <div class="font-mono text-[10px] uppercase tracking-wider text-amber-400">Tocador (/tocador)</div>
+                                <div class="font-display font-bold text-sm mt-0.5">Básicos Tocador</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">3 productos Farmasi</div>
+                            </button>
+                            <button type="button" data-web-slot="bienestar" class="web-slot-btn p-3 rounded-2xl border text-left transition-all cursor-pointer bg-obsidian-card border-obsidian-border text-zinc-300 hover:border-zinc-600">
+                                <div class="font-mono text-[10px] uppercase tracking-wider text-sky-400">Bienestar (/bienestar)</div>
+                                <div class="font-display font-bold text-sm mt-0.5">Rituales Nutriplus</div>
+                                <div class="text-[11px] text-zinc-400 mt-0.5">3 productos Farmasi</div>
+                            </button>
+                        </div>
+
+                        <!-- Aviso específico del bloque activo -->
+                        <div id="webSlotInfoBar" class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 text-xs text-zinc-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <span id="webSlotInfoText">Selecciona y ordena los 3 productos que aparecen en este bloque.</span>
+                            <button type="button" id="webSaveShowcaseBtn" class="shrink-0 px-4 py-2 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-acid/20 cursor-pointer">
+                                <i aria-hidden="true" data-lucide="save" class="w-3.5 h-3.5"></i>
+                                <span>Guardar Escaparate en Vivo</span>
+                            </button>
+                        </div>
+
+                        <!-- Grid de 2 columnas: Cola actual vs Catálogo disponible -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                            <!-- Izquierda: Orden actual -->
+                            <div class="lg:col-span-7 rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-display font-bold text-sm uppercase tracking-wide text-white">Orden de Publicación (#1–#3 visibles)</h3>
+                                    <span id="webSlotCountBadge" class="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">0 elementos</span>
+                                </div>
+                                <div id="webSlotCurrentList" class="space-y-2.5"></div>
+                            </div>
+
+                            <!-- Derecha: Disponibles para añadir -->
+                            <div class="lg:col-span-5 rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-display font-bold text-sm uppercase tracking-wide text-white">Disponibles para añadir</h3>
+                                    <span id="webSlotAvailCount" class="font-mono text-[11px] text-zinc-400">0</span>
+                                </div>
+                                <input type="text" id="webSlotAvailableSearch" placeholder="Buscar por nombre, marca o REF..." class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                                <div id="webSlotAvailableList" class="max-h-[460px] overflow-y-auto space-y-2 pr-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VISTA 2: CATÁLOGO FARMASI -->
+                    <div id="webSubViewFarmasi" class="hidden space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                            <div class="flex flex-wrap items-center gap-2 flex-1">
+                                <input type="text" id="webFarmasiSearch" placeholder="Buscar producto Farmasi..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                                <select id="webFarmasiPillarFilter" class="px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                    <option value="all">Todos los pilares</option>
+                                    <option value="tocador">Tocador Esencial</option>
+                                    <option value="bienestar">Bienestar Diario</option>
+                                </select>
+                            </div>
+                            <button type="button" id="webNewFarmasiBtn" class="px-4 py-2 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i aria-hidden="true" data-lucide="plus" class="w-4 h-4"></i>
+                                <span>Nuevo Producto Farmasi</span>
+                            </button>
+                        </div>
+
+                        <div id="webFarmasiGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                    </div>
+
+                    <!-- SUB-VISTA 3: GUÍAS PRÁCTICAS (EDITOR + ESTUDIO GOOGLE FLOW + IA + PUBLICACIÓN) -->
+                    <div id="webSubViewGuides" class="hidden space-y-5">
+                        <!-- Barra de acciones y estado de despliegue -->
+                        <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+                            <div class="flex flex-wrap items-center gap-2 flex-1">
+                                <input type="text" id="webGuidesSearch" placeholder="Buscar guía por título o slug..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                                <select id="webGuidesPillarFilter" class="px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                    <option value="all">Todos los pilares</option>
+                                    <option value="armario">Armario Inteligente</option>
+                                    <option value="tocador">Tocador Esencial</option>
+                                    <option value="hogar">Hogar Práctico</option>
+                                    <option value="bienestar">Bienestar Diario</option>
+                                </select>
+                                <select id="webGuidesStatusFilter" class="px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                                    <option value="all">Todos los estados</option>
+                                    <option value="published">Publicadas</option>
+                                    <option value="draft">Borradores</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div id="webDeployStatusPill" class="px-3 py-1.5 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-[11px] text-zinc-300 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-zinc-500"></span>
+                                    <span>Estado web: comprobando...</span>
+                                </div>
+                                <button type="button" id="webRefreshDeployBtn" class="p-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white cursor-pointer" title="Comprobar estado en vivo y último commit">
+                                    <i aria-hidden="true" data-lucide="activity" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" id="webNewGuideBtn" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-acid/50 text-acid font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                                    <i aria-hidden="true" data-lucide="plus" class="w-4 h-4"></i>
+                                    <span>Nueva Guía</span>
+                                </button>
+                                <button type="button" id="webPublishBtn" class="px-4 py-2 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-lg shadow-acid/20 cursor-pointer">
+                                    <i aria-hidden="true" data-lucide="rocket" class="w-4 h-4"></i>
+                                    <span>Publicar en la Web</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bloque Portada: Lecturas rápidas para aplicar hoy (#1 - #3) -->
+                        <div class="p-4 sm:p-5 rounded-2xl bg-obsidian-card border border-acid/30 space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div>
+                                    <span class="font-mono text-[10px] uppercase tracking-wider text-acid font-bold">Portada · Cuaderno de Notas</span>
+                                    <h3 class="font-display text-sm sm:text-base font-bold text-white uppercase">Lecturas rápidas para aplicar hoy (Posiciones #1–#3)</h3>
+                                </div>
+                                <span class="text-[11px] text-zinc-400">Edita cualquier guía para marcar «Destacar en Portada» o reordénalas aquí</span>
+                            </div>
+                            <div id="webHomeGuidesBar" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+                        </div>
+
+                        <!-- Listado completo de Guías -->
+                        <div id="webGuidesList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                    </div>
+
+                </div>
             </section>
         </div>
     </main>
@@ -3245,6 +3420,8 @@
         const WEBHOOK_ADMIN_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-admin';
         const WEBHOOK_SOCIAL_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/virmarket-social';
         const WEBHOOK_ANALYTICS_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/pulso-admin-analytics';
+        const WEBHOOK_PULSO_WEB_ADMIN_URL = 'https://virmarsolutions-n8n.lxoozt.easypanel.host/webhook/pulso-web-admin';
+        const PULSO_REVISTA_ORIGIN = 'https://pulsocotidiano.virmarsolutions.com';
 
         const urlParams = new URLSearchParams(window.location.search);
         const deepLinkLote = (urlParams.get('lote') || '').trim().toUpperCase();
@@ -5057,7 +5234,7 @@
         let autoPollingInterval = null;
 
         function setActiveTab(tabName) {
-            if (!['drops', 'vinted', 'registro', 'settings', 'logs'].includes(tabName)) tabName = 'drops';
+            if (!['drops', 'vinted', 'registro', 'settings', 'logs', 'web'].includes(tabName)) tabName = 'drops';
             adminState.activeTab = tabName;
             try {
                 localStorage.setItem('vm_admin_active_tab', tabName);
@@ -5065,7 +5242,7 @@
                     window.history.replaceState(null, '', `#${tabName}`);
                 }
             } catch (e) {}
-            ['drops', 'vinted', 'registro', 'settings', 'logs'].forEach(t => {
+            ['drops', 'vinted', 'registro', 'settings', 'logs', 'web'].forEach(t => {
                 const tabEl = document.getElementById(`tab-${t}`);
                 if (tabEl) tabEl.classList.toggle('hidden', t !== tabName);
             });
@@ -5087,13 +5264,15 @@
                 } else if (typeof refreshLatestVersionQuietly === 'function') {
                     refreshLatestVersionQuietly();
                 }
+            } else if (tabName === 'web' && typeof loadWebPulsoState === 'function') {
+                loadWebPulsoState(false);
             }
             lucide.createIcons();
         }
 
         window.addEventListener('hashchange', () => {
             const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
-            if (['drops', 'vinted', 'registro', 'settings', 'logs'].includes(hash) && hash !== adminState.activeTab) {
+            if (['drops', 'vinted', 'registro', 'settings', 'logs', 'web'].includes(hash) && hash !== adminState.activeTab) {
                 setActiveTab(hash);
             }
         });
@@ -13516,6 +13695,1351 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             if (cancelVerModalBtn) cancelVerModalBtn.addEventListener('click', () => document.getElementById('versionNoteModal')?.classList.add('hidden'));
             if (saveVerModalBtn) saveVerModalBtn.addEventListener('click', saveVersionNoteFromModal);
         });
+
+        // ======================== PESTAÑA 6: GESTOR WEB PULSO COTIDIANO ========================
+        const pulsoWebState = {
+            loaded: false,
+            loading: false,
+            activeSubTab: 'showcases',
+            activeSlot: 'portada',
+            products: [],
+            slots: {
+                portada: { slotKey: 'portada', itemIds: [], maxVisible: 3 },
+                armario: { slotKey: 'armario', itemIds: [], maxVisible: 3 },
+                tocador: { slotKey: 'tocador', itemIds: [], maxVisible: 3 },
+                bienestar: { slotKey: 'bienestar', itemIds: [], maxVisible: 3 }
+            },
+            eligibleVinted: [],
+            vintedByRef: {},
+            metricsByProductId: {}
+        };
+
+        function webEscHtml(str) {
+            return String(str == null ? '' : str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function resolveWebImg(src) {
+            const s = String(src || '').trim();
+            if (!s) return `${PULSO_REVISTA_ORIGIN}/assets/img/pilar-tocador.jpg`;
+            if (s.startsWith('/')) return `${PULSO_REVISTA_ORIGIN}${s}`;
+            return s;
+        }
+
+        function setWebStatus(msg, isError = false, hide = false) {
+            const box = document.getElementById('webStatusBanner');
+            if (!box) return;
+            if (hide) {
+                box.className = 'hidden';
+                box.textContent = '';
+                return;
+            }
+            box.className = `rounded-xl p-3 text-xs font-mono border ${
+                isError
+                    ? 'bg-rose-950/50 border-rose-500/40 text-rose-200'
+                    : 'bg-obsidian-elevated border-zinc-700 text-zinc-300'
+            }`;
+            box.textContent = msg;
+        }
+
+        async function callPulsoWebAdmin(action, extra = {}) {
+            const pwd = adminState.password || getStoredPassword();
+            const res = await fetch(WEBHOOK_PULSO_WEB_ADMIN_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pwd, action, ...extra })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) {
+                throw new Error(data.message || `Error HTTP ${res.status}`);
+            }
+            return data;
+        }
+
+        async function loadWebPulsoState(force = false) {
+            if (pulsoWebState.loading) return;
+            if (pulsoWebState.loaded && !force) {
+                renderWebCurrentSubView();
+                return;
+            }
+            pulsoWebState.loading = true;
+            setWebStatus('Cargando configuración de escaparates, catálogo Farmasi y métricas Umami...');
+            try {
+                const data = await callPulsoWebAdmin('get_web_state', { days: 30 });
+                pulsoWebState.products = Array.isArray(data.products) ? data.products : [];
+                pulsoWebState.slots = data.slots || pulsoWebState.slots;
+                pulsoWebState.eligibleVinted = Array.isArray(data.eligibleVinted) ? data.eligibleVinted : [];
+                pulsoWebState.vintedByRef = data.vintedByRef || {};
+                pulsoWebState.metricsByProductId = data.metricsByProductId || {};
+                pulsoWebState.loaded = true;
+                setWebStatus('', false, true);
+                renderWebCurrentSubView();
+            } catch (err) {
+                setWebStatus(`No se pudo cargar el gestor web: ${err.message}`, true);
+            } finally {
+                pulsoWebState.loading = false;
+            }
+        }
+
+        function setWebSubTab(subtab) {
+            pulsoWebState.activeSubTab = subtab;
+            document.querySelectorAll('.web-subtab-btn').forEach(btn => {
+                const isAct = btn.getAttribute('data-web-subtab') === subtab;
+                btn.className = `web-subtab-btn px-3 py-1.5 rounded-lg font-display font-bold text-xs uppercase tracking-wide cursor-pointer ${
+                    isAct ? 'bg-acid text-obsidian' : 'text-zinc-300 hover:text-white'
+                }`;
+            });
+            document.getElementById('webSubViewShowcases')?.classList.toggle('hidden', subtab !== 'showcases');
+            document.getElementById('webSubViewFarmasi')?.classList.toggle('hidden', subtab !== 'farmasi');
+            document.getElementById('webSubViewGuides')?.classList.toggle('hidden', subtab !== 'guides');
+            renderWebCurrentSubView();
+        }
+
+        function setWebActiveSlot(slotKey) {
+            pulsoWebState.activeSlot = slotKey;
+            document.querySelectorAll('.web-slot-btn').forEach(btn => {
+                const isAct = btn.getAttribute('data-web-slot') === slotKey;
+                btn.className = `web-slot-btn p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                    isAct
+                        ? 'bg-acid/10 border-acid text-white shadow-sm'
+                        : 'bg-obsidian-card border-obsidian-border text-zinc-300 hover:border-zinc-600'
+                }`;
+            });
+            renderWebSlotEditor();
+        }
+
+        function renderWebCurrentSubView() {
+            if (pulsoWebState.activeSubTab === 'showcases') {
+                renderWebSlotEditor();
+            } else if (pulsoWebState.activeSubTab === 'farmasi') {
+                renderWebFarmasiCatalog();
+            } else if (pulsoWebState.activeSubTab === 'guides') {
+                loadWebGuides(false);
+                loadWebDeployStatus();
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function getWebClickBadgeHtml(id) {
+            const clicks = Number(pulsoWebState.metricsByProductId[id] || 0);
+            return `<span class="px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-300 font-mono text-[10px] whitespace-nowrap">👁️ ${clicks} clics (30d)</span>`;
+        }
+
+        function renderWebSlotEditor() {
+            const slotKey = pulsoWebState.activeSlot;
+            const slotObj = pulsoWebState.slots[slotKey] || { slotKey, itemIds: [], maxVisible: 3 };
+            const itemIds = Array.isArray(slotObj.itemIds) ? slotObj.itemIds : [];
+
+            const infoEl = document.getElementById('webSlotInfoText');
+            if (infoEl) {
+                if (slotKey === 'armario') {
+                    infoEl.innerHTML = '<strong>Cola curada de Armario (/armario):</strong> Los puestos <strong>#1–#3</strong> se ven en la web; del <strong>#4 en adelante</strong> forman el banquillo aprobado. Si una prenda se vende o reserva, sube la siguiente de esta lista.';
+                } else if (slotKey === 'portada') {
+                    infoEl.innerHTML = '<strong>Portada («Los favoritos de esta semana»):</strong> Elige y ordena exactamente los 3 productos Farmasi destacados en la página principal.';
+                } else if (slotKey === 'tocador') {
+                    infoEl.innerHTML = '<strong>Pilar Tocador (/tocador):</strong> Elige y ordena los 3 básicos de maquillaje o cuidado facial mostrados en Tocador Esencial.';
+                } else {
+                    infoEl.innerHTML = '<strong>Pilar Bienestar (/bienestar):</strong> Elige y ordena los 3 productos Nutriplus mostrados en Bienestar Diario.';
+                }
+            }
+
+            const countBadge = document.getElementById('webSlotCountBadge');
+            if (countBadge) countBadge.textContent = `${itemIds.length} en cola`;
+
+            const prodMap = Object.fromEntries(pulsoWebState.products.map(p => [p.id, p]));
+            const currentWrap = document.getElementById('webSlotCurrentList');
+
+            if (currentWrap) {
+                if (itemIds.length === 0) {
+                    currentWrap.innerHTML = `<div class="p-6 rounded-xl bg-obsidian-elevated border border-dashed border-zinc-700 text-center text-xs text-zinc-400">${
+                        slotKey === 'armario'
+                            ? 'Tu cola curada está vacía. Añade prendas vistosas desde la columna derecha para bloquear cualquier publicación automática no deseada.'
+                            : 'No hay productos seleccionados en este escaparate. Añádelos desde la columna derecha.'
+                    }</div>`;
+                } else {
+                    const htmlParts = [];
+                    itemIds.forEach((id, idx) => {
+                        if (slotKey === 'armario' && idx === 3) {
+                            htmlParts.push(`
+                                <div class="flex items-center gap-2 py-1.5">
+                                    <div class="h-px flex-1 bg-zinc-700"></div>
+                                    <span class="font-mono text-[10px] uppercase tracking-wider text-amber-300 px-2">Banquillo curado de auto-reemplazo (#4+)</span>
+                                    <div class="h-px flex-1 bg-zinc-700"></div>
+                                </div>
+                            `);
+                        }
+
+                        let title = id;
+                        let meta = '';
+                        let img = '';
+                        let statusAlert = '';
+
+                        if (slotKey === 'armario') {
+                            const v = pulsoWebState.vintedByRef[id];
+                            if (v) {
+                                title = v.title || id;
+                                meta = `${v.ref} · ${v.brand || 'Vinted'}${v.size ? ` · Talla ${v.size}` : ''} · ${fmtEur(v.priceEur)}`;
+                                img = v.image || `${PULSO_REVISTA_ORIGIN}/assets/img/pilar-armario.jpg`;
+                                if (v.status !== 'DISPONIBLE') {
+                                    statusAlert = `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-[10px]">⚠️ ${webEscHtml(v.status)} (saltada)</span>`;
+                                } else if (v.inVipWindow) {
+                                    statusAlert = `<span class="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-[10px]">⏳ Ventana VIP 24h</span>`;
+                                }
+                            } else {
+                                statusAlert = `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-[10px]">⚠️ No disponible</span>`;
+                            }
+                        } else {
+                            const p = prodMap[id];
+                            if (p) {
+                                title = p.title;
+                                meta = `${p.pillarLabel || p.pillar} · ${p.format || p.tag}`;
+                                img = resolveWebImg(p.image);
+                                if (p.active === false) {
+                                    statusAlert = `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-[10px]">Inactivo</span>`;
+                                }
+                            } else {
+                                statusAlert = `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-[10px]">Ficha no encontrada</span>`;
+                            }
+                        }
+
+                        const isVisiblePos = idx < (slotObj.maxVisible || 3);
+                        const posBadge = isVisiblePos
+                            ? `<span class="px-2 py-0.5 rounded-lg bg-acid text-obsidian font-mono text-[11px] font-bold">#${idx + 1} Visible</span>`
+                            : `<span class="px-2 py-0.5 rounded-lg bg-zinc-800 text-zinc-300 font-mono text-[11px]">#${idx + 1} Suplente</span>`;
+
+                        htmlParts.push(`
+                            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-obsidian-elevated border ${isVisiblePos ? 'border-acid/40' : 'border-zinc-800'}">
+                                <img src="${webEscHtml(img)}" alt="${webEscHtml(title)}" class="w-16 h-12 rounded-lg object-cover bg-zinc-900 shrink-0">
+                                <div class="min-w-0 flex-1 space-y-1">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        ${posBadge}
+                                        ${getWebClickBadgeHtml(id)}
+                                        ${statusAlert}
+                                    </div>
+                                    <div class="text-xs font-semibold text-white truncate">${webEscHtml(title)}</div>
+                                    <div class="text-[11px] text-zinc-400 truncate">${webEscHtml(meta)}</div>
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <button type="button" data-web-move="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''} class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 text-zinc-200 text-xs cursor-pointer" title="Subir posición">↑</button>
+                                    <button type="button" data-web-move="down" data-idx="${idx}" ${idx === itemIds.length - 1 ? 'disabled' : ''} class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 text-zinc-200 text-xs cursor-pointer" title="Bajar posición">↓</button>
+                                    <button type="button" data-web-remove="${idx}" class="p-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs cursor-pointer" title="Quitar de este bloque">✕</button>
+                                </div>
+                            </div>
+                        `);
+                    });
+                    currentWrap.innerHTML = htmlParts.join('');
+                }
+            }
+
+            // Lista derecha: disponibles para añadir
+            const searchQ = (document.getElementById('webSlotAvailableSearch')?.value || '').trim().toLowerCase();
+            const currentSet = new Set(itemIds);
+            let availItems = [];
+
+            if (slotKey === 'armario') {
+                availItems = pulsoWebState.eligibleVinted
+                    .filter(v => !currentSet.has(v.ref))
+                    .filter(v => !searchQ || `${v.ref} ${v.title} ${v.brand} ${v.size}`.toLowerCase().includes(searchQ))
+                    .map(v => ({
+                        id: v.ref,
+                        title: v.title,
+                        meta: `${v.ref} · ${v.brand || 'Vinted'}${v.size ? ` · Talla ${v.size}` : ''} · ${fmtEur(v.priceEur)}`,
+                        image: v.image || `${PULSO_REVISTA_ORIGIN}/assets/img/pilar-armario.jpg`,
+                        extraBadge: v.inVipWindow ? '<span class="text-[10px] font-mono text-amber-300">⏳ VIP 24h</span>' : ''
+                    }));
+            } else {
+                availItems = pulsoWebState.products
+                    .filter(p => p.active !== false && !currentSet.has(p.id))
+                    .filter(p => slotKey === 'portada' || p.pillar === slotKey)
+                    .filter(p => !searchQ || `${p.id} ${p.title} ${p.tag} ${p.subtitle}`.toLowerCase().includes(searchQ))
+                    .map(p => ({
+                        id: p.id,
+                        title: p.title,
+                        meta: `${p.pillarLabel || p.pillar} · ${p.format || p.tag}`,
+                        image: resolveWebImg(p.image),
+                        extraBadge: ''
+                    }));
+            }
+
+            const availCount = document.getElementById('webSlotAvailCount');
+            if (availCount) availCount.textContent = `${availItems.length} disp.`;
+
+            const availWrap = document.getElementById('webSlotAvailableList');
+            if (availWrap) {
+                if (availItems.length === 0) {
+                    availWrap.innerHTML = `<div class="p-4 rounded-xl bg-obsidian-elevated text-center text-xs text-zinc-500">No hay más elementos disponibles con este filtro.</div>`;
+                } else {
+                    availWrap.innerHTML = availItems.map(it => `
+                        <div class="flex items-center gap-2.5 p-2 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-zinc-600 transition-colors">
+                            <img src="${webEscHtml(it.image)}" alt="${webEscHtml(it.title)}" class="w-12 h-9 rounded-lg object-cover bg-zinc-900 shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <div class="text-xs font-semibold text-white truncate">${webEscHtml(it.title)}</div>
+                                <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
+                                    <span class="text-[10px] text-zinc-400 truncate">${webEscHtml(it.meta)}</span>
+                                    ${getWebClickBadgeHtml(it.id)}
+                                    ${it.extraBadge}
+                                </div>
+                            </div>
+                            <button type="button" data-web-add="${webEscHtml(it.id)}" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-acid/15 hover:bg-acid text-acid hover:text-obsidian border border-acid/30 font-mono text-[11px] font-bold transition-colors cursor-pointer">+ Añadir</button>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        async function saveActiveShowcase() {
+            const slotKey = pulsoWebState.activeSlot;
+            const slotObj = pulsoWebState.slots[slotKey] || { slotKey, itemIds: [], maxVisible: 3 };
+            const btn = document.getElementById('webSaveShowcaseBtn');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Guardando...';
+            }
+            try {
+                await callPulsoWebAdmin('save_showcase', {
+                    slotKey,
+                    itemIds: slotObj.itemIds,
+                    maxVisible: slotObj.maxVisible || 3
+                });
+                toast(`Escaparate "${slotKey}" guardado y publicado en vivo.`);
+            } catch (err) {
+                toast(`Error al guardar escaparate: ${err.message}`, true);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
+            }
+        }
+
+        function renderWebFarmasiCatalog() {
+            const q = (document.getElementById('webFarmasiSearch')?.value || '').trim().toLowerCase();
+            const pillarFilter = document.getElementById('webFarmasiPillarFilter')?.value || 'all';
+
+            const filtered = pulsoWebState.products.filter(p => {
+                if (pillarFilter !== 'all' && p.pillar !== pillarFilter) return false;
+                if (q && !`${p.id} ${p.title} ${p.subtitle} ${p.tag}`.toLowerCase().includes(q)) return false;
+                return true;
+            });
+
+            const grid = document.getElementById('webFarmasiGrid');
+            if (!grid) return;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-8 rounded-2xl bg-obsidian-card border border-obsidian-border text-center text-xs text-zinc-400">No se encontraron productos Farmasi con esos filtros.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <article class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden flex flex-col">
+                    <div class="relative aspect-[4/3] bg-zinc-900">
+                        <img src="${webEscHtml(resolveWebImg(p.image))}" alt="${webEscHtml(p.imageAlt || p.title)}" class="w-full h-full object-cover">
+                        <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-black/75 text-white font-mono text-[10px] uppercase tracking-wide">${webEscHtml(p.tag)}</span>
+                        ${p.active === false ? '<span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-rose-600 text-white font-mono text-[10px]">Inactivo</span>' : ''}
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between gap-3">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[10px] font-mono uppercase text-acid">${webEscHtml(p.pillarLabel || p.pillar)}</span>
+                                ${getWebClickBadgeHtml(p.id)}
+                            </div>
+                            <h4 class="font-display font-bold text-sm text-white leading-snug">${webEscHtml(p.title)}</h4>
+                            <p class="text-xs text-zinc-400 line-clamp-2">${webEscHtml(p.subtitle)}</p>
+                            <div class="text-[11px] font-mono text-zinc-500">${webEscHtml(p.format)}${p.badge ? ` · ${webEscHtml(p.badge)}` : ''}</div>
+                        </div>
+                        <div class="flex items-center justify-between gap-2 pt-3 border-t border-zinc-800">
+                            <a href="${webEscHtml(p.url)}" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono text-sky-400 hover:underline">Ver Farmasi ↗</a>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" data-wf-edit="${webEscHtml(p.id)}" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-700 border border-zinc-700 text-xs text-zinc-200 cursor-pointer">Editar</button>
+                                <button type="button" data-wf-del="${webEscHtml(p.id)}" class="px-2.5 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-500/30 text-xs text-rose-300 cursor-pointer">Borrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function openFarmasiModal(productId = null) {
+            const modal = document.getElementById('webFarmasiModal');
+            if (!modal) return;
+            const prod = productId ? pulsoWebState.products.find(p => p.id === productId) : null;
+
+            document.getElementById('wfModalTitle').textContent = prod ? 'Editar Producto Farmasi' : 'Nuevo Producto Farmasi';
+            document.getElementById('wfIdInput').value = prod ? prod.id : '';
+            document.getElementById('wfPillarSelect').value = prod ? prod.pillar : 'tocador';
+            document.getElementById('wfTagInput').value = prod ? prod.tag : 'FARMASI · DR. C. TUNA';
+            document.getElementById('wfTitleInput').value = prod ? prod.title : '';
+            document.getElementById('wfSubtitleInput').value = prod ? prod.subtitle : '';
+            document.getElementById('wfDescriptionInput').value = prod ? prod.description : '';
+            document.getElementById('wfFormatInput').value = prod ? prod.format : '';
+            document.getElementById('wfBadgeInput').value = prod ? prod.badge : '';
+            document.getElementById('wfUrlInput').value = prod ? prod.url : '';
+            document.getElementById('wfImageInput').value = prod ? prod.image : '';
+            document.getElementById('wfImageAltInput').value = prod ? prod.imageAlt : '';
+            document.getElementById('wfActiveCheck').checked = prod ? prod.active !== false : true;
+
+            const prev = document.getElementById('wfImagePreview');
+            if (prev) {
+                prev.src = resolveWebImg(prod ? prod.image : '');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        async function compressImageTo4x3JpgBase64(file) {
+            const dataUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
+                reader.readAsDataURL(file);
+            });
+            const img = await new Promise((resolve, reject) => {
+                const i = new Image();
+                i.onload = () => resolve(i);
+                i.onerror = () => reject(new Error('Archivo de imagen inválido.'));
+                i.src = dataUrl;
+            });
+
+            const targetW = 1200;
+            const targetH = 900;
+            const targetRatio = targetW / targetH;
+            const srcRatio = img.width / img.height;
+
+            let sx = 0, sy = 0, sw = img.width, sh = img.height;
+            if (srcRatio > targetRatio) {
+                sw = img.height * targetRatio;
+                sx = (img.width - sw) / 2;
+            } else if (srcRatio < targetRatio) {
+                sh = img.width / targetRatio;
+                sy = (img.height - sh) / 2;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = targetW;
+            canvas.height = targetH;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+            return canvas.toDataURL('image/jpeg', 0.85);
+        }
+
+        async function saveFarmasiModal() {
+            const title = (document.getElementById('wfTitleInput')?.value || '').trim();
+            const url = (document.getElementById('wfUrlInput')?.value || '').trim();
+            if (!title || !/^https?:\/\//i.test(url)) {
+                toast('El título y una URL oficial de Farmasi válida son obligatorios.', true);
+                return;
+            }
+            const btn = document.getElementById('wfSaveBtn');
+            const orig = btn ? btn.textContent : '';
+            if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+
+            try {
+                const pillar = document.getElementById('wfPillarSelect').value;
+                await callPulsoWebAdmin('upsert_farmasi_product', {
+                    product: {
+                        id: document.getElementById('wfIdInput').value.trim(),
+                        pillar,
+                        pillarLabel: pillar === 'bienestar' ? 'Bienestar Diario' : 'Tocador Esencial',
+                        tag: document.getElementById('wfTagInput').value.trim(),
+                        title,
+                        subtitle: document.getElementById('wfSubtitleInput').value.trim(),
+                        description: document.getElementById('wfDescriptionInput').value.trim(),
+                        format: document.getElementById('wfFormatInput').value.trim(),
+                        badge: document.getElementById('wfBadgeInput').value.trim(),
+                        url,
+                        image: document.getElementById('wfImageInput').value.trim(),
+                        imageAlt: document.getElementById('wfImageAltInput').value.trim(),
+                        active: document.getElementById('wfActiveCheck').checked
+                    }
+                });
+                document.getElementById('webFarmasiModal')?.classList.add('hidden');
+                toast('Producto Farmasi guardado en catálogo.');
+                await loadWebPulsoState(true);
+            } catch (err) {
+                toast(`Error al guardar producto: ${err.message}`, true);
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = orig; }
+            }
+        }
+
+        async function deleteFarmasiProduct(productId) {
+            const prod = pulsoWebState.products.find(p => p.id === productId);
+            const ok = await vmConfirm({
+                title: 'Eliminar producto Farmasi',
+                message: `¿Seguro que quieres eliminar "${prod ? prod.title : productId}" del catálogo y retirarlo de los escaparates activos?`,
+                confirmText: 'Sí, eliminar',
+                variant: 'danger'
+            });
+            if (!ok) return;
+            try {
+                await callPulsoWebAdmin('delete_farmasi_product', { id: productId });
+                toast('Producto eliminado del catálogo.');
+                await loadWebPulsoState(true);
+            } catch (err) {
+                toast(`Error al eliminar producto: ${err.message}`, true);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.web-subtab-btn').forEach(btn => {
+                btn.addEventListener('click', () => setWebSubTab(btn.getAttribute('data-web-subtab')));
+            });
+            document.querySelectorAll('.web-slot-btn').forEach(btn => {
+                btn.addEventListener('click', () => setWebActiveSlot(btn.getAttribute('data-web-slot')));
+            });
+            document.getElementById('webReloadBtn')?.addEventListener('click', () => loadWebPulsoState(true));
+            document.getElementById('webSaveShowcaseBtn')?.addEventListener('click', saveActiveShowcase);
+            document.getElementById('webSlotAvailableSearch')?.addEventListener('input', renderWebSlotEditor);
+            document.getElementById('webFarmasiSearch')?.addEventListener('input', renderWebFarmasiCatalog);
+            document.getElementById('webFarmasiPillarFilter')?.addEventListener('change', renderWebFarmasiCatalog);
+            document.getElementById('webNewFarmasiBtn')?.addEventListener('click', () => openFarmasiModal(null));
+
+            document.getElementById('webSlotCurrentList')?.addEventListener('click', (ev) => {
+                const moveBtn = ev.target.closest('[data-web-move]');
+                const remBtn = ev.target.closest('[data-web-remove]');
+                const slot = pulsoWebState.slots[pulsoWebState.activeSlot];
+                if (!slot) return;
+                if (moveBtn) {
+                    const idx = Number(moveBtn.getAttribute('data-idx'));
+                    const dir = moveBtn.getAttribute('data-web-move');
+                    const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
+                    if (swapIdx >= 0 && swapIdx < slot.itemIds.length) {
+                        const copy = [...slot.itemIds];
+                        [copy[idx], copy[swapIdx]] = [copy[swapIdx], copy[idx]];
+                        slot.itemIds = copy;
+                        renderWebSlotEditor();
+                    }
+                } else if (remBtn) {
+                    const idx = Number(remBtn.getAttribute('data-web-remove'));
+                    slot.itemIds = slot.itemIds.filter((_, i) => i !== idx);
+                    renderWebSlotEditor();
+                }
+            });
+
+            document.getElementById('webSlotAvailableList')?.addEventListener('click', (ev) => {
+                const addBtn = ev.target.closest('[data-web-add]');
+                if (!addBtn) return;
+                const id = addBtn.getAttribute('data-web-add');
+                const slot = pulsoWebState.slots[pulsoWebState.activeSlot];
+                if (!slot || !id) return;
+                if (!slot.itemIds.includes(id)) {
+                    slot.itemIds.push(id);
+                    renderWebSlotEditor();
+                }
+            });
+
+            document.getElementById('webFarmasiGrid')?.addEventListener('click', (ev) => {
+                const editBtn = ev.target.closest('[data-wf-edit]');
+                const delBtn = ev.target.closest('[data-wf-del]');
+                if (editBtn) openFarmasiModal(editBtn.getAttribute('data-wf-edit'));
+                else if (delBtn) deleteFarmasiProduct(delBtn.getAttribute('data-wf-del'));
+            });
+
+            document.getElementById('closeWebFarmasiModalBtn')?.addEventListener('click', () => document.getElementById('webFarmasiModal')?.classList.add('hidden'));
+            document.getElementById('wfCancelBtn')?.addEventListener('click', () => document.getElementById('webFarmasiModal')?.classList.add('hidden'));
+            document.getElementById('wfSaveBtn')?.addEventListener('click', saveFarmasiModal);
+            document.getElementById('wfImageInput')?.addEventListener('input', (e) => {
+                const prev = document.getElementById('wfImagePreview');
+                if (prev) prev.src = resolveWebImg(e.target.value);
+            });
+            document.getElementById('wfImageFileInput')?.addEventListener('change', async (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const statusEl = document.getElementById('wfUploadStatus');
+                if (statusEl) statusEl.textContent = 'Recortando a 1200×900 (4:3) y subiendo a CDN...';
+                try {
+                    const base64Data = await compressImageTo4x3JpgBase64(file);
+                    const up = await callPulsoWebAdmin('upload_web_image', {
+                        filename: document.getElementById('wfTitleInput')?.value || file.name,
+                        base64Data
+                    });
+                    document.getElementById('wfImageInput').value = up.url;
+                    const prev = document.getElementById('wfImagePreview');
+                    if (prev) prev.src = up.url;
+                    if (statusEl) statusEl.textContent = '✓ Foto optimizada (1200×900) subida al CDN.';
+                    toast('Imagen 4:3 subida al CDN.');
+                } catch (err) {
+                    if (statusEl) statusEl.textContent = `Error: ${err.message}`;
+                    toast(`Error al subir imagen: ${err.message}`, true);
+                } finally {
+                    e.target.value = '';
+                }
+            });
+
+            initWebGuidesModuleListeners();
+        });
+
+        // ======================== FASE 2: EDITOR DE GUÍAS PRÁCTICAS, GOOGLE FLOW E IA ========================
+        const pulsoGuidesState = {
+            loaded: false,
+            loading: false,
+            guides: [],
+            viewsBySlug: {},
+            editingRelFarmasi: [],
+            editingRelVinted: [],
+            editingSlugOriginal: '',
+            deployTimer: null
+        };
+
+        const PILLAR_LABELS_WEB = {
+            armario: 'Armario Inteligente',
+            tocador: 'Tocador Esencial',
+            hogar: 'Hogar Práctico',
+            bienestar: 'Bienestar Diario'
+        };
+
+        function slugifyGuideTitle(str) {
+            return String(str || '')
+                .toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .slice(0, 80);
+        }
+
+        async function loadWebGuides(force = false) {
+            if (pulsoGuidesState.loading) return;
+            if (pulsoGuidesState.loaded && !force) {
+                renderWebHomeGuidesBar();
+                renderWebGuidesList();
+                return;
+            }
+            pulsoGuidesState.loading = true;
+            try {
+                const data = await callPulsoWebAdmin('list_guides', { days: 30 });
+                pulsoGuidesState.guides = Array.isArray(data.guides) ? data.guides : [];
+                pulsoGuidesState.viewsBySlug = data.viewsBySlug || {};
+                pulsoGuidesState.loaded = true;
+                renderWebHomeGuidesBar();
+                renderWebGuidesList();
+            } catch (err) {
+                toast(`Error al cargar guías: ${err.message}`, true);
+            } finally {
+                pulsoGuidesState.loading = false;
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        async function loadWebDeployStatus() {
+            const pill = document.getElementById('webDeployStatusPill');
+            if (!pill) return;
+            try {
+                const st = await callPulsoWebAdmin('get_deploy_status');
+                const sha = st.lastCommitSha ? `#${webEscHtml(st.lastCommitSha)}` : '';
+                const dt = st.lastCommitDate ? new Date(st.lastCommitDate).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : '';
+                pill.innerHTML = st.liveOk
+                    ? `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>Web online · Commit ${sha}${dt ? ` (${dt})` : ''}</span>`
+                    : `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>Compilando / comprobando · ${sha}</span>`;
+            } catch (err) {
+                pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-zinc-500"></span><span>Estado no disponible</span>`;
+            }
+        }
+
+        async function publishWebChanges() {
+            const ok = await vmConfirm({
+                title: 'Publicar cambios en Pulso Cotidiano',
+                message: 'Se sincronizarán todas las guías publicadas y el catálogo Farmasi con GitHub para recompilar y desplegar la web en Easypanel (~45 segundos). Las guías en borrador no se publican.',
+                confirmText: 'Publicar ahora',
+                variant: 'acid'
+            });
+            if (!ok) return;
+
+            const btn = document.getElementById('webPublishBtn');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.textContent = 'Publicando...'; }
+
+            const pill = document.getElementById('webDeployStatusPill');
+            if (pill) {
+                pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>Enviando a GitHub y Easypanel...</span>`;
+            }
+
+            try {
+                const res = await callPulsoWebAdmin('publish_web');
+                toast(res.message || 'Publicación enviada correctamente.');
+                if (pill) {
+                    pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span><span>Build Easypanel en curso (~45s)...</span>`;
+                }
+                clearTimeout(pulsoGuidesState.deployTimer);
+                pulsoGuidesState.deployTimer = setTimeout(() => {
+                    loadWebDeployStatus();
+                }, 25000);
+            } catch (err) {
+                toast(`Error al publicar: ${err.message}`, true);
+                loadWebDeployStatus();
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        function evaluateGuideHealth(g) {
+            const issues = [];
+            const title = String(g.title || '').trim();
+            const excerpt = String(g.excerpt || '').trim();
+            const img = String(g.image || '').trim();
+            const alt = String(g.imageAlt || '').trim();
+            const body = String(g.bodyMarkdown || '');
+            const relF = Array.isArray(g.relatedFarmasi) ? g.relatedFarmasi : [];
+            const relV = Array.isArray(g.relatedVinted) ? g.relatedVinted : [];
+
+            if (!title || title.length < 10) issues.push({ level: 'warn', msg: 'Titular demasiado corto' });
+            if (!excerpt || excerpt.length < 30) issues.push({ level: 'warn', msg: 'Falta extracto SEO completo' });
+            if (!img) issues.push({ level: 'err', msg: 'Falta imagen de portada 4:3' });
+            if (!alt || alt.length < 15) issues.push({ level: 'warn', msg: 'Texto alt muy corto o vacío (WCAG)' });
+
+            const mentionsFarmasi = relF.length > 0 || /farmasi\.es/i.test(body);
+            if (mentionsFarmasi && !/aviso-recomendaciones|tienda colaboradora/i.test(body)) {
+                issues.push({ level: 'err', msg: 'Falta nota legal de transparencia LSSI-CE (Farmasi)' });
+            }
+
+            const medicalRiskRe = /\b(cura definitiva|curar enfermedades|medicamento|clínicamente probado|elimina el acné definitivamente|receta médica|tratamiento médico)\b/i;
+            if (medicalRiskRe.test(body) || medicalRiskRe.test(title) || medicalRiskRe.test(excerpt)) {
+                issues.push({ level: 'err', msg: 'Posible afirmación médica/terapéutica prohibida' });
+            }
+
+            for (const ref of relV) {
+                const v = pulsoWebState.vintedByRef[ref];
+                if (!v || v.status !== 'DISPONIBLE') {
+                    issues.push({ level: 'err', msg: `Prenda ${ref} ya ${v ? v.status : 'no disponible'}` });
+                }
+            }
+
+            return issues;
+        }
+
+        function renderWebHomeGuidesBar() {
+            const wrap = document.getElementById('webHomeGuidesBar');
+            if (!wrap) return;
+
+            const featured = pulsoGuidesState.guides
+                .filter(g => g.status === 'published' && g.featuredHome)
+                .sort((a, b) => (a.homeOrder || 99) - (b.homeOrder || 99) || a.slug.localeCompare(b.slug))
+                .slice(0, 3);
+
+            if (featured.length === 0) {
+                wrap.innerHTML = `<div class="col-span-full p-4 rounded-xl bg-obsidian-elevated border border-dashed border-zinc-700 text-xs text-zinc-400 text-center">No hay guías marcadas como «Destacar en Portada». Edita 3 guías publicadas y activa esa casilla.</div>`;
+                return;
+            }
+
+            wrap.innerHTML = featured.map((g, idx) => `
+                <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-700 flex items-center gap-3">
+                    <img src="${webEscHtml(resolveWebImg(g.image))}" alt="${webEscHtml(g.imageAlt || g.title)}" class="w-16 h-12 rounded-lg object-cover bg-zinc-900 shrink-0">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-acid text-obsidian font-mono text-[10px] font-bold">#${idx + 1}</span>
+                            <span class="text-[10px] font-mono text-zinc-400 truncate">${webEscHtml(g.pillarLabel || g.pillar)}</span>
+                        </div>
+                        <div class="text-xs font-semibold text-white truncate mt-0.5">${webEscHtml(g.title)}</div>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button type="button" data-home-move="left" data-slug="${webEscHtml(g.slug)}" ${idx === 0 ? 'disabled' : ''} class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 text-xs text-white cursor-pointer" title="Mover antes">←</button>
+                        <button type="button" data-home-move="right" data-slug="${webEscHtml(g.slug)}" ${idx === featured.length - 1 ? 'disabled' : ''} class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 text-xs text-white cursor-pointer" title="Mover después">→</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function swapHomeGuideOrder(slug, dir) {
+            const featured = pulsoGuidesState.guides
+                .filter(g => g.status === 'published' && g.featuredHome)
+                .sort((a, b) => (a.homeOrder || 99) - (b.homeOrder || 99) || a.slug.localeCompare(b.slug))
+                .slice(0, 3);
+            const idx = featured.findIndex(g => g.slug === slug);
+            const targetIdx = dir === 'left' ? idx - 1 : idx + 1;
+            if (idx < 0 || targetIdx < 0 || targetIdx >= featured.length) return;
+
+            [featured[idx], featured[targetIdx]] = [featured[targetIdx], featured[idx]];
+            try {
+                for (let i = 0; i < featured.length; i++) {
+                    featured[i].homeOrder = i + 1;
+                    await callPulsoWebAdmin('save_guide', { guide: featured[i] });
+                }
+                toast('Orden de Portada actualizado. Pulsa «Publicar en la Web» para aplicarlo en producción.');
+                renderWebHomeGuidesBar();
+                renderWebGuidesList();
+            } catch (err) {
+                toast(`Error al reordenar portada: ${err.message}`, true);
+            }
+        }
+
+        function renderWebGuidesList() {
+            const listWrap = document.getElementById('webGuidesList');
+            if (!listWrap) return;
+
+            const q = (document.getElementById('webGuidesSearch')?.value || '').trim().toLowerCase();
+            const pillar = document.getElementById('webGuidesPillarFilter')?.value || 'all';
+            const status = document.getElementById('webGuidesStatusFilter')?.value || 'all';
+
+            const filtered = pulsoGuidesState.guides.filter(g => {
+                if (pillar !== 'all' && g.pillar !== pillar) return false;
+                if (status !== 'all' && g.status !== status) return false;
+                if (q && !`${g.slug} ${g.title} ${g.tag} ${g.excerpt}`.toLowerCase().includes(q)) return false;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                listWrap.innerHTML = `<div class="col-span-full p-8 rounded-2xl bg-obsidian-card border border-obsidian-border text-center text-xs text-zinc-400">No hay guías que coincidan con los filtros.</div>`;
+                return;
+            }
+
+            listWrap.innerHTML = filtered.map(g => {
+                const views = Number(pulsoGuidesState.viewsBySlug[g.slug.toLowerCase()] || 0);
+                const issues = evaluateGuideHealth(g);
+                const errs = issues.filter(i => i.level === 'err').length;
+                const warns = issues.filter(i => i.level === 'warn').length;
+                const healthBadge = errs > 0
+                    ? `<span class="px-2 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-[10px]">⚠️ ${errs} alerta${errs > 1 ? 's' : ''}</span>`
+                    : (warns > 0
+                        ? `<span class="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-[10px]">⚡ ${warns} mejora${warns > 1 ? 's' : ''}</span>`
+                        : `<span class="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-[10px]">✓ Salud OK</span>`);
+
+                return `
+                    <article class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden flex flex-col">
+                        <div class="relative aspect-[4/3] bg-zinc-900">
+                            <img src="${webEscHtml(resolveWebImg(g.image))}" alt="${webEscHtml(g.imageAlt || g.title)}" class="w-full h-full object-cover">
+                            <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2 py-0.5 rounded-full bg-black/75 text-white font-mono text-[10px] uppercase">${webEscHtml(g.pillarLabel || g.pillar)}</span>
+                                ${g.featuredHome ? `<span class="px-2 py-0.5 rounded-full bg-acid text-obsidian font-mono text-[10px] font-bold">★ Portada #${g.homeOrder}</span>` : ''}
+                            </div>
+                            <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${g.status === 'published' ? 'bg-emerald-600/90 text-white' : 'bg-zinc-700 text-zinc-200'}">
+                                ${g.status === 'published' ? 'Publicada' : 'Borrador'}
+                            </span>
+                        </div>
+                        <div class="p-4 flex-1 flex flex-col justify-between gap-3">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <span class="px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-300 font-mono text-[10px]">📖 ${views} lecturas (30d)</span>
+                                    ${healthBadge}
+                                </div>
+                                <h4 class="font-display font-bold text-sm text-white leading-snug line-clamp-2">${webEscHtml(g.title)}</h4>
+                                <p class="text-xs text-zinc-400 line-clamp-2">${webEscHtml(g.excerpt)}</p>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 pt-3 border-t border-zinc-800">
+                                <button type="button" data-guide-pin="${webEscHtml(g.slug)}" class="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-[11px] font-mono text-rose-300 cursor-pointer">📌 Pinterest</button>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" data-guide-edit="${webEscHtml(g.slug)}" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-700 border border-zinc-700 text-xs text-zinc-200 cursor-pointer">Editar</button>
+                                    <button type="button" data-guide-del="${webEscHtml(g.slug)}" class="px-2.5 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-500/30 text-xs text-rose-300 cursor-pointer">Borrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function getLinkedProductObjects() {
+            const farmasiMap = Object.fromEntries(pulsoWebState.products.map(p => [p.id, p]));
+            const out = [];
+            for (const id of pulsoGuidesState.editingRelFarmasi) {
+                const p = farmasiMap[id];
+                if (p) out.push({ id: p.id, origin: 'farmasi', title: p.title, tag: p.tag, image: resolveWebImg(p.image), url: p.url, status: 'OK' });
+            }
+            for (const ref of pulsoGuidesState.editingRelVinted) {
+                const v = pulsoWebState.vintedByRef[ref] || pulsoWebState.eligibleVinted.find(x => x.ref === ref);
+                if (v) out.push({ id: v.ref, origin: 'vinted', title: v.title, tag: `VINTED · ${v.ref}`, image: v.image, url: v.vintedUrl, status: v.status });
+            }
+            return out;
+        }
+
+        function populateGuideProductSelector() {
+            const sel = document.getElementById('wgInsertProductSelect');
+            if (!sel) return;
+            const opts = ['<option value="">-- Seleccionar producto Farmasi o prenda Vinted --</option>'];
+            pulsoWebState.products.filter(p => p.active !== false).forEach(p => {
+                opts.push(`<option value="farmasi:${webEscHtml(p.id)}">🧴 Farmasi · ${webEscHtml(p.title)}</option>`);
+            });
+            pulsoWebState.eligibleVinted.forEach(v => {
+                opts.push(`<option value="vinted:${webEscHtml(v.ref)}">👕 ${webEscHtml(v.ref)} · ${webEscHtml(v.title)} (${fmtEur(v.priceEur)})</option>`);
+            });
+            sel.innerHTML = opts.join('');
+        }
+
+        function renderGuideLinkedProductsAndRefs() {
+            const linked = getLinkedProductObjects();
+            const chipsWrap = document.getElementById('wgLinkedChips');
+            const refsWrap = document.getElementById('wgFlowRefsWrap');
+
+            if (chipsWrap) {
+                chipsWrap.innerHTML = linked.length === 0
+                    ? '<span class="text-[11px] text-zinc-500">Sin productos vinculados todavía.</span>'
+                    : linked.map(it => `
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-obsidian-elevated border ${it.origin === 'vinted' && it.status !== 'DISPONIBLE' ? 'border-rose-500/60 text-rose-200' : 'border-zinc-700 text-zinc-200'} text-[11px]">
+                            <span>${it.origin === 'vinted' ? '👕' : '🧴'} ${webEscHtml(it.title)}</span>
+                            <button type="button" data-wg-unlink="${webEscHtml(it.origin)}:${webEscHtml(it.id)}" class="text-zinc-400 hover:text-rose-400 font-bold cursor-pointer">✕</button>
+                        </span>
+                    `).join('');
+            }
+
+            if (refsWrap) {
+                refsWrap.innerHTML = linked.length === 0
+                    ? '<span class="text-[11px] text-zinc-500">Vincula productos de Farmasi o Vinted para mostrar aquí sus fotos de referencia listas para Google Flow.</span>'
+                    : linked.map(it => `
+                        <div class="flex items-center gap-2 p-2 rounded-xl bg-obsidian border border-zinc-800">
+                            <img src="${webEscHtml(it.image)}" alt="${webEscHtml(it.title)}" class="w-10 h-10 rounded-lg object-cover bg-zinc-900 shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <div class="text-[11px] font-semibold text-white truncate">${webEscHtml(it.title)}</div>
+                                <a href="${webEscHtml(it.image)}" target="_blank" rel="noopener noreferrer" download class="text-[10px] font-mono text-sky-400 hover:underline">Abrir / Guardar foto ↗</a>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+            updateGuideHealthPanel();
+        }
+
+        function updateGuideHealthPanel() {
+            const panel = document.getElementById('wgHealthChecklist');
+            if (!panel) return;
+            const fakeGuide = {
+                title: document.getElementById('wgTitleInput')?.value || '',
+                excerpt: document.getElementById('wgExcerptInput')?.value || '',
+                image: document.getElementById('wgImageInput')?.value || '',
+                imageAlt: document.getElementById('wgImageAltInput')?.value || '',
+                bodyMarkdown: document.getElementById('wgBodyTextarea')?.value || '',
+                relatedFarmasi: pulsoGuidesState.editingRelFarmasi,
+                relatedVinted: pulsoGuidesState.editingRelVinted
+            };
+            const issues = evaluateGuideHealth(fakeGuide);
+            if (issues.length === 0) {
+                panel.innerHTML = '<div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs text-emerald-300 font-mono">✓ Revisión editorial superada: LSSI-CE, WCAG alt, sin lenguaje médico y enlaces Vinted vigentes.</div>';
+            } else {
+                panel.innerHTML = issues.map(i => `
+                    <div class="px-3 py-1.5 rounded-lg border text-xs font-mono ${i.level === 'err' ? 'bg-rose-950/40 border-rose-500/40 text-rose-200' : 'bg-amber-950/40 border-amber-500/40 text-amber-200'}">
+                        ${i.level === 'err' ? '⛔' : '⚠️'} ${webEscHtml(i.msg)}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderGuidePreviewHtml() {
+            const box = document.getElementById('wgPreviewContainer');
+            if (!box) return;
+            const title = document.getElementById('wgTitleInput')?.value || 'Título de la guía';
+            const pillar = document.getElementById('wgPillarSelect')?.value || 'armario';
+            const tag = document.getElementById('wgTagInput')?.value || 'GUÍA PRÁCTICA';
+            const readTime = document.getElementById('wgReadTimeInput')?.value || '5 min de lectura';
+            const excerpt = document.getElementById('wgExcerptInput')?.value || '';
+            const img = resolveWebImg(document.getElementById('wgImageInput')?.value || '');
+            const md = document.getElementById('wgBodyTextarea')?.value || '';
+
+            const inlineMd = (t) => webEscHtml(t)
+                .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" style="color:#2C352D;text-decoration:underline;font-weight:600;">$1</a>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+            const lines = md.split(/\r?\n/);
+            const htmlLines = [];
+            let inUl = false;
+            for (const raw of lines) {
+                const l = raw.trim();
+                if (!l) {
+                    if (inUl) { htmlLines.push('</ul>'); inUl = false; }
+                    continue;
+                }
+                if (l.startsWith('## ')) {
+                    if (inUl) { htmlLines.push('</ul>'); inUl = false; }
+                    htmlLines.push(`<h2 style="font-family:Georgia,serif;font-size:1.35rem;color:#1E1E1E;margin:1.25rem 0 0.5rem;">${inlineMd(l.slice(3))}</h2>`);
+                } else if (l.startsWith('> ')) {
+                    if (inUl) { htmlLines.push('</ul>'); inUl = false; }
+                    htmlLines.push(`<blockquote style="border-left:3px solid #7A8B74;padding-left:1rem;font-style:italic;color:#2C352D;margin:1rem 0;">${inlineMd(l.slice(2))}</blockquote>`);
+                } else if (l.startsWith('- ') || /^\d+\.\s+/.test(l)) {
+                    if (!inUl) { htmlLines.push('<ul style="padding-left:1.2rem;margin:0.5rem 0;list-style:disc;">'); inUl = true; }
+                    const txt = l.startsWith('- ') ? l.slice(2) : l.replace(/^\d+\.\s+/, '');
+                    htmlLines.push(`<li style="margin:0.35rem 0;">${inlineMd(txt)}</li>`);
+                } else {
+                    if (inUl) { htmlLines.push('</ul>'); inUl = false; }
+                    htmlLines.push(`<p style="margin:0.65rem 0;line-height:1.65;">${inlineMd(l)}</p>`);
+                }
+            }
+            if (inUl) htmlLines.push('</ul>');
+
+            box.innerHTML = `
+                <div style="background:#FAF8F5;color:#1E1E1E;border-radius:16px;padding:1.5rem;max-height:420px;overflow-y:auto;">
+                    <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#5C5B57;font-weight:700;">${webEscHtml(PILLAR_LABELS_WEB[pillar] || pillar)} · ${webEscHtml(tag)} · ${webEscHtml(readTime)}</div>
+                    <h1 style="font-family:Georgia,serif;font-size:1.65rem;line-height:1.2;margin:0.5rem 0;">${webEscHtml(title)}</h1>
+                    <p style="color:#5C5B57;font-size:0.95rem;margin-bottom:1rem;">${webEscHtml(excerpt)}</p>
+                    <img src="${webEscHtml(img)}" alt="" style="width:100%;max-height:240px;object-fit:cover;border-radius:14px;margin-bottom:1rem;">
+                    <div style="font-size:0.95rem;">${htmlLines.join('')}</div>
+                </div>
+            `;
+        }
+
+        function openGuideModal(slug = null) {
+            const modal = document.getElementById('webGuideModal');
+            if (!modal) return;
+            const g = slug ? pulsoGuidesState.guides.find(x => x.slug === slug) : null;
+            pulsoGuidesState.editingSlugOriginal = g ? g.slug : '';
+
+            document.getElementById('wgModalTitle').textContent = g ? 'Editar Guía Práctica' : 'Nueva Guía Práctica';
+            document.getElementById('wgTitleInput').value = g ? g.title : '';
+            document.getElementById('wgSlugInput').value = g ? g.slug : '';
+            document.getElementById('wgPillarSelect').value = g ? g.pillar : 'armario';
+            document.getElementById('wgTagInput').value = g ? g.tag : 'GUÍA PRÁCTICA';
+            document.getElementById('wgReadTimeInput').value = g ? g.readTime : '5 min de lectura';
+            document.getElementById('wgStatusSelect').value = g ? g.status : 'draft';
+            document.getElementById('wgFeaturedHomeCheck').checked = Boolean(g && g.featuredHome);
+            document.getElementById('wgHomeOrderSelect').value = String((g && g.featuredHome && g.homeOrder <= 3) ? g.homeOrder : 1);
+            document.getElementById('wgHomeOrderWrap')?.classList.toggle('hidden', !(g && g.featuredHome));
+            document.getElementById('wgExcerptInput').value = g ? g.excerpt : '';
+            document.getElementById('wgImageInput').value = g ? g.image : '';
+            document.getElementById('wgImageAltInput').value = g ? g.imageAlt : '';
+            document.getElementById('wgBodyTextarea').value = g ? g.bodyMarkdown : '';
+            document.getElementById('wgAiTopicInput').value = '';
+            document.getElementById('wgFlowPromptTextarea').value = '';
+            document.getElementById('wgImagePreview').src = resolveWebImg(g ? g.image : '/assets/img/pilar-armario.jpg');
+
+            pulsoGuidesState.editingRelFarmasi = g && Array.isArray(g.relatedFarmasi) ? [...g.relatedFarmasi] : [];
+            pulsoGuidesState.editingRelVinted = g && Array.isArray(g.relatedVinted) ? [...g.relatedVinted] : [];
+
+            populateGuideProductSelector();
+            renderGuideLinkedProductsAndRefs();
+            // Volver a pestaña escribir
+            document.getElementById('wgTabWriteBtn')?.click();
+            modal.classList.remove('hidden');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function insertTextInGuideEditor(snippet) {
+            const ta = document.getElementById('wgBodyTextarea');
+            if (!ta) return;
+            const start = ta.selectionStart || 0;
+            const end = ta.selectionEnd || 0;
+            const val = ta.value;
+            ta.value = val.slice(0, start) + snippet + val.slice(end);
+            ta.selectionStart = ta.selectionEnd = start + snippet.length;
+            ta.focus();
+            updateGuideHealthPanel();
+        }
+
+        function insertSelectedProductIntoGuide() {
+            const sel = document.getElementById('wgInsertProductSelect');
+            if (!sel || !sel.value) {
+                toast('Selecciona primero un producto para insertar.', true);
+                return;
+            }
+            const [origin, id] = sel.value.split(':');
+            if (origin === 'farmasi') {
+                const p = pulsoWebState.products.find(x => x.id === id);
+                if (!p) return;
+                if (!pulsoGuidesState.editingRelFarmasi.includes(id)) {
+                    pulsoGuidesState.editingRelFarmasi.push(id);
+                }
+                insertTextInGuideEditor(`[${p.title}](${p.url})`);
+            } else if (origin === 'vinted') {
+                const v = pulsoWebState.eligibleVinted.find(x => x.ref === id);
+                if (!v) return;
+                if (!pulsoGuidesState.editingRelVinted.includes(id)) {
+                    pulsoGuidesState.editingRelVinted.push(id);
+                }
+                insertTextInGuideEditor(`[${v.title}](${v.vintedUrl})`);
+            }
+            renderGuideLinkedProductsAndRefs();
+            toast('Producto insertado en el texto y vinculado a la guía.');
+        }
+
+        async function saveGuideFromModal() {
+            const title = (document.getElementById('wgTitleInput')?.value || '').trim();
+            if (!title) {
+                toast('El título de la guía es obligatorio.', true);
+                return;
+            }
+            const btn = document.getElementById('wgSaveBtn');
+            const orig = btn ? btn.textContent : '';
+            if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+
+            const featuredHome = Boolean(document.getElementById('wgFeaturedHomeCheck')?.checked);
+            const homeOrder = featuredHome ? Number(document.getElementById('wgHomeOrderSelect')?.value || 1) : 99;
+
+            try {
+                await callPulsoWebAdmin('save_guide', {
+                    guide: {
+                        slug: document.getElementById('wgSlugInput').value.trim() || slugifyGuideTitle(title),
+                        title,
+                        pillar: document.getElementById('wgPillarSelect').value,
+                        tag: document.getElementById('wgTagInput').value.trim(),
+                        readTime: document.getElementById('wgReadTimeInput').value.trim(),
+                        status: document.getElementById('wgStatusSelect').value,
+                        featuredHome,
+                        homeOrder,
+                        excerpt: document.getElementById('wgExcerptInput').value.trim(),
+                        image: document.getElementById('wgImageInput').value.trim(),
+                        imageAlt: document.getElementById('wgImageAltInput').value.trim(),
+                        bodyMarkdown: document.getElementById('wgBodyTextarea').value,
+                        relatedFarmasi: pulsoGuidesState.editingRelFarmasi,
+                        relatedVinted: pulsoGuidesState.editingRelVinted
+                    }
+                });
+                document.getElementById('webGuideModal')?.classList.add('hidden');
+                toast('Guía guardada en Supabase. Pulsa «Publicar en la Web» cuando quieras subirla a producción.');
+                await loadWebGuides(true);
+            } catch (err) {
+                toast(`Error al guardar guía: ${err.message}`, true);
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = orig; }
+            }
+        }
+
+        async function deleteGuideBySlug(slug) {
+            const g = pulsoGuidesState.guides.find(x => x.slug === slug);
+            const ok = await vmConfirm({
+                title: 'Eliminar Guía Práctica',
+                message: `¿Seguro que quieres eliminar "${g ? g.title : slug}"? Tras confirmar, pulsa «Publicar en la Web» para retirarla de producción.`,
+                confirmText: 'Sí, eliminar',
+                variant: 'danger'
+            });
+            if (!ok) return;
+            try {
+                await callPulsoWebAdmin('delete_guide', { slug });
+                toast('Guía eliminada.');
+                await loadWebGuides(true);
+            } catch (err) {
+                toast(`Error al eliminar guía: ${err.message}`, true);
+            }
+        }
+
+        async function generateGuideDraftWithAI() {
+            const topic = (document.getElementById('wgAiTopicInput')?.value || document.getElementById('wgTitleInput')?.value || '').trim();
+            if (!topic) {
+                toast('Escribe un tema o titular para que la IA redacte el borrador.', true);
+                return;
+            }
+            const btn = document.getElementById('wgAiDraftBtn');
+            const orig = btn ? btn.textContent : '';
+            if (btn) { btn.disabled = true; btn.textContent = '✨ Redactando...'; }
+            try {
+                const res = await callPulsoWebAdmin('generate_guide_draft', {
+                    topic,
+                    pillar: document.getElementById('wgPillarSelect').value,
+                    linkedProducts: getLinkedProductObjects()
+                });
+                const d = res.draft || {};
+                if (d.title) document.getElementById('wgTitleInput').value = d.title;
+                if (!pulsoGuidesState.editingSlugOriginal && d.title) {
+                    document.getElementById('wgSlugInput').value = slugifyGuideTitle(d.title);
+                }
+                if (d.tag) document.getElementById('wgTagInput').value = d.tag;
+                if (d.readTime) document.getElementById('wgReadTimeInput').value = d.readTime;
+                if (d.excerpt) document.getElementById('wgExcerptInput').value = d.excerpt;
+                if (d.imageAlt) document.getElementById('wgImageAltInput').value = d.imageAlt;
+                if (d.bodyMarkdown) document.getElementById('wgBodyTextarea').value = d.bodyMarkdown;
+                updateGuideHealthPanel();
+                toast(`Borrador generado (${res.provider || 'IA'}).`);
+            } catch (err) {
+                toast(`Error al generar borrador: ${err.message}`, true);
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = orig; }
+            }
+        }
+
+        async function generateFlowPromptWithAI() {
+            const btn = document.getElementById('wgGenFlowPromptBtn');
+            const orig = btn ? btn.textContent : '';
+            if (btn) { btn.disabled = true; btn.textContent = '🎨 Generando...'; }
+            try {
+                const res = await callPulsoWebAdmin('generate_flow_prompt', {
+                    title: document.getElementById('wgTitleInput').value.trim(),
+                    pillar: document.getElementById('wgPillarSelect').value,
+                    excerpt: document.getElementById('wgExcerptInput').value.trim(),
+                    linkedProducts: getLinkedProductObjects()
+                });
+                document.getElementById('wgFlowPromptTextarea').value = res.prompt || '';
+                toast(`Prompt Maestro listo (${res.provider || 'IA'}). Cópialo en Google Flow.`);
+            } catch (err) {
+                toast(`Error al generar prompt: ${err.message}`, true);
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = orig; }
+            }
+        }
+
+        async function openPinterestKitModal(slug) {
+            const g = pulsoGuidesState.guides.find(x => x.slug === slug);
+            if (!g) return;
+            const modal = document.getElementById('webPinterestModal');
+            const bodyBox = document.getElementById('webPinterestBody');
+            if (!modal || !bodyBox) return;
+
+            bodyBox.innerHTML = '<div class="py-8 text-center text-xs font-mono text-zinc-300">Generando títulos SEO, descripción y UTM con Gemini Flash...</div>';
+            modal.classList.remove('hidden');
+
+            try {
+                const res = await callPulsoWebAdmin('generate_pinterest_kit', {
+                    slug: g.slug,
+                    title: g.title,
+                    pillar: g.pillar,
+                    excerpt: g.excerpt,
+                    tag: g.tag
+                });
+                const k = res.kit || {};
+                const titlesHtml = (k.titles || []).map(t => `
+                    <div class="flex items-center justify-between gap-2 p-2 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                        <span class="text-xs text-white">${webEscHtml(t)}</span>
+                        <button type="button" data-copy-text="${webEscHtml(t)}" class="shrink-0 px-2 py-1 rounded bg-zinc-800 hover:bg-acid hover:text-obsidian text-[10px] font-mono cursor-pointer">Copiar</button>
+                    </div>
+                `).join('');
+                const kwStr = (k.keywords || []).map(x => `#${String(x).replace(/\s+/g, '')}`).join(' ');
+
+                bodyBox.innerHTML = `
+                    <div class="space-y-3 text-xs">
+                        <div class="text-[11px] font-mono text-acid">Generado con: ${webEscHtml(res.provider || 'IA')}</div>
+                        <div class="space-y-1.5">
+                            <span class="font-mono text-[10px] uppercase text-zinc-400">Opciones de Título SEO:</span>
+                            ${titlesHtml}
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-zinc-400">Descripción para Pin:</span>
+                                <button type="button" data-copy-text="${webEscHtml(k.description || '')}" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-acid hover:text-obsidian text-[10px] font-mono cursor-pointer">Copiar</button>
+                            </div>
+                            <p class="p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800 text-zinc-200 leading-relaxed">${webEscHtml(k.description || '')}</p>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-zinc-400">Etiquetas / Palabras Clave:</span>
+                                <button type="button" data-copy-text="${webEscHtml(kwStr)}" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-acid hover:text-obsidian text-[10px] font-mono cursor-pointer">Copiar</button>
+                            </div>
+                            <p class="p-2 rounded-xl bg-obsidian-elevated border border-zinc-800 font-mono text-[11px] text-sky-300">${webEscHtml(kwStr)}</p>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono text-[10px] uppercase text-zinc-400">Enlace de Destino con UTM:</span>
+                                <button type="button" data-copy-text="${webEscHtml(k.utmUrl || '')}" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-acid hover:text-obsidian text-[10px] font-mono cursor-pointer">Copiar URL</button>
+                            </div>
+                            <p class="p-2 rounded-xl bg-obsidian-elevated border border-zinc-800 font-mono text-[11px] text-zinc-300 break-all">${webEscHtml(k.utmUrl || '')}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                bodyBox.innerHTML = `<div class="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-xs text-rose-200">Error: ${webEscHtml(err.message)}</div>`;
+            }
+        }
+
+        function initWebGuidesModuleListeners() {
+            document.getElementById('webGuidesSearch')?.addEventListener('input', renderWebGuidesList);
+            document.getElementById('webGuidesPillarFilter')?.addEventListener('change', renderWebGuidesList);
+            document.getElementById('webGuidesStatusFilter')?.addEventListener('change', renderWebGuidesList);
+            document.getElementById('webNewGuideBtn')?.addEventListener('click', () => openGuideModal(null));
+            document.getElementById('webPublishBtn')?.addEventListener('click', publishWebChanges);
+            document.getElementById('webRefreshDeployBtn')?.addEventListener('click', loadWebDeployStatus);
+
+            document.getElementById('webHomeGuidesBar')?.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('[data-home-move]');
+                if (!btn) return;
+                swapHomeGuideOrder(btn.getAttribute('data-slug'), btn.getAttribute('data-home-move'));
+            });
+
+            document.getElementById('webGuidesList')?.addEventListener('click', (ev) => {
+                const ed = ev.target.closest('[data-guide-edit]');
+                const del = ev.target.closest('[data-guide-del]');
+                const pin = ev.target.closest('[data-guide-pin]');
+                if (ed) openGuideModal(ed.getAttribute('data-guide-edit'));
+                else if (del) deleteGuideBySlug(del.getAttribute('data-guide-del'));
+                else if (pin) openPinterestKitModal(pin.getAttribute('data-guide-pin'));
+            });
+
+            document.getElementById('closeWebGuideModalBtn')?.addEventListener('click', () => document.getElementById('webGuideModal')?.classList.add('hidden'));
+            document.getElementById('wgCancelBtn')?.addEventListener('click', () => document.getElementById('webGuideModal')?.classList.add('hidden'));
+            document.getElementById('wgSaveBtn')?.addEventListener('click', saveGuideFromModal);
+
+            document.getElementById('wgTitleInput')?.addEventListener('input', (e) => {
+                if (!pulsoGuidesState.editingSlugOriginal) {
+                    document.getElementById('wgSlugInput').value = slugifyGuideTitle(e.target.value);
+                }
+                updateGuideHealthPanel();
+            });
+            ['wgExcerptInput', 'wgImageInput', 'wgImageAltInput', 'wgBodyTextarea'].forEach(id => {
+                document.getElementById(id)?.addEventListener('input', updateGuideHealthPanel);
+            });
+            document.getElementById('wgImageInput')?.addEventListener('input', (e) => {
+                document.getElementById('wgImagePreview').src = resolveWebImg(e.target.value);
+            });
+            document.getElementById('wgFeaturedHomeCheck')?.addEventListener('change', (e) => {
+                document.getElementById('wgHomeOrderWrap')?.classList.toggle('hidden', !e.target.checked);
+            });
+
+            document.getElementById('wgAiDraftBtn')?.addEventListener('click', generateGuideDraftWithAI);
+            document.getElementById('wgGenFlowPromptBtn')?.addEventListener('click', generateFlowPromptWithAI);
+            document.getElementById('wgCopyFlowPromptBtn')?.addEventListener('click', async () => {
+                const txt = document.getElementById('wgFlowPromptTextarea')?.value || '';
+                if (!txt) return;
+                await navigator.clipboard.writeText(txt);
+                toast('Prompt Maestro copiado al portapapeles.');
+            });
+
+            document.getElementById('wgImageFileInput')?.addEventListener('change', async (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const statusEl = document.getElementById('wgUploadStatus');
+                if (statusEl) statusEl.textContent = 'Recortando a 1200×900 (4:3) y subiendo...';
+                try {
+                    const base64Data = await compressImageTo4x3JpgBase64(file);
+                    const up = await callPulsoWebAdmin('upload_web_image', {
+                        filename: document.getElementById('wgSlugInput')?.value || document.getElementById('wgTitleInput')?.value || file.name,
+                        base64Data
+                    });
+                    document.getElementById('wgImageInput').value = up.url;
+                    document.getElementById('wgImagePreview').src = up.url;
+                    if (statusEl) statusEl.textContent = '✓ Imagen 1200×900 lista.';
+                    updateGuideHealthPanel();
+                    toast('Foto de guía optimizada (4:3) y subida al CDN.');
+                } catch (err) {
+                    if (statusEl) statusEl.textContent = `Error: ${err.message}`;
+                    toast(`Error al subir foto: ${err.message}`, true);
+                } finally {
+                    e.target.value = '';
+                }
+            });
+
+            document.getElementById('wgInsertProductBtn')?.addEventListener('click', insertSelectedProductIntoGuide);
+            document.getElementById('wgLinkedChips')?.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('[data-wg-unlink]');
+                if (!btn) return;
+                const [origin, id] = btn.getAttribute('data-wg-unlink').split(':');
+                if (origin === 'farmasi') {
+                    pulsoGuidesState.editingRelFarmasi = pulsoGuidesState.editingRelFarmasi.filter(x => x !== id);
+                } else {
+                    pulsoGuidesState.editingRelVinted = pulsoGuidesState.editingRelVinted.filter(x => x !== id);
+                }
+                renderGuideLinkedProductsAndRefs();
+            });
+
+            document.querySelectorAll('[data-wg-fmt]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const fmt = btn.getAttribute('data-wg-fmt');
+                    if (fmt === 'h2') insertTextInGuideEditor('\n## Subtítulo de sección\n');
+                    else if (fmt === 'bold') insertTextInGuideEditor('**texto destacado**');
+                    else if (fmt === 'italic') insertTextInGuideEditor('*texto en cursiva*');
+                    else if (fmt === 'ul') insertTextInGuideEditor('\n- Elemento de lista\n- Otro elemento\n');
+                    else if (fmt === 'ol') insertTextInGuideEditor('\n1. Primer paso\n2. Segundo paso\n');
+                    else if (fmt === 'quote') insertTextInGuideEditor('\n> Frase clave práctica para recordar.\n');
+                    else if (fmt === 'lssi') insertTextInGuideEditor('\n*Nota de transparencia: los enlaces anteriores dirigen a nuestra tienda colaboradora oficial de Farmasi España ([más información](/aviso-recomendaciones)).*\n');
+                });
+            });
+
+            document.getElementById('wgTabWriteBtn')?.addEventListener('click', () => {
+                document.getElementById('wgBodyTextarea')?.classList.remove('hidden');
+                document.getElementById('wgPreviewContainer')?.classList.add('hidden');
+                document.getElementById('wgTabWriteBtn').className = 'px-3 py-1 rounded-lg bg-acid text-obsidian font-mono text-[11px] font-bold cursor-pointer';
+                document.getElementById('wgTabPreviewBtn').className = 'px-3 py-1 rounded-lg text-zinc-300 hover:text-white font-mono text-[11px] cursor-pointer';
+            });
+            document.getElementById('wgTabPreviewBtn')?.addEventListener('click', () => {
+                renderGuidePreviewHtml();
+                document.getElementById('wgBodyTextarea')?.classList.add('hidden');
+                document.getElementById('wgPreviewContainer')?.classList.remove('hidden');
+                document.getElementById('wgTabPreviewBtn').className = 'px-3 py-1 rounded-lg bg-acid text-obsidian font-mono text-[11px] font-bold cursor-pointer';
+                document.getElementById('wgTabWriteBtn').className = 'px-3 py-1 rounded-lg text-zinc-300 hover:text-white font-mono text-[11px] cursor-pointer';
+            });
+
+            document.getElementById('closeWebPinterestModalBtn')?.addEventListener('click', () => document.getElementById('webPinterestModal')?.classList.add('hidden'));
+            document.getElementById('webPinterestBody')?.addEventListener('click', async (ev) => {
+                const btn = ev.target.closest('[data-copy-text]');
+                if (!btn) return;
+                await navigator.clipboard.writeText(btn.getAttribute('data-copy-text') || '');
+                toast('Copiado al portapapeles.');
+            });
+        }
     
     </script>
     <!-- Modal de Detalle Técnico de Log / Auditoría -->
@@ -13758,6 +15282,272 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     <span>Guardar</span>
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal CRUD Producto Farmasi (Pestaña 6 Web) -->
+    <div id="webFarmasiModal" role="dialog" aria-modal="true" aria-labelledby="wfModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto rounded-3xl bg-obsidian-card border border-zinc-700 p-5 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div>
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-acid">Catálogo Farmasi · Pulso Cotidiano</span>
+                    <h3 id="wfModalTitle" class="font-display text-base sm:text-lg font-bold text-white uppercase">Producto Farmasi</h3>
+                </div>
+                <button type="button" id="closeWebFarmasiModalBtn" aria-label="Cerrar modal de producto" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer">
+                    <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="wfIdInput" value="">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                    <label for="wfPillarSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Pilar Editorial</label>
+                    <select id="wfPillarSelect" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                        <option value="tocador">Tocador Esencial</option>
+                        <option value="bienestar">Bienestar Diario</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="wfTagInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Etiqueta Superior</label>
+                    <input type="text" id="wfTagInput" placeholder="FARMASI · DR. C. TUNA" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="wfTitleInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Nombre del Producto *</label>
+                    <input type="text" id="wfTitleInput" placeholder="Ej. Dr. C. Tuna Aqua Crema Hidratante" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="wfSubtitleInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Subtítulo de Tarjeta</label>
+                    <input type="text" id="wfSubtitleInput" placeholder="Descripción corta visible en la tarjeta" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div>
+                    <label for="wfFormatInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Formato / Contenido</label>
+                    <input type="text" id="wfFormatInput" placeholder="50 ml · Textura en gel" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div>
+                    <label for="wfBadgeInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Distintivo (Badge)</label>
+                    <input type="text" id="wfBadgeInput" placeholder="Hidratación diaria" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="wfUrlInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">URL Oficial Farmasi *</label>
+                    <input type="url" id="wfUrlInput" placeholder="https://www.farmasi.es/maytelasso/product-detail/..." class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="wfDescriptionInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Descripción Extendida</label>
+                    <textarea id="wfDescriptionInput" rows="2" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid resize-y"></textarea>
+                </div>
+
+                <!-- Imagen 4:3 + Subida CDN -->
+                <div class="sm:col-span-2 p-3 rounded-2xl bg-obsidian-elevated border border-zinc-800 flex flex-col sm:flex-row items-center gap-3">
+                    <img id="wfImagePreview" src="" alt="Vista previa" class="w-28 h-21 aspect-[4/3] rounded-xl object-cover bg-zinc-900 shrink-0 border border-zinc-700">
+                    <div class="flex-1 w-full space-y-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <label for="wfImageFileInput" class="px-3 py-1.5 rounded-xl bg-acid/15 hover:bg-acid text-acid hover:text-obsidian border border-acid/30 font-mono text-[11px] font-bold transition-colors cursor-pointer">
+                                📷 Subir y Optimizar Foto (4:3)
+                            </label>
+                            <input type="file" id="wfImageFileInput" accept="image/*" class="hidden">
+                            <span id="wfUploadStatus" class="text-[11px] font-mono text-zinc-400">Recorte automático a 1200×900 px</span>
+                        </div>
+                        <input type="text" id="wfImageInput" placeholder="/assets/img/... o https://raw.githubusercontent.com/..." class="w-full px-3 py-1.5 rounded-xl bg-obsidian border border-zinc-700 font-mono text-[11px] text-white focus:outline-none focus:border-acid">
+                        <input type="text" id="wfImageAltInput" placeholder="Texto alternativo accesible (alt) de la imagen" class="w-full px-3 py-1.5 rounded-xl bg-obsidian border border-zinc-700 text-[11px] text-white focus:outline-none focus:border-acid">
+                    </div>
+                </div>
+
+                <label class="sm:col-span-2 flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
+                    <input type="checkbox" id="wfActiveCheck" checked class="rounded border-zinc-600 bg-obsidian text-acid focus:ring-acid">
+                    <span>Producto activo en catálogo</span>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-zinc-800">
+                <button type="button" id="wfCancelBtn" class="px-3.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white cursor-pointer">
+                    Cancelar
+                </button>
+                <button type="button" id="wfSaveBtn" class="px-4 py-2 rounded-xl bg-acid hover:bg-acid/90 text-obsidian font-display font-bold text-xs uppercase tracking-wide cursor-pointer">
+                    Guardar Producto
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editor Asistido de Guía Práctica (Fase 2) -->
+    <div id="webGuideModal" role="dialog" aria-modal="true" aria-labelledby="wgModalTitle" class="hidden fixed inset-0 z-50 flex items-start justify-center p-2 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-5xl my-4 rounded-3xl bg-obsidian-card border border-zinc-700 p-4 sm:p-6 shadow-2xl space-y-5">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div>
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-acid">Editor Pulso Cotidiano · Fase 2</span>
+                    <h3 id="wgModalTitle" class="font-display text-lg font-bold text-white uppercase">Guía Práctica</h3>
+                </div>
+                <button type="button" id="closeWebGuideModalBtn" aria-label="Cerrar editor de guía" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer">
+                    <i aria-hidden="true" data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- 1. Metadatos y Ubicación -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs">
+                <div class="sm:col-span-8">
+                    <label for="wgTitleInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Titular de la Guía *</label>
+                    <input type="text" id="wgTitleInput" placeholder="Ej. Cómo organizar tu tocador con cinco básicos reales" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white focus:outline-none focus:border-acid">
+                </div>
+                <div class="sm:col-span-4">
+                    <label for="wgSlugInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Slug URL (/articulos/...)</label>
+                    <input type="text" id="wgSlugInput" placeholder="auto-generado" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-zinc-300 focus:outline-none focus:border-acid">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="wgPillarSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Pilar / Sección</label>
+                    <select id="wgPillarSelect" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                        <option value="armario">Armario Inteligente</option>
+                        <option value="tocador">Tocador Esencial</option>
+                        <option value="hogar">Hogar Práctico</option>
+                        <option value="bienestar">Bienestar Diario</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="wgTagInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Etiqueta Editorial</label>
+                    <input type="text" id="wgTagInput" placeholder="ARMARIO CÁPSULA" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="wgReadTimeInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Tiempo Lectura</label>
+                    <input type="text" id="wgReadTimeInput" placeholder="5 min de lectura" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="wgStatusSelect" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Estado</label>
+                    <select id="wgStatusSelect" class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white">
+                        <option value="draft">📝 Borrador</option>
+                        <option value="published">✅ Publicada</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-12 flex flex-wrap items-center gap-4 p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <label class="flex items-center gap-2 text-xs text-white cursor-pointer">
+                        <input type="checkbox" id="wgFeaturedHomeCheck" class="rounded border-zinc-600 bg-obsidian text-acid focus:ring-acid">
+                        <span>★ Destacar en Portada («Lecturas rápidas para aplicar hoy»)</span>
+                    </label>
+                    <div id="wgHomeOrderWrap" class="hidden flex items-center gap-2">
+                        <span class="text-[11px] font-mono text-zinc-400">Posición:</span>
+                        <select id="wgHomeOrderSelect" class="px-2.5 py-1 rounded-lg bg-obsidian border border-zinc-700 text-xs text-acid font-mono font-bold">
+                            <option value="1">#1 (Izquierda)</option>
+                            <option value="2">#2 (Centro)</option>
+                            <option value="3">#3 (Derecha)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="sm:col-span-12">
+                    <label for="wgExcerptInput" class="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Extracto / Meta Descripción SEO</label>
+                    <textarea id="wgExcerptInput" rows="2" placeholder="Resumen breve visible en tarjetas, Archivo Editorial y buscadores..." class="w-full px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white resize-y"></textarea>
+                </div>
+            </div>
+
+            <!-- 2. Asistente IA Redactor (Gemini Flash 0 €) -->
+            <div class="p-3.5 rounded-2xl bg-sky-950/25 border border-sky-500/30 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <input type="text" id="wgAiTopicInput" placeholder="✨ Idea o tema para redactar con Gemini Flash (ej. rutina piel mixta 3 pasos)..." class="flex-1 px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-sky-400">
+                <button type="button" id="wgAiDraftBtn" class="shrink-0 px-4 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 text-sky-200 font-display font-bold text-xs uppercase tracking-wider cursor-pointer">
+                    ✨ Generar borrador con IA (0 €)
+                </button>
+            </div>
+
+            <!-- 3. Estudio de Imagen asistido para Google Flow -->
+            <div class="p-4 rounded-2xl bg-obsidian-elevated border border-zinc-800 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <span class="font-mono text-[10px] uppercase tracking-wider text-amber-300 font-bold">Estudio de Imagen Editorial (4:3 · 1200×900)</span>
+                        <p class="text-[11px] text-zinc-400">La foto subida aquí se actualiza automáticamente en Portada, Archivo, Pilar, Artículo y og:image.</p>
+                    </div>
+                    <a href="https://flow.google" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-[11px] font-mono text-white">
+                        Abrir Google Flow ↗
+                    </a>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <img id="wgImagePreview" src="" alt="Portada guía" class="w-32 aspect-[4/3] rounded-xl object-cover bg-zinc-900 shrink-0 border border-zinc-700">
+                    <div class="flex-1 w-full space-y-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <label for="wgImageFileInput" class="px-3 py-1.5 rounded-xl bg-acid/15 hover:bg-acid text-acid hover:text-obsidian border border-acid/30 font-mono text-[11px] font-bold cursor-pointer">
+                                📷 Subir y Optimizar Foto (4:3)
+                            </label>
+                            <input type="file" id="wgImageFileInput" accept="image/*" class="hidden">
+                            <span id="wgUploadStatus" class="text-[11px] font-mono text-zinc-400">Recorte automático a 1200×900 px</span>
+                        </div>
+                        <input type="text" id="wgImageInput" placeholder="/assets/img/... o URL CDN" class="w-full px-3 py-1.5 rounded-xl bg-obsidian border border-zinc-700 font-mono text-[11px] text-white">
+                        <input type="text" id="wgImageAltInput" placeholder="Descripción accesible (alt) detallada de la fotografía" class="w-full px-3 py-1.5 rounded-xl bg-obsidian border border-zinc-700 text-[11px] text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 pt-2 border-t border-zinc-800">
+                    <div class="lg:col-span-5 space-y-2">
+                        <span class="block text-[10px] font-mono uppercase text-zinc-400">Imágenes de referencia de productos vinculados:</span>
+                        <div id="wgFlowRefsWrap" class="space-y-1.5 max-h-32 overflow-y-auto pr-1"></div>
+                    </div>
+                    <div class="lg:col-span-7 space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-[10px] font-mono uppercase text-zinc-400">Prompt Maestro (Estética Pulso Cotidiano):</span>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" id="wgGenFlowPromptBtn" class="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 text-amber-200 font-mono text-[11px] cursor-pointer">🎨 Generar Prompt</button>
+                                <button type="button" id="wgCopyFlowPromptBtn" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono text-[11px] cursor-pointer">📋 Copiar</button>
+                            </div>
+                        </div>
+                        <textarea id="wgFlowPromptTextarea" rows="3" placeholder="Pulsa 'Generar Prompt' para obtener un prompt 4:3 listo para pegar en Google Flow junto con las referencias de la izquierda..." class="w-full px-3 py-2 rounded-xl bg-obsidian border border-zinc-700 font-mono text-[11px] text-zinc-200 resize-y"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Editor de Contenido + Inserción de Productos + Vista Previa -->
+            <div class="space-y-3">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2 p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <button type="button" data-wg-fmt="h2" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-white cursor-pointer">H2</button>
+                        <button type="button" data-wg-fmt="bold" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-white cursor-pointer">B</button>
+                        <button type="button" data-wg-fmt="italic" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs italic text-white cursor-pointer">I</button>
+                        <button type="button" data-wg-fmt="ul" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-white cursor-pointer">• Lista</button>
+                        <button type="button" data-wg-fmt="ol" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-white cursor-pointer">1. Lista</button>
+                        <button type="button" data-wg-fmt="quote" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-white cursor-pointer">❝ Cita</button>
+                        <button type="button" data-wg-fmt="lssi" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-500/30 text-[11px] font-mono text-emerald-300 cursor-pointer">+ Nota LSSI-CE</button>
+                    </div>
+                    <div class="flex items-center gap-1.5 p-1 rounded-lg bg-obsidian border border-zinc-800">
+                        <button type="button" id="wgTabWriteBtn" class="px-3 py-1 rounded-lg bg-acid text-obsidian font-mono text-[11px] font-bold cursor-pointer">✏️ Escribir</button>
+                        <button type="button" id="wgTabPreviewBtn" class="px-3 py-1 rounded-lg text-zinc-300 hover:text-white font-mono text-[11px] cursor-pointer">👁️ Vista Previa Web</button>
+                    </div>
+                </div>
+
+                <!-- Insertar producto Vinted / Farmasi -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <select id="wgInsertProductSelect" class="flex-1 px-3 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white"></select>
+                    <button type="button" id="wgInsertProductBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-acid/15 hover:bg-acid text-acid hover:text-obsidian border border-acid/30 font-mono text-xs font-bold cursor-pointer">
+                        + Insertar enlace en el texto y vincular
+                    </button>
+                </div>
+
+                <div id="wgLinkedChips" class="flex flex-wrap gap-1.5"></div>
+
+                <textarea id="wgBodyTextarea" rows="12" placeholder="Redacta aquí tu guía en Markdown..." class="w-full px-3.5 py-3 rounded-2xl bg-obsidian-elevated border border-zinc-700 font-mono text-xs text-zinc-100 leading-relaxed focus:outline-none focus:border-acid resize-y"></textarea>
+                <div id="wgPreviewContainer" class="hidden"></div>
+            </div>
+
+            <!-- 5. Revisor de Salud Editorial -->
+            <div class="space-y-1.5">
+                <span class="block text-[10px] font-mono uppercase text-zinc-400">Revisor de Salud Editorial (En vivo):</span>
+                <div id="wgHealthChecklist" class="space-y-1"></div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-zinc-800">
+                <button type="button" id="wgCancelBtn" class="px-4 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white cursor-pointer">Cancelar</button>
+                <button type="button" id="wgSaveBtn" class="px-5 py-2 rounded-xl bg-acid hover:bg-acid-hover text-obsidian font-display font-bold text-xs uppercase tracking-wider cursor-pointer">Guardar Guía</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Kit Pinterest / Redes (Fase 2) -->
+    <div id="webPinterestModal" role="dialog" aria-modal="true" aria-labelledby="wpModalTitle" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-xl my-auto rounded-3xl bg-obsidian-card border border-rose-500/40 p-5 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div>
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-rose-400">Distribución Orgánica · UTM</span>
+                    <h3 id="wpModalTitle" class="font-display text-base font-bold text-white uppercase">Kit Pinterest &amp; SEO</h3>
+                </div>
+                <button type="button" id="closeWebPinterestModalBtn" aria-label="Cerrar kit Pinterest" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer">
+                    <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div id="webPinterestBody"></div>
         </div>
     </div>
 
