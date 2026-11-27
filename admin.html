@@ -1225,6 +1225,7 @@
                             <span class="font-mono text-[10px] uppercase text-zinc-400">Facturación Cobrada</span>
                             <div id="kpiFacturacionReal" class="mt-1 font-display text-xl sm:text-2xl font-bold text-white tabular-nums">0,00 €</div>
                             <span id="kpiFacturacionSub" class="text-[10px] text-zinc-500 font-mono mt-1">0 ventas cerradas</span>
+                            <div id="kpiFacturacionTotalConCamino" class="mt-1.5 font-display text-sm sm:text-base font-bold text-white tabular-nums">Total (+ en camino): 0,00 €</div>
                         </div>
                         <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border flex flex-col justify-between">
                             <span class="font-mono text-[10px] uppercase text-zinc-400">Coste Stock + Gastos</span>
@@ -8140,23 +8141,61 @@
         }
 
         function getGarmentSoldAt(g) {
+            if (g.status === 'VENDIDA' && g.completedAt) return g.completedAt;
             if (g.soldAt) return g.soldAt;
             if (g.reservedAt) return g.reservedAt;
             return g.updatedAt || '';
         }
 
+        function getRegistroPeriodBounds(now = new Date()) {
+            const pad2 = n => String(n).padStart(2, '0');
+            const toYmd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+            const startOfLastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const endOfLastMonthDate = new Date(now.getFullYear(), now.getMonth(), 0);
+            const sevenDaysAgoDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+            const f = adminState.registroFilters;
+
+            return {
+                todayYmd: toYmd(now),
+                sevenDaysAgoYmd: toYmd(sevenDaysAgoDate),
+                thisMonthStartYmd: `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-01`,
+                lastMonthStartYmd: toYmd(startOfLastMonthDate),
+                lastMonthEndYmd: toYmd(endOfLastMonthDate),
+                thisYearStartYmd: `${now.getFullYear()}-01-01`,
+                customFromYmd: f.dateFrom || '',
+                customToYmd: f.dateTo || '9999-12-31'
+            };
+        }
+
+        function extractIsoYmd(dateStr) {
+            const s = String(dateStr || '').trim();
+            if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+            if (!s) return '';
+            const d = new Date(s);
+            if (Number.isNaN(d.getTime())) return '';
+            const pad2 = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        }
+
+        function matchesRegistroPeriod(dateStr, period, bounds, requireDate = false) {
+            if (period === 'ALL') return true;
+            const ymd = extractIsoYmd(dateStr);
+            if (!ymd) return !requireDate;
+            if (period === 'TODAY') return ymd >= bounds.todayYmd;
+            if (period === '7DAYS') return ymd >= bounds.sevenDaysAgoYmd;
+            if (period === 'THIS_MONTH') return ymd >= bounds.thisMonthStartYmd;
+            if (period === 'LAST_MONTH') return ymd >= bounds.lastMonthStartYmd && ymd <= bounds.lastMonthEndYmd;
+            if (period === 'THIS_YEAR') return ymd >= bounds.thisYearStartYmd;
+            if (period === 'CUSTOM') {
+                return (!bounds.customFromYmd || ymd >= bounds.customFromYmd) &&
+                    (!bounds.customToYmd || ymd <= bounds.customToYmd);
+            }
+            return true;
+        }
+
         function getFilteredRegistroData() {
             const f = adminState.registroFilters;
-            const now = new Date();
-            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-            const sevenDaysAgo = now.getTime() - 7 * 24 * 3600 * 1000;
-            const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-            const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime();
-            const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999).getTime();
-            const startOfThisYear = new Date(now.getFullYear(), 0, 1).getTime();
-
-            const customFromMs = f.dateFrom ? new Date(f.dateFrom + 'T00:00:00').getTime() : 0;
-            const customToMs = f.dateTo ? new Date(f.dateTo + 'T23:59:59').getTime() : Infinity;
+            const bounds = getRegistroPeriodBounds();
 
             const q = (f.search || '').trim().toLowerCase();
 
@@ -8205,17 +8244,11 @@
                 if (f.profit === 'HIGH_MARGIN' && margin < 50) return false;
                 if (f.profit === 'LOW_MARGIN' && margin >= 20) return false;
 
-                // Filtro Periodo de Fecha (aplica a fecha de venta, reserva o actualizacion)
+                // Filtro Periodo de Fecha (coherente con Evolución Mensual y DAC7: usa completedAt en ventas cobradas)
                 const dateStr = getGarmentSoldAt(g);
-                const itemDate = dateStr ? new Date(dateStr).getTime() : 0;
-
-                if (f.period !== 'ALL' && itemDate > 0) {
-                    if (f.period === 'TODAY' && itemDate < startOfToday) return false;
-                    if (f.period === '7DAYS' && itemDate < sevenDaysAgo) return false;
-                    if (f.period === 'THIS_MONTH' && itemDate < startOfThisMonth) return false;
-                    if (f.period === 'LAST_MONTH' && (itemDate < startOfLastMonth || itemDate > endOfLastMonth)) return false;
-                    if (f.period === 'THIS_YEAR' && itemDate < startOfThisYear) return false;
-                    if (f.period === 'CUSTOM' && (itemDate < customFromMs || itemDate > customToMs)) return false;
+                const isCommercialMovement = g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA';
+                if (!matchesRegistroPeriod(dateStr, f.period, bounds, isCommercialMovement)) {
+                    return false;
                 }
 
                 // Buscador Omnicanal
@@ -8297,19 +8330,10 @@
             const gastosOperativos = soldItems.reduce((acc, g) => acc + Number(g.extraExpenseEur || 0), 0);
 
             // Gastos y Pacas Globales filtrados por el mismo periodo temporal
+            const fExp = adminState.registroFilters;
+            const expBounds = getRegistroPeriodBounds();
             const allExpenses = Array.isArray(adminState.config.globalExpenses) ? adminState.config.globalExpenses : [];
-            const filteredExpenses = allExpenses.filter(x => {
-                const expMs = x.date ? new Date(x.date + (x.date.length === 10 ? 'T12:00:00Z' : '')).getTime() : 0;
-                if (f.period !== 'ALL' && expMs > 0) {
-                    if (f.period === 'TODAY' && expMs < startOfToday) return false;
-                    if (f.period === '7DAYS' && expMs < sevenDaysAgo) return false;
-                    if (f.period === 'THIS_MONTH' && expMs < startOfThisMonth) return false;
-                    if (f.period === 'LAST_MONTH' && (expMs < startOfLastMonth || expMs > endOfLastMonth)) return false;
-                    if (f.period === 'THIS_YEAR' && expMs < startOfThisYear) return false;
-                    if (f.period === 'CUSTOM' && (expMs < customFromMs || expMs > customToMs)) return false;
-                }
-                return true;
-            });
+            const filteredExpenses = allExpenses.filter(x => matchesRegistroPeriod(x.date, fExp.period, expBounds, false));
             const totalGastosGlobales = filteredExpenses.reduce((acc, x) => acc + Number(x.amountEur || 0), 0);
             const costeTotalVendido = costeStockVendido + gastosOperativos + totalGastosGlobales;
             const beneficioNeto = facturacionReal - costeTotalVendido;
@@ -8332,6 +8356,10 @@
                 elFactSub.textContent = inTransitItems.length > 0
                     ? `${soldItems.length} ventas cobradas (+${inTransitItems.length} en camino: ${fmtEur(inTransitTotal)})`
                     : `${soldItems.length} venta${soldItems.length === 1 ? '' : 's'} (${reservedItems.length} en reserva)`;
+            }
+            const elFactTotal = document.getElementById('kpiFacturacionTotalConCamino');
+            if (elFactTotal) {
+                elFactTotal.textContent = `Total (+ en camino): ${fmtEur(round2(facturacionReal + inTransitTotal))}`;
             }
 
             const elCost = document.getElementById('kpiCosteTotal');
