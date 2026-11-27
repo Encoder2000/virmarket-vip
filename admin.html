@@ -1201,6 +1201,75 @@
                         </div>
                     </div>
 
+                    <!-- Prioridad A: Panel Fiscal DAC7, Conciliación Banco (Payouts), Facturas & Evolución Mensual -->
+                    <div id="erpDac7FinancePanel" class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2 py-0.5 rounded bg-sky-500/15 border border-sky-400/40 text-sky-300 font-mono text-[10px] font-bold uppercase">🛡️ Finanzas, DAC7 &amp; Auditoría Vinted</span>
+                                <span id="dac7AlertChip" class="hidden px-2 py-0.5 rounded font-mono text-[10px] font-bold"></span>
+                            </div>
+                            <button type="button" id="toggleMonthlyChartBtn" class="px-3 py-1.5 rounded-xl bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 hover:border-acid text-xs font-mono text-zinc-200 flex items-center gap-1.5 transition-colors self-start sm:self-auto">
+                                <i aria-hidden="true" data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-acid"></i>
+                                <span id="toggleMonthlyChartLabel">Ver Evolución Mensual (2025–2026)</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <!-- Tarjeta 1: DAC7 -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-2">
+                                <div class="flex items-center justify-between text-[11px] font-mono">
+                                    <span class="text-zinc-400 uppercase font-bold">Control DAC7 (<span id="dac7YearLabel">2026</span>)</span>
+                                    <span id="dac7OpsText" class="text-white font-bold">0 / 30 ventas</span>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-400">Volumen anual cobrado</span>
+                                        <span id="dac7EurText" class="font-mono font-bold text-acid">0,00 € / 2 000 €</span>
+                                    </div>
+                                    <div class="w-full h-2 rounded-full bg-zinc-900 overflow-hidden border border-zinc-800">
+                                        <div id="dac7ProgressBar" class="h-full rounded-full bg-acid transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                    <p id="dac7SubNote" class="text-[10px] text-zinc-400 font-mono pt-0.5">Umbral informativo Hacienda: 30 ventas o 2 000 €/año.</p>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta 2: Banco y Saldo -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                <div class="flex items-center justify-between text-[11px] font-mono">
+                                    <span class="text-zinc-400 uppercase font-bold">Banco (Payouts) &amp; Saldo</span>
+                                    <span id="payoutsCountBadge" class="text-emerald-300 font-bold">0 retiros</span>
+                                </div>
+                                <div class="flex items-baseline justify-between">
+                                    <span class="text-xs text-zinc-400">Transferido a banco</span>
+                                    <span id="payoutsTotalEur" class="font-display text-lg font-bold text-white tabular-nums">0,00 €</span>
+                                </div>
+                                <p id="walletBalanceSub" class="text-[10px] text-zinc-400 font-mono">Saldo Vinted (21/11): —</p>
+                            </div>
+
+                            <!-- Tarjeta 3: Auditoría Facturas y Promos -->
+                            <div class="p-3.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                                <div class="flex items-center justify-between text-[11px] font-mono">
+                                    <span class="text-zinc-400 uppercase font-bold">Facturas &amp; Promociones</span>
+                                    <span id="invoicesCountBadge" class="text-sky-300 font-bold">0 facturas</span>
+                                </div>
+                                <div class="flex items-baseline justify-between">
+                                    <span class="text-xs text-zinc-400">Gasto en Destacados / Ads</span>
+                                    <span id="extraServicesEur" class="font-display text-lg font-bold text-emerald-400 tabular-nums">0,00 €</span>
+                                </div>
+                                <p id="invoicesAuditSub" class="text-[10px] text-zinc-400 font-mono">Sin datos de facturas cargados todavía.</p>
+                            </div>
+                        </div>
+
+                        <!-- Gráfica de Evolución Mensual (Colapsable) -->
+                        <div id="monthlyEvolutionWrap" class="hidden pt-3 border-t border-zinc-800 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h4 class="font-display text-xs font-bold uppercase text-white">Evolución Mensual Real de Ventas Cobradas (2025–2026)</h4>
+                                <span id="monthlyEvolutionMeta" class="font-mono text-[10px] text-zinc-400"></span>
+                            </div>
+                            <div id="monthlyEvolutionBars" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+                        </div>
+                    </div>
+
                     <!-- Motor de Filtros Multicriterio de Alto Volumen -->
                     <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 sm:p-5 space-y-3">
                         <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
@@ -1305,6 +1374,9 @@
                         </button>
                         <button type="button" data-subview="analitica" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
                             📊 6. Tráfico &amp; Clics
+                        </button>
+                        <button type="button" data-subview="inteligencia" class="erp-subview-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-all text-zinc-300 hover:text-white">
+                            🧠 7. Producto &amp; Pricing
                         </button>
                     </div>
 
@@ -1495,7 +1567,9 @@
                                     </div>
                                     <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
                                         <select id="clientesOriginFilter" aria-label="Filtrar clientes por canal de captación" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-zinc-200 focus:outline-none focus:border-acid">
-                                            <option value="ALL">Todos los canales</option>
+                                            <option value="ALL">Todos los clientes</option>
+                                            <option value="RECURRENT">🏆 Solo Recurrentes (2+ compras)</option>
+                                            <option value="RISK">⚠️ Con Cancelaciones Históricas</option>
                                             <option value="WEB">📰 Solo Revista Web (Lista 6)</option>
                                             <option value="QR">🌱 Solo Club VIP QR (Lista 3)</option>
                                         </select>
@@ -1512,7 +1586,7 @@
                                                 <th class="py-3 px-3 text-center">Prendas / Pedidos</th>
                                                 <th class="py-3 px-3 text-right">Gasto Total (LTV)</th>
                                                 <th class="py-3 px-3 text-center">Cupón</th>
-                                                <th class="py-3 px-3">Notas Privadas</th>
+                                                <th class="py-3 px-3">Tallas / Notas</th>
                                                 <th class="py-3 px-3 text-center">Ficha</th>
                                             </tr>
                                         </thead>
@@ -1523,6 +1597,18 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+
+                            <!-- Prioridad B: Radar de Casi-Compradoras en Chat -->
+                            <div id="crmNearMissSection" class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                <div class="p-4 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-2">
+                                    <div>
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">💬 Radar de Casi-Compradoras (Preguntas u Ofertas en Chat 2026)</h3>
+                                        <p class="text-[11px] text-zinc-400 mt-0.5">Hilos con interés real (oferta, medidas o lote) que no terminaron en compra para detectar frenos o reactivar clientes.</p>
+                                    </div>
+                                    <span id="nearMissCountBadge" class="font-mono text-xs text-acid font-bold">0 hilos</span>
+                                </div>
+                                <div id="crmNearMissList" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto"></div>
                             </div>
                         </div>
 
@@ -1657,6 +1743,92 @@
                                     <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">Eventos (Farmasi, Vinted, VIP)</div>
                                     <div id="umamiEventsList" class="p-3.5 space-y-2 text-xs text-zinc-300">Sin eventos todavía.</div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- 7. Sub-vista Prioridad C: Inteligencia de Producto, Pacas, Tasador & Moderación -->
+                        <div id="subview-inteligencia" class="hidden space-y-4">
+                            <!-- KPIs Pricing & Rotación -->
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                                    <span class="font-mono text-[10px] uppercase text-zinc-400">Descuento Medio Regateo</span>
+                                    <div id="intelDiscountAvg" class="mt-1 font-display text-2xl font-bold text-amber-300 tabular-nums">0%</div>
+                                    <span id="intelDiscountSub" class="text-[10px] text-zinc-400 font-mono">Sobre precio inicial publicado</span>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                                    <span class="font-mono text-[10px] uppercase text-zinc-400">Velocidad Media de Venta</span>
+                                    <div id="intelDaysAvg" class="mt-1 font-display text-2xl font-bold text-acid tabular-nums">0 días</div>
+                                    <span class="text-[10px] text-zinc-400 font-mono">Desde publicación en Vinted</span>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                                    <span class="font-mono text-[10px] uppercase text-zinc-400">Pedidos Cancelados Hist.</span>
+                                    <div id="intelCancelledTotal" class="mt-1 font-display text-2xl font-bold text-rose-400 tabular-nums">0</div>
+                                    <span id="intelCancelledEurSub" class="text-[10px] text-zinc-400 font-mono">0,00 € no cobrados</span>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-obsidian-card border border-obsidian-border">
+                                    <span class="font-mono text-[10px] uppercase text-zinc-400">Avisos Moderación Hist.</span>
+                                    <div id="intelModerationCount" class="mt-1 font-display text-2xl font-bold text-zinc-200 tabular-nums">0</div>
+                                    <span class="text-[10px] text-zinc-400 font-mono">Reportes en armario Vinted</span>
+                                </div>
+                            </div>
+
+                            <!-- Tasador Histórico Visual -->
+                            <div class="rounded-2xl bg-obsidian-card border border-acid/40 p-4 space-y-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                                    <div>
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">🔍 Tasador Histórico Visual (Referencia para Futuras Pacas)</h3>
+                                        <p class="text-[11px] text-zinc-400">Busca prendas parecidas ya cobradas (ej. "Mayoral", "Zara", "Biomecánics", "pijama") para ver a qué precio real se vendieron y cuántos días tardaron.</p>
+                                    </div>
+                                    <input type="search" id="tasadorSearchInput" placeholder="Buscar prenda, marca o talla..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-acid">
+                                </div>
+                                <div id="tasadorResultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 max-h-[340px] overflow-y-auto pr-1"></div>
+                            </div>
+
+                            <!-- Tablas Top Marcas & Top Tallas -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">🏆 Top Marcas por Facturación &amp; Rotación</div>
+                                    <div class="overflow-x-auto max-h-[340px]">
+                                        <table class="w-full text-left text-xs border-collapse">
+                                            <thead>
+                                                <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                    <th class="py-2.5 px-3">Marca</th>
+                                                    <th class="py-2.5 px-2 text-center">Uds</th>
+                                                    <th class="py-2.5 px-2 text-right">Ingresos</th>
+                                                    <th class="py-2.5 px-2 text-right">Ticket</th>
+                                                    <th class="py-2.5 px-2 text-center">Días / Regateo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="intelBrandsBody" class="divide-y divide-obsidian-border"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
+                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">📏 Top Tallas Más Vendidas</div>
+                                    <div class="overflow-x-auto max-h-[340px]">
+                                        <table class="w-full text-left text-xs border-collapse">
+                                            <thead>
+                                                <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
+                                                    <th class="py-2.5 px-3">Talla</th>
+                                                    <th class="py-2.5 px-2 text-center">Ventas</th>
+                                                    <th class="py-2.5 px-3 text-right">Ingresos</th>
+                                                    <th class="py-2.5 px-3 text-right">Ticket Medio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="intelSizesBody" class="divide-y divide-obsidian-border"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Radar de Moderación -->
+                            <div class="rounded-2xl bg-obsidian-card border border-obsidian-border p-4 space-y-2.5">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <h3 class="font-display text-xs font-bold text-white uppercase">🛡️ Radar Anti-Reportes (Histórico de Moderación en Vinted)</h3>
+                                    <span class="text-[11px] text-zinc-400 font-mono">Evita fotos de catálogo web o baja luz para reducir eliminaciones automáticas</span>
+                                </div>
+                                <div id="intelModerationList" class="flex flex-wrap gap-2"></div>
                             </div>
                         </div>
                     </div>
@@ -8046,6 +8218,10 @@
 
             const filterBadge = document.getElementById('erpFilterIndicatorBadge');
             if (filterBadge) filterBadge.classList.toggle('hidden', !isFiltering);
+
+            if (typeof renderFinanzasDac7Panel === 'function') {
+                renderFinanzasDac7Panel();
+            }
         }
 
         // ======================== SUB-VISTA 1: VENTAS & PEDIDOS ========================
@@ -8171,10 +8347,14 @@
                                 <button type="button" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'ventas')" class="font-mono font-bold text-acid hover:underline">${escapeHtml(g.ref)}</button>
                                 ${g.reservationGroupId ? `<span class="block font-mono text-[9px] text-zinc-500">${escapeHtml(g.reservationGroupId)}</span>` : ''}
                             </td>
-                            <td class="py-3 px-2.5 max-w-[210px]">
+                            <td class="py-3 px-2.5 max-w-[230px]">
                                 <div class="font-bold text-white truncate cursor-pointer hover:text-acid" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'ventas')" title="${escapeHtml(g.title)}">${escapeHtml(g.title || g.ref)}</div>
-                                <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</span>
-                                ${stageBadgeHtml}
+                                <span class="font-mono text-[10px] text-zinc-400 block truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}${g.daysToSell !== null && g.daysToSell !== undefined ? ' • ' + g.daysToSell + 'd' : ''}</span>
+                                ${Array.isArray(g.lotItems) && g.lotItems.length > 0 ? `<span class="block text-[10px] text-amber-300/80 truncate" title="${escapeHtml(g.lotItems.map(li => li.title + ' (' + fmtEur(li.price) + ')').join(' | '))}">📦 ${g.lotItems.length} uds: ${escapeHtml(g.lotItems.map(li => li.title).slice(0, 2).join(', '))}${g.lotItems.length > 2 ? '...' : ''}</span>` : ''}
+                                <div class="flex flex-wrap items-center gap-1">
+                                    ${stageBadgeHtml}
+                                    ${Number(g.publishedPriceEur || 0) > finalPrice && finalPrice > 0 ? `<span class="mt-0.5 px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-400/30 text-amber-300 font-mono text-[9px]" title="Publicado inicialmente a ${fmtEur(g.publishedPriceEur)}">-${Math.round((1 - finalPrice / Number(g.publishedPriceEur)) * 100)}% regateo</span>` : ''}
+                                </div>
                             </td>
                             <td class="py-3 px-2.5">
                                 <span class="font-mono text-xs font-semibold text-zinc-200 whitespace-nowrap">@${escapeHtml(buyerVinted.replace(/^@+/, ''))}</span>
@@ -9338,6 +9518,8 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     client.purchases.push({
                         ref: g.ref,
                         title: g.title,
+                        brand: g.brand || '',
+                        size: g.size || '',
                         status: g.status,
                         price: getGarmentSoldPrice(g),
                         soldAt: getGarmentSoldAt(g)
@@ -9345,11 +9527,59 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 }
             });
 
-            let clientsList = [...crmMap.values()];
+            const insights = (typeof getVintedInsights === 'function') ? getVintedInsights() : null;
+            const buyerInsightsMap = insights?.buyerInsights || {};
 
-            // Filtrar por canal de captación (Revista Web vs Club VIP QR)
+            // Incorporar también compradoras históricas con cancelaciones/compras registradas en buyerInsights
+            Object.entries(buyerInsightsMap).forEach(([uKey, bi]) => {
+                const cleanU = String(uKey || '').trim().toLowerCase().replace(/^@+/, '');
+                if (!cleanU) return;
+                if (!crmMap.has(cleanU)) {
+                    // Comprobar si existe por vintedUser en alguna entrada con email
+                    const existingByU = [...crmMap.values()].find(x => (x.vintedUser || '').toLowerCase().replace(/^@+/, '') === cleanU);
+                    if (!existingByU && Number(bi.ordersCancelled || 0) > 0) {
+                        crmMap.set(cleanU, {
+                            key: cleanU,
+                            email: '',
+                            vintedUser: cleanU,
+                            purchases: [],
+                            waitlists: [],
+                            brevoId: null,
+                            createdAt: bi.lastOrderAt || '',
+                            numReservas: 0
+                        });
+                    }
+                }
+            });
+
+            let clientsList = [...crmMap.values()].map(c => {
+                const uKey = String(c.vintedUser || c.key || '').trim().toLowerCase().replace(/^@+/, '');
+                const bi = buyerInsightsMap[uKey] || null;
+                const sizeCounts = new Map();
+                const brandCounts = new Map();
+                c.purchases.forEach(p => {
+                    if (p.size) sizeCounts.set(p.size, (sizeCounts.get(p.size) || 0) + 1);
+                    if (p.brand) brandCounts.set(p.brand, (brandCounts.get(p.brand) || 0) + 1);
+                });
+                const liveSizes = [...sizeCounts.entries()].sort((a, b) => b[1] - a[1]).map(x => x[0]).slice(0, 3);
+                const liveBrands = [...brandCounts.entries()].sort((a, b) => b[1] - a[1]).map(x => x[0]).slice(0, 2);
+
+                return {
+                    ...c,
+                    topSizes: liveSizes.length ? liveSizes : (bi?.topSizes || []),
+                    topBrands: liveBrands.length ? liveBrands : (bi?.topBrands || []),
+                    ordersCancelled: Number(bi?.ordersCancelled || 0),
+                    cancelledEur: Number(bi?.cancelledEur || 0)
+                };
+            });
+
+            // Filtrar por canal de captación / segmento
             const srcFilter = adminState.registroFilters.clientSource || 'ALL';
-            if (srcFilter === 'WEB') {
+            if (srcFilter === 'RECURRENT') {
+                clientsList = clientsList.filter(c => c.purchases.filter(p => p.status === 'VENDIDA').length >= 2);
+            } else if (srcFilter === 'RISK') {
+                clientsList = clientsList.filter(c => c.ordersCancelled > 0);
+            } else if (srcFilter === 'WEB') {
                 clientsList = clientsList.filter(c => {
                     const lids = Array.isArray(c.listIds) ? c.listIds : [];
                     const orig = String(c.origen || '').toLowerCase();
@@ -9367,7 +9597,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             const q = (adminState.registroFilters.search || '').trim().toLowerCase();
             if (!q) return clientsList;
             return clientsList.filter(c => {
-                const hay = [c.email, c.vintedUser, c.firstName, c.origen || ''].join(' ').toLowerCase();
+                const hay = [c.email, c.vintedUser, c.firstName, c.origen || '', ...(c.topSizes || []), ...(c.topBrands || [])].join(' ').toLowerCase();
                 return hay.includes(q);
             });
         }
@@ -9430,6 +9660,11 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
 
                 const clientMeta = configCrm[c.key.toLowerCase()] || {};
                 const privateNote = clientMeta.note || '';
+                const sizesBadge = (c.topSizes && c.topSizes.length) ? `🏷️ ${c.topSizes.join(', ')}` : '';
+                const brandsBadge = (c.topBrands && c.topBrands.length) ? `${c.topBrands.join(' · ')}` : '';
+                const riskHtml = c.ordersCancelled > 0
+                    ? `<span class="mt-0.5 inline-flex items-center px-1.5 py-0.2 rounded bg-rose-500/15 border border-rose-500/40 text-rose-300 font-mono text-[9px] font-bold" title="Pedidos cancelados registrados">⚠️ ${c.ordersCancelled} cancel. (${fmtEur(c.cancelledEur)})</span>`
+                    : '';
 
                 return `
                 <tr class="hover:bg-obsidian-elevated/40 transition-colors">
@@ -9450,7 +9685,10 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                         <div>${escapeHtml(c.email || '-')}</div>
                         ${originLabel ? `<div class="text-[10px] text-zinc-400 mt-0.5">${originLabel}${c.emailBlacklisted ? ' • <span class="text-rose-400">Baja</span>' : ''}</div>` : ''}
                     </td>
-                    <td class="py-3 px-3 text-center whitespace-nowrap">${tagBadge}</td>
+                    <td class="py-3 px-3 text-center whitespace-nowrap">
+                        <div>${tagBadge}</div>
+                        ${riskHtml}
+                    </td>
                     <td class="py-3 px-3 text-center font-mono tabular-nums text-xs whitespace-nowrap">
                         <strong class="text-white">${completedPurchases.length}</strong>
                         ${reservedPurchases.length > 0 ? `<span class="text-amber-400 text-[10px]"> (+${reservedPurchases.length} res.)</span>` : ''}
@@ -9459,9 +9697,10 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     <td class="py-3 px-3 text-center font-mono text-[10px] whitespace-nowrap">
                         ${couponCell}
                     </td>
-                    <td class="py-3 px-3 max-w-[180px]">
+                    <td class="py-3 px-3 max-w-[210px]">
+                        ${sizesBadge ? `<span class="text-[10px] font-mono text-acid block truncate" title="${escapeHtml(sizesBadge + (brandsBadge ? ' • ' + brandsBadge : ''))}">${escapeHtml(sizesBadge)}${brandsBadge ? ' · ' + escapeHtml(brandsBadge) : ''}</span>` : ''}
                         <span class="text-[11px] text-zinc-400 truncate block" title="${escapeHtml(privateNote)}">
-                            ${escapeHtml(privateNote || 'Sin notas')}
+                            ${escapeHtml(privateNote || (sizesBadge ? '' : 'Sin notas'))}
                         </span>
                     </td>
                     <td class="py-3 px-3 text-center whitespace-nowrap">
@@ -9475,6 +9714,29 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             tableBody.querySelectorAll('[data-open-client]').forEach(btn => {
                 btn.addEventListener('click', () => openClientDetailsModal(btn.getAttribute('data-open-client')));
             });
+
+            // Prioridad B: Renderizar Radar de Casi-Compradoras (Chat sin cierre)
+            const nearMissListEl = document.getElementById('crmNearMissList');
+            const nearMissBadgeEl = document.getElementById('nearMissCountBadge');
+            const insightsCrm = (typeof getVintedInsights === 'function') ? getVintedInsights() : null;
+            const nearMiss = Array.isArray(insightsCrm?.nearMissLeads) ? insightsCrm.nearMissLeads : [];
+            if (nearMissBadgeEl) nearMissBadgeEl.textContent = `${nearMiss.length} hilos`;
+            if (nearMissListEl) {
+                if (nearMiss.length === 0) {
+                    nearMissListEl.innerHTML = '<p class="col-span-full text-xs font-mono text-zinc-500 text-center py-4">Sin hilos de casi-compradoras detectados.</p>';
+                } else {
+                    nearMissListEl.innerHTML = nearMiss.map(nm => `
+                        <div class="p-3 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1">
+                            <div class="flex items-center justify-between gap-2 text-[11px]">
+                                <span class="font-mono font-bold text-acid">@${escapeHtml(nm.user)}</span>
+                                <span class="font-mono text-[10px] text-zinc-500">${escapeHtml(nm.date)}</span>
+                            </div>
+                            <div class="text-xs font-bold text-white truncate" title="${escapeHtml(nm.subject)}">${escapeHtml(nm.subject)}</div>
+                            <p class="text-[11px] text-zinc-400 line-clamp-2">${escapeHtml(nm.snippet)}</p>
+                        </div>
+                    `).join('');
+                }
+            }
 
             lucide.createIcons();
         }
@@ -9684,7 +9946,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 }
             });
 
-            ['ventas', 'prendas', 'clientes', 'drops', 'lotes', 'analitica'].forEach(v => {
+            ['ventas', 'prendas', 'clientes', 'drops', 'lotes', 'analitica', 'inteligencia'].forEach(v => {
                 const el = document.getElementById(`subview-${v}`);
                 if (el) el.classList.toggle('hidden', v !== subViewName);
             });
@@ -9697,7 +9959,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             const filtered = getFilteredRegistroData();
             renderRegistroKpis(filtered);
 
-            // Sincronizacion reactiva de badges numericos de las 5 sub-vistas
+            // Sincronizacion reactiva de badges numericos de las sub-vistas
             const salesCount = filtered.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA').length;
             const bV = document.getElementById('badgeCountVentas');
             if (bV) bV.textContent = String(salesCount);
@@ -9729,7 +9991,246 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 renderSubViewLotes(filtered, computedLots);
             } else if (adminState.activeSubView === 'analitica') {
                 renderSubViewAnalitica();
+            } else if (adminState.activeSubView === 'inteligencia') {
+                renderSubViewInteligencia();
             }
+        }
+
+        function getVintedInsights() {
+            if (adminState.config?.vintedInsights && typeof adminState.config.vintedInsights === 'object') {
+                return adminState.config.vintedInsights;
+            }
+            const rawCrm = adminState.config?.crmClientsMeta;
+            if (rawCrm && typeof rawCrm === 'object' && rawCrm.__vintedInsights) {
+                return rawCrm.__vintedInsights;
+            }
+            if (typeof rawCrm === 'string') {
+                try {
+                    const parsed = JSON.parse(rawCrm);
+                    if (parsed && parsed.__vintedInsights) return parsed.__vintedInsights;
+                } catch (e) {}
+            }
+            return null;
+        }
+
+        function renderFinanzasDac7Panel() {
+            const ins = getVintedInsights();
+            const soldGarments = (adminState.garments || []).filter(g => g.status === 'VENDIDA');
+            const curYear = String(new Date().getFullYear());
+            const soldThisYear = soldGarments.filter(g => {
+                const dt = g.completedAt || getGarmentSoldAt(g) || '';
+                return String(dt).startsWith(curYear);
+            });
+            const countYear = soldThisYear.length;
+            const eurYear = round2(soldThisYear.reduce((acc, g) => acc + getGarmentSoldPrice(g), 0));
+
+            const dac7YearEl = document.getElementById('dac7YearLabel');
+            const dac7OpsEl = document.getElementById('dac7OpsText');
+            const dac7EurEl = document.getElementById('dac7EurText');
+            const dac7BarEl = document.getElementById('dac7ProgressBar');
+            const dac7AlertEl = document.getElementById('dac7AlertChip');
+            const dac7SubEl = document.getElementById('dac7SubNote');
+
+            if (dac7YearEl) dac7YearEl.textContent = curYear;
+            if (dac7OpsEl) dac7OpsEl.textContent = `${countYear} / 30 ventas`;
+            if (dac7EurEl) dac7EurEl.textContent = `${fmtEur(eurYear)} / 2 000 €`;
+
+            const pctEur = Math.min(100, round2((eurYear / 2000) * 100));
+            if (dac7BarEl) {
+                dac7BarEl.style.width = `${pctEur}%`;
+                dac7BarEl.className = eurYear >= 2000
+                    ? 'h-full rounded-full bg-rose-500 transition-all duration-300'
+                    : (eurYear >= 1700 ? 'h-full rounded-full bg-amber-400 transition-all duration-300' : 'h-full rounded-full bg-acid transition-all duration-300');
+            }
+            if (dac7AlertEl) {
+                if (eurYear >= 2000) {
+                    dac7AlertEl.textContent = '⚠️ Umbral 2 000 € superado (DAC7 activo)';
+                    dac7AlertEl.className = 'px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+                    dac7AlertEl.classList.remove('hidden');
+                } else if (eurYear >= 1650 || countYear >= 30) {
+                    const rem = round2(Math.max(0, 2000 - eurYear));
+                    dac7AlertEl.textContent = countYear >= 30
+                        ? `⚠️ >30 ventas • a ${fmtEur(rem)} de 2 000 €`
+                        : `⚠️ Al ${pctEur}% del límite 2 000 €`;
+                    dac7AlertEl.className = 'px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-400/40';
+                    dac7AlertEl.classList.remove('hidden');
+                } else {
+                    dac7AlertEl.classList.add('hidden');
+                }
+            }
+            if (dac7SubEl) {
+                const rem = round2(Math.max(0, 2000 - eurYear));
+                dac7SubEl.textContent = eurYear >= 2000
+                    ? 'Superados ambos umbrales DAC7 (Modelo 238).'
+                    : `Faltan ${fmtEur(rem)} para los 2 000 € anuales (${countYear >= 30 ? 'umbral 30 ventas ya superado' : 'umbral 30 ventas'}).`;
+            }
+
+            // Banco (Payouts) & Saldo
+            const pay = ins?.payouts;
+            const payBadgeEl = document.getElementById('payoutsCountBadge');
+            const payTotalEl = document.getElementById('payoutsTotalEur');
+            const walletSubEl = document.getElementById('walletBalanceSub');
+            if (pay) {
+                if (payBadgeEl) payBadgeEl.textContent = `${pay.count || 0} retiros`;
+                if (payTotalEl) payTotalEl.textContent = fmtEur(pay.totalEur || 0);
+                if (walletSubEl) walletSubEl.textContent = `Saldo export (21/11): ${fmtEur(pay.walletAvailableEur || 0)} disp. + ${fmtEur(pay.walletPendingEur || 0)} pdte. • Último: ${pay.lastPayoutAt || '-'}`;
+            }
+
+            // Facturas y Servicios Pagados
+            const inv = ins?.invoicesAudit;
+            const invBadgeEl = document.getElementById('invoicesCountBadge');
+            const extraSrvEl = document.getElementById('extraServicesEur');
+            const invSubEl = document.getElementById('invoicesAuditSub');
+            if (inv) {
+                if (invBadgeEl) invBadgeEl.textContent = `${inv.totalCount || 0} facturas`;
+                if (extraSrvEl) extraSrvEl.textContent = fmtEur(inv.extraServicesEur || 0);
+                if (invSubEl) invSubEl.textContent = `Portes comprador: ${inv.vgltCount || 0} VGLT (${fmtEur(inv.vgltEur || 0)}) + ${inv.frltCount || 0} FRLT (${fmtEur(inv.frltEur || 0)}) • 100% orgánico.`;
+            }
+
+            // Evolución Mensual Dinámica sobre soldGarments
+            const monthlyBarsEl = document.getElementById('monthlyEvolutionBars');
+            const monthlyMetaEl = document.getElementById('monthlyEvolutionMeta');
+            if (monthlyBarsEl) {
+                const mMap = new Map();
+                soldGarments.forEach(g => {
+                    const dtStr = g.completedAt || getGarmentSoldAt(g) || '';
+                    const ym = String(dtStr).slice(0, 7);
+                    if (!/^\d{4}-\d{2}$/.test(ym)) return;
+                    if (!mMap.has(ym)) mMap.set(ym, { month: ym, count: 0, totalEur: 0 });
+                    const m = mMap.get(ym);
+                    m.count += 1;
+                    m.totalEur = round2(m.totalEur + getGarmentSoldPrice(g));
+                });
+                const months = [...mMap.values()].sort((a, b) => a.month.localeCompare(b.month));
+                const maxEur = Math.max(1, ...months.map(m => m.totalEur));
+                if (monthlyMetaEl) {
+                    const totAll = round2(months.reduce((a, m) => a + m.totalEur, 0));
+                    monthlyMetaEl.textContent = `${months.length} meses activos • Total histórico: ${fmtEur(totAll)} (${soldGarments.length} ventas)`;
+                }
+                monthlyBarsEl.innerHTML = months.map(m => {
+                    const w = Math.max(4, Math.round((m.totalEur / maxEur) * 100));
+                    const ticket = m.count > 0 ? round2(m.totalEur / m.count) : 0;
+                    return `
+                    <div class="p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800 space-y-1.5">
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span class="font-bold text-white">${escapeHtml(m.month)}</span>
+                            <span class="text-acid font-bold">${fmtEur(m.totalEur)}</span>
+                        </div>
+                        <div class="w-full h-1.5 rounded-full bg-zinc-900 overflow-hidden">
+                            <div class="h-full rounded-full bg-acid" style="width: ${w}%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                            <span>${m.count} ventas</span>
+                            <span>Ticket: ${fmtEur(ticket)}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+        }
+
+        function renderTasadorResults() {
+            const grid = document.getElementById('tasadorResultsGrid');
+            if (!grid) return;
+            const q = (document.getElementById('tasadorSearchInput')?.value || '').trim().toLowerCase();
+            const sold = (adminState.garments || []).filter(g => g.status === 'VENDIDA');
+            const matches = q
+                ? sold.filter(g => [g.title, g.brand, g.size, g.ref, ...(Array.isArray(g.lotItems) ? g.lotItems.map(li => li.title) : [])].join(' ').toLowerCase().includes(q))
+                : sold.filter(g => (g.photos && g.photos.length) || g.vintedThumbUrl);
+
+            const sorted = [...matches].sort((a, b) => new Date(b.completedAt || getGarmentSoldAt(b) || 0).getTime() - new Date(a.completedAt || getGarmentSoldAt(a) || 0).getTime()).slice(0, 24);
+            if (sorted.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-xs font-mono text-zinc-500 py-6">Sin prendas vendidas coincidentes con esa búsqueda.</p>';
+                return;
+            }
+            grid.innerHTML = sorted.map(g => {
+                const thumb = (g.photos && g.photos[0]) || g.vintedThumbUrl || '';
+                const soldP = getGarmentSoldPrice(g);
+                const pubP = Number(g.publishedPriceEur || 0);
+                return `
+                <div class="p-2.5 rounded-xl bg-obsidian-elevated border border-zinc-800 hover:border-acid/60 transition-colors flex gap-2.5 items-center cursor-pointer" onclick="openGarment360Modal('${escapeHtml(g.ref)}', 'ventas')">
+                    ${thumb
+                        ? `<img src="${escapeHtml(thumb)}" alt="" referrerpolicy="no-referrer" class="w-12 h-14 object-cover rounded-lg border border-zinc-700 bg-zinc-900 shrink-0">`
+                        : `<div class="w-12 h-14 rounded-lg bg-obsidian border border-zinc-800 flex items-center justify-center text-[10px] font-mono text-zinc-500 shrink-0">VTD</div>`
+                    }
+                    <div class="min-w-0 flex-1 space-y-0.5">
+                        <div class="text-xs font-bold text-white truncate" title="${escapeHtml(g.title)}">${escapeHtml(g.title)}</div>
+                        <div class="text-[10px] font-mono text-zinc-400 truncate">${escapeHtml(g.brand || 'Vintage')}${g.size ? ' • ' + escapeHtml(g.size) : ''}</div>
+                        <div class="flex items-center gap-1.5 font-mono text-xs pt-0.5">
+                            <span class="font-bold text-acid">${fmtEur(soldP)}</span>
+                            ${pubP > soldP ? `<span class="text-[10px] text-zinc-500 line-through">${fmtEur(pubP)}</span>` : ''}
+                            ${g.daysToSell !== null && g.daysToSell !== undefined ? `<span class="text-[10px] text-sky-300 ml-auto">${g.daysToSell}d</span>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderSubViewInteligencia() {
+            const ins = getVintedInsights();
+            const neg = ins?.negotiationStats || {};
+            const canc = ins?.cancelledOrdersStats || {};
+            const mod = ins?.moderationAlerts || {};
+
+            const discEl = document.getElementById('intelDiscountAvg');
+            const discSubEl = document.getElementById('intelDiscountSub');
+            const daysEl = document.getElementById('intelDaysAvg');
+            const cancEl = document.getElementById('intelCancelledTotal');
+            const cancSubEl = document.getElementById('intelCancelledEurSub');
+            const modEl = document.getElementById('intelModerationCount');
+
+            if (discEl) discEl.textContent = `${round2(neg.avgDiscountPct || 0)}%`;
+            if (discSubEl) discSubEl.textContent = `${neg.fullPriceCount || 0} precio lleno vs ${neg.discountedCount || 0} negociadas`;
+            if (daysEl) daysEl.textContent = `${round2(neg.avgDaysToSell || 0)} días`;
+            if (cancEl) cancEl.textContent = `${canc.count || 0}`;
+            if (cancSubEl) cancSubEl.textContent = `${fmtEur(canc.totalEur || 0)} anulados`;
+            if (modEl) modEl.textContent = `${mod.total || 0}`;
+
+            const brandsBody = document.getElementById('intelBrandsBody');
+            if (brandsBody) {
+                const brands = Array.isArray(ins?.brandStats) ? ins.brandStats : [];
+                brandsBody.innerHTML = brands.length === 0
+                    ? '<tr><td colspan="5" class="py-6 text-center text-zinc-500 font-mono text-xs">Sin datos de marcas todavía.</td></tr>'
+                    : brands.map(b => `
+                        <tr class="hover:bg-obsidian-elevated/40">
+                            <td class="py-2 px-3 font-bold text-white">${escapeHtml(b.brand)}</td>
+                            <td class="py-2 px-2 text-center font-mono text-zinc-300">${b.count}</td>
+                            <td class="py-2 px-2 text-right font-mono font-bold text-acid">${fmtEur(b.revenueEur)}</td>
+                            <td class="py-2 px-2 text-right font-mono text-zinc-300">${fmtEur(b.avgTicketEur)}</td>
+                            <td class="py-2 px-2 text-center font-mono text-[11px] text-zinc-400">
+                                ${b.avgDaysToSell !== null ? `${b.avgDaysToSell}d` : '-'}${b.avgDiscountPct !== null ? ` • -${b.avgDiscountPct}%` : ''}
+                            </td>
+                        </tr>
+                    `).join('');
+            }
+
+            const sizesBody = document.getElementById('intelSizesBody');
+            if (sizesBody) {
+                const sizes = Array.isArray(ins?.sizeStats) ? ins.sizeStats : [];
+                sizesBody.innerHTML = sizes.length === 0
+                    ? '<tr><td colspan="4" class="py-6 text-center text-zinc-500 font-mono text-xs">Sin datos de tallas todavía.</td></tr>'
+                    : sizes.map(sz => `
+                        <tr class="hover:bg-obsidian-elevated/40">
+                            <td class="py-2 px-3 font-bold text-white">${escapeHtml(sz.size)}</td>
+                            <td class="py-2 px-2 text-center font-mono text-zinc-300">${sz.count}</td>
+                            <td class="py-2 px-3 text-right font-mono font-bold text-acid">${fmtEur(sz.revenueEur)}</td>
+                            <td class="py-2 px-3 text-right font-mono text-zinc-300">${fmtEur(sz.count > 0 ? round2(sz.revenueEur / sz.count) : 0)}</td>
+                        </tr>
+                    `).join('');
+            }
+
+            const modList = document.getElementById('intelModerationList');
+            if (modList) {
+                const reasons = Object.entries(mod?.byReason || {});
+                modList.innerHTML = reasons.length === 0
+                    ? '<span class="text-xs font-mono text-zinc-500">Sin reportes de moderación históricos.</span>'
+                    : reasons.map(([r, cnt]) => `
+                        <span class="px-2.5 py-1 rounded-xl bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-zinc-200">
+                            ${escapeHtml(r)}: <strong class="text-rose-300">${cnt}</strong>
+                        </span>
+                    `).join('');
+            }
+
+            renderTasadorResults();
         }
 
         let umamiCache = { key: '', fetchedAt: 0, data: null };
@@ -10449,6 +10950,19 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
         document.getElementById('clientesOriginFilter')?.addEventListener('change', (e) => {
             adminState.registroFilters.clientSource = e.target.value;
             renderActiveSubView();
+        });
+
+        document.getElementById('toggleMonthlyChartBtn')?.addEventListener('click', () => {
+            const wrap = document.getElementById('monthlyEvolutionWrap');
+            const lbl = document.getElementById('toggleMonthlyChartLabel');
+            if (!wrap) return;
+            const willOpen = wrap.classList.contains('hidden');
+            wrap.classList.toggle('hidden', !willOpen);
+            if (lbl) lbl.textContent = willOpen ? 'Ocultar Evolución Mensual' : 'Ver Evolución Mensual (2025–2026)';
+        });
+
+        document.getElementById('tasadorSearchInput')?.addEventListener('input', () => {
+            renderTasadorResults();
         });
 
         // Reset filtros
