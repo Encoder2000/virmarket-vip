@@ -524,6 +524,61 @@
             color: #15803D !important;
             border-color: #86EFAC !important;
         }
+
+        /* ===================================================================== */
+        /* LISTADOS REGISTRO: SCROLL INTERNO, CABECERAS FIJAS Y ORDENACIÓN       */
+        /* ===================================================================== */
+        .erp-scroll-table-wrap {
+            max-height: 58vh;
+            min-height: 220px;
+            overflow: auto;
+        }
+        .erp-scroll-cards-wrap {
+            max-height: 62vh;
+            overflow-y: auto;
+        }
+        .erp-sticky-thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #18181B;
+            box-shadow: 0 1px 0 0 #27272A;
+        }
+        .erp-sticky-thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #18181B;
+        }
+        html.theme-light .erp-sticky-thead,
+        html.theme-light .erp-sticky-thead th {
+            background-color: #F1F5F9 !important;
+            box-shadow: 0 1px 0 0 #E2E8F0;
+        }
+        .erp-sort-th {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.15s ease;
+        }
+        .erp-sort-th:hover {
+            color: #A3E635;
+        }
+        html.theme-light .erp-sort-th:hover {
+            color: #3F6212 !important;
+        }
+        .erp-sort-indicator {
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 9px;
+            opacity: 0.45;
+        }
+        .erp-sort-th.is-sorted .erp-sort-indicator {
+            opacity: 1;
+            color: #A3E635;
+        }
+        html.theme-light .erp-sort-th.is-sorted .erp-sort-indicator {
+            color: #3F6212 !important;
+        }
     </style>
 </head>
 <body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-acid selection:text-obsidian">
@@ -1419,7 +1474,23 @@
                                         </h3>
                                         <span id="ventasRowCountLabel" class="font-mono text-xs text-zinc-400">0 registros</span>
                                     </div>
-                                    <div class="flex items-center gap-2.5">
+                                    <div class="flex flex-wrap items-center gap-2.5">
+                                        <!-- Ordenación por columna -->
+                                        <div class="flex items-center gap-1">
+                                            <select id="ventasSortKeySelect" data-sort-select="ventas" aria-label="Ordenar ventas por columna" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="date">Orden: Fecha</option>
+                                                <option value="ref">Orden: REF</option>
+                                                <option value="title">Orden: Prenda</option>
+                                                <option value="buyer">Orden: Comprador</option>
+                                                <option value="channel">Orden: Canal</option>
+                                                <option value="price">Orden: PVP Base</option>
+                                                <option value="soldPrice">Orden: Cobrado</option>
+                                                <option value="totalCost">Orden: Coste + Gasto</option>
+                                                <option value="profit">Orden: Beneficio</option>
+                                                <option value="margin">Orden: Margen %</option>
+                                            </select>
+                                            <button type="button" id="ventasSortDirBtn" data-sort-dir-btn="ventas" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↓ Desc</button>
+                                        </div>
                                         <!-- Selector de volumen visible -->
                                         <div class="flex items-center gap-1.5 text-xs text-zinc-400">
                                             <span class="text-[11px] font-mono uppercase text-zinc-400">Ver:</span>
@@ -1445,21 +1516,21 @@
                                 </div>
 
                                 <!-- Vista Tabla Ventas -->
-                                <div id="ventasTableWrap" class="overflow-x-auto">
+                                <div id="ventasTableWrap" class="erp-scroll-table-wrap">
                                     <table class="w-full text-left text-xs border-collapse">
-                                        <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                        <thead class="erp-sticky-thead">
+                                            <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
                                                 <th class="py-3 px-2 w-11">Foto</th>
-                                                <th class="py-3 px-2.5">Fecha</th>
-                                                <th class="py-3 px-2.5">REF</th>
-                                                <th class="py-3 px-2.5">Prenda</th>
-                                                <th class="py-3 px-2.5">Comprador</th>
-                                                <th class="py-3 px-2.5 text-center">Canal</th>
-                                                <th class="py-3 px-2.5 text-right">PVP Base</th>
-                                                <th class="py-3 px-2.5 text-right">Cobrado</th>
-                                                <th class="py-3 px-2.5 text-right">Coste + Gasto</th>
-                                                <th class="py-3 px-3 text-right text-acid font-bold">Beneficio</th>
-                                                <th class="py-3 px-2.5 text-center">Margen</th>
+                                                <th class="py-3 px-2.5 erp-sort-th" data-sort-table="ventas" data-sort-col="date">Fecha<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 erp-sort-th" data-sort-table="ventas" data-sort-col="ref">REF<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 erp-sort-th" data-sort-table="ventas" data-sort-col="title">Prenda<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 erp-sort-th" data-sort-table="ventas" data-sort-col="buyer">Comprador<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 text-center erp-sort-th" data-sort-table="ventas" data-sort-col="channel">Canal<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 text-right erp-sort-th" data-sort-table="ventas" data-sort-col="price">PVP Base<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 text-right erp-sort-th" data-sort-table="ventas" data-sort-col="soldPrice">Cobrado<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 text-right erp-sort-th" data-sort-table="ventas" data-sort-col="totalCost">Coste + Gasto<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right text-acid font-bold erp-sort-th" data-sort-table="ventas" data-sort-col="profit">Beneficio<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2.5 text-center erp-sort-th" data-sort-table="ventas" data-sort-col="margin">Margen<span class="erp-sort-indicator">↕</span></th>
                                                 <th class="py-3 px-2.5 text-center">Acciones</th>
                                             </tr>
                                         </thead>
@@ -1472,7 +1543,7 @@
                                 </div>
 
                                 <!-- Vista Escaparate Ventas (Cards) -->
-                                <div id="ventasCardsWrap" class="hidden p-3.5 sm:p-5">
+                                <div id="ventasCardsWrap" class="hidden p-3.5 sm:p-5 erp-scroll-cards-wrap">
                                     <div id="ventasCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
                                         <!-- Tarjetas inyectadas dinámicamente -->
                                     </div>
@@ -1489,7 +1560,23 @@
                                         <span class="text-[11px] text-zinc-500 hidden sm:inline">(Clic en Coste para editar en línea)</span>
                                         <span id="prendasRowCountLabel" class="font-mono text-xs text-zinc-400">0 prendas</span>
                                     </div>
-                                    <div class="flex items-center gap-2.5">
+                                    <div class="flex flex-wrap items-center gap-2.5">
+                                        <!-- Ordenación por columna -->
+                                        <div class="flex items-center gap-1">
+                                            <select id="prendasSortKeySelect" data-sort-select="prendas" aria-label="Ordenar inventario por columna" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="default">Orden: Por defecto</option>
+                                                <option value="ref">Orden: REF</option>
+                                                <option value="title">Orden: Título / Marca</option>
+                                                <option value="size">Orden: Talla</option>
+                                                <option value="dropId">Orden: Drop</option>
+                                                <option value="status">Orden: Estado</option>
+                                                <option value="price">Orden: PVP Base</option>
+                                                <option value="cost">Orden: Coste (€)</option>
+                                                <option value="soldPrice">Orden: PVP Final</option>
+                                                <option value="margin">Orden: Rentabilidad</option>
+                                            </select>
+                                            <button type="button" id="prendasSortDirBtn" data-sort-dir-btn="prendas" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↑ Asc</button>
+                                        </div>
                                         <!-- Botón Seleccionar Visibles (sincronizado con acciones masivas) -->
                                         <button type="button" id="prendasSelectVisibleBtn" class="px-2.5 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 shadow-sm" title="Seleccionar todas las prendas visibles actualmente">
                                             <i aria-hidden="true" data-lucide="check-square" class="w-3.5 h-3.5 text-acid"></i>
@@ -1520,23 +1607,23 @@
                                 </div>
 
                                 <!-- Vista Tabla Inventario -->
-                                <div id="prendasTableWrap" class="overflow-x-auto">
+                                <div id="prendasTableWrap" class="erp-scroll-table-wrap">
                                     <table class="w-full text-left text-xs border-collapse">
-                                        <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                        <thead class="erp-sticky-thead">
+                                            <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
                                                 <th class="py-3 px-2 w-8 text-center">
                                                     <input type="checkbox" id="erpSelectAllCheckbox" aria-label="Seleccionar todas las prendas visibles" class="rounded border-zinc-700 text-acid focus:ring-0">
                                                 </th>
                                                 <th class="py-3 px-1.5 w-11">Foto</th>
-                                                <th class="py-3 px-2">REF</th>
-                                                <th class="py-3 px-2">Título / Marca</th>
-                                                <th class="py-3 px-2">Talla</th>
-                                                <th class="py-3 px-2">Drop</th>
-                                                <th class="py-3 px-2 text-center">Estado</th>
-                                                <th class="py-3 px-2 text-right">PVP Base</th>
-                                                <th class="py-3 px-2 text-center text-amber-300 font-bold">Coste (€)</th>
-                                                <th class="py-3 px-2 text-right">PVP Final</th>
-                                                <th class="py-3 px-2 text-center">Rentab.</th>
+                                                <th class="py-3 px-2 erp-sort-th" data-sort-table="prendas" data-sort-col="ref">REF<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 erp-sort-th" data-sort-table="prendas" data-sort-col="title">Título / Marca<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 erp-sort-th" data-sort-table="prendas" data-sort-col="size">Talla<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 erp-sort-th" data-sort-table="prendas" data-sort-col="dropId">Drop<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 text-center erp-sort-th" data-sort-table="prendas" data-sort-col="status">Estado<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 text-right erp-sort-th" data-sort-table="prendas" data-sort-col="price">PVP Base<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 text-center text-amber-300 font-bold erp-sort-th" data-sort-table="prendas" data-sort-col="cost">Coste (€)<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 text-right erp-sort-th" data-sort-table="prendas" data-sort-col="soldPrice">PVP Final<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-2 text-center erp-sort-th" data-sort-table="prendas" data-sort-col="margin">Rentab.<span class="erp-sort-indicator">↕</span></th>
                                                 <th class="py-3 px-2 text-center">Acciones</th>
                                             </tr>
                                         </thead>
@@ -1549,7 +1636,7 @@
                                 </div>
 
                                 <!-- Vista Escaparate Inventario (Cards) -->
-                                <div id="prendasCardsWrap" class="hidden p-3.5 sm:p-5">
+                                <div id="prendasCardsWrap" class="hidden p-3.5 sm:p-5 erp-scroll-cards-wrap">
                                     <div id="prendasCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
                                         <!-- Tarjetas inyectadas dinámicamente -->
                                     </div>
@@ -1565,7 +1652,18 @@
                                         <h3 class="font-display text-sm font-bold text-white uppercase">Directorio CRM 360º (Compradores + Leads Web &amp; QR Brevo)</h3>
                                         <p class="text-[11px] text-zinc-400 mt-0.5">Visión unificada de clientes recurrentes, compradores, leads de Revista Web / Club VIP QR y notas privadas.</p>
                                     </div>
-                                    <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+                                    <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                                        <div class="flex items-center gap-1">
+                                            <select id="clientesSortKeySelect" data-sort-select="clientes" aria-label="Ordenar clientes por columna" class="px-2 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="ltv">Orden: Gasto Total (LTV)</option>
+                                                <option value="client">Orden: Cliente</option>
+                                                <option value="email">Orden: Email</option>
+                                                <option value="profile">Orden: Perfil / Etiqueta</option>
+                                                <option value="purchases">Orden: Prendas / Pedidos</option>
+                                                <option value="coupon">Orden: Cupón</option>
+                                            </select>
+                                            <button type="button" id="clientesSortDirBtn" data-sort-dir-btn="clientes" class="px-2 py-1.5 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↓ Desc</button>
+                                        </div>
                                         <select id="clientesOriginFilter" aria-label="Filtrar clientes por canal de captación" class="px-2.5 py-1.5 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs text-zinc-200 focus:outline-none focus:border-acid">
                                             <option value="ALL">Todos los clientes</option>
                                             <option value="RECURRENT">🏆 Solo Recurrentes (2+ compras)</option>
@@ -1576,16 +1674,16 @@
                                         <span id="clientesRowCountLabel" class="font-mono text-xs text-zinc-400 shrink-0">0 clientes</span>
                                     </div>
                                 </div>
-                                <div class="overflow-x-auto">
+                                <div id="clientesTableWrap" class="erp-scroll-table-wrap">
                                     <table class="w-full text-left text-xs border-collapse">
-                                        <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
-                                                <th class="py-3 px-3.5">Cliente</th>
-                                                <th class="py-3 px-3">Email</th>
-                                                <th class="py-3 px-3 text-center">Perfil / Etiqueta</th>
-                                                <th class="py-3 px-3 text-center">Prendas / Pedidos</th>
-                                                <th class="py-3 px-3 text-right">Gasto Total (LTV)</th>
-                                                <th class="py-3 px-3 text-center">Cupón</th>
+                                        <thead class="erp-sticky-thead">
+                                            <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                                <th class="py-3 px-3.5 erp-sort-th" data-sort-table="clientes" data-sort-col="client">Cliente<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 erp-sort-th" data-sort-table="clientes" data-sort-col="email">Email<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="clientes" data-sort-col="profile">Perfil / Etiqueta<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="clientes" data-sort-col="purchases">Prendas / Pedidos<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right erp-sort-th" data-sort-table="clientes" data-sort-col="ltv">Gasto Total (LTV)<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="clientes" data-sort-col="coupon">Cupón<span class="erp-sort-indicator">↕</span></th>
                                                 <th class="py-3 px-3">Tallas / Notas</th>
                                                 <th class="py-3 px-3 text-center">Ficha</th>
                                             </tr>
@@ -1615,22 +1713,37 @@
                         <!-- 4. Sub-vista Rendimiento Drops -->
                         <div id="subview-drops" class="hidden space-y-3">
                             <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
-                                    <h3 class="font-display text-sm font-bold text-white uppercase">Rendimiento Histórico y Liquidación por Drop</h3>
-                                    <span id="dropsRowCountLabel" class="font-mono text-xs text-zinc-400">0 drops</span>
+                                <div class="p-4 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">Rendimiento Histórico y Liquidación por Drop</h3>
+                                        <span id="dropsRowCountLabel" class="font-mono text-xs text-zinc-400">0 drops</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <select id="dropsSortKeySelect" data-sort-select="drops" aria-label="Ordenar drops por columna" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                            <option value="id">Orden: Código Drop</option>
+                                            <option value="title">Orden: Título</option>
+                                            <option value="total">Orden: Prendas</option>
+                                            <option value="sold">Orden: Vendidas</option>
+                                            <option value="sellThrough">Orden: % Liquidación</option>
+                                            <option value="revenue">Orden: Facturación</option>
+                                            <option value="cost">Orden: Coste Drop</option>
+                                            <option value="profit">Orden: Beneficio Drop</option>
+                                        </select>
+                                        <button type="button" id="dropsSortDirBtn" data-sort-dir-btn="drops" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↓ Desc</button>
+                                    </div>
                                 </div>
-                                <div class="overflow-x-auto">
+                                <div id="dropsTableWrap" class="erp-scroll-table-wrap">
                                     <table class="w-full text-left text-xs border-collapse">
-                                        <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
-                                                <th class="py-3 px-3.5">Código Drop</th>
-                                                <th class="py-3 px-3">Título</th>
-                                                <th class="py-3 px-3 text-center">Prendas</th>
-                                                <th class="py-3 px-3 text-center">Vendidas</th>
-                                                <th class="py-3 px-3 text-center">% Liquidación</th>
-                                                <th class="py-3 px-3 text-right">Facturación</th>
-                                                <th class="py-3 px-3 text-right">Coste Drop</th>
-                                                <th class="py-3 px-3.5 text-right text-acid font-bold">Beneficio Drop</th>
+                                        <thead class="erp-sticky-thead">
+                                            <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                                <th class="py-3 px-3.5 erp-sort-th" data-sort-table="drops" data-sort-col="id">Código Drop<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 erp-sort-th" data-sort-table="drops" data-sort-col="title">Título<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="drops" data-sort-col="total">Prendas<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="drops" data-sort-col="sold">Vendidas<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="drops" data-sort-col="sellThrough">% Liquidación<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right erp-sort-th" data-sort-table="drops" data-sort-col="revenue">Facturación<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right erp-sort-th" data-sort-table="drops" data-sort-col="cost">Coste Drop<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3.5 text-right text-acid font-bold erp-sort-th" data-sort-table="drops" data-sort-col="profit">Beneficio Drop<span class="erp-sort-indicator">↕</span></th>
                                                 <th class="py-3 px-3 text-center">Filtrar</th>
                                             </tr>
                                         </thead>
@@ -1647,22 +1760,38 @@
                         <!-- 5. Sub-vista Registro de Lotes -->
                         <div id="subview-lotes" class="hidden space-y-3">
                             <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                <div class="p-4 border-b border-obsidian-border flex items-center justify-between gap-2">
-                                    <h3 class="font-display text-sm font-bold text-white uppercase">Auditoría de Lotes Multi-Prenda y Control de Limpieza</h3>
-                                    <span id="lotesRowCountLabel" class="font-mono text-xs text-zinc-400">0 lotes</span>
+                                <div class="p-4 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-display text-sm font-bold text-white uppercase">Auditoría de Lotes Multi-Prenda y Control de Limpieza</h3>
+                                        <span id="lotesRowCountLabel" class="font-mono text-xs text-zinc-400">0 lotes</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <select id="lotesSortKeySelect" data-sort-select="lotes" aria-label="Ordenar lotes por columna" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-xs font-mono text-white focus:outline-none focus:border-acid">
+                                            <option value="default">Orden: Por defecto</option>
+                                            <option value="groupId">Orden: ID Lote</option>
+                                            <option value="buyer">Orden: Comprador</option>
+                                            <option value="itemsCount">Orden: Prendas Incluidas</option>
+                                            <option value="baseSum">Orden: PVP Base</option>
+                                            <option value="finalSum">Orden: Precio Lote</option>
+                                            <option value="costSum">Orden: Coste Lote</option>
+                                            <option value="profit">Orden: Beneficio</option>
+                                            <option value="cleaned">Orden: Limpieza Vinted</option>
+                                        </select>
+                                        <button type="button" id="lotesSortDirBtn" data-sort-dir-btn="lotes" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↓ Desc</button>
+                                    </div>
                                 </div>
-                                <div class="overflow-x-auto">
+                                <div id="lotesTableWrap" class="erp-scroll-table-wrap">
                                     <table class="w-full text-left text-xs border-collapse">
-                                        <thead>
-                                            <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
-                                                <th class="py-3 px-3.5">ID Lote</th>
-                                                <th class="py-3 px-3">Comprador</th>
-                                                <th class="py-3 px-3">Prendas Incluidas</th>
-                                                <th class="py-3 px-3 text-right">PVP Base</th>
-                                                <th class="py-3 px-3 text-right">Precio Lote</th>
-                                                <th class="py-3 px-3 text-right">Coste Lote</th>
-                                                <th class="py-3 px-3.5 text-right text-acid font-bold">Beneficio</th>
-                                                <th class="py-3 px-3 text-center">Limpieza Vinted</th>
+                                        <thead class="erp-sticky-thead">
+                                            <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400 whitespace-nowrap">
+                                                <th class="py-3 px-3.5 erp-sort-th" data-sort-table="lotes" data-sort-col="groupId">ID Lote<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 erp-sort-th" data-sort-table="lotes" data-sort-col="buyer">Comprador<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 erp-sort-th" data-sort-table="lotes" data-sort-col="itemsCount">Prendas Incluidas<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right erp-sort-th" data-sort-table="lotes" data-sort-col="baseSum">PVP Base<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right erp-sort-th" data-sort-table="lotes" data-sort-col="finalSum">Precio Lote<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-right erp-sort-th" data-sort-table="lotes" data-sort-col="costSum">Coste Lote<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3.5 text-right text-acid font-bold erp-sort-th" data-sort-table="lotes" data-sort-col="profit">Beneficio<span class="erp-sort-indicator">↕</span></th>
+                                                <th class="py-3 px-3 text-center erp-sort-th" data-sort-table="lotes" data-sort-col="cleaned">Limpieza Vinted<span class="erp-sort-indicator">↕</span></th>
                                                 <th class="py-3 px-3 text-center">Acciones</th>
                                             </tr>
                                         </thead>
@@ -1787,16 +1916,29 @@
                             <!-- Tablas Top Marcas & Top Tallas -->
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">🏆 Top Marcas por Facturación &amp; Rotación</div>
-                                    <div class="overflow-x-auto max-h-[340px]">
+                                    <div class="p-3.5 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-2">
+                                        <span class="font-display text-xs font-bold text-white uppercase">🏆 Top Marcas por Facturación &amp; Rotación</span>
+                                        <div class="flex items-center gap-1">
+                                            <select id="brandsSortKeySelect" data-sort-select="brands" aria-label="Ordenar top marcas por columna" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-[11px] font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="default">Orden: Por defecto</option>
+                                                <option value="brand">Orden: Marca</option>
+                                                <option value="count">Orden: Uds</option>
+                                                <option value="revenueEur">Orden: Ingresos</option>
+                                                <option value="avgTicketEur">Orden: Ticket</option>
+                                                <option value="avgDaysToSell">Orden: Días venta</option>
+                                            </select>
+                                            <button type="button" id="brandsSortDirBtn" data-sort-dir-btn="brands" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-[11px] font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↓ Desc</button>
+                                        </div>
+                                    </div>
+                                    <div id="brandsTableWrap" class="overflow-auto max-h-[340px]">
                                         <table class="w-full text-left text-xs border-collapse">
-                                            <thead>
-                                                <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
-                                                    <th class="py-2.5 px-3">Marca</th>
-                                                    <th class="py-2.5 px-2 text-center">Uds</th>
-                                                    <th class="py-2.5 px-2 text-right">Ingresos</th>
-                                                    <th class="py-2.5 px-2 text-right">Ticket</th>
-                                                    <th class="py-2.5 px-2 text-center">Días / Regateo</th>
+                                            <thead class="erp-sticky-thead">
+                                                <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400">
+                                                    <th class="py-2.5 px-3 erp-sort-th" data-sort-table="brands" data-sort-col="brand">Marca<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-2 text-center erp-sort-th" data-sort-table="brands" data-sort-col="count">Uds<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-2 text-right erp-sort-th" data-sort-table="brands" data-sort-col="revenueEur">Ingresos<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-2 text-right erp-sort-th" data-sort-table="brands" data-sort-col="avgTicketEur">Ticket<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-2 text-center erp-sort-th" data-sort-table="brands" data-sort-col="avgDaysToSell">Días / Regateo<span class="erp-sort-indicator">↕</span></th>
                                                 </tr>
                                             </thead>
                                             <tbody id="intelBrandsBody" class="divide-y divide-obsidian-border"></tbody>
@@ -1805,15 +1947,27 @@
                                 </div>
 
                                 <div class="rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden">
-                                    <div class="p-3.5 border-b border-obsidian-border font-display text-xs font-bold text-white uppercase">📏 Top Tallas Más Vendidas</div>
-                                    <div class="overflow-x-auto max-h-[340px]">
+                                    <div class="p-3.5 border-b border-obsidian-border flex flex-wrap items-center justify-between gap-2">
+                                        <span class="font-display text-xs font-bold text-white uppercase">📏 Top Tallas Más Vendidas</span>
+                                        <div class="flex items-center gap-1">
+                                            <select id="sizesSortKeySelect" data-sort-select="sizes" aria-label="Ordenar top tallas por columna" class="px-2 py-1 rounded-lg bg-obsidian-elevated border border-zinc-700 text-[11px] font-mono text-white focus:outline-none focus:border-acid">
+                                                <option value="default">Orden: Por defecto</option>
+                                                <option value="size">Orden: Talla</option>
+                                                <option value="count">Orden: Ventas</option>
+                                                <option value="revenueEur">Orden: Ingresos</option>
+                                                <option value="avgTicketEur">Orden: Ticket Medio</option>
+                                            </select>
+                                            <button type="button" id="sizesSortDirBtn" data-sort-dir-btn="sizes" class="px-2 py-1 rounded-lg bg-obsidian-elevated hover:bg-zinc-800 border border-zinc-700 text-[11px] font-mono font-bold text-acid transition-colors whitespace-nowrap" title="Cambiar dirección de ordenación">↓ Desc</button>
+                                        </div>
+                                    </div>
+                                    <div id="sizesTableWrap" class="overflow-auto max-h-[340px]">
                                         <table class="w-full text-left text-xs border-collapse">
-                                            <thead>
-                                                <tr class="border-b border-obsidian-border bg-obsidian-elevated/60 font-mono text-[10px] uppercase text-zinc-400">
-                                                    <th class="py-2.5 px-3">Talla</th>
-                                                    <th class="py-2.5 px-2 text-center">Ventas</th>
-                                                    <th class="py-2.5 px-3 text-right">Ingresos</th>
-                                                    <th class="py-2.5 px-3 text-right">Ticket Medio</th>
+                                            <thead class="erp-sticky-thead">
+                                                <tr class="border-b border-obsidian-border font-mono text-[10px] uppercase text-zinc-400">
+                                                    <th class="py-2.5 px-3 erp-sort-th" data-sort-table="sizes" data-sort-col="size">Talla<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-2 text-center erp-sort-th" data-sort-table="sizes" data-sort-col="count">Ventas<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-3 text-right erp-sort-th" data-sort-table="sizes" data-sort-col="revenueEur">Ingresos<span class="erp-sort-indicator">↕</span></th>
+                                                    <th class="py-2.5 px-3 text-right erp-sort-th" data-sort-table="sizes" data-sort-col="avgTicketEur">Ticket Medio<span class="erp-sort-indicator">↕</span></th>
                                                 </tr>
                                             </thead>
                                             <tbody id="intelSizesBody" class="divide-y divide-obsidian-border"></tbody>
@@ -3734,6 +3888,15 @@
             erpPageSizes: {
                 ventas: localStorage.getItem('vm_erp_pagesize_ventas') || '25',
                 prendas: localStorage.getItem('vm_erp_pagesize_prendas') || '25'
+            },
+            erpSorts: {
+                ventas: { key: 'date', dir: 'desc' },
+                prendas: { key: 'default', dir: 'asc' },
+                clientes: { key: 'ltv', dir: 'desc' },
+                drops: { key: 'id', dir: 'desc' },
+                lotes: { key: 'default', dir: 'desc' },
+                brands: { key: 'default', dir: 'desc' },
+                sizes: { key: 'default', dir: 'desc' }
             },
             erpCarouselIdx: {
                 ventas: {},
@@ -8224,6 +8387,121 @@
             }
         }
 
+        // ======================== MOTOR COMPARTIDO DE ORDENACIÓN ERP ========================
+        function createDefaultErpSorts() {
+            return {
+                ventas: { key: 'date', dir: 'desc' },
+                prendas: { key: 'default', dir: 'asc' },
+                clientes: { key: 'ltv', dir: 'desc' },
+                drops: { key: 'id', dir: 'desc' },
+                lotes: { key: 'default', dir: 'desc' },
+                brands: { key: 'default', dir: 'desc' },
+                sizes: { key: 'default', dir: 'desc' }
+            };
+        }
+
+        const ERP_TEXT_SORT_KEYS = new Set([
+            'ref', 'title', 'buyer', 'channel', 'size', 'dropId', 'status',
+            'client', 'email', 'profile', 'coupon', 'id', 'groupId', 'brand'
+        ]);
+
+        function sortListBySpec(items, accessorsMap, sortSpec) {
+            const list = Array.isArray(items) ? [...items] : [];
+            if (!sortSpec || !sortSpec.key || sortSpec.key === 'default') return list;
+            const getter = accessorsMap[sortSpec.key];
+            if (typeof getter !== 'function') return list;
+            const mult = sortSpec.dir === 'asc' ? 1 : -1;
+
+            return list.sort((a, b) => {
+                const va = getter(a);
+                const vb = getter(b);
+                const aEmpty = va === null || va === undefined || va === '' || (typeof va === 'number' && Number.isNaN(va));
+                const bEmpty = vb === null || vb === undefined || vb === '' || (typeof vb === 'number' && Number.isNaN(vb));
+                if (aEmpty && bEmpty) return 0;
+                if (aEmpty) return 1;
+                if (bEmpty) return -1;
+
+                if (typeof va === 'number' && typeof vb === 'number') {
+                    return (va - vb) * mult;
+                }
+                return String(va).localeCompare(String(vb), 'es', { numeric: true, sensitivity: 'base' }) * mult;
+            });
+        }
+
+        function syncSortUiControls(tableKey) {
+            const sortSpec = adminState.erpSorts?.[tableKey];
+            if (!sortSpec) return;
+
+            const sel = document.querySelector(`[data-sort-select="${tableKey}"]`);
+            if (sel && sel.value !== sortSpec.key) sel.value = sortSpec.key;
+
+            const dirBtn = document.querySelector(`[data-sort-dir-btn="${tableKey}"]`);
+            if (dirBtn) {
+                const isAsc = sortSpec.dir === 'asc';
+                dirBtn.textContent = isAsc ? '↑ Asc' : '↓ Desc';
+                dirBtn.disabled = sortSpec.key === 'default';
+                dirBtn.classList.toggle('opacity-50', sortSpec.key === 'default');
+            }
+
+            document.querySelectorAll(`th[data-sort-table="${tableKey}"]`).forEach(th => {
+                const col = th.getAttribute('data-sort-col');
+                const isActive = col === sortSpec.key && sortSpec.key !== 'default';
+                th.classList.toggle('is-sorted', isActive);
+                const ind = th.querySelector('.erp-sort-indicator');
+                if (ind) {
+                    ind.textContent = isActive ? (sortSpec.dir === 'asc' ? '↑' : '↓') : '↕';
+                }
+            });
+        }
+
+        function getSortedVentas(items) {
+            const accessors = {
+                date: g => {
+                    const dt = getGarmentSoldAt(g);
+                    const ms = dt ? new Date(dt).getTime() : NaN;
+                    return Number.isNaN(ms) ? null : ms;
+                },
+                ref: g => g.ref || '',
+                title: g => g.title || g.ref || '',
+                buyer: g => (g.soldToVinted || g.reservedByVinted || '').replace(/^@+/, ''),
+                channel: g => (g.saleChannel || (g.reservationGroupId ? 'DROP_VIP' : 'VINTED_DIRECT')).toUpperCase(),
+                price: g => Number(g.priceEur || 0),
+                soldPrice: g => getGarmentSoldPrice(g),
+                totalCost: g => Number(g.costEur || 0) + Number(g.extraExpenseEur || 0),
+                profit: g => getGarmentSoldPrice(g) - (Number(g.costEur || 0) + Number(g.extraExpenseEur || 0)),
+                margin: g => {
+                    const fp = getGarmentSoldPrice(g);
+                    const cost = Number(g.costEur || 0);
+                    const exp = Number(g.extraExpenseEur || 0);
+                    const isDirectWithoutCost = cost <= 0 && ((g.dropId || '').toUpperCase() === 'VINTED-DIRECT' || (g.saleChannel || '').toUpperCase() === 'VINTED_DIRECT');
+                    if (isDirectWithoutCost || fp <= 0) return null;
+                    return round2(((fp - (cost + exp)) / fp) * 100);
+                }
+            };
+            return sortListBySpec(items, accessors, adminState.erpSorts.ventas);
+        }
+
+        function getSortedPrendas(items) {
+            const accessors = {
+                ref: g => g.ref || '',
+                title: g => g.title || g.ref || '',
+                size: g => g.size || '',
+                dropId: g => g.dropId || '',
+                status: g => g.status || '',
+                price: g => Number(g.priceEur || 0),
+                cost: g => Number(g.costEur || 0),
+                soldPrice: g => getGarmentSoldPrice(g),
+                margin: g => {
+                    const fp = getGarmentSoldPrice(g);
+                    const cost = Number(g.costEur || 0);
+                    const exp = Number(g.extraExpenseEur || 0);
+                    if (cost <= 0 || fp <= 0) return null;
+                    return round2(((fp - (cost + exp)) / fp) * 100);
+                }
+            };
+            return sortListBySpec(items, accessors, adminState.erpSorts.prendas);
+        }
+
         // ======================== SUB-VISTA 1: VENTAS & PEDIDOS ========================
         function renderSubViewVentas(filteredGarments) {
             const tableBody = document.getElementById('ventasTableBody');
@@ -8233,6 +8511,8 @@
             const cardsGrid = document.getElementById('ventasCardsGrid');
             const mode = adminState.erpViewModes.ventas || 'table';
             const pageSizeVal = adminState.erpPageSizes.ventas || '25';
+
+            syncSortUiControls('ventas');
 
             // Sincronizar botones de modo de vista
             const tableBtn = document.getElementById('ventasViewTableBtn');
@@ -8250,14 +8530,10 @@
                 }
             }
 
-            // Filtrar ventas cobradas, envíos y reservas activas
-            const sales = filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA');
-
-            sales.sort((a, b) => {
-                const dateA = new Date(getGarmentSoldAt(a) || 0).getTime();
-                const dateB = new Date(getGarmentSoldAt(b) || 0).getTime();
-                return dateB - dateA;
-            });
+            // Filtrar ventas cobradas, envíos y reservas activas y ordenar según selector
+            const sales = getSortedVentas(
+                filteredGarments.filter(g => g.status === 'VENDIDA' || g.status === 'EN_CAMINO' || g.status === 'RESERVADA')
+            );
 
             const badgeCount = document.getElementById('badgeCountVentas');
             if (badgeCount) badgeCount.textContent = `${sales.length}`;
@@ -8405,6 +8681,8 @@
             const mode = adminState.erpViewModes.prendas || 'table';
             const pageSizeVal = adminState.erpPageSizes.prendas || '25';
 
+            syncSortUiControls('prendas');
+
             // Sincronizar botones de modo de vista
             const tableBtn = document.getElementById('prendasViewTableBtn');
             const cardsBtn = document.getElementById('prendasViewCardsBtn');
@@ -8421,11 +8699,13 @@
                 }
             }
 
+            const sortedPrendas = getSortedPrendas(filteredGarments);
+
             const badgeCount = document.getElementById('badgeCountPrendas');
-            if (badgeCount) badgeCount.textContent = `${filteredGarments.length}`;
+            if (badgeCount) badgeCount.textContent = `${sortedPrendas.length}`;
 
             // Manejo de lista vacía
-            if (filteredGarments.length === 0) {
+            if (sortedPrendas.length === 0) {
                 if (countLabel) countLabel.textContent = '0 prendas';
                 if (tableBody) tableBody.innerHTML = `<tr><td colspan="12" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay prendas registradas con los filtros actuales.</td></tr>`;
                 if (cardsGrid) cardsGrid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 font-mono text-xs">No hay prendas registradas con los filtros actuales.</div>`;
@@ -8434,13 +8714,13 @@
             }
 
             // Paginación / Límite de visualización según selector
-            const limit = (pageSizeVal === 'ALL') ? filteredGarments.length : parseInt(pageSizeVal, 10);
-            const visiblePrendas = filteredGarments.slice(0, limit);
+            const limit = (pageSizeVal === 'ALL') ? sortedPrendas.length : parseInt(pageSizeVal, 10);
+            const visiblePrendas = sortedPrendas.slice(0, limit);
 
             if (countLabel) {
-                countLabel.textContent = (limit < filteredGarments.length)
-                    ? `${visiblePrendas.length} de ${filteredGarments.length} prendas`
-                    : `${filteredGarments.length} prenda${filteredGarments.length === 1 ? '' : 's'}`;
+                countLabel.textContent = (limit < sortedPrendas.length)
+                    ? `${visiblePrendas.length} de ${sortedPrendas.length} prendas`
+                    : `${sortedPrendas.length} prenda${sortedPrendas.length === 1 ? '' : 's'}`;
             }
 
             if (mode === 'cards') {
@@ -9057,14 +9337,11 @@ Solo se permite porque la prenda no tiene ventas, reservas ni trazabilidad previ
             adminState.activeG360Ref = ref;
             adminState.g360Mode = mode;
 
-            // Determinar lista filtrada actual para navegación Anterior / Siguiente
-            const list = (mode === 'ventas')
+            // Determinar lista filtrada y ordenada actual para navegación Anterior / Siguiente
+            const rawList = (mode === 'ventas')
                 ? getFilteredRegistroData().filter(x => x.status === 'VENDIDA' || x.status === 'EN_CAMINO' || x.status === 'RESERVADA')
                 : getFilteredRegistroData();
-            
-            if (mode === 'ventas') {
-                list.sort((a, b) => new Date(getGarmentSoldAt(b) || 0) - new Date(getGarmentSoldAt(a) || 0));
-            }
+            const list = (mode === 'ventas') ? getSortedVentas(rawList) : getSortedPrendas(rawList);
             adminState.g360FilteredRefs = list.map(x => x.ref);
 
             const currIdx = adminState.g360FilteredRefs.indexOf(ref);
@@ -9607,6 +9884,8 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             const countLabel = document.getElementById('clientesRowCountLabel');
             if (!tableBody) return;
 
+            syncSortUiControls('clientes');
+
             const configCrm = adminState.config.crmClientsMeta || {};
             const filteredClients = precomputedClients || getComputedCrmClients();
 
@@ -9619,14 +9898,39 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 return;
             }
 
-            // Ordenar por LTV descendente
-            filteredClients.sort((a, b) => {
-                const ltvA = a.purchases.reduce((acc, p) => acc + (p.status === 'VENDIDA' ? p.price : 0), 0);
-                const ltvB = b.purchases.reduce((acc, p) => acc + (p.status === 'VENDIDA' ? p.price : 0), 0);
-                return ltvB - ltvA;
-            });
+            const getClientProfileLabel = c => {
+                const completedLen = c.purchases.filter(p => p.status === 'VENDIDA').length;
+                const reservedLen = c.purchases.filter(p => p.status === 'RESERVADA').length;
+                const lids = Array.isArray(c.listIds) ? c.listIds : [];
+                const origLower = String(c.origen || '').toLowerCase();
+                const isWebLead = lids.includes(6) || origLower.startsWith('revista');
+                const isVipLead = lids.includes(3) || (origLower && !origLower.startsWith('revista'));
+                if (isWebLead && !isVipLead && completedLen === 0 && reservedLen === 0 && c.waitlists.length === 0) return 'Lead Revista';
+                if (completedLen >= 2) return 'VIP Recurrente';
+                if (completedLen === 1) return 'Comprador';
+                if (reservedLen > 0) return 'Reserva Activa';
+                if (c.waitlists.length > 0) return 'En Cola';
+                if (isWebLead && isVipLead) return 'Web + VIP';
+                return 'Lead QR';
+            };
 
-            tableBody.innerHTML = filteredClients.map(c => {
+            const sortedClients = sortListBySpec(filteredClients, {
+                ltv: c => c.purchases.reduce((acc, p) => acc + (p.status === 'VENDIDA' ? p.price : 0), 0),
+                client: c => (c.vintedUser || c.firstName || c.email || '').replace(/^@+/, ''),
+                email: c => c.email || '',
+                profile: c => getClientProfileLabel(c),
+                purchases: c => c.purchases.filter(p => p.status === 'VENDIDA').length + (c.purchases.filter(p => p.status === 'RESERVADA').length * 0.01),
+                coupon: c => {
+                    const lids = Array.isArray(c.listIds) ? c.listIds : [];
+                    const origLower = String(c.origen || '').toLowerCase();
+                    const isWebLead = lids.includes(6) || origLower.startsWith('revista');
+                    const isVipLead = lids.includes(3) || (origLower && !origLower.startsWith('revista'));
+                    if (isWebLead && !isVipLead) return 'Solo Revista';
+                    return c.numReservas === 0 ? 'Disponible' : 'Consumido';
+                }
+            }, adminState.erpSorts.clientes);
+
+            tableBody.innerHTML = sortedClients.map(c => {
                 const completedPurchases = c.purchases.filter(p => p.status === 'VENDIDA');
                 const reservedPurchases = c.purchases.filter(p => p.status === 'RESERVADA');
                 const ltv = completedPurchases.reduce((acc, p) => acc + p.price, 0);
@@ -9747,6 +10051,8 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             const countLabel = document.getElementById('dropsRowCountLabel');
             if (!tableBody) return;
 
+            syncSortUiControls('drops');
+
             const dropsMap = new Map();
             adminState.garments.forEach(g => {
                 const dId = (g.dropId || 'DROP-01').toUpperCase();
@@ -9760,7 +10066,27 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 dropsMap.get(dId).garments.push(g);
             });
 
-            const drops = [...dropsMap.values()].sort((a, b) => b.id.localeCompare(a.id));
+            const dropRows = [...dropsMap.values()].map(d => {
+                const total = d.garments.length;
+                const sold = d.garments.filter(g => g.status === 'VENDIDA').length;
+                const reserved = d.garments.filter(g => g.status === 'RESERVADA').length;
+                const sellThrough = total > 0 ? round2((sold / total) * 100) : 0;
+                const facturacion = d.garments.filter(g => g.status === 'VENDIDA').reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
+                const coste = d.garments.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
+                const beneficio = facturacion - coste;
+                return { ...d, total, sold, reserved, sellThrough, facturacion, coste, beneficio };
+            });
+
+            const drops = sortListBySpec(dropRows, {
+                id: d => d.id,
+                title: d => d.title,
+                total: d => d.total,
+                sold: d => d.sold,
+                sellThrough: d => d.sellThrough,
+                revenue: d => d.facturacion,
+                cost: d => d.coste,
+                profit: d => d.beneficio
+            }, adminState.erpSorts.drops);
 
             if (countLabel) countLabel.textContent = `${drops.length} drop${drops.length === 1 ? '' : 's'}`;
             const badgeCount = document.getElementById('badgeCountDrops');
@@ -9772,14 +10098,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             }
 
             tableBody.innerHTML = drops.map(d => {
-                const total = d.garments.length;
-                const sold = d.garments.filter(g => g.status === 'VENDIDA').length;
-                const reserved = d.garments.filter(g => g.status === 'RESERVADA').length;
-                const sellThrough = total > 0 ? round2((sold / total) * 100) : 0;
-
-                const facturacion = d.garments.filter(g => g.status === 'VENDIDA').reduce((acc, g) => acc + getGarmentSoldPrice(g), 0);
-                const coste = d.garments.reduce((acc, g) => acc + Number(g.costEur || 0), 0);
-                const beneficio = facturacion - coste;
+                const { total, sold, reserved, sellThrough, facturacion, coste, beneficio } = d;
 
                 const isActive = (adminState.config.activeDropId || '').toUpperCase() === d.id;
 
@@ -9862,27 +10181,44 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             const countLabel = document.getElementById('lotesRowCountLabel');
             if (!tableBody) return;
 
-            const lots = precomputedLots || getComputedLots();
+            syncSortUiControls('lotes');
 
-            if (countLabel) countLabel.textContent = `${lots.length} lote${lots.length === 1 ? '' : 's'}`;
+            const lotsRaw = precomputedLots || getComputedLots();
+
+            if (countLabel) countLabel.textContent = `${lotsRaw.length} lote${lotsRaw.length === 1 ? '' : 's'}`;
             const badgeCount = document.getElementById('badgeCountLotes');
-            if (badgeCount) badgeCount.textContent = `${lots.length}`;
+            if (badgeCount) badgeCount.textContent = `${lotsRaw.length}`;
 
-            if (lots.length === 0) {
+            if (lotsRaw.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="9" class="py-12 text-center text-zinc-500 font-mono text-xs">No hay lotes multi-prenda registrados en el sistema.</td></tr>`;
                 return;
             }
 
-            tableBody.innerHTML = lots.map(l => {
+            const lotRows = lotsRaw.map(l => {
                 const baseSum = l.items.reduce((acc, x) => acc + Number(x.priceEur || 0), 0);
                 const finalSum = l.lotPrice > 0 ? l.lotPrice : l.items.reduce((acc, x) => acc + getGarmentSoldPrice(x), 0);
                 const costSum = l.items.reduce((acc, x) => acc + Number(x.costEur || 0), 0);
                 const profit = finalSum - costSum;
-
-                // Verificacion de limpieza en Vinted
                 const cleanedCount = l.items.filter(x => x.vintedCleanedAt).length;
                 const isAllCleaned = cleanedCount === l.items.length;
                 const isSold = l.items.every(x => x.status === 'VENDIDA');
+                const cleanedScore = !isSold ? 0 : (isAllCleaned ? 2 : 1);
+                return { ...l, baseSum, finalSum, costSum, profit, cleanedCount, isAllCleaned, isSold, cleanedScore };
+            });
+
+            const lots = sortListBySpec(lotRows, {
+                groupId: l => l.groupId || '',
+                buyer: l => (l.buyerVinted || '').replace(/^@+/, ''),
+                itemsCount: l => l.items.length,
+                baseSum: l => l.baseSum,
+                finalSum: l => l.finalSum,
+                costSum: l => l.costSum,
+                profit: l => l.profit,
+                cleaned: l => l.cleanedScore
+            }, adminState.erpSorts.lotes);
+
+            tableBody.innerHTML = lots.map(l => {
+                const { baseSum, finalSum, costSum, profit, cleanedCount, isAllCleaned, isSold } = l;
 
                 let cleanBadge = `<span class="inline-flex items-center whitespace-nowrap px-2 py-0.5 rounded font-mono text-[9px] font-bold bg-zinc-800 text-zinc-400">N/A</span>`;
                 if (isSold) {
@@ -10185,9 +10521,19 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             if (cancSubEl) cancSubEl.textContent = `${fmtEur(canc.totalEur || 0)} anulados`;
             if (modEl) modEl.textContent = `${mod.total || 0}`;
 
+            syncSortUiControls('brands');
+            syncSortUiControls('sizes');
+
             const brandsBody = document.getElementById('intelBrandsBody');
             if (brandsBody) {
-                const brands = Array.isArray(ins?.brandStats) ? ins.brandStats : [];
+                const rawBrands = Array.isArray(ins?.brandStats) ? ins.brandStats : [];
+                const brands = sortListBySpec(rawBrands, {
+                    brand: b => b.brand || '',
+                    count: b => Number(b.count || 0),
+                    revenueEur: b => Number(b.revenueEur || 0),
+                    avgTicketEur: b => Number(b.avgTicketEur || 0),
+                    avgDaysToSell: b => (b.avgDaysToSell !== null && b.avgDaysToSell !== undefined) ? Number(b.avgDaysToSell) : null
+                }, adminState.erpSorts.brands);
                 brandsBody.innerHTML = brands.length === 0
                     ? '<tr><td colspan="5" class="py-6 text-center text-zinc-500 font-mono text-xs">Sin datos de marcas todavía.</td></tr>'
                     : brands.map(b => `
@@ -10205,7 +10551,16 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
 
             const sizesBody = document.getElementById('intelSizesBody');
             if (sizesBody) {
-                const sizes = Array.isArray(ins?.sizeStats) ? ins.sizeStats : [];
+                const rawSizes = (Array.isArray(ins?.sizeStats) ? ins.sizeStats : []).map(sz => ({
+                    ...sz,
+                    avgTicketEur: sz.count > 0 ? round2(sz.revenueEur / sz.count) : 0
+                }));
+                const sizes = sortListBySpec(rawSizes, {
+                    size: sz => sz.size || '',
+                    count: sz => Number(sz.count || 0),
+                    revenueEur: sz => Number(sz.revenueEur || 0),
+                    avgTicketEur: sz => Number(sz.avgTicketEur || 0)
+                }, adminState.erpSorts.sizes);
                 sizesBody.innerHTML = sizes.length === 0
                     ? '<tr><td colspan="4" class="py-6 text-center text-zinc-500 font-mono text-xs">Sin datos de tallas todavía.</td></tr>'
                     : sizes.map(sz => `
@@ -10213,7 +10568,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                             <td class="py-2 px-3 font-bold text-white">${escapeHtml(sz.size)}</td>
                             <td class="py-2 px-2 text-center font-mono text-zinc-300">${sz.count}</td>
                             <td class="py-2 px-3 text-right font-mono font-bold text-acid">${fmtEur(sz.revenueEur)}</td>
-                            <td class="py-2 px-3 text-right font-mono text-zinc-300">${fmtEur(sz.count > 0 ? round2(sz.revenueEur / sz.count) : 0)}</td>
+                            <td class="py-2 px-3 text-right font-mono text-zinc-300">${fmtEur(sz.avgTicketEur)}</td>
                         </tr>
                     `).join('');
             }
@@ -10809,7 +11164,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
 
         // Botón Seleccionar Visibles en Inventario
         document.getElementById('prendasSelectVisibleBtn')?.addEventListener('click', () => {
-            const filtered = getFilteredRegistroData();
+            const filtered = getSortedPrendas(getFilteredRegistroData());
             const pageSizeVal = adminState.erpPageSizes.prendas || '25';
             const limit = (pageSizeVal === 'ALL') ? filtered.length : parseInt(pageSizeVal, 10);
             const visible = filtered.slice(0, limit);
@@ -10965,6 +11320,48 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             renderTasadorResults();
         });
 
+        // Controles de ordenación multicriterio (Select, Botón Asc/Desc y Cabeceras TH)
+        function applySortChange(tableKey, nextKey, nextDir) {
+            if (!adminState.erpSorts?.[tableKey]) return;
+            adminState.erpSorts[tableKey] = { key: nextKey, dir: nextDir };
+            if (tableKey === 'brands' || tableKey === 'sizes') {
+                renderSubViewInteligencia();
+            } else {
+                renderActiveSubView();
+            }
+        }
+
+        document.querySelectorAll('[data-sort-select]').forEach(sel => {
+            sel.addEventListener('change', (e) => {
+                const tableKey = sel.getAttribute('data-sort-select');
+                const nextKey = e.target.value;
+                const defaultDir = ERP_TEXT_SORT_KEYS.has(nextKey) ? 'asc' : 'desc';
+                applySortChange(tableKey, nextKey, defaultDir);
+            });
+        });
+
+        document.querySelectorAll('[data-sort-dir-btn]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tableKey = btn.getAttribute('data-sort-dir-btn');
+                const curr = adminState.erpSorts?.[tableKey];
+                if (!curr || curr.key === 'default') return;
+                applySortChange(tableKey, curr.key, curr.dir === 'asc' ? 'desc' : 'asc');
+            });
+        });
+
+        document.querySelectorAll('th[data-sort-table]').forEach(th => {
+            th.addEventListener('click', () => {
+                const tableKey = th.getAttribute('data-sort-table');
+                const col = th.getAttribute('data-sort-col');
+                const curr = adminState.erpSorts?.[tableKey];
+                if (!curr || !col) return;
+                const nextDir = (curr.key === col)
+                    ? (curr.dir === 'asc' ? 'desc' : 'asc')
+                    : (ERP_TEXT_SORT_KEYS.has(col) ? 'asc' : 'desc');
+                applySortChange(tableKey, col, nextDir);
+            });
+        });
+
         // Reset filtros
         document.getElementById('erpResetFiltersBtn')?.addEventListener('click', () => {
             adminState.registroFilters = {
@@ -10980,6 +11377,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 profit: 'ALL',
                 clientSource: 'ALL'
             };
+            adminState.erpSorts = createDefaultErpSorts();
             const origSel = document.getElementById('clientesOriginFilter');
             if (origSel) origSel.value = 'ALL';
             const sIn = document.getElementById('erpFilterSearch');
