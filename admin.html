@@ -12118,10 +12118,19 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             });
         }
 
+        function getLocalYmdDate(d = new Date()) {
+            const dt = d instanceof Date ? d : new Date(d);
+            const y = dt.getFullYear();
+            const m = String(dt.getMonth() + 1).padStart(2, '0');
+            const day = String(dt.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
         function getFilteredSyncItems() {
             const sync = adminState.vintedSync;
             const filter = sync.filter || 'ALL';
             const q = (sync.search || '').trim().toLowerCase();
+            const highlightUnpaidOn = adminState.config?.vintedSyncConfig?.autoPromoteExpiredWaitlist === true;
 
             const filteredEvents = (sync.events || []).filter(ev => {
                 if (filter === 'EXPIRED') return false;
@@ -12140,6 +12149,13 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     if (!q) return true;
                     const hay = [ex.ref, ex.title, ex.reservedByVinted, ex.reservedByEmail, ex.reservationGroupId].join(' ').toLowerCase();
                     return hay.includes(q);
+                }).sort((a, b) => {
+                    if (highlightUnpaidOn) {
+                        const wa = (a.waitlistCount || 0) > 0 ? 1 : 0;
+                        const wb = (b.waitlistCount || 0) > 0 ? 1 : 0;
+                        if (wb !== wa) return wb - wa;
+                    }
+                    return Number(b.hoursExpired || 0) - Number(a.hoursExpired || 0);
                 })
                 : [];
 
@@ -12281,10 +12297,19 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 return;
             }
 
+            const highlightUnpaidOn = adminState.config?.vintedSyncConfig?.autoPromoteExpiredWaitlist === true;
+            const activeFilter = sync.filter || 'ALL';
             const assignableGarments = (adminState.garments || []).filter(g => (g.dropId || '').toUpperCase() !== 'VINTED-DIRECT' && (g.status === 'DISPONIBLE' || g.status === 'RESERVADA'));
 
-            const expiredCards = filteredExpired.map(ex => `
-                <div class="p-3.5 rounded-2xl bg-rose-950/25 border border-rose-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            const expiredCards = filteredExpired.map(ex => {
+                const isPriorityWaitlist = highlightUnpaidOn && (ex.waitlistCount || 0) > 0;
+                const cardStyle = highlightUnpaidOn
+                    ? (isPriorityWaitlist
+                        ? 'bg-amber-950/25 border-2 border-amber-400/75 shadow-lg shadow-amber-500/10'
+                        : 'bg-rose-950/30 border border-rose-500/60')
+                    : 'bg-rose-950/20 border border-rose-500/40';
+                return `
+                <div class="p-3.5 rounded-2xl ${cardStyle} flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex items-center gap-3 min-w-0">
                         ${ex.photo
                             ? `<img src="${escapeHtml(ex.photo)}" alt="" class="w-12 h-14 object-cover rounded-xl border border-rose-500/40 shrink-0">`
@@ -12293,6 +12318,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                         <div class="min-w-0 space-y-1">
                             <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="px-2 py-0.5 rounded bg-rose-500 text-white font-mono text-[10px] font-bold uppercase">🚨 Impago 24h Verificado</span>
+                                ${isPriorityWaitlist ? '<span class="px-2 py-0.5 rounded bg-amber-400 text-obsidian font-mono text-[10px] font-bold uppercase">⚡ Suplente Listo</span>' : ''}
                                 <span class="font-mono text-xs font-bold text-acid">${escapeHtml(ex.ref)}</span>
                                 <span class="font-mono text-[10px] text-rose-300">Vencida hace ${ex.hoursExpired}h</span>
                             </div>
@@ -12306,7 +12332,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     <div class="flex flex-wrap items-center gap-2 shrink-0 justify-end">
                         ${ex.vintedUrl ? `<a href="${escapeHtml(ex.vintedUrl)}" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-zinc-700 hover:border-acid text-xs font-mono text-acid transition-colors">Abrir Vinted ↗</a>` : ''}
                         ${ex.waitlistCount > 0 ? `
-                            <button type="button" data-sync-promote="${escapeHtml(ex.ref)}" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-display font-bold text-xs uppercase transition-colors">
+                            <button type="button" data-sync-promote="${escapeHtml(ex.ref)}" class="px-3 py-1.5 rounded-lg ${isPriorityWaitlist ? 'bg-amber-400 hover:bg-amber-300 ring-2 ring-amber-300/60' : 'bg-amber-400/90 hover:bg-amber-300'} text-obsidian font-display font-bold text-xs uppercase transition-colors">
                                 Pasar al 1º →
                             </button>
                         ` : `
@@ -12316,7 +12342,8 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                         `}
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             const eventCards = filteredEvents.map(ev => {
                 const isSelected = sync.selectedKeys.has(ev.eventKey);
@@ -12444,7 +12471,9 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 </div>`;
             }).join('');
 
-            listEl.innerHTML = expiredCards + eventCards;
+            listEl.innerHTML = (highlightUnpaidOn || activeFilter === 'EXPIRED')
+                ? (expiredCards + eventCards)
+                : (eventCards + expiredCards);
             lucide.createIcons();
 
             listEl.querySelectorAll('[data-sync-select]').forEach(chk => {
@@ -12704,7 +12733,8 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             }
         }
 
-        async function runVintedEmailScan(autoApplyIfEnabled = true) {
+        async function runVintedEmailScan(autoApplyIfEnabled = true, options = {}) {
+            const updateCutoffAfterScan = options.updateCutoffAfterScan !== false;
             const sync = adminState.vintedSync;
             if (sync.isLoading) return;
             sync.isLoading = true;
@@ -12719,6 +12749,13 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                 sync.lastScannedAt = res.scannedAt || new Date().toISOString();
                 if (res.syncConfig) {
                     adminState.config.vintedSyncConfig = res.syncConfig;
+                }
+
+                if (updateCutoffAfterScan) {
+                    const todayYmd = getLocalYmdDate();
+                    if ((adminState.config?.vintedSyncConfig?.syncFromDate || '') !== todayYmd) {
+                        await saveVintedSyncToggle({ syncFromDate: todayYmd }, { silent: true });
+                    }
                 }
 
                 const autoApplyOn = adminState.config?.vintedSyncConfig?.autoApplyExactMatches === true;
@@ -12829,7 +12866,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             if (selected.length > 0) await importVintedEventsToErp(selected);
         });
 
-        async function saveVintedSyncToggle(patch) {
+        async function saveVintedSyncToggle(patch, options = {}) {
             try {
                 await callAdminApi('save_config', {
                     onlySyncConfig: true,
@@ -12839,7 +12876,9 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
                     ...(adminState.config.vintedSyncConfig || {}),
                     ...patch
                 };
-                toast('✓ Preferencia de automatización guardada.');
+                if (!options.silent) {
+                    toast('✓ Preferencia de automatización guardada.');
+                }
             } catch (err) {
                 toast(err.message, true);
             }
@@ -12849,8 +12888,9 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             saveVintedSyncToggle({ autoApplyExactMatches: e.target.checked });
         });
 
-        document.getElementById('syncToggleAutoPromote')?.addEventListener('change', (e) => {
-            saveVintedSyncToggle({ autoPromoteExpiredWaitlist: e.target.checked });
+        document.getElementById('syncToggleAutoPromote')?.addEventListener('change', async (e) => {
+            await saveVintedSyncToggle({ autoPromoteExpiredWaitlist: e.target.checked });
+            renderVintedSyncModal();
         });
 
         
@@ -12995,7 +13035,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             await saveVintedSyncToggle({ syncFromDate: val });
             const stEl = document.getElementById('syncFromDateStatus');
             if (stEl) stEl.textContent = val ? `✓ Filtrando desde ${val}` : '✓ Historial completo';
-            runVintedEmailScan(true);
+            runVintedEmailScan(true, { updateCutoffAfterScan: false });
         });
 
         document.getElementById('clearSyncFromDateBtn')?.addEventListener('click', async () => {
@@ -13004,7 +13044,7 @@ Al liberarla a DISPONIBLE, volverá al catálogo abierto y el evento se registra
             await saveVintedSyncToggle({ syncFromDate: '' });
             const stEl = document.getElementById('syncFromDateStatus');
             if (stEl) stEl.textContent = '✓ Historial completo';
-            runVintedEmailScan(true);
+            runVintedEmailScan(true, { updateCutoffAfterScan: false });
         });
 
         // Boton Recordatorio en Drop Activo

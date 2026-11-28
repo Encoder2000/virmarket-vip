@@ -283,7 +283,7 @@
                             Guía de Usuario 360º
                         </span>
                         <span id="guideLastUpdated" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[10px] font-bold">
-                            Actualizada: 2026-11-23
+                            Actualizada: 2026-11-28
                         </span>
                     </div>
                     <p class="font-mono text-[10px] text-zinc-400 truncate">
@@ -373,7 +373,7 @@
                             <span class="px-2.5 py-0.5 rounded-md bg-acid/10 border border-acid/30 text-acid font-mono text-[10px] font-bold uppercase tracking-wider">
                                 Manual Vivo 360º
                             </span>
-                            <span class="font-mono text-[11px] text-zinc-400 sm:hidden">Actualizada: 2026-11-23</span>
+                            <span class="font-mono text-[11px] text-zinc-400 sm:hidden">Actualizada: 2026-11-28</span>
                         </div>
                         <h1 class="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight uppercase">
                             Cómo funciona VirMarket de principio a fin
@@ -440,7 +440,7 @@
                         </a>
                         <a href="#sec-panel" data-toc="sec-panel" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
                             <span class="font-mono text-[10px] text-acid">02</span>
-                            <span>Panel Studio (5 Pestañas)</span>
+                            <span>Panel Studio (6 Pestañas)</span>
                         </a>
                         <a href="#sec-correos" data-toc="sec-correos" class="toc-link flex items-center gap-2.5 px-3 py-2 rounded-xl border border-transparent text-xs font-semibold text-zinc-300 hover:text-white hover:bg-obsidian-elevated transition-colors">
                             <span class="font-mono text-[10px] text-acid">03</span>
@@ -639,26 +639,29 @@
                         </article>
 
                         <!-- Pestaña 3: Registro ERP -->
-                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 3 registro erp ventas prendas clientes drops lotes analitica escaparate ficha 360 paca gasto conciliacion vinted cancelaciones csv">
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 3 registro erp ventas prendas clientes drops lotes analitica inteligencia dac7 tasador pricing escaparate ficha 360 paca gasto conciliacion vinted cancelaciones destacar impagos fecha corte ultimo escaneo csv scroll ordenacion">
                             <details class="guide-accordion">
                                 <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
                                     <div class="flex items-center gap-3">
                                         <span class="text-xl">📊</span>
                                         <div>
-                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 3 · Registro / ERP y Conciliación Vinted</h3>
-                                            <p class="text-xs text-zinc-400">Control financiero, pacas/gastos, CRM de clientes, Ficha 360º y lectura de correos de Vinted.</p>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 3 · Registro / ERP, DAC7 y Conciliación Vinted</h3>
+                                            <p class="text-xs text-zinc-400">Control financiero, DAC7, pacas/gastos, CRM 360º, Tasador Histórico y lectura de correos de Vinted.</p>
                                         </div>
                                     </div>
                                     <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
                                 </summary>
                                 <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
-                                    <p>Incluye <strong>6 sub-vistas</strong> filtrables por periodo, drop, canal o texto, con exportación a <strong>CSV</strong> compatible con Excel:</p>
+                                    <p>Incluye <strong>7 sub-vistas</strong> con <strong>scroll interno, cabeceras fijas y ordenación por columna</strong> (ascendente/descendente sincronizada con la Ficha 360º), filtrables por periodo (usando <code class="font-mono">completedAt</code> como fecha contable de cobro), drop, canal o texto, con exportación a <strong>CSV</strong> compatible con Excel:</p>
                                     <ul class="space-y-1.5">
+                                        <li>• <strong>Finanzas, DAC7 &amp; Auditoría Vinted:</strong> Semáforo fiscal <strong>DAC7</strong> (30 ventas / 2.000 € anuales en vivo), cuadre de retiradas bancarias (<code class="font-mono">payouts</code>), auditoría de facturas, gráfica mensual y KPI de facturación con desglose <em>Total (+ en camino)</em>.</li>
                                         <li>• <strong>Ventas &amp; Pedidos / Inventario Maestro:</strong> Alterna entre vista <em>Tabla</em> y vista <em>Escaparate</em> (25/50/100/Todo). Distingue <code class="font-mono text-emerald-300">📧 Cobro Verificado por Correo</code> frente a <code class="font-mono text-amber-300">✋ Venta Manual</code>.</li>
                                         <li>• <strong>Ficha de Producto 360º Editable:</strong> Haz clic en cualquier tarjeta o icono de edición para cambiar fotos (hasta 4, portada y orden), precio, coste unitario, gasto extra, comprador o etapa logística, con navegación <code class="font-mono">‹ Anterior / Siguiente ›</code>.</li>
                                         <li>• <strong>Pacas y Gastos Globales:</strong> Registra compras de pacas, envíos o sobres en <em>«💸 Apuntar Paca / Gasto»</em> (se restan del beneficio neto del periodo) o reparte el coste de una paca entre varias prendas seleccionadas.</li>
-                                        <li>• <strong>Clientes (CRM 360º):</strong> Cruza suscriptores de Brevo con compradores y colas de espera, muestra badge <code class="font-mono">⭐ Recurrente</code> (2+ pedidos) y permite guardar notas privadas.</li>
-                                        <li>• <strong>Conciliación Híbrida Vinted (Gmail):</strong> Escanea correos de venta, envío, entrega y cancelación/reembolso (<code class="font-mono text-rose-300">🚨 PEDIDO CANCELADO</code>). Permite asociar lotes, importar ventas directas a <code class="font-mono">VINTED-DIRECT</code> y definir fecha de corte (<code class="font-mono">syncFromDate</code>).</li>
+                                        <li>• <strong>Clientes (CRM 360º):</strong> Cruza suscriptores de Brevo con el histórico Vinted, tallas y marcas favoritas, badge <code class="font-mono">⭐ Recurrente</code>, alertas de cancelaciones (<code class="font-mono">⚠️ X cancel.</code>), filtros <code class="font-mono">RECURRENT / RISK</code>, <strong>Radar de Casi-Compradoras</strong> y notas privadas.</li>
+                                        <li>• <strong>7. Producto &amp; Pricing:</strong> Incluye el <strong>Tasador Histórico Visual</strong> (referencia real de precios vendidos para valorar pacas), Top Marcas/Tallas, velocidad en días hasta venta y <strong>Radar Anti-Reportes</strong>.</li>
+                                        <li>• <strong>Conciliación Híbrida Vinted (Gmail):</strong> Escanea correos de venta, múltiples avisos de tránsito consolidados sin duplicados, entrega y cancelación/reembolso (<code class="font-mono text-rose-300">🚨 PEDIDO CANCELADO</code>). Incluye 3 interruptores: <strong>Auto-Aplicar Drops</strong> (aplica coincidencias exactas), <strong>Auto-Importar a Caja</strong> (da de alta ventas directas en <code class="font-mono">VINTED-DIRECT</code> sin confirmación) y <strong>Destacar Impagos 24h</strong> (si está activo, prioriza arriba de la bandeja los impagos vencidos con suplentes listos para pulsar <em>Pasar al 1º →</em>; si está desactivado, en la vista <em>Todos</em> pasan al final).</li>
+                                        <li>• <strong>Fecha de corte automática (<code class="font-mono">syncFromDate</code>):</strong> Por defecto, tras cada escaneo estándar guarda automáticamente la fecha local del último escaneo (evaluada desde las 00:00 en horario <code class="font-mono">Europe/Madrid</code>). Los botones <strong>Guardar Fecha</strong> (fecha manual) y <strong>Limpiar</strong> (<em>✓ Historial completo</em>) conservan su comportamiento sin sobrescribirse durante ese escaneo.</li>
                                         <li>• <strong>Candado anti-borrado:</strong> Solo puedes eliminar prendas en estado <code class="font-mono">DISPONIBLE</code> u <code class="font-mono">OCULTA</code> sin ventas, reservas ni colas.</li>
                                     </ul>
                                     <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
@@ -667,7 +670,7 @@
                                             <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
                                         </summary>
                                         <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
-                                            Acciones <code class="font-mono text-zinc-200">scan_vinted_emails</code> (Gmail OAuth2), <code class="font-mono text-zinc-200">bulk_update_garments</code>, <code class="font-mono text-zinc-200">save_client_note</code> y <code class="font-mono text-zinc-200">delete_garment</code> (con guard <code class="font-mono text-zinc-200">status=in.(DISPONIBLE,OCULTA)</code>). Metadatos financieros en <code class="font-mono text-zinc-200">__vintedMeta</code> y <code class="font-mono text-zinc-200">virmarket_config.crmClientsMeta</code>.
+                                            Acciones <code class="font-mono text-zinc-200">scan_vinted_emails</code> (Gmail OAuth2 con consolidación multi-tránsito y corte horario CET/CEST), <code class="font-mono text-zinc-200">bulk_update_garments</code> (deduplicación por <code class="font-mono text-zinc-200">vintedTxId</code> / <code class="font-mono text-zinc-200">vintedInboxUrl</code>), <code class="font-mono text-zinc-200">save_client_note</code> y <code class="font-mono text-zinc-200">delete_garment</code> (<code class="font-mono text-zinc-200">status=in.(DISPONIBLE,OCULTA)</code>). Histórico e inteligencia en <code class="font-mono text-zinc-200">__vintedInsights</code> y <code class="font-mono text-zinc-200">virmarket_config.crmClientsMeta.__vintedSyncConfig</code>.
                                         </p>
                                     </details>
                                 </div>
@@ -734,6 +737,39 @@
                                         </summary>
                                         <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
                                             Tablas <code class="font-mono text-zinc-200">public.virmarket_logs</code> y <code class="font-mono text-zinc-200">public.virmarket_versions</code> en Supabase (RLS activo). Acciones <code class="font-mono text-zinc-200">get_logs</code>, <code class="font-mono text-zinc-200">resolve_logs</code>, <code class="font-mono text-zinc-200">purge_logs</code>, <code class="font-mono text-zinc-200">get_versions</code> y <code class="font-mono text-zinc-200">save_version_note</code>.
+                                        </p>
+                                    </details>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- Pestaña 6: Gestor Web Pulso Cotidiano -->
+                        <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border overflow-hidden" data-search="pestana 6 gestor web pulso cotidiano escaparates farmasi armario banquillo guias practicas borrador ia google flow pinterest kit publicar easypanel umami">
+                            <details class="guide-accordion">
+                                <summary class="p-5 flex items-center justify-between gap-3 hover:bg-obsidian-elevated/40 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl">🌐</span>
+                                        <div>
+                                            <h3 class="font-display text-base font-bold text-white uppercase">Pestaña 6 · Gestor Web (Pulso Cotidiano)</h3>
+                                            <p class="text-xs text-zinc-400">Edita escaparates en tiempo real, catálogo Farmasi, cola de Vinted, guías prácticas SEO y publicación.</p>
+                                        </div>
+                                    </div>
+                                    <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 border-t border-obsidian-border space-y-3 text-xs text-zinc-300 leading-relaxed">
+                                    <ul class="space-y-1.5">
+                                        <li>• <strong>Escaparates en tiempo real (0 s):</strong> Selecciona y ordena qué productos aparecen en <em>Portada</em>, <em>Tocador</em> y <em>Bienestar</em>.</li>
+                                        <li>• <strong>Cola curada de Vinted (<code class="font-mono">/armario</code>):</strong> Elige las prendas aprobadas (posiciones 1-3 visibles y posiciones 4+ en banquillo de auto-reemplazo). Nunca se publica una prenda de un Drop VIP 24h todavía activo.</li>
+                                        <li>• <strong>Catálogo Farmasi &amp; Imágenes 4:3:</strong> Crea, edita o desactiva fichas de Farmasi y sube imágenes optimizadas automáticamente a <code class="font-mono">1200×900</code>.</li>
+                                        <li>• <strong>Editor de Guías Prácticas + Asistente IA:</strong> Redacta guías (<code class="font-mono">draft / published</code>), genera borradores sin reclamos médicos, crea el <strong>Prompt Maestro para Google Flow</strong>, genera el <strong>Kit Pinterest</strong> con UTM y pulsa <strong>Publicar en Web</strong> para compilar y desplegar en Easypanel (~45 s).</li>
+                                    </ul>
+                                    <details class="tech-details rounded-xl bg-obsidian-elevated border border-zinc-800 p-3">
+                                        <summary class="flex items-center justify-between text-xs font-mono font-bold text-zinc-300">
+                                            <span>⚙️ Detalle técnico</span>
+                                            <i aria-hidden="true" data-lucide="chevron-down" class="w-3.5 h-3.5 tech-chevron transition-transform"></i>
+                                        </summary>
+                                        <p class="mt-2 pt-2 border-t border-zinc-800 text-zinc-400">
+                                            Webhook privado <code class="font-mono text-zinc-200">POST /webhook/pulso-web-admin</code> y feed público <code class="font-mono text-zinc-200">GET /webhook/pulso-escaparate-publico</code>. Tablas <code class="font-mono text-zinc-200">pulso_farmasi_products</code>, <code class="font-mono text-zinc-200">pulso_showcase_config</code> y <code class="font-mono text-zinc-200">pulso_guides</code> en Supabase (RLS activo). Auditoría en categoría <code class="font-mono text-zinc-200">WEB_PULSO</code>.
                                         </p>
                                     </details>
                                 </div>
@@ -931,6 +967,7 @@
                                         <p>• <code class="font-mono text-zinc-200">virmarket_prendas</code>: inventario, estados, fotos, colas y datos financieros.</p>
                                         <p>• <code class="font-mono text-zinc-200">virmarket_consents</code>: registro probatorio RGPD inmutable.</p>
                                         <p>• <code class="font-mono text-zinc-200">virmarket_logs</code> y <code class="font-mono text-zinc-200">virmarket_versions</code>: auditoría y releases.</p>
+                                        <p>• <code class="font-mono text-zinc-200">pulso_farmasi_products</code>, <code class="font-mono text-zinc-200">pulso_showcase_config</code> y <code class="font-mono text-zinc-200">pulso_guides</code>: escaparate y CMS de Pulso Cotidiano.</p>
                                         <p>• RPCs atómicas: <code class="font-mono text-zinc-200">virmarket_lock_reservation</code>, <code class="font-mono text-zinc-200">virmarket_append_waitlist</code>, <code class="font-mono text-zinc-200">virmarket_allocate_import_slot</code>, <code class="font-mono text-zinc-200">virmarket_upsert_version</code>.</p>
                                     </div>
                                 </div>
@@ -971,17 +1008,17 @@
                                 </p>
                             </article>
 
-                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-2.5" data-search="revista pulso cotidiano hostinger armario tocador hogar bienestar farmasi vinted">
+                            <article class="guide-card rounded-2xl bg-obsidian-card border border-obsidian-border p-5 space-y-2.5" data-search="revista pulso cotidiano archivo editorial hostinger easypanel armario tocador hogar bienestar farmasi vinted">
                                 <h3 class="font-display text-sm font-bold text-white uppercase flex items-center gap-2">
                                     <i aria-hidden="true" data-lucide="newspaper" class="w-4 h-4 text-acid"></i>
-                                    Revista Pulso Cotidiano (Hostinger)
+                                    Revista Pulso Cotidiano (Easypanel / Hostinger)
                                 </h3>
                                 <p class="text-xs text-zinc-300 leading-relaxed">
-                                    Portal editorial público en <code class="font-mono">pulsocotidiano.virmarsolutions.com</code> con 4 pilares (<em>Armario Inteligente</em>, <em>Tocador Esencial</em>, <em>Hogar Práctico</em>, <em>Bienestar Diario</em>). Muestra solo prendas sobrantes de drops ya cerrados (vía endpoint público aislado) y fichas curadas de Farmasi España. <strong>Nunca enlaza al Escaparate VIP 24h ni a admin.html.</strong>
+                                    Portal editorial público en <code class="font-mono">pulsocotidiano.virmarsolutions.com</code> con 4 pilares (<em>Armario Inteligente</em>, <em>Tocador Esencial</em>, <em>Hogar Práctico</em>, <em>Bienestar Diario</em>) y apartado <strong>Archivo Editorial (<code class="font-mono">/archivo</code>)</strong> con filtros y buscador. Muestra escaparates gestionados desde <strong>6. Web</strong>, enlace público al armario Vinted y fichas curadas de Farmasi España. <strong>Nunca enlaza al Escaparate VIP 24h ni a admin.html.</strong>
                                 </p>
                                 <details class="tech-details rounded-lg bg-obsidian-elevated border border-zinc-800 p-2.5 text-xs text-zinc-400">
                                     <summary class="font-mono font-bold text-zinc-300">⚙️ Detalle técnico</summary>
-                                    <p class="mt-1.5">Compilada por <code class="font-mono text-zinc-200">scripts/generar_revista_pulso.py</code> y subida a Hostinger con <code class="font-mono text-zinc-200">scripts/publicar_revista_hostinger.py</code>. Feed Vinted: <code class="font-mono text-zinc-200">GET /webhook/pulso-escaparate-publico</code>.</p>
+                                    <p class="mt-1.5">Compilada por <code class="font-mono text-zinc-200">scripts/generar_revista_pulso.py</code> (o vía GitOps desde <strong>6. Web</strong> con rebuild en Easypanel; backup en <code class="font-mono text-zinc-200">scripts/publicar_revista_hostinger.py</code>). Feed en vivo: <code class="font-mono text-zinc-200">GET /webhook/pulso-escaparate-publico</code>.</p>
                                 </details>
                             </article>
 
@@ -1105,7 +1142,7 @@
                                         <i aria-hidden="true" data-lucide="chevron-down" class="w-4 h-4 text-zinc-400 acc-chevron transition-transform shrink-0"></i>
                                     </summary>
                                     <div class="px-5 pb-4 pt-2 border-t border-obsidian-border text-xs text-zinc-300 space-y-1.5 leading-relaxed">
-                                        <p>1. Abre <strong>3. Registro → Conciliar Vinted</strong> y revisa que la fecha de corte (<code class="font-mono">syncFromDate</code>) no sea posterior al correo de venta.</p>
+                                        <p>1. Abre <strong>3. Registro → Sincronizar Vinted</strong> y revisa la <strong>Fecha de corte</strong>: recuerda que por defecto se guarda la fecha de tu último escaneo. Si buscas una venta de días anteriores, elige esa fecha y pulsa <strong>Guardar Fecha</strong>, o pulsa <strong>Limpiar</strong> (<em>✓ Historial completo</em>).</p>
                                         <p>2. Asegúrate de que el correo de Vinted llegó a <code class="font-mono">virmarket.oficial@gmail.com</code> (directo o reenviado vía <code class="font-mono">contacto@virmarsolutions.com</code>).</p>
                                         <p>3. Si aparece marcada como <code class="font-mono text-rose-300">🚨 PEDIDO CANCELADO / REEMBOLSO</code>, elige <em>«Anular y Ocultar»</em> (si ya no la vendes) o <em>«Pasar a Disponible»</em> (si vuelve al stock) para que el sistema limpie el cobro y silencie ese evento.</p>
                                     </div>
